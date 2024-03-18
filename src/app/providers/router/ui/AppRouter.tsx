@@ -1,4 +1,6 @@
+import { memo } from "react";
 import { Route, Routes } from "react-router-dom";
+
 
 const AppRouter = () => {
   return (
@@ -7,3 +9,5 @@ const AppRouter = () => {
     </Routes>
   );
 };
+
+export default memo(AppRouter);

@@ -1,12 +1,12 @@
-import './styles/index.scss'
+import "./styles/index.scss";
+import AppRouter from "./providers/router/ui/AppRouter";
 
 function App() {
-
   return (
     <>
-      <AppRouter/>
+      <AppRouter />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
