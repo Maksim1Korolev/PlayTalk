@@ -1,14 +1,16 @@
-import cls from "./UiButton.module.scss";
+import { ReactNode } from "react";
+import cls from "./UiText.module.scss";
 export type TextSize = "small" | "medium";
 
-const UiText = ({
+export const UiText = ({
+  children,
   classname,
-  text,
-  size,
+  size = "medium",
 }: {
+  children?: ReactNode;
   classname?: string;
-  text?: string;
   size?: TextSize;
 }) => {
-  return <p className={cls.button}></p>;
+  const className: string = `${classname}${cls[size]} `;
+  return <p className={className}>{children}</p>;
 };
