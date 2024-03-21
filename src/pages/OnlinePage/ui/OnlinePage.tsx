@@ -7,5 +7,5 @@ export const OnlinePage = ({ className }: {className?: string}) => {
 		<div className={`${cls.OnlinePage} ${className}}>
 
 		</div>
-	);
+	)
 }
