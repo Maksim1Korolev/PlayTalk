@@ -12,7 +12,7 @@ import {
   HStack,
   VStack,
 } from "../../../shared/ui";
-import { apiService } from "../api/apiAuthService";
+import { $api, apiService } from "../api/apiAuthService";
 
 interface AuthPageProps {
   className?: string;
@@ -35,7 +35,6 @@ export const AuthPage = ({ className }: AuthPageProps) => {
   const {
     mutate: signIn,
     isLoading,
-    isError,
     error,
   } = useMutation(() => apiService.login(username, password), {
     onSuccess: (data) => {
