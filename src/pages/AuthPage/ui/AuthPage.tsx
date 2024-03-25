@@ -38,7 +38,11 @@ export const AuthPage = ({ className }: AuthPageProps) => {
     error,
   } = useMutation(() => apiService.login(username, password), {
     onSuccess: (data) => {
-      setCookie("jwt-cookie", data);
+      const newUser = {
+        ...data,
+        isOnline: true,
+      };
+      setCookie("jwt-cookie", newUser);
       setIsAuthenticated(true);
     },
     onError: (error) => {
