@@ -127,9 +127,7 @@ export const OnlinePage = memo(({ className }: { className?: string }) => {
 			<h2>Online Users</h2>
 			<UserList handleUserChatButton={handleOpenNewChat} users={users} />
 			{chatModals?.map(({ user }) => {
-				const handleUserMessage = () => {
-					// get message from user and send it to server
-				}
+				const handleUserMessage = () => {}
 				return <ChatModal handleUserMessage={handleUserMessage} user={user} />
 			})}
 		</div>
