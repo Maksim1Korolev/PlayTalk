@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import cls from "./OnlinePage.module.scss";
 import { UserList } from "../../../features/UserList";
 import { useQuery } from "react-query";
@@ -41,21 +41,33 @@ export const OnlinePage = memo(({ className }: { className?: string }) => {
     };
 
     const updateOnlineUsers = (usernames: string[]) => {
+      console.log(usernames);
+      console.log("usernames 123");
+
       setOnlineUsernames(usernames);
-      if (data) setUsersOnline(usernames, data);
+      if (!isLoading) setUsersOnline(usernames, data);
       console.log(usernames + " - usernames");
-      console.log(users + " - users");
+      console.log(data + " - updateOnlineUsers data");
     };
 
-    const updateUserOnline = (username: string) => {
-      console.log(username + " - username");
-      console.log(users + " - users");
+    const updateUserOnline = (username: string, isOnline: boolean) => {
+      console.log(username + " - updateUserOnline username");
+      console.log(users + " - updateUserOnline users");
+      setOnlineUsernames((prev) => {
+        if (isOnline) {
+          return prev.includes(username) ? prev : [...prev, username];
+        } else {
+          return prev.filter((u) => u !== username);
+        }
+      });
       setUsers((prevUsers) => {
         if (!prevUsers) return [];
+        console.log("prev users before");
+        console.log(prevUsers);
 
-        return prevUsers.map((user) => {
+        return prevUsers?.map((user) => {
           if (user.username == username) {
-            return { ...user, isOnline: true };
+            return { ...user, isOnline };
           }
           return user;
         });
@@ -65,28 +77,30 @@ export const OnlinePage = memo(({ className }: { className?: string }) => {
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("online-users", updateOnlineUsers);
-    socket.on("user-connected", updateUserOnline);
+    socket.on("user-connection", updateUserOnline);
 
     return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-      socket.off("online-users", updateOnlineUsers);
-      socket.off("user-connected", updateUserOnline);
+      socket.close();
     };
-  }, [username, data]);
+  }, []);
 
-  const setUsersOnline = (usernames: string[], fetchedUsers?: User[]) => {
-    const usersToUpdate = fetchedUsers || users;
-    if (!usersToUpdate) return;
+  const setUsersOnline = useCallback(
+    (usernames: string[], fetchedUsers?: User[]) => {
+      const usersToUpdate = fetchedUsers || users;
+      if (!usersToUpdate) return;
+      console.log(usernames);
+      console.log(onlineUsernames);
+      console.log("- usernames SetUsersOnline");
 
-    const updatedUsers = usersToUpdate.map((user) => ({
-      ...user,
-      isOnline: usernames.includes(user.username),
-    }));
-    console.log(updatedUsers + " - updatedUsers");
-    console.log(data + " - data");
-    setUsers(updatedUsers);
-  };
+      const updatedUsers = usersToUpdate.map((user) => ({
+        ...user,
+        isOnline: usernames.includes(user.username),
+      }));
+
+      setUsers(updatedUsers);
+    },
+    [setUsers]
+  );
 
   if (isLoading) {
     return <Loader />;

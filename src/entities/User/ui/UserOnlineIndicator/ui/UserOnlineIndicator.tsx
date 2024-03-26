@@ -1,6 +1,4 @@
-import { memo, useEffect, useState } from "react";
 import cls from "./UserOnlineIndicator.module.scss";
-import { socket } from "../../../socket/socket";
 
 export const UserOnlineIndicator = ({
   className,
