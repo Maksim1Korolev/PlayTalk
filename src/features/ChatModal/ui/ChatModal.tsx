@@ -1,17 +1,27 @@
 import { memo } from "react";
 import cls from "./ChatModal.module.scss";
 import { Widget } from "react-chat-widget";
+import { User } from "../../../entities/User";
+import { cx } from "../../../shared/lib/cx";
 
-export const ChatModal = ({ className }: { className?: string }) => {
-  return (
-    <div className={`${cls.ChatModal} ${className}`}>
-      {/*<Widget
-				handleNewUserMessage={handleNewUserMessage}
-				profileAvatar={logo}
-				title="My new awesome title"
-				subtitle="And my cool subtitle"
-			
-				/>*/}
-    </div>
-  );
-};
+export const ChatModal = memo(
+  ({
+    className,
+    handleUserMessage,
+    user,
+  }: {
+    className?: string;
+    handleUserMessage: (newMessage: string) => void;
+    user: User;
+  }) => {
+    return (
+      <div className={cx(cls.ChatModal, {}, [className])}>
+        <Widget
+          handleNewUserMessage={handleUserMessage}
+          //profileAvatar={logo}
+          title={user.username}
+        />
+      </div>
+    );
+  }
+);

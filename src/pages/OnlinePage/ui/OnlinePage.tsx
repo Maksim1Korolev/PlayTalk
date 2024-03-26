@@ -7,6 +7,11 @@ import { User } from "../../../entities/User";
 import { useCookies } from "react-cookie";
 import { Loader } from "../../../shared/ui";
 import { socket } from "../../../entities/User/api/socket";
+import { ChatModal } from "../../../features/ChatModal";
+
+interface ChatModalStateProps {
+  user: User;
+}
 
 export const OnlinePage = memo(({ className }: { className?: string }) => {
   const [cookies] = useCookies(["jwt-cookie"]);
@@ -15,6 +20,8 @@ export const OnlinePage = memo(({ className }: { className?: string }) => {
 
   const [onlineUsernames, setOnlineUsernames] = useState<string[]>([]);
   const [isConnected, setIsConnected] = useState(socket.connected);
+
+  const [chatModals, setChatModals] = useState<ChatModalStateProps[]>();
 
   const [users, setUsers] = useState<User[]>();
 
@@ -114,6 +121,9 @@ export const OnlinePage = memo(({ className }: { className?: string }) => {
     <div className={`${cls.OnlinePage} ${className || ""}`}>
       <h2>Online Users</h2>
       <UserList users={users} />
+      {chatModals?.map(({ user }) => (
+        <ChatModal handleUserMessage={} user={user} />
+      ))}
     </div>
   );
 });
