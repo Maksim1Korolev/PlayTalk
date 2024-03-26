@@ -1,28 +1,30 @@
-import { memo } from "react";
-import cls from "./UserCard.module.scss";
-import { User } from "../../../model/user";
-import { Card, HStack, UiButton, UiText } from "../../../../../shared/ui";
-import { UserOnlineIndicator } from "../../UserOnlineIndicator";
+import { Card, HStack, UiButton, UiText } from '../../../../../shared/ui'
+import { User } from '../../../model/user'
+import { UserOnlineIndicator } from '../../UserOnlineIndicator'
+import cls from './UserCard.module.scss'
 
 export const UserCard = ({
-  className,
-  user,
-  handleChatButton,
-  handlePlayButton,
+	className,
+	user,
+	handleUserChatButton,
+	handlePlayButton,
 }: {
-  className?: string;
-  user: User;
-  handleChatButton: () => void;
-  handlePlayButton: () => void;
+	className?: string
+	user: User
+	handleUserChatButton: (user: User) => void
+	handlePlayButton: () => void
 }) => {
-  return (
-    <Card className={`${cls.UserCard} ${className}`}>
-      <HStack>
-        <UiText>{user.username}</UiText>
-        <UiButton onClick={handleChatButton}>Chat</UiButton>
-        <UiButton onClick={handlePlayButton}>Play</UiButton>
-        <UserOnlineIndicator isOnline={user.isOnline} />
-      </HStack>
-    </Card>
-  );
-};
+	const handleChatButton = () => {
+		handleUserChatButton(user)
+	}
+	return (
+		<Card className={`${cls.UserCard} ${className}`}>
+			<HStack>
+				<UiText>{user.username}</UiText>
+				<UiButton onClick={handleChatButton}>Chat</UiButton>
+				<UiButton onClick={handlePlayButton}>Play</UiButton>
+				<UserOnlineIndicator isOnline={user.isOnline} />
+			</HStack>
+		</Card>
+	)
+}
