@@ -1,74 +1,115 @@
-import { useEffect, useState } from 'react'
-import { useCookies } from 'react-cookie'
-import { useMutation } from 'react-query'
-import { useNavigate } from 'react-router-dom'
-import { Card, HStack, Loader, UiButton, UiInput, UiText, VStack } from '../../../shared/ui'
-import { apiService } from '../api/apiAuthService'
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
+import {
+  Card,
+  HStack,
+  Loader,
+  UiButton,
+  UiInput,
+  UiText,
+  VStack,
+} from "../../../shared/ui";
+import { apiService } from "../api/apiAuthService";
 
 interface AuthPageProps {
-	className?: string
+  className?: string;
 }
 
 export const AuthPage = ({ className }: AuthPageProps) => {
-	const [username, setUsername] = useState('')
-	const [password, setPassword] = useState('')
-	const [isAuthenticated, setIsAuthenticated] = useState(false)
-	const navigate = useNavigate()
-	const [cookies, setCookie] = useCookies(['jwt-cookie'])
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false); // New state to toggle between sign in and sign up
+  const navigate = useNavigate();
+  const [cookies, setCookie] = useCookies(["jwt-cookie"]);
 
-	const handleUsernameChange = (value: string) => {
-		setUsername(value)
-	}
-	const handlePasswordChange = (value: string) => {
-		setPassword(value)
-	}
+  const handleUsernameChange = (value: string) => {
+    setUsername(value);
+  };
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+  };
 
-	const {
-		mutate: signIn,
-		isLoading,
-		error,
-	} = useMutation(() => apiService.login(username, password), {
-		onSuccess: data => {
-			const newUser = {
-				...data,
-				isOnline: true,
-			}
-			setCookie('jwt-cookie', newUser)
-			setIsAuthenticated(true)
-		},
-		onError: error => {
-			console.error(error)
-		},
-	})
+  const signInMutation = useMutation(
+    () => apiService.login(username, password),
+    {
+      onSuccess: (data) => {
+        setCookie("jwt-cookie", data, { path: "/" });
+        setIsAuthenticated(true);
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    }
+  );
 
-	useEffect(() => {
-		if (isAuthenticated) {
-			navigate('/')
-			window.location.reload()
-		}
-	}, [isAuthenticated, cookies, navigate])
+  const signUpMutation = useMutation(
+    () => apiService.register(username, password),
+    {
+      onSuccess: (data) => {
+        setCookie("jwt-cookie", data, { path: "/" });
+        setIsAuthenticated(true);
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    }
+  );
 
-	const handleSignIn = () => {
-		signIn()
-	}
+  const handleAuthAction = () => {
+    if (isSignUp) {
+      signUpMutation.mutate();
+    } else {
+      signInMutation.mutate();
+    }
+  };
 
-	return (
-		<div>
-			<Card>
-				<VStack align="center">
-					<HStack gap="16">
-						<UiText>Username:</UiText>
-						<UiInput value={username} onChange={handleUsernameChange} />
-					</HStack>
+  const toggleAuthMode = () => {
+    setIsSignUp(!isSignUp);
+  };
 
-					<HStack gap="16">
-						<UiText>Password:</UiText>
-						<UiInput type="password" value={password} onChange={handlePasswordChange} />
-					</HStack>
-					<UiButton onClick={handleSignIn}>Sign In</UiButton>
-					{isLoading && <Loader />}
-				</VStack>
-			</Card>
-		</div>
-	)
-}
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+      window.location.reload();
+    }
+  }, [isAuthenticated, navigate]);
+
+  return (
+    <div className={cls.AuthPage}>
+      <Card>
+        <VStack align="center">
+          <HStack gap="16">
+            <UiText>Username:</UiText>
+            <UiInput value={username} onChange={handleUsernameChange} />
+          </HStack>
+
+          <HStack gap="16">
+            <UiText>Password:</UiText>
+            <UiInput
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+          </HStack>
+          <HStack gap="16">
+            {isSignUp ? (
+              <div>Already have an account?</div>
+            ) : (
+              <div>Don't have an account?</div>
+            )}
+            <UiButton onClick={toggleAuthMode}>
+              {isSignUp ? "Sign In" : "Sign Up"}
+            </UiButton>
+          </HStack>
+          <UiButton onClick={handleAuthAction}>
+            {isSignUp ? "Sign Up" : "Sign In"}
+          </UiButton>
+          {(signInMutation.isLoading || signUpMutation.isLoading) && <Loader />}
+        </VStack>
+      </Card>
+    </div>
+  );
+};

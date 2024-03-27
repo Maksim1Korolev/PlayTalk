@@ -10,6 +10,15 @@ export const apiService = {
       username,
       password,
     });
+
+    return response.data;
+  },
+  register: async (username: string, password: string) => {
+    const response = await $api.post(`/register`, {
+      username,
+      password,
+    });
+
     return response.data;
   },
 };
