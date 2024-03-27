@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { chatSocket } from "../../../shared/api/sockets";
 
-const useChatSocket = ({
+export const useChatSocket = ({
   currentUsername,
   receiverUsername,
   printMessage,

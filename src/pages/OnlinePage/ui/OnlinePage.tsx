@@ -3,13 +3,13 @@ import { useCookies } from "react-cookie";
 import { useQuery } from "react-query";
 import { User } from "../../../entities/User";
 import { chatSocket } from "../../../shared/api/sockets";
-import { ChatModal } from "../../../features/ChatModal";
 import { UserList } from "../../../features/UserList";
 import { Loader } from "../../../shared/ui";
 import { apiService } from "../api/apiUsersService";
 import cls from "./OnlinePage.module.scss";
 import { useOnlineSocket } from "../hooks/useOnlineSocket";
 import { addResponseMessage } from "react-chat-widget";
+import { ChatModal } from "../../../widgets/ChatModal";
 
 interface ChatModalStateProps {
   user: User;
@@ -60,7 +60,11 @@ export const OnlinePage = ({ className }: { className?: string }) => {
       {chatModals?.map(({ user }) => {
         return (
           <div>
-            <ChatModal key={user._id} user={user} />
+            <ChatModal
+              key={user._id}
+              currentUser={cookies["jwt-cookie"].user}
+              receiverUser={user}
+            />
           </div>
         );
       })}
