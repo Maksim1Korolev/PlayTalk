@@ -19,11 +19,11 @@ export const ChatModal = memo(
       addResponseMessage(message);
     };
 
-    const handleNewUserMessage = useChatSocket(
-      currentUser.username,
-      receiverUser.username,
-      printMessage
-    );
+    const handleNewUserMessage = useChatSocket({
+      currentUsername: currentUser.username,
+      receiverUsername: receiverUser.username,
+      printMessage,
+    });
 
     return (
       <div className={cx(cls.ChatModal, {}, [className])}>
