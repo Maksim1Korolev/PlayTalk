@@ -16,9 +16,6 @@ export const useOnlineSocket = ({
     (usernames: string[], fetchedUsers?: User[]) => {
       const usersToUpdate = fetchedUsers || upToDateUsers;
       if (!usersToUpdate) return;
-      console.log(usernames);
-      console.log(onlineUsernames);
-      console.log("- usernames SetUsersOnline");
 
       const updatedUsers = usersToUpdate.map((user: User) => ({
         ...user,
@@ -36,18 +33,11 @@ export const useOnlineSocket = ({
     };
 
     const updateOnlineUsers = (usernames: string[]) => {
-      console.log(usernames);
-      console.log("usernames 123");
-
       setOnlineUsernames(usernames);
       if (!data) setUsersOnline(usernames, data);
-      console.log(usernames + " - usernames");
-      console.log(data + " - updateOnlineUsers data");
     };
 
     const updateUserOnline = (username: string, isOnline: boolean) => {
-      console.log(username + " - updateUserOnline username");
-      console.log(upToDateUsers + " - updateUserOnline users");
       setOnlineUsernames((prev) => {
         if (isOnline) {
           return prev.includes(username) ? prev : [...prev, username];
@@ -57,8 +47,6 @@ export const useOnlineSocket = ({
       });
       setUpToDateUsers((prevUsers) => {
         if (!prevUsers) return [];
-        console.log("prev users before");
-        console.log(prevUsers);
 
         return prevUsers?.map((user) => {
           if (user.username == username) {

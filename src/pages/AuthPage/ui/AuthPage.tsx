@@ -53,6 +53,7 @@ export const AuthPage = ({ className }: AuthPageProps) => {
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/");
+      window.location.reload();
     }
   }, [isAuthenticated, cookies, navigate]);
 
