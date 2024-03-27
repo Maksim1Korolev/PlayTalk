@@ -1,3 +1,4 @@
+import cls from "./AuthPage.module.scss";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useMutation } from "react-query";
