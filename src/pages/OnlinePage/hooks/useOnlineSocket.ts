@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { User } from "../../../entities/User";
-import { onlineSocket } from "../api/sockets";
+import { onlineSocket } from "../../../shared/api/sockets";
 
 export const useOnlineSocket = ({
   username,

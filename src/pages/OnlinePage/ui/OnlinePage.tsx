@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useQuery } from "react-query";
 import { User } from "../../../entities/User";
-import { chatSocket } from "../api/sockets";
+import { chatSocket } from "../../../shared/api/sockets";
 import { ChatModal } from "../../../features/ChatModal";
 import { UserList } from "../../../features/UserList";
 import { Loader } from "../../../shared/ui";
@@ -15,7 +15,7 @@ interface ChatModalStateProps {
   user: User;
 }
 
-export const OnlinePage = memo(({ className }: { className?: string }) => {
+export const OnlinePage = ({ className }: { className?: string }) => {
   const [cookies] = useCookies(["jwt-cookie"]);
   const token = cookies["jwt-cookie"]?.token;
   const username = cookies["jwt-cookie"]?.user?.username;
@@ -36,13 +36,6 @@ export const OnlinePage = memo(({ className }: { className?: string }) => {
     username,
     data,
   });
-  useEffect(() => {
-    const onConnection = () => {};
-
-    chatSocket.on("connection", onConnection);
-    chatSocket.on("connection", onConnection);
-    chatSocket.on("connection", onConnection);
-  }, []);
 
   if (isLoading) {
     return <Loader />;
@@ -65,33 +58,12 @@ export const OnlinePage = memo(({ className }: { className?: string }) => {
         users={upToDateUsers}
       />
       {chatModals?.map(({ user }) => {
-        useEffect(() => {
-          chatSocket.emit("join-chat", username, user.username);
-          chatSocket.on("receive-message", onMessageReceived);
-        }, []);
-        const handleUserMessage = (message: string) => {
-          //TODO: dynamic request
-          chatSocket.emit(
-            `send-message-${username}`,
-            username,
-            user.username,
-            message
-          );
-        };
-
-        const onMessageReceived = (message: string) => {
-          addResponseMessage(message);
-        };
         return (
           <div>
-            <ChatModal
-              key={user._id}
-              handleUserMessage={handleUserMessage}
-              user={user}
-            />
+            <ChatModal key={user._id} user={user} />
           </div>
         );
       })}
     </div>
   );
-});
+};
