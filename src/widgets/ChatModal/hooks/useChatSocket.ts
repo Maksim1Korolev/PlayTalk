@@ -1,30 +1,70 @@
-import { useEffect } from 'react'
-import { chatSocket } from '../../../shared/api/sockets'
+import { useEffect } from "react";
+import { chatSocket } from "../../../shared/api/sockets";
+
+interface UseChatSocketParams {
+  currentUsername: string;
+  receiverUsername: string;
+  printMessage: ({
+    senderUsername,
+    message,
+  }: {
+    senderUsername: string;
+    message: string;
+  }) => void;
+}
 
 export const useChatSocket = ({
-	currentUsername,
-	receiverUsername,
-	printMessage,
-}: {
-	currentUsername: string
-	receiverUsername: string
-	printMessage: (message: string) => void
-}): {
-	handleUserMessage: (message: string) => void
+  currentUsername,
+  receiverUsername,
+  printMessage,
+}: UseChatSocketParams): {
+  handleUserMessage: (message: string) => void;
+  requestChat: () => void;
 } => {
-	useEffect(() => {
-		chatSocket.emit('join-chat', currentUsername, receiverUsername)
-		chatSocket.on(`receive-message-${currentUsername}`, onMessageReceived)
-	}, [])
-	const handleUserMessage = (message: string) => {
-		chatSocket.emit(`send-message-${receiverUsername}`, currentUsername, receiverUsername, message)
-	}
+  useEffect(() => {
+    /////////////////////////////////////////////////////
+    chatSocket.on("receive-message", (data) => {
+      console.log(data + "receive start");
 
-	const onMessageReceived = (message: string) => {
-		printMessage(message)
-	}
+      if (data.senderUsername && data.message) {
+        printMessage(data);
+        console.log(data);
+      }
+    });
 
-	return {
-		handleUserMessage,
-	}
-}
+    chatSocket.on("chat-request-received", ({ senderUsername }) => {
+      console.log(`${senderUsername} wants to chat with you.`);
+      // You could also automatically accept the chat or show a notification to the user here
+    });
+    /////////////////////////////////////////////////////
+
+    chatSocket.emit("join-chat-lobby", {
+      senderUsername: currentUsername,
+      receiverUsername,
+    });
+
+    return () => {
+      chatSocket.close();
+    };
+  }, []);
+
+  const handleUserMessage = (message: string) => {
+    chatSocket.emit("send-message", {
+      senderUsername: currentUsername,
+      receiverUsername,
+      message,
+    });
+  };
+
+  const requestChat = () => {
+    chatSocket.emit("request-chat", {
+      senderUsername: currentUsername,
+      receiverUsername,
+    });
+  };
+
+  return {
+    handleUserMessage,
+    requestChat,
+  };
+};

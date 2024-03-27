@@ -9,7 +9,8 @@ import {
   VStack,
 } from "../../../shared/ui";
 import cls from "./Chat.module.scss";
-interface MessageHistory {
+
+export interface MessageHistory {
   message: string;
   date: Date;
   username: string;
@@ -17,53 +18,30 @@ interface MessageHistory {
 
 export const Chat = ({
   className,
-  currentUsername,
-  receiverUsername,
+  messageHistory,
   handleSendMessage,
-  onMessageReceived,
 }: {
   className?: string;
-  currentUsername: string;
-  receiverUsername: string;
-  onMessageReceived: (message: string) => void;
+  messageHistory?: MessageHistory[];
   handleSendMessage: (message: string) => void;
 }) => {
-  const [messageHistory, setMessageHistory] = useState<MessageHistory[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
 
-  const AddMessageToHistory = (username: string, message: string) => {
-    const newMessage: MessageHistory = {
-      message: message,
-      date: new Date(),
-      username: username,
-    };
-    setMessageHistory((prev) => ({
-      ...prev,
-      newMessage,
-    }));
-  };
-
-  onMessageReceived = (message: string) => {
-    AddMessageToHistory(receiverUsername, message);
-  };
-
-  const handleClickButton = () => {
+  const handleSendButton = () => {
     handleSendMessage(inputMessage);
-
-    AddMessageToHistory(currentUsername, inputMessage);
     setInputMessage("");
   };
 
   return (
     <Card className={cx(cls.Chat, {}, [className])}>
       <VStack className={cls.messageLog}>
-        {messageHistory.map((message) => (
-          <UiText>{message.message}</UiText>
+        {messageHistory?.map((message, index) => (
+          <UiText key={index}>{message.message}</UiText>
         ))}
       </VStack>
       <HStack>
         <UiInput value={inputMessage} onChange={(e) => setInputMessage(e)} />
-        <UiButton onClick={handleClickButton} />
+        <UiButton onClick={handleSendButton} />
       </HStack>
     </Card>
   );
