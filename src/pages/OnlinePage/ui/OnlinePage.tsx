@@ -16,7 +16,7 @@ interface ChatModalStateProps {
 export const OnlinePage = ({ className }: { className?: string }) => {
   const [cookies] = useCookies(["jwt-cookie"]);
   const token = cookies["jwt-cookie"]?.token;
-  const username = cookies["jwt-cookie"]?.user?.username;
+  const currentUser = cookies["jwt-cookie"]?.user;
 
   const [chatModals, setChatModals] = useState<ChatModalStateProps[]>();
 
@@ -26,12 +26,15 @@ export const OnlinePage = ({ className }: { className?: string }) => {
     {
       enabled: !!token,
       onSuccess: (fetchedUsers) => {
-        setUsersOnline(onlineUsernames, fetchedUsers);
+        const otherUsers = fetchedUsers.filter(
+          (user) => user._id !== currentUser._id
+        );
+        setUsersOnline(onlineUsernames, otherUsers);
       },
     }
   );
   const { onlineUsernames, setUsersOnline, upToDateUsers } = useOnlineSocket({
-    username,
+    username: currentUser.username,
     data,
   });
 
@@ -57,12 +60,11 @@ export const OnlinePage = ({ className }: { className?: string }) => {
       />
       {chatModals?.map(({ user }) => {
         return (
-          <div key={user._id}>
-            <ChatModal
-              currentUser={cookies["jwt-cookie"].user}
-              receiverUser={user}
-            />
-          </div>
+          <ChatModal
+            key={user._id}
+            currentUser={currentUser}
+            receiverUser={user}
+          />
         );
       })}
     </div>

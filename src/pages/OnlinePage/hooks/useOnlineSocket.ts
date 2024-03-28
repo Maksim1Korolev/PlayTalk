@@ -48,6 +48,8 @@ export const useOnlineSocket = ({
       setUpToDateUsers((prevUsers) => {
         if (!prevUsers) return [];
 
+        prevUsers.reduce;
+
         return prevUsers?.map((user) => {
           if (user.username == username) {
             return { ...user, isOnline };

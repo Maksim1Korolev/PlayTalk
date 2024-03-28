@@ -1,18 +1,18 @@
-import { memo, useEffect, useState } from "react";
 import cls from "./AuthPage.module.scss";
-import { useMutation } from "react-query";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import {
-  UiText,
   Card,
-  UiInput,
-  UiButton,
-  Loader,
   HStack,
+  Loader,
+  UiButton,
+  UiInput,
+  UiText,
   VStack,
 } from "../../../shared/ui";
-import { $api, apiService } from "../api/apiAuthService";
+import { apiService } from "../api/apiAuthService";
 
 interface AuthPageProps {
   className?: string;
