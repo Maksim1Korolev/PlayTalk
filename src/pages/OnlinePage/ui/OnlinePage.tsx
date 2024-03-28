@@ -3,20 +3,22 @@ import { useCookies } from "react-cookie";
 import { useQuery } from "react-query";
 import { User } from "../../../entities/User";
 import { UserList } from "../../../features/UserList";
-import { Loader } from "../../../shared/ui";
+import { Loader, UiButton } from "../../../shared/ui";
 import { apiService } from "../api/apiUsersService";
 import cls from "./OnlinePage.module.scss";
 import { useOnlineSocket } from "../hooks/useOnlineSocket";
 import { ChatModal } from "../../../widgets/ChatModal";
+import { useNavigate } from "react-router-dom";
 
 interface ChatModalStateProps {
   user: User;
 }
 
 export const OnlinePage = ({ className }: { className?: string }) => {
-  const [cookies] = useCookies(["jwt-cookie"]);
+  const [cookies, , removeCookie] = useCookies(["jwt-cookie"]);
   const token = cookies["jwt-cookie"]?.token;
   const currentUser = cookies["jwt-cookie"]?.user;
+  const navigate = useNavigate();
 
   const [chatModals, setChatModals] = useState<ChatModalStateProps[]>();
 
@@ -38,6 +40,11 @@ export const OnlinePage = ({ className }: { className?: string }) => {
     data,
   });
 
+  const handleLogout = () => {
+    removeCookie("jwt-cookie");
+    navigate("/auth");
+  };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -53,6 +60,7 @@ export const OnlinePage = ({ className }: { className?: string }) => {
 
   return (
     <div className={`${cls.OnlinePage} ${className || ""}`}>
+      <UiButton onClick={handleLogout}>Logout</UiButton>
       <h2>Online Users</h2>
       <UserList
         handleUserChatButton={handleOpenNewChat}
