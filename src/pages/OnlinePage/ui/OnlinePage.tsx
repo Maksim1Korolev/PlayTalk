@@ -3,7 +3,7 @@
 import resources from "@/public/resources/OnlinePageResources.json";
 import { User } from '@/entities/User'
 import { UserList } from '@/features/UserList'
-import { Loader, UiButton, UiText } from '@/shared/ui'
+import { Loader, UiButton, UiText} from '@/shared/ui'
 import { ChatModal } from '@/widgets/ChatModal'
 import { useState } from 'react'
 import { useCookies } from 'react-cookie'
