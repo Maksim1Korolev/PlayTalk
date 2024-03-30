@@ -1,3 +1,49 @@
-.button {
+.Button {
   cursor: pointer;
+  color: var(--text-redesigned);
+  border-radius: 25%;
+  padding: 6px 15px;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    opacity: var(--accent-redesigned);
+  }
+}
+
+.clear {
+  padding: 0;
+  border: none;
+  background: none;
+  outline: none;
+
+  &.blue {
+    color: var(--accent-redesigned);
+  }
+
+  &:hover {
+    opacity: (0.9);
+  }
+}
+
+.outlined {
+  background: none;
+  font-weight: 700;
+  padding: 10px 15px;
+  border-radius: 34px;
+
+  &:hover {
+    border: 2px solid var(--accent-redesigned);
+    color: var(--accent-redesigned);
+  }
+}
+
+.filled {
+  background: var(--light-bg-redesigned);
+  border: none;
+  outline: none;
+
+  &.default {
+    background: var(--light-bg-redesigned);
+  }
 }

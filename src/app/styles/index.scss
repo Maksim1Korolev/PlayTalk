@@ -1,5 +1,5 @@
 @import "./variables/theme";
-
+@import "./reset.scss";
 .app {
   background: var(--bg-color);
   color: var(--text-redesigned);

@@ -79,38 +79,36 @@ export const AuthPage = ({ className }: AuthPageProps) => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className={cls.AuthPage}>
-      <Card>
-        <VStack align="center">
-          <HStack gap="16">
-            <UiText>Username:</UiText>
-            <UiInput value={username} onChange={handleUsernameChange} />
-          </HStack>
+    <Card variant="outlined">
+      <VStack align="center">
+        <HStack gap="16">
+          <UiText>Username:</UiText>
+          <UiInput value={username} onChange={handleUsernameChange} />
+        </HStack>
 
-          <HStack gap="16">
-            <UiText>Password:</UiText>
-            <UiInput
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-            />
-          </HStack>
-          <HStack gap="16">
-            {isSignUp ? (
-              <div>Already have an account?</div>
-            ) : (
-              <div>Don't have an account?</div>
-            )}
-            <UiButton onClick={toggleAuthMode}>
-              {isSignUp ? "Sign In" : "Sign Up"}
-            </UiButton>
-          </HStack>
-          <UiButton onClick={handleAuthAction}>
-            {isSignUp ? "Sign Up" : "Sign In"}
+        <HStack gap="16">
+          <UiText>Password:</UiText>
+          <UiInput
+            type="password"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+        </HStack>
+        <HStack gap="16">
+          {isSignUp ? (
+            <div>Already have an account?</div>
+          ) : (
+            <div>Don't have an account?</div>
+          )}
+          <UiButton variant="clear" color="blue" onClick={toggleAuthMode}>
+            {isSignUp ? "Sign In" : "Sign Up"}
           </UiButton>
-          {(signInMutation.isLoading || signUpMutation.isLoading) && <Loader />}
-        </VStack>
-      </Card>
-    </div>
+        </HStack>
+        <UiButton onClick={handleAuthAction}>
+          {isSignUp ? "Sign Up" : "Sign In"}
+        </UiButton>
+        {(signInMutation.isLoading || signUpMutation.isLoading) && <Loader />}
+      </VStack>
+    </Card>
   );
 };
