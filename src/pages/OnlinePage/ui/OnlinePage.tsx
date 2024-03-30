@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useQuery } from "react-query";
-import { User } from "../../../entities/User";
-import { UserList } from "../../../features/UserList";
-import { Loader, UiButton } from "../../../shared/ui";
+import { User } from "@/entities/User";
+import { UserList } from "@/features/UserList";
+import { Loader, UiButton } from "@/shared/ui";
 import { apiService } from "../api/apiUsersService";
 import cls from "./OnlinePage.module.scss";
-import { useOnlineSocket } from "../hooks/useOnlineSocket";
-import { ChatModal } from "../../../widgets/ChatModal";
 import { useNavigate } from "react-router-dom";
+import { ChatModal } from "@/widgets/ChatModal";
+import { useOnlineSocket } from "../hooks/useOnlineSocket";
 
 interface ChatModalStateProps {
   user: User;
