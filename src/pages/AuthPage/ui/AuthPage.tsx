@@ -13,6 +13,7 @@ import {
   VStack,
 } from "../../../shared/ui";
 import { apiService } from "../api/apiAuthService";
+import { cx } from "@/shared/lib/cx";
 
 interface AuthPageProps {
   className?: string;
@@ -22,9 +23,9 @@ export const AuthPage = ({ className }: AuthPageProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false); // New state to toggle between sign in and sign up
+  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies(["jwt-cookie"]);
+  const [, setCookie] = useCookies(["jwt-cookie"]);
 
   const handleUsernameChange = (value: string) => {
     setUsername(value);
@@ -79,36 +80,40 @@ export const AuthPage = ({ className }: AuthPageProps) => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <Card variant="outlined">
-      <VStack align="center">
-        <HStack gap="16">
-          <UiText>Username:</UiText>
-          <UiInput value={username} onChange={handleUsernameChange} />
-        </HStack>
-
-        <HStack gap="16">
-          <UiText>Password:</UiText>
+    <VStack className={cx(cls.AuthPage)} max align="center" justify="center">
+      <Card variant="outlined" padding="24">
+        <VStack gap="24" align="center">
           <UiInput
+            placeholder="Enter your username"
+            value={username}
+            label="Username"
+            onChange={handleUsernameChange}
+          />
+
+          <UiInput
+            placeholder="••••••••"
+            label="Password"
             type="password"
             value={password}
             onChange={handlePasswordChange}
           />
-        </HStack>
-        <HStack gap="16">
-          {isSignUp ? (
-            <div>Already have an account?</div>
-          ) : (
-            <div>Don't have an account?</div>
-          )}
-          <UiButton variant="clear" color="blue" onClick={toggleAuthMode}>
-            {isSignUp ? "Sign In" : "Sign Up"}
+
+          <HStack gap="16">
+            {isSignUp ? (
+              <div>Already have an account?</div>
+            ) : (
+              <div>Don't have an account?</div>
+            )}
+            <UiButton variant="clear" color="blue" onClick={toggleAuthMode}>
+              {isSignUp ? "Sign In" : "Sign Up"}
+            </UiButton>
+          </HStack>
+          <UiButton variant="filled" onClick={handleAuthAction}>
+            {isSignUp ? "Sign Up" : "Sign In"}
           </UiButton>
-        </HStack>
-        <UiButton onClick={handleAuthAction}>
-          {isSignUp ? "Sign Up" : "Sign In"}
-        </UiButton>
-        {(signInMutation.isLoading || signUpMutation.isLoading) && <Loader />}
-      </VStack>
-    </Card>
+          {(signInMutation.isLoading || signUpMutation.isLoading) && <Loader />}
+        </VStack>
+      </Card>
+    </VStack>
   );
 };

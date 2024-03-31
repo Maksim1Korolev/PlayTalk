@@ -1,21 +1,24 @@
 body {
-  --bg-color: #1e1f26;
+  --bg-color: #191919;
   --inverted-bg-color: #e8e8ea;
-  --primary-color: #568203;
+  --primary-color: #5916f3;
   --secondary-color: #279349;
   --inverted-primary-color: #257;
   --inverted-secondary-color: #0ebeff;
 
   // redesigned
-  --dark-bg-redesigned: #090f11;
-  --bg-redesigned: #0c1214;
+  --highlight: #bfbaff;
+  --dark-bg-redesigned: #191919;
+  --bg-redesigned: #222;
   --light-bg-redesigned: #151c1f;
-  --text-redesigned: #dbdbdb;
+  --text-redesigned: white;
+  --text-secondary: #fbf8f3;
+  --text-tertiary: #9f9f9f;
   --hint-redesigned: #555;
   --cancel-redesigned: #d95757;
   --save-redesigned: #6cd98b;
-  --icon-redesigned: #74a2b2;
-  --accent-redesigned: #5ed3f3;
+
+  --accent-redesigned: #5916f3;
 
   // skeleton
   --skeleton-color: #1515ad;
@@ -24,8 +27,8 @@ body {
   // code
   --code-bg: #353642;
 
-  // card
-  --card-bg: #353642;
+  // card#FAFAFA
+  --card-bg: #222;
 
   // listbox
   --listbox-bg: #353642;
