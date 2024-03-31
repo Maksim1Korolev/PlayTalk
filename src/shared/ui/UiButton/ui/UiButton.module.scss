@@ -2,12 +2,16 @@
   cursor: pointer;
   color: var(--text-redesigned);
   border-radius: 25%;
-  padding: 6px 15px;
   display: flex;
   align-items: center;
+  display: flex;
+  padding: 15px 35px;
+  justify-content: center;
+  align-items: center;
+  flex: 0 auto;
 
   &:hover {
-    opacity: var(--accent-redesigned);
+    box-shadow: 0 0 30px 0 rgba(113, 77, 197, 0.32);
   }
 }
 
@@ -18,7 +22,7 @@
   outline: none;
 
   &.blue {
-    color: var(--accent-redesigned);
+    color: var(--highlight);
   }
 
   &:hover {
@@ -33,17 +37,22 @@
   border-radius: 34px;
 
   &:hover {
-    border: 2px solid var(--accent-redesigned);
-    color: var(--accent-redesigned);
+    border: 2px solid var(--accent-redesign);
+    color: var(--highlight);
   }
 }
 
 .filled {
-  background: var(--light-bg-redesigned);
-  border: none;
-  outline: none;
+  border: 1px solid #5916f3;
+  border-radius: 10px 20px;
+  transition: transform 200ms ease;
+  font-family: Satoshi, sans-serif;
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
 
   &.default {
-    background: var(--light-bg-redesigned);
+    background: var(--accent-redesigned);
   }
 }
