@@ -15,7 +15,6 @@ const AppRouter = () => {
           </RequireAuth>
         }
       />
-
       <Route path="/auth" element={<AuthPage />} />
     </Routes>
   );
