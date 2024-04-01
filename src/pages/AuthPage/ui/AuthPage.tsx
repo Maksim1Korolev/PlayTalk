@@ -11,9 +11,11 @@ import {
   UiInput,
   UiText,
   VStack,
-} from "../../../shared/ui";
+} from "@/shared/ui";
 import { apiService } from "../api/apiAuthService";
 import { cx } from "@/shared/lib/cx";
+
+import resources from "@/public/resources/AuthPageResources.json";
 
 interface AuthPageProps {
   className?: string;
@@ -82,17 +84,25 @@ export const AuthPage = ({ className }: AuthPageProps) => {
   return (
     <VStack className={cx(cls.AuthPage)} max align="center" justify="center">
       <Card variant="outlined" padding="24">
+        <VStack gap="16">
+          <UiText size="medium">
+            {isSignUp ? resources.title_sign_up : resources.title_login}
+          </UiText>
+          <UiText size="small">
+            {isSignUp ? resources.subtitle_sign_up : resources.subtitle_login}
+          </UiText>
+        </VStack>
         <VStack gap="24" align="center">
           <UiInput
-            placeholder="Enter your username"
+            placeholder={resources.placeholder_username}
             value={username}
-            label="Username"
+            label={resources.label_username}
             onChange={handleUsernameChange}
           />
 
           <UiInput
-            placeholder="••••••••"
-            label="Password"
+            placeholder={resources.placeholder_password}
+            label={resources.label_password}
             type="password"
             value={password}
             onChange={handlePasswordChange}
@@ -100,16 +110,16 @@ export const AuthPage = ({ className }: AuthPageProps) => {
 
           <HStack gap="16">
             {isSignUp ? (
-              <div>Already have an account?</div>
+              <div>{resources.action_already_have_account}</div>
             ) : (
-              <div>Don't have an account?</div>
+              <div>{resources.action_dont_have_account}</div>
             )}
             <UiButton variant="clear" color="blue" onClick={toggleAuthMode}>
-              {isSignUp ? "Sign In" : "Sign Up"}
+              {isSignUp ? resources.button_sign_in : resources.button_sign_up}
             </UiButton>
           </HStack>
           <UiButton variant="filled" onClick={handleAuthAction}>
-            {isSignUp ? "Sign Up" : "Sign In"}
+            {isSignUp ? resources.button_sign_up : resources.button_sign_in}
           </UiButton>
           {(signInMutation.isLoading || signUpMutation.isLoading) && <Loader />}
         </VStack>
