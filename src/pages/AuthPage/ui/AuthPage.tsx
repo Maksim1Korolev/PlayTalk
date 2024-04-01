@@ -114,7 +114,12 @@ export const AuthPage = ({ className }: AuthPageProps) => {
             ) : (
               <div>{resources.action_dont_have_account}</div>
             )}
-            <UiButton variant="clear" color="blue" onClick={toggleAuthMode}>
+            <UiButton
+              variant="clear"
+              color="blue"
+              onClick={toggleAuthMode}
+              textIsUnderlined
+            >
               {isSignUp ? resources.button_sign_in : resources.button_sign_up}
             </UiButton>
           </HStack>
