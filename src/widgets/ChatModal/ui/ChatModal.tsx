@@ -1,11 +1,11 @@
 import { memo, useState } from "react";
 
-import { User } from "../../../entities/User";
-import { Chat } from "../../../features/Chat";
-import { cx } from "../../../shared/lib/cx";
+import { User } from "@/entities/User";
+import { Chat } from "@/features/Chat";
+import { cx } from "@/shared/lib/cx";
 import { useChatSocket } from "../hooks/useChatSocket";
 import cls from "./ChatModal.module.scss";
-import { MessageHistory } from "../../../features/Chat/ui/Chat";
+import { MessageHistory } from "@/features/Chat/ui/Chat";
 
 export const ChatModal = memo(
   ({
