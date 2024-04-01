@@ -4,13 +4,14 @@ import { UiText, VStack } from "../..";
 
 type HTMLInputProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  "value" | "onChange" | "readOnly" | "size"
+  "value" | "onChange" | "readOnly" | "size" | "max"
 >;
 interface InputProps extends HTMLInputProps {
   className?: string;
   value?: string | number;
   placeholder?: string;
   label?: string;
+  max?: boolean;
   onChange?: (value: string) => void;
 }
 export const UiInput = ({
@@ -18,6 +19,7 @@ export const UiInput = ({
   value,
   placeholder,
   label,
+  max,
   onChange,
   ...otherProps
 }: InputProps) => {
@@ -26,7 +28,7 @@ export const UiInput = ({
   };
 
   return (
-    <VStack align="start" gap="8">
+    <VStack align="start" gap="8" max={max}>
       {label && <UiText>{label}</UiText>}
       <input
         value={value}
