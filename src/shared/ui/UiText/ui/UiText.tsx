@@ -1,16 +1,30 @@
 import { ReactNode } from "react";
 import cls from "./UiText.module.scss";
-export type TextSize = "small" | "medium";
+import { Mods, cx } from "@/shared/lib/cx";
+
+export type TextSize = "s" | "m" | "l" | "xl" | "xxl";
 
 export const UiText = ({
   children,
-  classname,
-  size = "medium",
+  className,
+  size = "m",
+  bold,
+  dimmed,
 }: {
   children?: ReactNode;
-  classname?: string;
+  className?: string;
   size?: TextSize;
+  bold?: boolean;
+  dimmed?: boolean;
 }) => {
-  const className: string = `${classname}${cls[size]} `;
-  return <p className={className}>{children}</p>;
+  const textMods: Mods = {
+    [cls.bold]: bold,
+    [cls.dimmed]: dimmed,
+  };
+
+  return (
+    <p className={cx(cls.UiInput, textMods, [className, cls[size]])}>
+      {children}
+    </p>
+  );
 };

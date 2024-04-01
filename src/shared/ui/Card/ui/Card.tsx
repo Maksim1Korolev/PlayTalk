@@ -5,13 +5,13 @@ import { cx } from "@/shared/lib/cx";
 export type CardVariant = "default" | "outlined" | "light";
 export type CardBorder = "default" | "round";
 
-export type CardPadding = "0" | "8" | "16" | "24";
+export type CardPadding = "0" | "8" | "16" | "24" | "32";
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
   children: ReactNode;
   variant?: CardVariant;
-  fullscreen?: boolean;
+  max?: boolean;
   padding?: CardPadding;
   border?: CardBorder;
 }
@@ -21,6 +21,7 @@ const mapPaddingToClass: Record<CardPadding, string> = {
   "8": "padding_8",
   "16": "padding_16",
   "24": "padding_24",
+  "32": "padding_32",
 };
 const mapBorderToClass: Record<CardBorder, string> = {
   round: "border_round",
@@ -32,7 +33,7 @@ export const Card = memo(
     className,
     children,
     variant = "default",
-    fullscreen,
+    max,
     padding = "8",
     border = "round",
     ...otherProps
@@ -45,7 +46,7 @@ export const Card = memo(
         className={cx(
           cls.card,
           {
-            [cls.fullscreen]: fullscreen,
+            [cls.max]: max,
           },
           [className, cls[variant], cls[paddingClass], cls[borderClass]]
         )}
