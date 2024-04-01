@@ -1,6 +1,6 @@
 import { HTMLAttributes, ReactNode, memo } from "react";
 import cls from "./Card.module.scss";
-import { cx } from "../../../lib/cx";
+import { cx } from "@/shared/lib/cx";
 
 export type CardVariant = "default" | "outlined" | "light";
 export type CardBorder = "default" | "round";

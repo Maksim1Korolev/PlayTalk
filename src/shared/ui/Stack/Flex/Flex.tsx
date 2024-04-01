@@ -1,8 +1,7 @@
 import { DetailedHTMLProps, HTMLAttributes, ReactNode, memo } from "react";
 
-import { Mods, cx } from "../../../lib/cx";
-
 import cls from "./Flex.module.scss";
+import { Mods, cx } from "@/shared/lib/cx";
 
 export type FlexJustify = "start" | "center" | "end" | "between";
 export type FlexWrap = "nowrap" | "wrap";

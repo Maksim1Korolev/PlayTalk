@@ -1,13 +1,6 @@
 import { useState } from "react";
-import { cx } from "../../../shared/lib/cx";
-import {
-  Card,
-  HStack,
-  UiButton,
-  UiInput,
-  UiText,
-  VStack,
-} from "../../../shared/ui";
+import { cx } from "@/shared/lib/cx";
+import { Card, HStack, UiButton, UiInput, UiText, VStack } from "@/shared/ui";
 import cls from "./Chat.module.scss";
 
 export interface MessageHistory {

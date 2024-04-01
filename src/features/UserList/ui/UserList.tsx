@@ -1,7 +1,6 @@
 import { memo } from "react";
-import { User, UserCard } from "../../../entities/User";
+import { User, UserCard } from "@/entities/User";
 import cls from "./UserList.module.scss";
-import { useCookies } from "react-cookie";
 
 interface UserListProps {
   className?: string;
