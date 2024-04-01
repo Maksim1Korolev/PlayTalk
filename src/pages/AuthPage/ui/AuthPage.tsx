@@ -15,7 +15,7 @@ import {
 import { apiService } from "../api/apiAuthService";
 import { cx } from "@/shared/lib/cx";
 
-import resources from "@/public/resources/AuthPageResources.json";
+import resources from "@/shared/assets/locales/en/AuthPageResources.json";
 
 interface AuthPageProps {
   className?: string;
