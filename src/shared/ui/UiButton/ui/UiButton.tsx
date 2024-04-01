@@ -1,4 +1,4 @@
-import { cx } from "@/shared/lib/cx";
+import { Mods, cx } from "@/shared/lib/cx";
 import cls from "./UiButton.module.scss";
 import { ButtonHTMLAttributes } from "react";
 
@@ -10,16 +10,25 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   variant?: ButtonVariant;
   color?: ButtonColor;
+  textIsUnderlined?: boolean;
 }
 export const UiButton = ({
   className,
   variant = "outlined",
   color = "default",
+  textIsUnderlined,
   ...otherProps
 }: ButtonProps) => {
+  const buttonMods: Mods = {
+    [cls.textIsUnderlined]: textIsUnderlined,
+  };
   return (
     <button
-      className={cx(cls.Button, {}, [className, cls[variant], cls[color]])}
+      className={cx(cls.Button, buttonMods, [
+        className,
+        cls[variant],
+        cls[color],
+      ])}
       {...otherProps}
     />
   );
