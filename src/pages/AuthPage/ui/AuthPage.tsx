@@ -15,13 +15,13 @@ import {
 import { apiService } from "../api/apiAuthService";
 import { cx } from "@/shared/lib/cx";
 
-import resources from "@/shared/assets/locales/en/AuthPageResources.json";
+import resources from "@/public/resources/AuthPageResources.json";
 
 interface AuthPageProps {
   className?: string;
 }
 
-export const AuthPage = ({ className }: AuthPageProps) => {
+const AuthPage = ({ className }: AuthPageProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -156,3 +156,5 @@ export const AuthPage = ({ className }: AuthPageProps) => {
     </VStack>
   );
 };
+
+export default AuthPage;

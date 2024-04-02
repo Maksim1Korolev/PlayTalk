@@ -1,1 +1,1 @@
-export { OnlinePage } from './ui/OnlinePage'
+export { OnlinePageAsync as OnlinePage } from "./ui/OnlinePage.async";
