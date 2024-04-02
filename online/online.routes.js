@@ -1,5 +1,5 @@
 import express from 'express'
-import { addToMap, getReceiverSocketId, removeFromMap } from './chat.controller.js'
+import { addToMap, getReceiverSocketId, removeFromMap } from './online.controller.js'
 
 const router = express.Router()
 

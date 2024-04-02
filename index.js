@@ -2,7 +2,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import http from 'http'
-import router from './online/chat.routes.js'
+import router from './online/online.routes.js'
 
 dotenv.config()
 
