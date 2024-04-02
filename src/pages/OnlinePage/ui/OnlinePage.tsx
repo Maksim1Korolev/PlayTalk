@@ -3,12 +3,14 @@ import { useCookies } from "react-cookie";
 import { useQuery } from "react-query";
 import { User } from "@/entities/User";
 import { UserList } from "@/features/UserList";
-import { Loader, UiButton } from "@/shared/ui";
+import { Loader, UiButton, UiText } from "@/shared/ui";
 import { apiService } from "../api/apiUsersService";
 import cls from "./OnlinePage.module.scss";
 import { useNavigate } from "react-router-dom";
 import { ChatModal } from "@/widgets/ChatModal";
 import { useOnlineSocket } from "../hooks/useOnlineSocket";
+
+import resources from "@/public/resources/OnlinePageResources.json";
 
 interface ChatModalStateProps {
   user: User;
@@ -50,7 +52,11 @@ export const OnlinePage = ({ className }: { className?: string }) => {
   }
 
   if (isError && error) {
-    return <div>Error: {error.message}</div>;
+    {
+      isError && error ? (
+        <UiText>{`${resources.errorMessagePrefix} ${error.message}`}</UiText>
+      ) : null;
+    }
   }
   const handleOpenNewChat = (user: User) => {
     const newChatModalProps: ChatModalStateProps = { user };
@@ -60,8 +66,8 @@ export const OnlinePage = ({ className }: { className?: string }) => {
 
   return (
     <div className={`${cls.OnlinePage} ${className || ""}`}>
-      <UiButton onClick={handleLogout}>Logout</UiButton>
-      <h2>Online Users</h2>
+      <UiButton onClick={handleLogout}>{resources.logoutButton}</UiButton>
+      <UiText size="xl">{resources.onlineUsersHeading}</UiText>
       <UserList
         handleUserChatButton={handleOpenNewChat}
         users={upToDateUsers}
