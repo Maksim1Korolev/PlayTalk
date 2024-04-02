@@ -106,17 +106,20 @@ const AuthPage = ({ className }: AuthPageProps) => {
                   {resources.label_username}
                 </UiText>
                 <UiInput
+                  maxLength={15}
                   placeholder={resources.placeholder_username}
                   value={username}
                   onChange={handleUsernameChange}
                   max
                 />
               </VStack>
+
               <VStack max gap="8">
                 <UiText size="l" fontFamily="text">
                   {resources.label_password}
                 </UiText>
                 <UiInput
+                  maxLength={30}
                   placeholder={resources.placeholder_password}
                   type="password"
                   value={password}
@@ -125,12 +128,14 @@ const AuthPage = ({ className }: AuthPageProps) => {
                 />
               </VStack>
             </VStack>
+
             <HStack gap="16">
               <UiText size="m" fontFamily="main">
                 {isSignUp
                   ? resources.action_already_have_account
                   : resources.action_dont_have_account}
               </UiText>
+
               <UiButton
                 variant="clear"
                 color="blue"
