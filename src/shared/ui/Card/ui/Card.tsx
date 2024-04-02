@@ -5,7 +5,7 @@ import { cx } from "@/shared/lib/cx";
 export type CardVariant = "default" | "outlined" | "light";
 export type CardBorder = "default" | "round";
 
-export type CardPadding = "0" | "8" | "16" | "24" | "32";
+export type CardPadding = "0" | "8" | "16" | "24" | "32" | "45" | "60";
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -22,6 +22,8 @@ const mapPaddingToClass: Record<CardPadding, string> = {
   "16": "padding_16",
   "24": "padding_24",
   "32": "padding_32",
+  "45": "padding_45",
+  "60": "padding_60",
 };
 const mapBorderToClass: Record<CardBorder, string> = {
   round: "border_round",
