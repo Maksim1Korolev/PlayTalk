@@ -11,16 +11,19 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   color?: ButtonColor;
   textIsUnderlined?: boolean;
+  max?: boolean;
 }
 export const UiButton = ({
   className,
   variant = "outlined",
   color = "default",
   textIsUnderlined,
+  max = false,
   ...otherProps
 }: ButtonProps) => {
   const buttonMods: Mods = {
     [cls.textIsUnderlined]: textIsUnderlined,
+    [cls.max]: max,
   };
   return (
     <button

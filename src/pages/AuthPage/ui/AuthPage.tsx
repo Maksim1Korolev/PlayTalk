@@ -83,50 +83,68 @@ export const AuthPage = ({ className }: AuthPageProps) => {
 
   return (
     <VStack className={cx(cls.AuthPage)} max align="center" justify="center">
-      <Card max className={cls.card} variant="outlined" padding="32">
-        <VStack gap="32">
+      <Card
+        max
+        className={cls.card}
+        variant="default"
+        padding="60"
+        border="default"
+      >
+        <VStack gap="60" max>
           <VStack gap="8" max>
-            <UiText size="l" bold>
+            <UiText size="l" bold fontFamily="main">
               {isSignUp ? resources.title_sign_up : resources.title_login}
             </UiText>
-            <UiText size="m" dimmed>
+            <UiText size="m" dimmed fontFamily="main">
               {isSignUp ? resources.subtitle_sign_up : resources.subtitle_login}
             </UiText>
           </VStack>
-          <VStack gap="24" align="center" max>
-            <UiInput
-              placeholder={resources.placeholder_username}
-              value={username}
-              label={resources.label_username}
-              onChange={handleUsernameChange}
-              max
-            />
-
-            <UiInput
-              placeholder={resources.placeholder_password}
-              label={resources.label_password}
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              max
-            />
-
+          <VStack gap="45" align="center" max>
+            <VStack gap="24" max>
+              <VStack max gap="8">
+                <UiText size="l" fontFamily="text">
+                  {resources.label_username}
+                </UiText>
+                <UiInput
+                  placeholder={resources.placeholder_username}
+                  value={username}
+                  onChange={handleUsernameChange}
+                  max
+                />
+              </VStack>
+              <VStack max gap="8">
+                <UiText size="l" fontFamily="text">
+                  {resources.label_password}
+                </UiText>
+                <UiInput
+                  placeholder={resources.placeholder_password}
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  max
+                />
+              </VStack>
+            </VStack>
             <HStack gap="16">
-              {isSignUp ? (
-                <div>{resources.action_already_have_account}</div>
-              ) : (
-                <div>{resources.action_dont_have_account}</div>
-              )}
+              <UiText size="m" fontFamily="main">
+                {isSignUp
+                  ? resources.action_already_have_account
+                  : resources.action_dont_have_account}
+              </UiText>
               <UiButton
                 variant="clear"
                 color="blue"
                 onClick={toggleAuthMode}
                 textIsUnderlined
               >
-                {isSignUp ? resources.button_sign_in : resources.button_sign_up}
+                <UiText size="m" fontFamily="main">
+                  {isSignUp
+                    ? resources.button_sign_in
+                    : resources.button_sign_up}
+                </UiText>
               </UiButton>
             </HStack>
-            <UiButton variant="filled" onClick={handleAuthAction}>
+            <UiButton max variant="filled" onClick={handleAuthAction}>
               {isSignUp ? resources.button_sign_up : resources.button_sign_in}
             </UiButton>
             {(signInMutation.isLoading || signUpMutation.isLoading) && (

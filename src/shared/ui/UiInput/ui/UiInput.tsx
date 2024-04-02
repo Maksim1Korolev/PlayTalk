@@ -1,6 +1,7 @@
 import { ChangeEvent, InputHTMLAttributes } from "react";
 import cls from "./UiInput.module.scss";
 import { UiText, VStack } from "../..";
+import { cx } from "@/shared/lib/cx";
 
 type HTMLInputProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -10,7 +11,6 @@ interface InputProps extends HTMLInputProps {
   className?: string;
   value?: string | number;
   placeholder?: string;
-  label?: string;
   max?: boolean;
   onChange?: (value: string) => void;
 }
@@ -18,7 +18,6 @@ export const UiInput = ({
   className,
   value,
   placeholder,
-  label,
   max,
   onChange,
   ...otherProps
@@ -29,10 +28,9 @@ export const UiInput = ({
 
   return (
     <VStack align="start" gap="8" max={max}>
-      {label && <UiText>{label}</UiText>}
       <input
         value={value}
-        className={`${cls.Input} ${className}`}
+        className={cx(cls.Input, {}, [className])}
         placeholder={placeholder}
         onChange={onChangeHandler}
         {...otherProps}
