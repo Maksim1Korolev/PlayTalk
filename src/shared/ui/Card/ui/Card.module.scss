@@ -7,8 +7,8 @@
 }
 
 // variants
-.normal {
-  background: var(--dark-bg-redesigned);
+.default {
+  background: var(--card-bg);
 }
 
 .light {
@@ -24,28 +24,29 @@
 .padding_0 {
   padding: 0;
 }
-
 .padding_8 {
   padding: 8px;
 }
-
 .padding_16 {
   padding: 16px;
 }
-
 .padding_24 {
   padding: 24px;
 }
-
 .padding_32 {
   padding: 32px;
+}
+.padding_45 {
+  padding: 45px;
+}
+.padding_60 {
+  padding: 60px;
 }
 
 // border
 .border_round {
   border-radius: 40px;
 }
-
-.border_normal {
+.border_default {
   border-radius: 12px;
 }
