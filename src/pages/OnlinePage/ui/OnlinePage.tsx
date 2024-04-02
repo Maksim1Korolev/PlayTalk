@@ -1,16 +1,17 @@
-import { useState } from "react";
-import { useCookies } from "react-cookie";
-import { useQuery } from "react-query";
-import { User } from "@/entities/User";
-import { UserList } from "@/features/UserList";
-import { Loader, UiButton, UiText } from "@/shared/ui";
-import { apiService } from "../api/apiUsersService";
-import cls from "./OnlinePage.module.scss";
-import { useNavigate } from "react-router-dom";
-import { ChatModal } from "@/widgets/ChatModal";
-import { useOnlineSocket } from "../hooks/useOnlineSocket";
+
 
 import resources from "@/public/resources/OnlinePageResources.json";
+import { User } from '@/entities/User'
+import { UserList } from '@/features/UserList'
+import { Loader, UiButton, UiText } from '@/shared/ui'
+import { ChatModal } from '@/widgets/ChatModal'
+import { useState } from 'react'
+import { useCookies } from 'react-cookie'
+import { useQuery } from 'react-query'
+import { useNavigate } from 'react-router-dom'
+import { apiService } from '../api/apiUsersService'
+import { useOnlineSocket } from '../hooks/useOnlineSocket'
+import cls from './OnlinePage.module.scss'
 
 interface ChatModalStateProps {
   user: User;
@@ -37,7 +38,13 @@ const OnlinePage = ({ className }: { className?: string }) => {
       },
     }
   );
-  const { onlineUsernames, setUsersOnline, upToDateUsers } = useOnlineSocket({
+  const {
+    onlineUsernames,
+    setUsersOnline,
+    upToDateUsers,
+    handleUserMessage,
+    receiveMessageSubscribe,
+  } = useOnlineSocket({
     username: currentUser.username,
     data,
   });
@@ -76,8 +83,9 @@ const OnlinePage = ({ className }: { className?: string }) => {
         return (
           <ChatModal
             key={user._id}
-            currentUser={currentUser}
             receiverUser={user}
+            receiveMessageSubscribe={receiveMessageSubscribe}
+            handleUserSend={handleUserMessage}
           />
         );
       })}

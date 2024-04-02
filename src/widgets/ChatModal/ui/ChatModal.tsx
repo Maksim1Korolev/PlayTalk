@@ -1,61 +1,55 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from 'react'
 
-import { User } from "@/entities/User";
-import { Chat } from "@/features/Chat";
-import { cx } from "@/shared/lib/cx";
-import { useChatSocket } from "../hooks/useChatSocket";
-import cls from "./ChatModal.module.scss";
-import { MessageHistory } from "@/features/Chat/ui/Chat";
+import { User } from '@/entities/User'
+import { Chat } from '@/features/Chat'
+import { MessageHistory } from '@/features/Chat/ui/Chat'
+import { cx } from '@/shared/lib/cx'
+import cls from './ChatModal.module.scss'
 
 export const ChatModal = memo(
-  ({
-    className,
-    currentUser,
-    receiverUser,
-  }: {
-    className?: string;
-    currentUser: User;
-    receiverUser: User;
-  }) => {
-    const [messageHistory, setMessageHistory] = useState<MessageHistory[]>();
+	({
+		className,
+		receiverUser,
+		receiveMessageSubscribe,
+		handleUserSend,
+	}: {
+		className?: string
 
-    const AddMessageToHistory = (username: string, message: string) => {
-      const newMessage: MessageHistory = {
-        message: message,
-        date: new Date(),
-        username: username,
-      };
-      setMessageHistory((prev) => [...(prev || []), newMessage]);
-    };
+		receiverUser: User
+		receiveMessageSubscribe: (senderUsername: string, callback: (message: string) => void) => void
+		handleUserSend: (receiverUsername: string, message: string) => void
+	}) => {
+		const [messageHistory, setMessageHistory] = useState<MessageHistory[]>()
+		// Assume useOnlineSocket hook has been updated to include necessary information
 
-    const onMessageReceived = ({
-      senderUsername,
-      message,
-    }: {
-      senderUsername: string;
-      message: string;
-    }) => {
-      AddMessageToHistory(receiverUser.username, message);
-    };
+		useEffect(() => {
+			// Setup subscription when the component mounts
+			const unsubscribe = receiveMessageSubscribe(receiverUser.username, (message: string) => {
+				// Assuming message format needs to be adjusted or used directly
+				AddMessageToHistory(receiverUser.username, message)
+			})
 
-    const handleCurrentUserSend = (message: string) => {
-      AddMessageToHistory(currentUser.username, message);
-      handleUserMessage(message);
-    };
+			// Cleanup subscription when the component unmounts
+			return unsubscribe
+		}, [receiverUser.username])
 
-    const { handleUserMessage } = useChatSocket({
-      currentUsername: currentUser.username,
-      receiverUsername: receiverUser.username,
-      printMessage: onMessageReceived,
-    });
+		const AddMessageToHistory = (username: string, message: string) => {
+			const newMessage: MessageHistory = {
+				message: message,
+				date: new Date(),
+				username: username,
+			}
+			setMessageHistory(prev => [...(prev || []), newMessage])
+		}
 
-    return (
-      <div className={cx(cls.ChatModal, {}, [className])}>
-        <Chat
-          messageHistory={messageHistory}
-          handleSendMessage={handleCurrentUserSend}
-        />
-      </div>
-    );
-  }
-);
+		const onUserSend = (message: string) => {
+			handleUserSend(receiverUser.username, message)
+		}
+
+		return (
+			<div className={cx(cls.ChatModal, {}, [className])}>
+				<Chat messageHistory={messageHistory} handleSendMessage={onUserSend} />
+			</div>
+		)
+	}
+)
