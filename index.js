@@ -59,6 +59,7 @@ io.on("connection", (socket) => {
     );
   });
 
+<<<<<<< Updated upstream
   socket.on("disconnect", () => {
     if (savedUsername) {
       onlineUsers.delete(savedUsername);
@@ -67,6 +68,19 @@ io.on("connection", (socket) => {
         onlineUsers
       );
       socket.broadcast.emit("user-connection", savedUsername, false);
+=======
+			if (receiverSocketId) {
+				io.to(receiverSocketId).emit(`receive-message-${senderUsername}`, {
+					message,
+				})
+			}
+			//else {
+			//	console.log(`Receiver ${receiverUsername} is not available.`)
+			//	socket.emit('receiver-not-available', `${receiverUsername} is not available.`)
+			//}
+		})
+	})
+>>>>>>> Stashed changes
 
       axios.delete(`${process.env.CHAT_SERVER_URL}/${socket.id}`);
     }
