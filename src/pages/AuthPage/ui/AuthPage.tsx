@@ -21,7 +21,7 @@ interface AuthPageProps {
   className?: string;
 }
 
-export const AuthPage = ({ className }: AuthPageProps) => {
+const AuthPage = ({ className }: AuthPageProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -156,3 +156,5 @@ export const AuthPage = ({ className }: AuthPageProps) => {
     </VStack>
   );
 };
+
+export default AuthPage;

@@ -1,8 +1,9 @@
-import { memo } from "react";
+import { Suspense, memo } from "react";
 import { Route, Routes } from "react-router-dom";
-import { AuthPage } from "../../../../pages/AuthPage/ui/AuthPage";
-import { OnlinePage } from "../../../../pages/OnlinePage";
+import { AuthPage } from "@/pages/AuthPage";
+import { OnlinePage } from "@/pages/OnlinePage";
 import { RequireAuth } from "./RequireAuth";
+import { Loader } from "@/shared/ui";
 
 const AppRouter = () => {
   return (
@@ -11,11 +12,20 @@ const AppRouter = () => {
         path="/"
         element={
           <RequireAuth>
-            <OnlinePage />
+            <Suspense fallback={<Loader />}>
+              <OnlinePage />
+            </Suspense>
           </RequireAuth>
         }
       />
-      <Route path="/auth" element={<AuthPage />} />
+      <Route
+        path="/auth"
+        element={
+          <Suspense fallback={<Loader />}>
+            <AuthPage />
+          </Suspense>
+        }
+      />
     </Routes>
   );
 };

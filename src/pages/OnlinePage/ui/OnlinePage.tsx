@@ -16,7 +16,7 @@ interface ChatModalStateProps {
   user: User;
 }
 
-export const OnlinePage = ({ className }: { className?: string }) => {
+const OnlinePage = ({ className }: { className?: string }) => {
   const [cookies, , removeCookie] = useCookies(["jwt-cookie"]);
   const token = cookies["jwt-cookie"]?.token;
   const currentUser = cookies["jwt-cookie"]?.user;
@@ -84,3 +84,5 @@ export const OnlinePage = ({ className }: { className?: string }) => {
     </div>
   );
 };
+
+export default OnlinePage;

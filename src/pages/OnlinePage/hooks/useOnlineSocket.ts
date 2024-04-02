@@ -24,7 +24,7 @@ export const useOnlineSocket = ({
 
       setUpToDateUsers(updatedUsers);
     },
-    [onlineUsernames, upToDateUsers]
+    [upToDateUsers]
   );
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export const useOnlineSocket = ({
 
     const updateOnlineUsers = (usernames: string[]) => {
       setOnlineUsernames(usernames);
-      if (!data) setUsersOnline(usernames, data);
+      setUsersOnline(usernames, data);
     };
 
     const updateUserOnline = (username: string, isOnline: boolean) => {
@@ -47,28 +47,21 @@ export const useOnlineSocket = ({
       });
       setUpToDateUsers((prevUsers) => {
         if (!prevUsers) return [];
-
-        prevUsers.reduce;
-
-        return prevUsers?.map((user) => {
-          if (user.username == username) {
-            return { ...user, isOnline };
-          }
-          return user;
-        });
+        return prevUsers.map((user) => ({
+          ...user,
+          isOnline: user.username === username ? isOnline : user.isOnline,
+        }));
       });
     };
 
-    /////////////////////////////////////////////////////
     onlineSocket.on("connect", onConnect);
     onlineSocket.on("online-users", updateOnlineUsers);
     onlineSocket.on("user-connection", updateUserOnline);
-    /////////////////////////////////////////////////////
 
     return () => {
-      onlineSocket.close();
+      onlineSocket.disconnect();
     };
-  }, []);
+  }, [username, data, setUsersOnline]);
 
   return {
     setUsersOnline,
