@@ -1,10 +1,16 @@
 .Input {
-  border: 1px solid #767676;
+  border: 1px solid var(--input-border);
   border-radius: 5px;
-  background-color: #424243;
-  color: #fff;
+  background-color: var(--input-bg);
+  color: var(--text-redesigned);
   font-size: 16px;
   display: block;
   width: 100%;
   padding: 8px 12px;
+  outline: none;
+
+  &:hover,
+  &:focus {
+    border: 1px solid var(--primary-color);
+  }
 }
