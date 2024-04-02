@@ -80,20 +80,14 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
-  const __dirname = path.resolve();
-
+  
+  // const __dirname = path.resolve();
   //app.use('/uploads', express.static(path.join(__dirname, '/uploads/')))
 }
 
 app.listen(
   PORT,
-  console.log(
-    `server running in ${process.env.NODE_ENV} mode on port ${PORT}`.blue.bold
-  )
+  console.log(`server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
 );
 
 main();
-
-server.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
-});
