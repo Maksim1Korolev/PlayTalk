@@ -1,55 +1,66 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from "react";
 
-import { User } from '@/entities/User'
-import { Chat } from '@/features/Chat'
-import { MessageHistory } from '@/features/Chat/ui/Chat'
-import { cx } from '@/shared/lib/cx'
-import cls from './ChatModal.module.scss'
+import { User } from "@/entities/User";
+import { Chat } from "@/features/Chat";
+import { MessageHistory } from "@/features/Chat/ui/Chat";
+import { cx } from "@/shared/lib/cx";
+import cls from "./ChatModal.module.scss";
+import { useReceiveMessage } from "@/pages/OnlinePage/hooks/useOnlineSocket";
 
 export const ChatModal = memo(
-	({
-		className,
-		receiverUser,
-		receiveMessageSubscribe,
-		handleUserSend,
-	}: {
-		className?: string
+  ({
+    className,
+    receiverUser,
 
-		receiverUser: User
-		receiveMessageSubscribe: (senderUsername: string, callback: (message: string) => void) => void
-		handleUserSend: (receiverUsername: string, message: string) => void
-	}) => {
-		const [messageHistory, setMessageHistory] = useState<MessageHistory[]>()
-		// Assume useOnlineSocket hook has been updated to include necessary information
+    handleUserSend,
+  }: {
+    className?: string;
 
-		useEffect(() => {
-			// Setup subscription when the component mounts
-			const unsubscribe = receiveMessageSubscribe(receiverUser.username, (message: string) => {
-				// Assuming message format needs to be adjusted or used directly
-				AddMessageToHistory(receiverUser.username, message)
-			})
+    receiverUser: User;
 
-			// Cleanup subscription when the component unmounts
-			return unsubscribe
-		}, [receiverUser.username])
+    handleUserSend: (receiverUsername: string, message: string) => void;
+  }) => {
+    const [messageHistory, setMessageHistory] = useState<MessageHistory[]>();
 
-		const AddMessageToHistory = (username: string, message: string) => {
-			const newMessage: MessageHistory = {
-				message: message,
-				date: new Date(),
-				username: username,
-			}
-			setMessageHistory(prev => [...(prev || []), newMessage])
-		}
+    const receiveMessageSubscribe = useCallback(
+      ({
+        senderUsername,
+        message,
+      }: {
+        senderUsername: string;
+        message: string;
+      }) => {
+        console.log(senderUsername);
 
-		const onUserSend = (message: string) => {
-			handleUserSend(receiverUser.username, message)
-		}
+        if (senderUsername === receiverUser.username)
+          AddMessageToHistory(senderUsername, message);
+      },
+      []
+    );
+    useEffect(() => {
+      const disconnect = useReceiveMessage(receiveMessageSubscribe);
+      return () => {
+        disconnect();
+      };
+    });
 
-		return (
-			<div className={cx(cls.ChatModal, {}, [className])}>
-				<Chat messageHistory={messageHistory} handleSendMessage={onUserSend} />
-			</div>
-		)
-	}
-)
+    const AddMessageToHistory = (username: string, message: string) => {
+      const newMessage: MessageHistory = {
+        message: message,
+        date: new Date(),
+        username: username,
+      };
+      setMessageHistory((prev) => [...(prev || []), newMessage]);
+    };
+
+    const onUserSend = (message: string) => {
+      handleUserSend(receiverUser.username, message);
+    };
+
+    return (
+      <div className={cx(cls.ChatModal, {}, [className])}>
+        <Chat messageHistory={messageHistory} handleSendMessage={onUserSend} />
+      </div>
+    );
+  }
+);

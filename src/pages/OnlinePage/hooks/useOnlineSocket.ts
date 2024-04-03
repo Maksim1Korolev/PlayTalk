@@ -1,35 +1,44 @@
-import { User } from '@/entities/User'
-import { onlineSocket } from '@/shared/api/sockets'
-import { useCallback, useEffect, useState } from 'react'
+import { User } from "@/entities/User";
+import { onlineSocket } from "@/shared/api/sockets";
+import { useCallback, useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
-export const useOnlineSocket = ({ username, data }: { username: string; data?: User[] }) => {
-	const [onlineUsernames, setOnlineUsernames] = useState<string[]>([])
-	const [upToDateUsers, setUpToDateUsers] = useState<User[]>()
+export const useOnlineSocket = ({
+  username,
+  data,
+}: {
+  username: string;
+  data?: User[];
+}) => {
+  const [onlineUsernames, setOnlineUsernames] = useState<string[]>([]);
+  const [upToDateUsers, setUpToDateUsers] = useState<User[]>();
+  const [cookies] = useCookies();
+  const { user }: { user: User } = cookies["jwt-cookie"];
 
-	const setUsersOnline = useCallback(
-		(usernames: string[], fetchedUsers?: User[]) => {
-			const usersToUpdate = fetchedUsers || upToDateUsers
-			if (!usersToUpdate) return
+  const setUsersOnline = useCallback(
+    (usernames: string[], fetchedUsers?: User[]) => {
+      const usersToUpdate = fetchedUsers || upToDateUsers;
+      if (!usersToUpdate) return;
 
-			const updatedUsers = usersToUpdate.map((user: User) => ({
-				...user,
-				isOnline: usernames.includes(user.username),
-			}))
+      const updatedUsers = usersToUpdate.map((user: User) => ({
+        ...user,
+        isOnline: usernames.includes(user.username),
+      }));
 
-			setUpToDateUsers(updatedUsers)
-		},
-		[upToDateUsers]
-	)
+      setUpToDateUsers(updatedUsers);
+    },
+    [upToDateUsers]
+  );
 
-	useEffect(() => {
-		const onConnect = () => {
-			onlineSocket.emit('online-ping', username)
-		}
+  useEffect(() => {
+    const onConnect = () => {
+      onlineSocket.emit("online-ping", username);
+    };
 
-		const updateOnlineUsers = (usernames: string[]) => {
-			setOnlineUsernames(usernames)
-			if (!data) setUsersOnline(usernames, data)
-		}
+    const updateOnlineUsers = (usernames: string[]) => {
+      setOnlineUsernames(usernames);
+      if (!data) setUsersOnline(usernames, data);
+    };
 
     const updateUserOnline = (username: string, isOnline: boolean) => {
       setOnlineUsernames((prev) => {
@@ -59,37 +68,61 @@ export const useOnlineSocket = ({ username, data }: { username: string; data?: U
     onlineSocket.on("user-connection", updateUserOnline);
     /////////////////////////////////////////////////////
 
-		return () => {
-			onlineSocket.close()
-		}
-	}, [])
+    return () => {
+      onlineSocket.close();
+    };
+  }, []);
 
-	const handleUserMessage = (receiverUsername: string, message: string) => {
-		onlineSocket.emit('send-message', {
-			receiverUsername,
-			message,
-		})
-	}
+  const handleUserMessage = (receiverUsername: string, message: string) => {
+    onlineSocket.emit("send-message", {
+      senderUsername: user.username,
+      receiverUsername,
+      message,
+    });
+  };
 
-	const receiveMessageSubscribe = (senderUsername: string, callback: (message: string) => void) => {
-		const eventName = `receive-message-${senderUsername}`
+  const receiveMessageSubscribe = (
+    senderUsername: string,
+    callback: (message: string) => void
+  ) => {
+    const eventName = `receive-message-${senderUsername}`;
 
-		const getMessage = (message: string) => {
-			callback(message)
-		}
+    console.log(eventName);
 
-		onlineSocket.on(eventName, getMessage)
+    const getMessage = (message: string) => {
+      console.log(message);
 
-		// Return a cleanup function to unsubscribe from the event
-		return () => {
-			onlineSocket.off(eventName, getMessage)
-		}
-	}
-	return {
-		setUsersOnline,
-		handleUserMessage,
-		onlineUsernames,
-		upToDateUsers,
-		receiveMessageSubscribe,
-	}
-}
+      callback(message);
+    };
+
+    onlineSocket.on(eventName, getMessage);
+
+    // Return a cleanup function to unsubscribe from the event
+    return () => {
+      //   onlineSocket.off(eventName, getMessage);
+    };
+  };
+  return {
+    setUsersOnline,
+    handleUserMessage,
+    onlineUsernames,
+    upToDateUsers,
+    receiveMessageSubscribe,
+  };
+};
+
+export const useReceiveMessage = (
+  receiveMessage: ({
+    senderUsername,
+    message,
+  }: {
+    senderUsername: string;
+    message: string;
+  }) => void
+) => {
+  onlineSocket.on("receive-message", receiveMessage);
+
+  return () => {
+    onlineSocket.off("receive-message");
+  };
+};

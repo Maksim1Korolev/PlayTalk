@@ -1,17 +1,15 @@
-
-
 import resources from "@/public/resources/OnlinePageResources.json";
-import { User } from '@/entities/User'
-import { UserList } from '@/features/UserList'
-import { Loader, UiButton, UiText} from '@/shared/ui'
-import { ChatModal } from '@/widgets/ChatModal'
-import { useState } from 'react'
-import { useCookies } from 'react-cookie'
-import { useQuery } from 'react-query'
-import { useNavigate } from 'react-router-dom'
-import { apiService } from '../api/apiUsersService'
-import { useOnlineSocket } from '../hooks/useOnlineSocket'
-import cls from './OnlinePage.module.scss'
+import { User } from "@/entities/User";
+import { UserList } from "@/features/UserList";
+import { Loader, UiButton, UiText } from "@/shared/ui";
+import { ChatModal } from "@/widgets/ChatModal";
+import { useCallback, useState } from "react";
+import { useCookies } from "react-cookie";
+import { useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { apiService } from "../api/apiUsersService";
+import { useOnlineSocket, useReceiveMessage } from "../hooks/useOnlineSocket";
+import cls from "./OnlinePage.module.scss";
 
 interface ChatModalStateProps {
   user: User;
@@ -38,15 +36,23 @@ const OnlinePage = ({ className }: { className?: string }) => {
       },
     }
   );
+
+  const onMessageReceived = (senderUsername: string, message: string) => {
+    chatModals?.map(({ user }) => {
+      if (user.username === senderUsername) {
+      }
+    });
+  };
+
   const {
     onlineUsernames,
     setUsersOnline,
     upToDateUsers,
     handleUserMessage,
-    receiveMessageSubscribe,
   } = useOnlineSocket({
     username: currentUser.username,
     data,
+    onMessageReceived,
   });
 
   const handleLogout = () => {
@@ -65,6 +71,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
       ) : null;
     }
   }
+
   const handleOpenNewChat = (user: User) => {
     const newChatModalProps: ChatModalStateProps = { user };
 
@@ -84,7 +91,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
           <ChatModal
             key={user._id}
             receiverUser={user}
-            receiveMessageSubscribe={receiveMessageSubscribe}
             handleUserSend={handleUserMessage}
           />
         );
