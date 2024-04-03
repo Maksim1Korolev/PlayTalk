@@ -3,12 +3,12 @@ import { User } from "@/entities/User";
 import { UserList } from "@/features/UserList";
 import { Loader, UiButton, UiText } from "@/shared/ui";
 import { ChatModal } from "@/widgets/ChatModal";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { apiService } from "../api/apiUsersService";
-import { useOnlineSocket, useReceiveMessage } from "../hooks/useOnlineSocket";
+import { useOnlineSocket } from "../hooks/useOnlineSocket";
 import cls from "./OnlinePage.module.scss";
 
 interface ChatModalStateProps {
@@ -37,23 +37,11 @@ const OnlinePage = ({ className }: { className?: string }) => {
     }
   );
 
-  const onMessageReceived = (senderUsername: string, message: string) => {
-    chatModals?.map(({ user }) => {
-      if (user.username === senderUsername) {
-      }
+  const { onlineUsernames, setUsersOnline, upToDateUsers, handleUserMessage } =
+    useOnlineSocket({
+      username: currentUser.username,
+      data,
     });
-  };
-
-  const {
-    onlineUsernames,
-    setUsersOnline,
-    upToDateUsers,
-    handleUserMessage,
-  } = useOnlineSocket({
-    username: currentUser.username,
-    data,
-    onMessageReceived,
-  });
 
   const handleLogout = () => {
     removeCookie("jwt-cookie");
