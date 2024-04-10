@@ -1,0 +1,66 @@
+.Button {
+  cursor: pointer;
+  color: var(--text-redesigned);
+  border-radius: 25%;
+  display: flex;
+  align-items: center;
+  display: flex;
+  padding: 15px 35px;
+  justify-content: center;
+  align-items: center;
+  flex: 0 auto;
+
+  &:hover {
+    box-shadow: 0 0 30px 0 rgba(113, 77, 197, 0.32);
+  }
+}
+
+.clear {
+  padding: 0;
+  border: none;
+  background: none;
+  outline: none;
+
+  &.blue {
+    color: var(--highlight);
+  }
+
+  &:hover {
+    opacity: (0.9);
+  }
+}
+
+.outlined {
+  background: none;
+  font-weight: 700;
+  padding: 10px 15px;
+  border-radius: 34px;
+
+  &:hover {
+    border: 2px solid var(--accent-redesign);
+    color: var(--highlight);
+  }
+}
+
+.filled {
+  border: 1px solid var(--primary-color);
+  border-radius: 10px 20px;
+  transition: transform 200ms ease;
+  font-family: Satoshi, sans-serif;
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+
+  &.default {
+    background: var(--accent-redesigned);
+  }
+}
+
+.textIsUnderlined {
+  text-decoration: underline;
+}
+
+.max {
+  width: 100%;
+}

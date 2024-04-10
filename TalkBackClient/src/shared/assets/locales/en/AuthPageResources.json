@@ -1,0 +1,14 @@
+{
+  "label_username": "Username",
+  "label_password": "Password",
+  "placeholder_username": "Enter your username",
+  "placeholder_password": "••••••••",
+  "button_sign_in": "Sign In",
+  "button_sign_up": "Sign Up",
+  "title_login": "Log in to your account",
+  "subtitle_login": "Welcome back! Please enter your details.",
+  "title_sign_up": "Create a new account",
+  "subtitle_sign_up": "Join us! Please fill in your details.",
+  "action_already_have_account": "Already have an account?",
+  "action_dont_have_account": "Don't have an account?"
+}
