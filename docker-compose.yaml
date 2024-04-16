@@ -1,0 +1,32 @@
+services:
+  auth_server:
+    build: ./TalkBackAuthServer
+    ports:
+      - "5000:5000"
+    networks:
+      - talkback-network
+
+  chat_server:
+    build: ./TalkBackChatServer
+    ports:
+      - "4100:4100"
+    networks:
+      - talkback-network
+
+  online_server:
+    build: ./TalkBackOnlineServer
+    ports:
+      - "4000:4000"
+    networks:
+      - talkback-network
+
+  client:
+    build: ./TalkBack/TalkBackClient
+    ports:
+      - "5173:5173"
+    networks:
+      - talkback-network
+
+networks:
+  talkback-network:
+    driver: bridge
