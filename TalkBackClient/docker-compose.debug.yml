@@ -1,7 +1,7 @@
 version: "3.4"
 
 services:
-  talkbackclientreact:
+  talkbackclient:
     image: talkbackclient
     build:
       context: .
