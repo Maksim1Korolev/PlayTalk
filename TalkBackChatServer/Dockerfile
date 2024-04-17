@@ -4,6 +4,8 @@ FROM node:16-alpine
 # Create and set app directory
 WORKDIR /usr/src/app
 
+ENV PORT=4100
+
 # Install app dependencies by copying package.json and package-lock.json
 COPY package*.json ./
 
