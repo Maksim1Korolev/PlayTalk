@@ -18,6 +18,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
 	const [password, setPassword] = useState('')
 	const [isAuthenticated, setIsAuthenticated] = useState(false)
 	const [isSignUp, setIsSignUp] = useState(false)
+	const [error, setError] = useState<string>()
 	const navigate = useNavigate()
 	const [, setCookie] = useCookies(['jwt-cookie'])
 
@@ -33,8 +34,8 @@ const AuthPage = ({ className }: AuthPageProps) => {
 			setCookie('jwt-cookie', data, { path: '/' })
 			setIsAuthenticated(true)
 		},
-		onError: error => {
-			console.error(error)
+		onError: (error: string) => {
+			setError(error)
 		},
 	})
 
@@ -43,8 +44,8 @@ const AuthPage = ({ className }: AuthPageProps) => {
 			setCookie('jwt-cookie', data, { path: '/' })
 			setIsAuthenticated(true)
 		},
-		onError: error => {
-			console.error(error)
+		onError: (error: string) => {
+			setError(error)
 		},
 	})
 
@@ -71,6 +72,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
 		<VStack className={cx(cls.AuthPage, {}, [className])} max align="center" justify="center">
 			<Card max className={cls.card} variant="default" padding="60" border="default">
 				<VStack gap="60" max>
+					{error && <UiText>{error}</UiText>}
 					<VStack gap="8" max>
 						<UiText size="l" bold fontFamily="main">
 							{isSignUp ? resources.title_sign_up : resources.title_login}
