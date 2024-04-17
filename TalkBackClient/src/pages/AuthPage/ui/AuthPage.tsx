@@ -44,8 +44,8 @@ const AuthPage = ({ className }: AuthPageProps) => {
         setCookie("jwt-cookie", data, { path: "/" });
         setIsAuthenticated(true);
       },
-      onError: ({ data }) => {
-        setError(data);
+      onError: ({ message }) => {
+        setError(message);
       },
     }
   );
@@ -57,8 +57,8 @@ const AuthPage = ({ className }: AuthPageProps) => {
         setCookie("jwt-cookie", data, { path: "/" });
         setIsAuthenticated(true);
       },
-      onError: ({ data }) => {
-        setError(data);
+      onError: ({ message }) => {
+        setError(message);
       },
     }
   );
@@ -75,44 +75,55 @@ const AuthPage = ({ className }: AuthPageProps) => {
     setIsSignUp(!isSignUp);
   };
 
-	useEffect(() => {
-		if (isAuthenticated) {
-			navigate('/')
-			window.location.reload()
-		}
-	}, [isAuthenticated])
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+      window.location.reload();
+    }
+  }, [isAuthenticated]);
 
-	return (
-		<VStack className={cx(cls.AuthPage, {}, [className])} max align="center" justify="center">
-			<Card max className={cls.card} variant="default" padding="60" border="default">
-				<VStack gap="60" max>
-					<VStack gap="8" max>
-						<UiText size="l" bold fontFamily="main">
-							{isSignUp ? resources.title_sign_up : resources.title_login}
-						</UiText>
-						<UiText size="m" dimmed fontFamily="main">
-							{isSignUp ? resources.subtitle_sign_up : resources.subtitle_login}
-						</UiText>
-						{error && (
-							<UiText className={cls.error} color="error">
-								{error}
-							</UiText>
-						)}
-					</VStack>
-					<VStack gap="45" align="center" max>
-						<VStack gap="24" max>
-							<VStack max gap="8">
-								<UiText size="l" fontFamily="text">
-									{resources.label_username}
-								</UiText>
-								<UiInput
-									maxLength={15}
-									placeholder={resources.placeholder_username}
-									value={username}
-									onChange={handleUsernameChange}
-									max
-								/>
-							</VStack>
+  return (
+    <VStack
+      className={cx(cls.AuthPage, {}, [className])}
+      max
+      align="center"
+      justify="center"
+    >
+      <Card
+        max
+        className={cls.card}
+        variant="default"
+        padding="60"
+        border="default"
+      >
+        <VStack gap="60" max>
+          <VStack gap="8" max>
+            <UiText size="l" bold fontFamily="main">
+              {isSignUp ? resources.title_sign_up : resources.title_login}
+            </UiText>
+            <UiText size="m" dimmed fontFamily="main">
+              {isSignUp ? resources.subtitle_sign_up : resources.subtitle_login}
+            </UiText>
+            {error && (
+              <UiText className={cls.error} color="error">
+                {error}
+              </UiText>
+            )}
+          </VStack>
+          <VStack gap="45" align="center" max>
+            <VStack gap="24" max>
+              <VStack max gap="8">
+                <UiText size="l" fontFamily="text">
+                  {resources.label_username}
+                </UiText>
+                <UiInput
+                  maxLength={15}
+                  placeholder={resources.placeholder_username}
+                  value={username}
+                  onChange={handleUsernameChange}
+                  max
+                />
+              </VStack>
 
               <VStack max gap="8">
                 <UiText size="l" fontFamily="text">
