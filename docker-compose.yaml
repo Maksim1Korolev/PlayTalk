@@ -20,12 +20,12 @@ services:
     networks:
       - talkback-network
 
-  client:
-    build: ./TalkBackClient
-    ports:
-      - "5173:5173"
-    networks:
-      - talkback-network
+  # client:
+  #   build: ./TalkBackClient
+  #   ports:
+  #     - "5173:5173"
+  #   networks:
+  #     - talkback-network
 
 networks:
   talkback-network:
