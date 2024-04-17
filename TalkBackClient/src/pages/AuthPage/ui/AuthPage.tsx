@@ -34,8 +34,8 @@ const AuthPage = ({ className }: AuthPageProps) => {
 			setCookie('jwt-cookie', data, { path: '/' })
 			setIsAuthenticated(true)
 		},
-		onError: (error: string) => {
-			setError(error)
+		onError: ({ data }) => {
+			setError(data)
 		},
 	})
 
@@ -44,8 +44,8 @@ const AuthPage = ({ className }: AuthPageProps) => {
 			setCookie('jwt-cookie', data, { path: '/' })
 			setIsAuthenticated(true)
 		},
-		onError: (error: string) => {
-			setError(error)
+		onError: ({ data }) => {
+			setError(data)
 		},
 	})
 
