@@ -2,7 +2,8 @@ import { memo, useCallback, useEffect, useState } from 'react'
 
 import { User } from '@/entities/User'
 import { Chat } from '@/features/Chat'
-import { MessageHistory } from '@/features/Chat/ui/Chat/Chat'
+
+import { Message } from '@/features/Chat/ui/ChatMessage/ui/ChatMessage'
 import { useReceiveMessage } from '@/pages/OnlinePage/hooks/useOnlineSocket'
 import { cx } from '@/shared/lib/cx'
 import { Card, HStack, UiButton, UiText } from '@/shared/ui'
@@ -23,7 +24,7 @@ export const ChatModal = memo(
 		handleCloseModal: (userId: string) => void
 		handleUserSend: (receiverUsername: string, message: string) => void
 	}) => {
-		const [messageHistory, setMessageHistory] = useState<MessageHistory[]>()
+		const [messageHistory, setMessageHistory] = useState<Message[]>()
 
 		const receiveMessageSubscribe = useCallback(
 			({ senderUsername, message }: { senderUsername: string; message: string }) => {
@@ -41,7 +42,7 @@ export const ChatModal = memo(
 		})
 
 		const AddMessageToHistory = (username: string, message: string) => {
-			const newMessage: MessageHistory = {
+			const newMessage: Message = {
 				message: message,
 				date: new Date(),
 				username: username,
