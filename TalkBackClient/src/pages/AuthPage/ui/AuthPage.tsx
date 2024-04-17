@@ -66,13 +66,12 @@ const AuthPage = ({ className }: AuthPageProps) => {
 			navigate('/')
 			window.location.reload()
 		}
-	}, [isAuthenticated, navigate])
+	}, [isAuthenticated])
 
 	return (
 		<VStack className={cx(cls.AuthPage, {}, [className])} max align="center" justify="center">
 			<Card max className={cls.card} variant="default" padding="60" border="default">
 				<VStack gap="60" max>
-					{error && <UiText>{error}</UiText>}
 					<VStack gap="8" max>
 						<UiText size="l" bold fontFamily="main">
 							{isSignUp ? resources.title_sign_up : resources.title_login}
@@ -80,6 +79,11 @@ const AuthPage = ({ className }: AuthPageProps) => {
 						<UiText size="m" dimmed fontFamily="main">
 							{isSignUp ? resources.subtitle_sign_up : resources.subtitle_login}
 						</UiText>
+						{error && (
+							<UiText className={cls.error} color="error">
+								{error}
+							</UiText>
+						)}
 					</VStack>
 					<VStack gap="45" align="center" max>
 						<VStack gap="24" max>
