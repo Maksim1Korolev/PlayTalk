@@ -44,8 +44,8 @@ const AuthPage = ({ className }: AuthPageProps) => {
         setCookie("jwt-cookie", data, { path: "/" });
         setIsAuthenticated(true);
       },
-      onError: ({ message }) => {
-        setError(message);
+      onError: ({ response }) => {
+        setError(response.data.message);
       },
     }
   );
@@ -57,8 +57,8 @@ const AuthPage = ({ className }: AuthPageProps) => {
         setCookie("jwt-cookie", data, { path: "/" });
         setIsAuthenticated(true);
       },
-      onError: ({ message }) => {
-        setError(message);
+      onError: ({ response }) => {
+        setError(response.data.message);
       },
     }
   );
@@ -66,13 +66,14 @@ const AuthPage = ({ className }: AuthPageProps) => {
   const handleAuthAction = () => {
     if (isSignUp) {
       signUpMutation.mutate();
-    } else {
-      signInMutation.mutate();
+      return;
     }
+    signInMutation.mutate();
   };
 
   const toggleAuthMode = () => {
     setIsSignUp(!isSignUp);
+    setError("");
   };
 
   useEffect(() => {

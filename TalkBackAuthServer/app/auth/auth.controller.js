@@ -10,14 +10,19 @@ import UserService from "../service/UserService.js";
 
 export const authUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
+
   const user = await UserService.getUserByUsername(username);
 
-  const isValidPassword = await verify(user.password, password);
-
-  if (user && isValidPassword) {
-    const token = generateToken(user.id);
-    res.json({ user, token });
-  } else {
+  try {
+    const isValidPassword = await verify(user.password, password);
+    if (user && isValidPassword) {
+      console.log("In try");
+      const token = generateToken(user.id);
+      res.json({ user, token });
+    } else {
+      throw new Error();
+    }
+  } catch (error) {
     res.status(401);
     throw new Error("Username or password is incorrect");
   }
