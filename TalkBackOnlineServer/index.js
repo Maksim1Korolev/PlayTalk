@@ -13,6 +13,7 @@ const server = http.createServer(app);
 export const io = new Server(server, {
   cors: {},
 });
+
 io.on("connection", async (socket) => {
   console.log("user connected");
   let savedUsername;
@@ -34,7 +35,6 @@ io.on("connection", async (socket) => {
       "send-message",
       async ({ senderUsername, receiverUsername, message }) => {
         const { data: receiverSocketId } = await GetUserId(receiverUsername);
-        console.log(receiverSocketId);
 
         if (receiverSocketId) {
           io.to(receiverSocketId).emit(`receive-message`, {
@@ -42,11 +42,11 @@ io.on("connection", async (socket) => {
             message,
           });
         }
-        //else {
-        //	console.log(`Receiver ${receiverUsername} is not available.`)
-        //	socket.emit('receiver-not-available', `${receiverUsername} is not available.`)
-        //}
       }
+      //else {
+      //	console.log(`Receiver ${receiverUsername} is not available.`)
+      //	socket.emit('receiver-not-available', `${receiverUsername} is not available.`)
+      //}
     );
   });
 
@@ -71,14 +71,22 @@ const PostUser = async (username, socketId) => {
       socketId,
     })
     .catch((e) => {
-      console.log(e);
+      console.log("Server is not connected or returns an error");
     });
 };
 const GetUserId = async (receiverUsername) => {
-  return await axios.get(`${process.env.CHAT_SERVER_URL}/${receiverUsername}`);
+  return await axios
+    .get(`${process.env.CHAT_SERVER_URL}/${receiverUsername}`)
+    .catch((e) => {
+      console.log("Server is not connected or returns an error");
+    });
 };
 const DeleteUser = async (socketId) => {
-  return await axios.delete(`${process.env.CHAT_SERVER_URL}/${socketId}`);
+  return await axios
+    .delete(`${process.env.CHAT_SERVER_URL}/${socketId}`)
+    .catch(() => {
+      console.log("Server is not connected or returns an error");
+    });
 };
 
 const PORT = process.env.PORT || 4000;

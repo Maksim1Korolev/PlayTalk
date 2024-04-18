@@ -3,7 +3,6 @@ import { Card, HStack, UiButton, UiInput, VStack } from "@/shared/ui";
 import { useState } from "react";
 import { ChatMessage } from "../ChatMessage";
 import { Message } from "../ChatMessage/ui/ChatMessage";
-import { MessageDirection } from "../MessageDirection";
 import cls from "./Chat.module.scss";
 
 export const Chat = ({
@@ -30,12 +29,11 @@ export const Chat = ({
         <Card variant="light" max padding="24">
           <VStack className={cls.messageLog} gap="8">
             {messageHistory?.map((message, index) => (
-              <MessageDirection
+              <ChatMessage
+                message={message}
                 key={`${index} ${message.date}`}
-                isRight={currentUsername === message.username}
-              >
-                <ChatMessage message={message} />
-              </MessageDirection>
+                isRight={currentUsername == message.username}
+              />
             ))}
           </VStack>
         </Card>

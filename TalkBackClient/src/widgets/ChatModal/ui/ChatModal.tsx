@@ -16,13 +16,13 @@ export const ChatModal = memo(
 		currentUsername,
 		receiverUser,
 		handleCloseModal,
-		handleUserSend,
+		handleSendMessage,
 	}: {
 		className?: string
 		currentUsername: string
 		receiverUser: User
 		handleCloseModal: (userId: string) => void
-		handleUserSend: (receiverUsername: string, message: string) => void
+		handleSendMessage: (receiverUsername: string, message: string) => void
 	}) => {
 		const [messageHistory, setMessageHistory] = useState<Message[]>()
 
@@ -51,7 +51,7 @@ export const ChatModal = memo(
 		}
 
 		const onUserSend = (message: string) => {
-			handleUserSend(receiverUser.username, message)
+			handleSendMessage(receiverUser.username, message)
 			AddMessageToHistory(currentUsername, message)
 		}
 
