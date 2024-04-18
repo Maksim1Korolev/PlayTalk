@@ -13,11 +13,11 @@ const server = http.createServer(app);
 export const io = new Server(server, {
   cors: {},
 });
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   console.log("user connected");
   let savedUsername;
 
-  socket.on("online-ping", (username) => {
+  socket.on("online-ping", async (username) => {
     savedUsername = username;
 
     // OnLine logic
@@ -28,25 +28,16 @@ io.on("connection", (socket) => {
     socket.broadcast.emit(`user-connection`, savedUsername, true);
 
     //Chat logic
-    axios.post(`${process.env.CHAT_SERVER_URL}/addToChatLobby`, {
-      username,
-      socketId: socket.id,
-    });
+    await PostUser(username, socket.id);
 
     socket.on(
       "send-message",
       async ({ senderUsername, receiverUsername, message }) => {
-        const receiverSocketId = await axios.post(
-          `${process.env.CHAT_SERVER_URL}/send-message`,
-          {
-            senderUsername,
-            receiverUsername,
-            message,
-          }
-        );
+        const { data: receiverSocketId } = await GetUserId(receiverUsername);
+        console.log(receiverSocketId);
 
         if (receiverSocketId) {
-          io.to(receiverSocketId).emit("receive-message", {
+          io.to(receiverSocketId).emit(`receive-message`, {
             senderUsername,
             message,
           });
@@ -59,7 +50,7 @@ io.on("connection", (socket) => {
     );
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", async () => {
     if (savedUsername) {
       onlineUsers.delete(savedUsername);
       console.log(
@@ -68,10 +59,27 @@ io.on("connection", (socket) => {
       );
       socket.broadcast.emit("user-connection", savedUsername, false);
 
-      axios.delete(`${process.env.CHAT_SERVER_URL}/${socket.id}`);
+      await DeleteUser(socket.id);
     }
   });
 });
+
+const PostUser = async (username, socketId) => {
+  return await axios
+    .post(`${process.env.CHAT_SERVER_URL}/addToChatLobby`, {
+      username,
+      socketId,
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+};
+const GetUserId = async (receiverUsername) => {
+  return await axios.get(`${process.env.CHAT_SERVER_URL}/${receiverUsername}`);
+};
+const DeleteUser = async (socketId) => {
+  return await axios.delete(`${process.env.CHAT_SERVER_URL}/${socketId}`);
+};
 
 const PORT = process.env.PORT || 4000;
 const onlineUsers = new Set();
@@ -84,9 +92,8 @@ async function main() {
   //app.use('/uploads', express.static(path.join(__dirname, '/uploads/')))
 }
 
-app.listen(
-  PORT,
-  console.log(`server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
-);
+server.listen(PORT, () => {
+  console.log(`server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+});
 
 main();

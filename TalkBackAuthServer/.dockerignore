@@ -6,9 +6,6 @@ npm-debug.log*
 # Directory for node_modules
 node_modules
 
-# Ignore .env files
-.env
-
 # Ignore Git and temporary files
 .git
 .gitignore
