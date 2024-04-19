@@ -7,7 +7,7 @@ import { Message } from '@/features/Chat/ui/ChatMessage/ui/ChatMessage'
 import { useReceiveMessage } from '@/pages/OnlinePage/hooks/useOnlineSocket'
 import { cx } from '@/shared/lib/cx'
 import { Card, HStack, UiButton, UiText } from '@/shared/ui'
-import Draggable from 'react-draggable'
+import { Rnd } from 'react-rnd'
 import cls from './ChatModal.module.scss'
 
 export const ChatModal = memo(
@@ -56,8 +56,16 @@ export const ChatModal = memo(
 		}
 
 		return (
-			<Draggable
-			//grid={[100, 20]}
+			<Rnd
+				default={{
+					x: 150,
+					y: 205,
+					width: 500,
+					height: 190,
+				}}
+				minWidth={500}
+				minHeight={190}
+				bounds="window"
 			>
 				<Card padding="16" variant="outlined" className={cx(cls.ChatModal, {}, [className])}>
 					<HStack gap="24" className={cls.draggableChatTitle}>
@@ -72,7 +80,7 @@ export const ChatModal = memo(
 						handleSendMessage={onUserSend}
 					/>
 				</Card>
-			</Draggable>
+			</Rnd>
 		)
 	}
 )
