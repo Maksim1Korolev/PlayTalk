@@ -20,7 +20,7 @@ class UserService {
   }
   async getUserById(userId) {
     if (!userId) {
-      throw new Error("Id is not specified");
+      throw new Error("ID is not specified");
     }
 
     const user = await User.findOne({ _id: userId });

@@ -42,9 +42,7 @@ app.listen(PORT, () => {
 });
 
 main()
-  .then(async () => {
-    //await mongoose.disconnect();
-  })
+  .then(async () => {})
   .catch(async (e) => {
     console.error(e);
     await mongoose.disconnect();
