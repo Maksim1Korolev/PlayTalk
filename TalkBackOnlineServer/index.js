@@ -43,10 +43,6 @@ io.on("connection", async (socket) => {
           });
         }
       }
-      //else {
-      //	console.log(`Receiver ${receiverUsername} is not available.`)
-      //	socket.emit('receiver-not-available', `${receiverUsername} is not available.`)
-      //}
     );
   });
 
