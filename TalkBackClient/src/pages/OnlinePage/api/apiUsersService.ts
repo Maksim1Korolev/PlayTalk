@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useCookies } from "react-cookie";
 
 export const $api = axios.create({
   baseURL: import.meta.env.VITE_USERS_SERVER_URL,
