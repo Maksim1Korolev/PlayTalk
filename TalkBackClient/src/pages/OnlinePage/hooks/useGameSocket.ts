@@ -1,9 +1,9 @@
-import { User } from "@/entities/User";
+import { Player } from "@/entities/Player";
 import { onlineSocket } from "@/shared/api/sockets";
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 export interface ChatModalStateProps {
-  user: User;
+  player: Player;
 }
 
 export const useOnlineSocket = ({
@@ -11,20 +11,20 @@ export const useOnlineSocket = ({
   data,
 }: {
   username: string;
-  data?: User[];
+  data?: Player[];
 }) => {
   const [onlineUsernames, setOnlineUsernames] = useState<string[]>([]);
-  const [upToDateUsers, setUpToDateUsers] = useState<User[]>();
+  const [upToDateUsers, setUpToDateUsers] = useState<Player[]>();
   const [chatModals, setChatModals] = useState<ChatModalStateProps[]>();
   const [cookies] = useCookies();
-  const { user }: { user: User } = cookies["jwt-cookie"];
+  const { user }: { user: Player } = cookies["jwt-cookie"];
 
   const setUsersOnline = useCallback(
-    (usernames: string[], fetchedUsers?: User[]) => {
+    (usernames: string[], fetchedUsers?: Player[]) => {
       const usersToUpdate = fetchedUsers || upToDateUsers;
       if (!usersToUpdate) return;
 
-      const updatedUsers = usersToUpdate.map((user: User) => ({
+      const updatedUsers = usersToUpdate.map((user: Player) => ({
         ...user,
         isOnline: usernames.includes(user.username),
       }));
