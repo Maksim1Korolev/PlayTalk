@@ -1,28 +1,34 @@
 import { io } from "../index.js";
 import PlayerService from "../service/PlayerService.js";
 
+//TODO: Several connections from single client, server crashes on docker
 export const connectToGameLobby = () => {
-  const connectedPlayers = new Array();
+  let connectedPlayers = [];
 
   io.on("connection", async (socket) => {
     console.log("player connected");
     let savedUsername;
-
     socket.on("online-ping", async (username) => {
       savedUsername = username;
 
+      let addedPlayer = await PlayerService.getPlayerByUsername(savedUsername);
+      if (!addedPlayer) {
+        addedPlayer = await PlayerService.addPlayer({
+          username: savedUsername,
+        });
+      }
+
       // Online logic
-      let addedPlayer = PlayerService.getPlayerByUsername(savedUsername);
       addedPlayer.socketId = socket.id;
-      connectedPlayers.add(addedPlayer);
+      connectedPlayers.push(addedPlayer);
 
       console.log(
         `Online players after ${savedUsername} connected:`,
-        connectedPlayers
+        connectedPlayers.map((player) => player.username)
       );
       socket.emit(
         "in-game-players",
-        Array.from(connectedPlayers)
+        connectedPlayers
           .filter((player) => player.inGame)
           .map((player) => player.username)
       );
@@ -32,15 +38,15 @@ export const connectToGameLobby = () => {
 
     socket.on("disconnect", async () => {
       if (savedUsername) {
-        connectedPlayers.delete(savedUsername);
+        connectedPlayers = connectedPlayers.filter(
+          (player) => player.username !== savedUsername
+        );
         console.log(
           `Online players after ${savedUsername} disconnected:`,
-          connectedPlayers
+          connectedPlayers.map((player) => player.username)
         );
 
         socket.broadcast.emit("player-connection", savedUsername, false);
-
-        await DeleteUser(socket.id);
       }
     });
   });

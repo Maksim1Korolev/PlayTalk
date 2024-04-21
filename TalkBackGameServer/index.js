@@ -1,14 +1,19 @@
-import cors from "cors";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import { connectToGameLobby } from "./connection/connection.controller.js";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
 
+async function main() {
+  app.use(cors());
+  app.use(express.json());
+}
 const server = http.createServer(app);
 export const io = new Server(server, {
   cors: {},
@@ -18,16 +23,23 @@ connectToGameLobby();
 
 const PORT = process.env.PORT || 4200;
 
-async function main() {
-  app.use(cors());
-  app.use(express.json());
+const mongoURL = process.env.DATABASE_URL;
 
-  // const __dirname = path.resolve();
-  //app.use('/uploads', express.static(path.join(__dirname, '/uploads/')))
-}
+console.log(mongoURL);
+
+mongoose
+  .connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("Successfully connected to MongoDB"))
+  .catch((err) => console.error("Connection error", err));
 
 server.listen(PORT, () => {
-  console.log(`server running in on port ${PORT}`);
+  console.log(`Server listening at http://localhost:${PORT}`);
 });
 
-main();
+main()
+  .then(async () => {})
+  .catch(async (e) => {
+    console.error(e);
+    await mongoose.disconnect();
+    process.exit(1);
+  });

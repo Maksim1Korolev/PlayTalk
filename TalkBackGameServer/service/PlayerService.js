@@ -1,8 +1,8 @@
 import Player from "../models/Player.js";
 
 class PlayerService {
-  async addPlayer(user) {
-    const addedPlayer = await Player.create({ ...user });
+  async addPlayer(player) {
+    const addedPlayer = await Player.create({ ...player });
     return addedPlayer;
   }
 
