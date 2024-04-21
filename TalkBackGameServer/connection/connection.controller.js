@@ -2,7 +2,7 @@ import { io } from "../index.js";
 import PlayerService from "../service/PlayerService.js";
 
 export const connectToGameLobby = () => {
-  const connectedPlayers = new []();
+  const connectedPlayers = new Array();
 
   io.on("connection", async (socket) => {
     console.log("player connected");
