@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { apiService } from "../api/apiUsersService";
 import { ChatModalStateProps, useOnlineSocket } from "../hooks/useOnlineSocket";
 import cls from "./OnlinePage.module.scss";
+import { useInviteGameSocket } from "../hooks/useGameSocket";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const [cookies, , removeCookie] = useCookies(["jwt-cookie"]);
@@ -25,21 +26,37 @@ const OnlinePage = ({ className }: { className?: string }) => {
         const otherUsers = fetchedUsers.filter(
           (user) => user._id !== currentUser._id
         );
-        setUsersOnline(onlineUsernames, otherUsers);
+
+        updateUsersStatus(otherUsers);
       },
     }
   );
 
+  const updateUsersStatus = (users: User[]) => {
+    const usersWithOnlineStatus = setUsersOnline(onlineUsernames, users);
+
+    setUsersGameStatus(inGameUsernames, usersWithOnlineStatus);
+  };
+
+  //remove usersWithOnlineStatus?
   const {
     onlineUsernames,
+    usersWithOnlineStatus,
     chatModals,
     setChatModals,
     setUsersOnline,
-    upToDateUsers,
     handleUserMessage,
   } = useOnlineSocket({
-    username: currentUser.username,
     data,
+  });
+
+  const {
+    inGameUsernames,
+    usersWithGameStatus,
+    setUsersGameStatus,
+    handleUserInvite,
+  } = useInviteGameSocket({
+    data: usersWithOnlineStatus,
   });
 
   const handleLogout = () => {
@@ -80,7 +97,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
       <UiText size="xl">{resources.onlineUsersHeading}</UiText>
       <UserList
         handleUserChatButton={handleOpenNewChat}
-        users={upToDateUsers}
+        users={usersWithGameStatus}
       />
       {chatModals?.map(({ user }) => {
         return (

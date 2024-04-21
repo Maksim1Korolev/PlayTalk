@@ -6,37 +6,33 @@ export interface ChatModalStateProps {
   user: User;
 }
 
-export const useOnlineSocket = ({
-  username,
-  data,
-}: {
-  username: string;
-  data?: User[];
-}) => {
+export const useOnlineSocket = ({ data }: { data?: User[] }) => {
   const [onlineUsernames, setOnlineUsernames] = useState<string[]>([]);
-  const [upToDateUsers, setUpToDateUsers] = useState<User[]>();
+  const [usersWithOnlineStatus, setUsersWithOnlineStatus] = useState<User[]>();
   const [chatModals, setChatModals] = useState<ChatModalStateProps[]>();
   const [cookies] = useCookies();
   const { user }: { user: User } = cookies["jwt-cookie"];
 
   const setUsersOnline = useCallback(
     (usernames: string[], fetchedUsers?: User[]) => {
-      const usersToUpdate = fetchedUsers || upToDateUsers;
-      if (!usersToUpdate) return;
+      const usersToUpdate = fetchedUsers || usersWithOnlineStatus;
+      if (!usersToUpdate) return fetchedUsers;
 
       const updatedUsers = usersToUpdate.map((user: User) => ({
         ...user,
         isOnline: usernames.includes(user.username),
       }));
 
-      setUpToDateUsers(updatedUsers);
+      setUsersWithOnlineStatus(updatedUsers);
+
+      return updatedUsers;
     },
-    [upToDateUsers]
+    [usersWithOnlineStatus]
   );
 
   useEffect(() => {
     const onConnect = () => {
-      onlineSocket.emit("online-ping", username);
+      onlineSocket.emit("online-ping", user.username);
     };
 
     const updateOnlineUsers = (usernames: string[]) => {
@@ -52,7 +48,7 @@ export const useOnlineSocket = ({
           return prev.filter((u) => u !== username);
         }
       });
-      setUpToDateUsers((prevUsers) => {
+      setUsersWithOnlineStatus((prevUsers) => {
         if (!prevUsers) return [];
 
         prevUsers.reduce;
@@ -91,7 +87,7 @@ export const useOnlineSocket = ({
     setChatModals,
     handleUserMessage,
     onlineUsernames,
-    upToDateUsers,
+    usersWithOnlineStatus,
   };
 };
 

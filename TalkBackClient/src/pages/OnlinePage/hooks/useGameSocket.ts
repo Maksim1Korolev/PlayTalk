@@ -1,25 +1,18 @@
-import { Player } from "@/entities/Player";
 import { User } from "@/entities/User";
 import { gameSocket } from "@/shared/api/sockets";
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 export interface ChatModalStateProps {
-  player: Player;
+  user: User;
 }
 
-export const useInviteGameSocket = ({
-  username,
-  data,
-}: {
-  username: string;
-  data?: Player[];
-}) => {
+export const useInviteGameSocket = ({ data }: { data?: User[] }) => {
   const [inGameUsernames, setInGameUsernames] = useState<string[]>([]);
   const [usersWithGameStatus, setUsersWithGameStatus] = useState<User[]>();
   const [cookies] = useCookies();
   const { user }: { user: User } = cookies["jwt-cookie"];
 
-  const setGameStatus = useCallback(
+  const setUsersGameStatus = useCallback(
     (usernames: string[], users?: User[]) => {
       const usersToUpdate = users || usersWithGameStatus;
       if (!usersToUpdate) return;
@@ -30,18 +23,19 @@ export const useInviteGameSocket = ({
       }));
 
       setUsersWithGameStatus(updatedUsers);
+      return { updatedUsers };
     },
     [usersWithGameStatus]
   );
 
   useEffect(() => {
     const onConnect = () => {
-      gameSocket.emit("online-ping", username);
+      gameSocket.emit("online-ping", user.username);
     };
 
     const updateUsersGameStatus = (usernames: string[]) => {
       setInGameUsernames(usernames);
-      if (!data) setGameStatus(usernames, data);
+      if (!data) setUsersGameStatus(usernames, data);
     };
 
     const updatePlayingUsersStatus = (
@@ -88,7 +82,7 @@ export const useInviteGameSocket = ({
   };
 
   return {
-    setGameStatus,
+    setUsersGameStatus,
     handleUserInvite,
     inGameUsernames,
     usersWithGameStatus,
