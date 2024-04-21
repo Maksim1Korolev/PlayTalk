@@ -89,27 +89,6 @@ export const useInviteGameSocket = ({
     });
   };
 
-  const receiveMessageSubscribe = (
-    senderUsername: string,
-    callback: (message: string) => void
-  ) => {
-    const eventName = `receive-message-${senderUsername}`;
-
-    console.log(eventName);
-
-    const getMessage = (message: string) => {
-      console.log(message);
-
-      callback(message);
-    };
-
-    gameSocket.on(eventName, getMessage);
-
-    // Return a cleanup function to unsubscribe from the event
-    return () => {
-      gameSocket.off(eventName);
-    };
-  };
   return {
     setUsersOnline: setGameStatus,
     // chatModals,
@@ -117,7 +96,6 @@ export const useInviteGameSocket = ({
     handleUserMessage,
     onlineUsernames: inGameUsernames,
     upToDateUsers: usersWithGameStatus,
-    receiveMessageSubscribe,
   };
 };
 

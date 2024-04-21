@@ -85,27 +85,6 @@ export const useOnlineSocket = ({
     });
   };
 
-  const receiveMessageSubscribe = (
-    senderUsername: string,
-    callback: (message: string) => void
-  ) => {
-    const eventName = `receive-message-${senderUsername}`;
-
-    console.log(eventName);
-
-    const getMessage = (message: string) => {
-      console.log(message);
-
-      callback(message);
-    };
-
-    onlineSocket.on(eventName, getMessage);
-
-    // Return a cleanup function to unsubscribe from the event
-    return () => {
-      onlineSocket.off(eventName);
-    };
-  };
   return {
     setUsersOnline,
     chatModals,
@@ -113,7 +92,6 @@ export const useOnlineSocket = ({
     handleUserMessage,
     onlineUsernames,
     upToDateUsers,
-    receiveMessageSubscribe,
   };
 };
 
