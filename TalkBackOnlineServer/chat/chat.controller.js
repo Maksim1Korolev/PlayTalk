@@ -1,4 +1,5 @@
 import axios from "axios";
+import { io } from "../index.js";
 
 export const connectUserToChat = async (username, socket) => {
   await PostUser(username, socket.id);
@@ -7,7 +8,6 @@ export const connectUserToChat = async (username, socket) => {
     "send-message",
     async ({ senderUsername, receiverUsername, message }) => {
       const { data: receiverSocketId } = await GetUserId(receiverUsername);
-
       if (receiverSocketId) {
         io.to(receiverSocketId).emit(`receive-message`, {
           senderUsername,

@@ -20,10 +20,10 @@ export const connectOnline = () => {
       socket.emit("online-users", Array.from(onlineUsers));
 
       socket.broadcast.emit(`user-connection`, savedUsername, true);
-    });
 
-    //Chat logic
-    await connectUserToChat(savedUsername, socket);
+      //Chat logic
+      await connectUserToChat(savedUsername, socket);
+    });
 
     socket.on("disconnect", async () => {
       if (savedUsername) {
