@@ -16,7 +16,6 @@ export const useInviteGameSocket = ({
 }) => {
   const [inGameUsernames, setInGameUsernames] = useState<string[]>([]);
   const [usersWithGameStatus, setUsersWithGameStatus] = useState<User[]>();
-  //const [chatModals, setChatModals] = useState<ChatModalStateProps[]>();
   const [cookies] = useCookies();
   const { user }: { user: User } = cookies["jwt-cookie"];
 
@@ -81,36 +80,27 @@ export const useInviteGameSocket = ({
     };
   }, []);
 
-  const handleUserMessage = (receiverUsername: string, message: string) => {
-    gameSocket.emit("send-message", {
+  const handleUserInvite = (receiverUsername: string) => {
+    gameSocket.emit("invite-to-play", {
       senderUsername: user.username,
       receiverUsername,
-      message,
     });
   };
 
   return {
-    setUsersOnline: setGameStatus,
-    // chatModals,
-    // setChatModals,
-    handleUserMessage,
-    onlineUsernames: inGameUsernames,
-    upToDateUsers: usersWithGameStatus,
+    setGameStatus,
+    handleUserInvite,
+    inGameUsernames,
+    usersWithGameStatus,
   };
 };
 
-export const useReceiveMessage = (
-  receiveMessage: ({
-    senderUsername,
-    message,
-  }: {
-    senderUsername: string;
-    message: string;
-  }) => void
+export const useReceiveInvite = (
+  receiveInvite: ({ senderUsername }: { senderUsername: string }) => void
 ) => {
-  gameSocket.on("receive-message", receiveMessage);
+  gameSocket.on("receive-invite", receiveInvite);
 
   return () => {
-    gameSocket.off("receive-message");
+    gameSocket.off("receive-invite");
   };
 };
