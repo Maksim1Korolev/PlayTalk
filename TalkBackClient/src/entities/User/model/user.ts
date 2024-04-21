@@ -3,4 +3,5 @@ export interface User {
   username: string;
   password: string;
   isOnline: boolean;
+  inGame: boolean;
 }

@@ -20,13 +20,15 @@ export const connectToGameLobby = () => {
         `Online players after ${savedUsername} connected:`,
         connectedPlayers
       );
-      socket.emit("online-players", connectedPlayers.username);
+      socket.emit(
+        "in-game-players",
+        Array.from(connectedPlayers)
+          .filter((player) => player.inGame)
+          .map((player) => player.username)
+      );
 
-      socket.broadcast.emit(`player-connection`, savedUsername, true);
+      // socket.broadcast.emit(`players-started-game`, savedUsername, true);
     });
-
-    //Chat logic
-    await connectUserToChat(savedUsername, socket);
 
     socket.on("disconnect", async () => {
       if (savedUsername) {
