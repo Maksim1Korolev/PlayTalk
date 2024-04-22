@@ -49,7 +49,7 @@ export const Chat = ({
 
 			<Card className={cx(cls.chatBoxBody)} border="default" variant="light" max>
 				<div className={cls.chatBoxOverlay}></div>
-				<VStack className={cls.chatBoxLogs} max>
+				<div className={cls.chatLogs}>
 					{messageHistory?.map((message, index) => (
 						<ChatMessage
 							message={message}
@@ -57,7 +57,7 @@ export const Chat = ({
 							isRight={currentUsername == message.username}
 						/>
 					))}
-				</VStack>
+				</div>
 			</Card>
 			<div className={cls.chatInput}>
 				<ChatInput

@@ -1,9 +1,9 @@
 import express from 'express'
-import { addToMap, getReceiverSocketId, removeFromMap } from './online.controller.js'
+import { addMessageToHistory, addToMap, removeFromMap } from './online.controller.js'
 
 const router = express.Router()
 
-router.route('/:username').get(getReceiverSocketId)
+router.route('/messages/message').post(addMessageToHistory)
 router.route('/addToChatLobby').post(addToMap)
 router.route('/:socketId').delete(removeFromMap)
 
