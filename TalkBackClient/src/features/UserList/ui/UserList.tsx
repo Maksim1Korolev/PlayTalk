@@ -6,6 +6,7 @@ interface UserListProps {
   className?: string;
   users?: User[];
   handleUserChatButton: (user: User) => void;
+  handleUserInviteButton: (invitedUsername: string) => void;
 }
 
 export const UserList = memo(

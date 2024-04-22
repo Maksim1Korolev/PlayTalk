@@ -92,9 +92,9 @@ export const useInviteGameSocket = ({ data }: { data?: User[] }) => {
 export const useReceiveInvite = (
   receiveInvite: ({ senderUsername }: { senderUsername: string }) => void
 ) => {
-  gameSocket.on("receive-invite", receiveInvite);
+  gameSocket.on("receive-game-invite", receiveInvite);
 
   return () => {
-    gameSocket.off("receive-invite");
+    gameSocket.off("receive-game-invite");
   };
 };

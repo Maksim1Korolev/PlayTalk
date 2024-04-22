@@ -35,6 +35,20 @@ export const connectToGameLobby = () => {
       // socket.broadcast.emit(`players-started-game`, savedUsername, true);
     });
 
+    socket.on("invite-to-play", async (senderUsername, receiverUsername) => {
+      const player = connectedPlayers.find(
+        (p) => p.username === receiverUsername
+      );
+      if (player) {
+        const receiverSocketId = player.socketId;
+        io.to(receiverSocketId).emit("receive-game-invite", {
+          senderUsername: senderUsername,
+        });
+      } else {
+        console.log("Receiver not found in connected players.");
+      }
+    });
+
     socket.on("disconnect", async () => {
       if (savedUsername) {
         connectedPlayers = connectedPlayers.filter(

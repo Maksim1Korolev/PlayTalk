@@ -9,7 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { apiService } from "../api/apiUsersService";
 import { ChatModalStateProps, useOnlineSocket } from "../hooks/useOnlineSocket";
 import cls from "./OnlinePage.module.scss";
-import { useInviteGameSocket } from "../hooks/useGameSocket";
+import { useInviteGameSocket, useReceiveInvite } from "../hooks/useGameSocket";
+import { useCallback, useEffect } from "react";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const [cookies, , removeCookie] = useCookies(["jwt-cookie"]);
@@ -59,6 +60,19 @@ const OnlinePage = ({ className }: { className?: string }) => {
     data: usersWithOnlineStatus,
   });
 
+  const receiveInviteSubscribe = useCallback(
+    ({ senderUsername }: { senderUsername: string }) => {
+      console.log(senderUsername);
+    },
+    []
+  );
+  useEffect(() => {
+    const disconnect = useReceiveInvite(receiveInviteSubscribe);
+    return () => {
+      disconnect();
+    };
+  });
+
   const handleLogout = () => {
     removeCookie("jwt-cookie");
     navigate("/auth");
@@ -98,6 +112,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
       <UserList
         handleUserChatButton={handleOpenNewChat}
         users={usersWithGameStatus}
+        handleUserInviteButton={handleUserInvite}
       />
       {chatModals?.map(({ user }) => {
         return (
