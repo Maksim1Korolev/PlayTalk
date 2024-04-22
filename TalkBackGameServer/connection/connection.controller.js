@@ -1,7 +1,6 @@
 import { io } from "../index.js";
 import PlayerService from "../service/PlayerService.js";
 
-//TODO: Several connections from single client, server crashes on docker
 export const connectToGameLobby = () => {
   let connectedPlayers = [];
 

@@ -15,10 +15,10 @@ import { useNavigate } from "react-router-dom";
 import { apiService } from "../api/apiAuthService";
 import cls from "./AuthPage.module.scss";
 
-import resources from '@/public/resources/AuthPageResources.json'
+import resources from "@/shared/assets/locales/en/AuthPageResources.json";
 
 interface AuthPageProps {
-	className?: string
+  className?: string;
 }
 
 const AuthPage = ({ className }: AuthPageProps) => {
@@ -126,43 +126,52 @@ const AuthPage = ({ className }: AuthPageProps) => {
                 />
               </VStack>
 
-							<VStack max gap="8">
-								<UiText size="l" fontFamily="text">
-									{resources.label_password}
-								</UiText>
-								<UiInput
-									maxLength={30}
-									placeholder={resources.placeholder_password}
-									type="password"
-									value={password}
-									onChange={handlePasswordChange}
-									max
-								/>
-							</VStack>
-						</VStack>
+              <VStack max gap="8">
+                <UiText size="l" fontFamily="text">
+                  {resources.label_password}
+                </UiText>
+                <UiInput
+                  maxLength={30}
+                  placeholder={resources.placeholder_password}
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  max
+                />
+              </VStack>
+            </VStack>
 
-						<HStack gap="16">
-							<UiText size="m" fontFamily="main">
-								{isSignUp
-									? resources.action_already_have_account
-									: resources.action_dont_have_account}
-							</UiText>
+            <HStack gap="16">
+              <UiText size="m" fontFamily="main">
+                {isSignUp
+                  ? resources.action_already_have_account
+                  : resources.action_dont_have_account}
+              </UiText>
 
-							<UiButton variant="clear" color="blue" onClick={toggleAuthMode} textIsUnderlined>
-								<UiText size="m" fontFamily="main">
-									{isSignUp ? resources.button_sign_in : resources.button_sign_up}
-								</UiText>
-							</UiButton>
-						</HStack>
-						<UiButton max variant="filled" onClick={handleAuthAction}>
-							{isSignUp ? resources.button_sign_up : resources.button_sign_in}
-						</UiButton>
-						{(signInMutation.isLoading || signUpMutation.isLoading) && <Loader />}
-					</VStack>
-				</VStack>
-			</Card>
-		</VStack>
-	)
-}
+              <UiButton
+                variant="clear"
+                color="blue"
+                onClick={toggleAuthMode}
+                textIsUnderlined
+              >
+                <UiText size="m" fontFamily="main">
+                  {isSignUp
+                    ? resources.button_sign_in
+                    : resources.button_sign_up}
+                </UiText>
+              </UiButton>
+            </HStack>
+            <UiButton max variant="filled" onClick={handleAuthAction}>
+              {isSignUp ? resources.button_sign_up : resources.button_sign_in}
+            </UiButton>
+            {(signInMutation.isLoading || signUpMutation.isLoading) && (
+              <Loader />
+            )}
+          </VStack>
+        </VStack>
+      </Card>
+    </VStack>
+  );
+};
 
-export default AuthPage
+export default AuthPage;

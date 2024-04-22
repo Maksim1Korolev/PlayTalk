@@ -1,6 +1,6 @@
 import { User } from "@/entities/User";
 import { UserList } from "@/features/UserList";
-import resources from "@/public/resources/OnlinePageResources.json";
+import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
 import { Loader, UiButton, UiText } from "@/shared/ui";
 import { ChatModal } from "@/widgets/ChatModal";
 import { useCookies } from "react-cookie";
