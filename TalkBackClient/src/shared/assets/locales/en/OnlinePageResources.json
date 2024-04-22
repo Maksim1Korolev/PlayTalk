@@ -1,0 +1,6 @@
+{
+  "logoutButton": "Logout",
+  "onlineUsersHeading": "Online Users",
+  "errorMessagePrefix": "Error:",
+  "chatModalQuantityError": "Cannot open more than 5 chats"
+}
