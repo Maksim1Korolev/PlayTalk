@@ -1,0 +1,18 @@
+
+.textarea {
+	display: block;
+	width: 80%; // Make it fill the container
+	min-height: 40px;
+	max-height: 150px; // Set the maximum height to 150px
+	padding: 8px;
+
+	box-sizing: border-box; // Include padding and border in the width and height
+	resize: none; // Disable manual resizing
+	overflow-y: auto; // Allow scrolling inside
+	line-height: 20px;
+	transition: height 0.2s ease-in-out;
+	background-color: var(--background-color, #fff); // Fallback if --background-color is not defined
+	caret-color: var(--primary-color);
+	color: var(--primary-text-color);
+}
+

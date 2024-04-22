@@ -2,3 +2,47 @@
 	padding-inline: 20px;
 	max-width: 60%;
 }
+
+.chatMsg.user > .msgAvatar img {
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  float:left;
+  width:15%;
+}
+.chatMsg.self > .msgAvatar img {
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  float:right;
+  width:15%;
+}
+.cmMsgText {
+  background:white;
+  padding:10px 15px 10px 15px;  
+  color:#666;
+  max-width:75%;
+  float:left;
+  margin-left:10px; 
+  position:relative;
+  margin-bottom:20px;
+  border-radius:30px;
+}
+.chatMsg {
+  clear:both;    
+}
+.chatMsg.self > .cmMsgText {  
+  float:right;
+  margin-right:10px;
+  background: #5A5EB9;
+  color:white;
+}
+.cmMsgButton>ul>li {
+  list-style:none;
+  float:left;
+  width:50%;
+}
+.cmMsgButton {
+    clear: both;
+    margin-bottom: 70px;
+}

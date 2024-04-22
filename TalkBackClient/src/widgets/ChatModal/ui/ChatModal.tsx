@@ -1,92 +1,101 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from 'react'
 
-import { User } from "@/entities/User";
-import { Chat } from "@/features/Chat";
+import { User } from '@/entities/User'
+import { Chat } from '@/features/Chat'
 
-import { Message } from "@/features/Chat/ui/ChatMessage/ui/ChatMessage";
-import { useReceiveMessage } from "@/pages/OnlinePage/hooks/useOnlineSocket";
-import { cx } from "@/shared/lib/cx";
-import { Card, HStack, UiButton, UiText } from "@/shared/ui";
-import Draggable from "react-draggable";
-import cls from "./ChatModal.module.scss";
+import { ChatCircle } from '@/features/Chat/ui/ChatCircle'
+import { Message } from '@/features/Chat/ui/ChatMessage/ui/ChatMessage'
+import { useReceiveMessage } from '@/pages/OnlinePage/hooks/useOnlineSocket'
+import { cx } from '@/shared/lib/cx'
+import { Rnd } from 'react-rnd'
+import cls from './ChatModal.module.scss'
 
 export const ChatModal = memo(
-  ({
-    className,
-    currentUsername,
-    receiverUser,
-    handleCloseModal,
-    handleSendMessage,
-  }: {
-    className?: string;
-    currentUsername: string;
-    receiverUser: User;
-    handleCloseModal: (userId: string) => void;
-    handleSendMessage: (receiverUsername: string, message: string) => void;
-  }) => {
-    const [messageHistory, setMessageHistory] = useState<Message[]>();
+	({
+		className,
+		currentUsername,
+		receiverUser,
+		handleCloseModal,
+		handleSendMessage,
+	}: {
+		className?: string
+		currentUsername: string
+		receiverUser: User
+		handleCloseModal: (userId: string) => void
+		handleSendMessage: (receiverUsername: string, message: string) => void
+	}) => {
+		const [messageHistory, setMessageHistory] = useState<Message[]>()
 
-    const receiveMessageSubscribe = useCallback(
-      ({
-        senderUsername,
-        message,
-      }: {
-        senderUsername: string;
-        message: string;
-      }) => {
-        console.log(senderUsername);
+		const [chatOpen, setChatOpen] = useState<boolean>(false)
 
-        if (senderUsername === receiverUser.username)
-          AddMessageToHistory(senderUsername, message);
-      },
-      []
-    );
-    useEffect(() => {
-      const disconnect = useReceiveMessage(receiveMessageSubscribe);
-      return () => {
-        disconnect();
-      };
-    });
+		const receiveMessageSubscribe = useCallback(
+			({ senderUsername, message }: { senderUsername: string; message: string }) => {
+				console.log(senderUsername)
 
-    const AddMessageToHistory = (username: string, message: string) => {
-      const newMessage: Message = {
-        message: message,
-        date: new Date(),
-        username: username,
-      };
-      setMessageHistory((prev) => [...(prev || []), newMessage]);
-    };
+				if (senderUsername === receiverUser.username) AddMessageToHistory(senderUsername, message)
+			},
+			[]
+		)
+		useEffect(() => {
+			const disconnect = useReceiveMessage(receiveMessageSubscribe)
+			return () => {
+				disconnect()
+			}
+		})
 
-    const onUserSend = (message: string) => {
-      handleSendMessage(receiverUser.username, message);
-      AddMessageToHistory(currentUsername, message);
-    };
+		const AddMessageToHistory = (username: string, message: string) => {
+			const newMessage: Message = {
+				message: message,
+				date: new Date(),
+				username: username,
+			}
+			setMessageHistory(prev => [...(prev || []), newMessage])
+		}
 
-    return (
-      <Draggable
-      //grid={[100, 20]}
-      >
-        <Card
-          padding="16"
-          variant="outlined"
-          className={cx(cls.ChatModal, {}, [className])}
-        >
-          <HStack gap="24" className={cls.draggableChatTitle}>
-            <UiButton
-              variant="clear"
-              onClick={() => handleCloseModal(receiverUser._id)}
-            >
-              X
-            </UiButton>
-            <UiText>{receiverUser.username}</UiText>
-          </HStack>
-          <Chat
-            currentUsername={currentUsername}
-            messageHistory={messageHistory}
-            handleSendMessage={onUserSend}
-          />
-        </Card>
-      </Draggable>
-    );
-  }
-);
+		const handleOpenChatModal = () => {
+			setChatOpen(true)
+		}
+
+		const handleCloseChatModal = () => {
+			setChatOpen(false)
+		}
+
+		const onUserSend = (message: string) => {
+			handleSendMessage(receiverUser.username, message)
+			AddMessageToHistory(currentUsername, message)
+		}
+		if (!chatOpen)
+			return (
+				<Rnd minWidth={80} minHeight={80} bounds="window" enableResizing={false}>
+					<ChatCircle
+						className={cx(cls.ChatModal, {}, [className])}
+						onClick={handleOpenChatModal}
+					/>
+				</Rnd>
+			)
+
+		return (
+			<Rnd
+				default={{
+					x: 150,
+					y: 205,
+					width: 365,
+					height: 280,
+				}}
+				minWidth={365}
+				minHeight={280}
+				bounds="window"
+			>
+				<Chat
+					className={cx(cls.ChatModal, {}, [className])}
+					handleSendMessage={onUserSend}
+					currentUsername={currentUsername}
+					messageHistory={messageHistory}
+					receiverUsername={receiverUser.username}
+					onClose={() => handleCloseModal(receiverUser._id)}
+					onCollapse={handleCloseChatModal}
+				/>
+			</Rnd>
+		)
+	}
+)
