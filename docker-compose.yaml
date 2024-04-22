@@ -1,4 +1,11 @@
 services:
+  game_server:
+    build: ./TalkBackGameServer
+    ports:
+      - "4200:4200"
+    networks:
+      - talkback-network
+
   auth_server:
     build: ./TalkBackAuthServer
     ports:

@@ -10,13 +10,16 @@ import { apiService } from "../api/apiUsersService";
 import { ChatModalStateProps, useOnlineSocket } from "../hooks/useOnlineSocket";
 import cls from "./OnlinePage.module.scss";
 import { useInviteGameSocket, useReceiveInvite } from "../hooks/useGameSocket";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { GameRequest } from "@/features/GameRequest";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const [cookies, , removeCookie] = useCookies(["jwt-cookie"]);
   const token = cookies["jwt-cookie"]?.token;
   const currentUser = cookies["jwt-cookie"]?.user;
+  const [isInvitedToGame, setIsInvitedToGame] = useState(false);
   const navigate = useNavigate();
+  const [gameInviteSenderUsername, setGameInviteSenderUsername] = useState("");
 
   const { data, isLoading, isError, error } = useQuery<User[], Error>(
     "users",
@@ -35,7 +38,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
 
   const updateUsersStatus = (users: User[]) => {
     const usersWithOnlineStatus = setUsersOnline(onlineUsernames, users);
-
     setUsersGameStatus(inGameUsernames, usersWithOnlineStatus);
   };
 
@@ -63,6 +65,8 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const receiveInviteSubscribe = useCallback(
     ({ senderUsername }: { senderUsername: string }) => {
       console.log(senderUsername);
+      setGameInviteSenderUsername(senderUsername);
+      setIsInvitedToGame(true);
     },
     []
   );
@@ -125,6 +129,9 @@ const OnlinePage = ({ className }: { className?: string }) => {
           />
         );
       })}
+      {isInvitedToGame && (
+        <GameRequest senderUsername={gameInviteSenderUsername}></GameRequest>
+      )}
     </div>
   );
 };
