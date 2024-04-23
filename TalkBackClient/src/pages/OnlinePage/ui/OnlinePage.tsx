@@ -8,7 +8,7 @@ import { useCookies } from "react-cookie";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { apiService } from "../api/apiUsersService";
-import { useInviteGameSocket, useReceiveInvite } from "../hooks/useGameSocket";
+import { useInviteGameSocket, useReceiveInvite } from "../hooks/useInviteGameSocket";
 import { ChatModalStateProps, useOnlineSocket } from "../hooks/useOnlineSocket";
 import cls from "./OnlinePage.module.scss";
 import { GameRequest } from "@/features/GameRequest";
@@ -37,6 +37,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
     }
   );
 
+  //TODO: Divide to different files, remove socket logic from onlinePage, get usernames through http request.
   const updateUsersStatus = (users: User[]) => {
     const usersWithOnlineStatus = setUsersOnline(onlineUsernames, users);
     setUsersGameStatus(inGameUsernames, usersWithOnlineStatus);
