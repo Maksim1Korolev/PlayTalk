@@ -1,4 +1,3 @@
-import { memo } from "react";
 import cls from "./GameRequest.module.scss";
 import { Card, HStack, UiButton, VStack } from "@/shared/ui";
 

@@ -7,15 +7,19 @@ export const UserCard = ({
   className,
   user,
   handleUserChatButton,
-  handlePlayButton,
+  handleInviteButton,
 }: {
   className?: string;
   user: User;
   handleUserChatButton: (user: User) => void;
-  handlePlayButton: () => void;
+  handleInviteButton: (invitedUsername: string) => void;
 }) => {
   const handleChatButton = () => {
     handleUserChatButton(user);
+  };
+
+  const handlePlayButton = () => {
+    handleInviteButton(user.username);
   };
   return (
     <Card className={`${cls.UserCard} ${className}`}>

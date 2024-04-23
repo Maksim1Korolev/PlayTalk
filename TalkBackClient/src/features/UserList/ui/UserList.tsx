@@ -6,10 +6,16 @@ interface UserListProps {
   className?: string;
   users?: User[];
   handleUserChatButton: (user: User) => void;
+  handleUserInviteButton: (invitedUsername: string) => void;
 }
 
 export const UserList = memo(
-  ({ className, users, handleUserChatButton }: UserListProps) => {
+  ({
+    className,
+    users,
+    handleUserChatButton,
+    handleUserInviteButton,
+  }: UserListProps) => {
     if (!users || users.length === 0) {
       return <p>No users available.</p>;
     }
@@ -22,7 +28,7 @@ export const UserList = memo(
             user={user}
             className={cls.userCard}
             handleUserChatButton={handleUserChatButton}
-            handlePlayButton={() => {}}
+            handleInviteButton={handleUserInviteButton}
           />
         ))}
       </ul>

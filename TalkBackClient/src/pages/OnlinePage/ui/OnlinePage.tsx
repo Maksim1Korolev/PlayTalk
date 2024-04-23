@@ -3,11 +3,12 @@ import { UserList } from '@/features/UserList'
 import resources from '@/shared/assets/locales/en/OnlinePageResources.json'
 import { Loader, UiButton, UiText } from '@/shared/ui'
 import { ChatModal } from '@/widgets/ChatModal'
+import { useCallback, useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { apiService } from '../api/apiUsersService'
-import { useInviteGameSocket } from '../hooks/useGameSocket'
+import { useInviteGameSocket, useReceiveInvite } from '../hooks/useGameSocket'
 import { ChatModalStateProps, useOnlineSocket } from '../hooks/useOnlineSocket'
 import cls from './OnlinePage.module.scss'
 
@@ -15,8 +16,10 @@ const OnlinePage = ({ className }: { className?: string }) => {
 	const [cookies, , removeCookie] = useCookies(['jwt-cookie'])
 	const token = cookies['jwt-cookie']?.token
 	const currentUser = cookies['jwt-cookie']?.user
+	const [isInvitedToGame, setIsInvitedToGame] = useState(false)
 	const navigate = useNavigate()
-
+	const [gameInviteSenderUsername, setGameInviteSenderUsername] = useState('')
+	const [usersWithUpdatedStatus, setUsersWithUpdatedStatus] = useState<User[]>()
 	const { data, isLoading, isError, error } = useQuery<User[], Error>(
 		'users',
 		() => apiService.getUsers(token),
@@ -32,10 +35,11 @@ const OnlinePage = ({ className }: { className?: string }) => {
 
 	const updateUsersStatus = (users: User[]) => {
 		const usersWithOnlineStatus = setUsersOnline(onlineUsernames, users)
-
 		setUsersGameStatus(inGameUsernames, usersWithOnlineStatus)
+		setUsersWithUpdatedStatus(usersWithGameStatus)
 	}
 
+	//remove usersWithOnlineStatus?
 	const {
 		onlineUsernames,
 		usersWithOnlineStatus,
@@ -46,12 +50,23 @@ const OnlinePage = ({ className }: { className?: string }) => {
 	} = useOnlineSocket({
 		data,
 	})
-	//remove usersWithOnlineStatus?
 
 	const { inGameUsernames, usersWithGameStatus, setUsersGameStatus, handleUserInvite } =
 		useInviteGameSocket({
 			data: usersWithOnlineStatus,
 		})
+
+	const receiveInviteSubscribe = useCallback(({ senderUsername }: { senderUsername: string }) => {
+		console.log(senderUsername)
+		setGameInviteSenderUsername(senderUsername)
+		setIsInvitedToGame(true)
+	}, [])
+	useEffect(() => {
+		const disconnect = useReceiveInvite(receiveInviteSubscribe)
+		return () => {
+			disconnect()
+		}
+	}, [])
 
 	const handleLogout = () => {
 		removeCookie('jwt-cookie')
@@ -90,7 +105,11 @@ const OnlinePage = ({ className }: { className?: string }) => {
 		<div className={`${cls.OnlinePage} ${className || ''}`}>
 			<UiButton onClick={handleLogout}>{resources.logoutButton}</UiButton>
 			<UiText size="xl">{resources.onlineUsersHeading}</UiText>
-			<UserList handleUserChatButton={handleOpenNewChat} users={usersWithGameStatus} />
+			<UserList
+				handleUserChatButton={handleOpenNewChat}
+				users={usersWithUpdatedStatus}
+				handleUserInviteButton={handleUserInvite}
+			/>
 			{chatModals?.map(({ user }, index) => {
 				return (
 					<ChatModal
