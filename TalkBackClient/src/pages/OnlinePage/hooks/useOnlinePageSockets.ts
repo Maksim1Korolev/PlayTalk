@@ -9,14 +9,12 @@ export const useOnlinePageSockets = ({ data }: { data?: User[] }) => {
   const [usersWithUpdatedStatus, setUsersWithUpdatedStatus] =
     useState<User[]>();
 
-  //TODO: Divide to different files, remove socket logic from onlinePage, get usernames through http request.
   const updateUsersStatus = (users: User[]) => {
     const usersWithOnlineStatus = setUsersOnline(onlineUsernames, users);
     setUsersGameStatus(inGameUsernames, usersWithOnlineStatus);
     setUsersWithUpdatedStatus(usersWithGameStatus);
   };
 
-  //remove usersWithOnlineStatus?
   const {
     onlineUsernames,
     usersWithOnlineStatus,
