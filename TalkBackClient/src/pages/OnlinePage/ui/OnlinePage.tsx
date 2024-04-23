@@ -20,7 +20,8 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const [isInvitedToGame, setIsInvitedToGame] = useState(false);
   const navigate = useNavigate();
   const [gameInviteSenderUsername, setGameInviteSenderUsername] = useState("");
-
+  const [usersWithUpdatedStatus, setUsersWithUpdatedStatus] =
+    useState<User[]>();
   const { data, isLoading, isError, error } = useQuery<User[], Error>(
     "users",
     () => apiService.getUsers(token),
@@ -39,6 +40,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const updateUsersStatus = (users: User[]) => {
     const usersWithOnlineStatus = setUsersOnline(onlineUsernames, users);
     setUsersGameStatus(inGameUsernames, usersWithOnlineStatus);
+    setUsersWithUpdatedStatus(usersWithGameStatus);
   };
 
   //remove usersWithOnlineStatus?
@@ -75,7 +77,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
     return () => {
       disconnect();
     };
-  });
+  }, []);
 
   const handleLogout = () => {
     removeCookie("jwt-cookie");
@@ -115,7 +117,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
       <UiText size="xl">{resources.onlineUsersHeading}</UiText>
       <UserList
         handleUserChatButton={handleOpenNewChat}
-        users={usersWithGameStatus}
+        users={usersWithUpdatedStatus}
         handleUserInviteButton={handleUserInvite}
       />
       {chatModals?.map(({ user }) => {
