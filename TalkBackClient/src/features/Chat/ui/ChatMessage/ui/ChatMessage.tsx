@@ -4,6 +4,7 @@ import { memo } from 'react'
 import cls from './ChatMessage.module.scss'
 
 export interface Message {
+	_id?: string
 	message: string
 	date: Date
 	username: string

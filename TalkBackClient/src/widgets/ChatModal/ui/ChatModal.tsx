@@ -22,35 +22,48 @@ export const ChatModal = memo(
 		currentUsername: string
 		receiverUser: User
 		handleCloseModal: (userId: string) => void
-		handleSendMessage: (receiverUsername: string, message: string) => void
+		handleSendMessage: (receiverUsername: string, message: Message) => void
 	}) => {
 		const [messageHistory, setMessageHistory] = useState<Message[]>()
 
 		const [chatOpen, setChatOpen] = useState<boolean>(false)
 
-		const receiveMessageSubscribe = useCallback(
-			({ senderUsername, message }: { senderUsername: string; message: string }) => {
-				console.log(senderUsername)
+		const AddMessageToHistory = useCallback((message: Message) => {
+			setMessageHistory(prev => [...(prev || []), message])
+		}, [])
 
-				if (senderUsername === receiverUser.username) AddMessageToHistory(senderUsername, message)
+		const AddMessagesToHistory = useCallback((messages: Message[]) => {
+			setMessageHistory(prev => [...(prev || []), ...messages])
+		}, [])
+
+		const receiveMessageSubscribe = useCallback(
+			({ senderUsername, message }: { senderUsername: string; message: Message }) => {
+				if (senderUsername === receiverUser.username) {
+					AddMessageToHistory(message)
+				}
 			},
-			[]
+			[AddMessageToHistory, receiverUser.username]
 		)
+
+		const updateChatHistory = useCallback(
+			(messages: Message[], receiverUsername: string) => {
+				if (receiverUsername === receiverUser.username) {
+					AddMessagesToHistory(messages)
+				}
+			},
+			[AddMessagesToHistory, receiverUser.username]
+		)
+
 		useEffect(() => {
-			const disconnect = useReceiveMessage(receiveMessageSubscribe)
+			const disconnect = useReceiveMessage(
+				receiverUser.username,
+				receiveMessageSubscribe,
+				updateChatHistory
+			)
 			return () => {
 				disconnect()
 			}
-		})
-
-		const AddMessageToHistory = (username: string, message: string) => {
-			const newMessage: Message = {
-				message: message,
-				date: new Date(),
-				username: username,
-			}
-			setMessageHistory(prev => [...(prev || []), newMessage])
-		}
+		}, [])
 
 		const handleOpenChatModal = () => {
 			setChatOpen(true)
@@ -60,10 +73,21 @@ export const ChatModal = memo(
 			setChatOpen(false)
 		}
 
-		const onUserSend = (message: string) => {
-			handleSendMessage(receiverUser.username, message)
-			AddMessageToHistory(currentUsername, message)
-		}
+		const onUserSend = useCallback(
+			(message: string) => {
+				const wrapMessage = (message: string): Message => {
+					return {
+						message: message,
+						date: new Date(),
+						username: currentUsername,
+					}
+				}
+				const newMessage = wrapMessage(message)
+				handleSendMessage(receiverUser.username, newMessage)
+				AddMessageToHistory(newMessage)
+			},
+			[AddMessageToHistory, currentUsername, handleSendMessage, receiverUser.username]
+		)
 		if (!chatOpen)
 			return (
 				<Rnd minWidth={80} minHeight={80} bounds="window" enableResizing={false}>

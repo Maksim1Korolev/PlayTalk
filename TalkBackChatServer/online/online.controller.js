@@ -17,26 +17,32 @@ export const addMessageToHistory = asyncHandler(async (req, res) => {
 
 	const receiversSocketIds = []
 	usernames.map(username => {
-		receiversSocketIds.push(userSockets.get(username))
+		const currentUserSockets = userSockets.get(username)
+		if (currentUserSockets) {
+			currentUserSockets.map(socketId => receiversSocketIds.push(socketId))
+		}
 	})
 
-	return res.json({ receiversSocketIds, message })
+	return res.json({ receiversSocketIds })
 })
 
-// @desc   Add user to chat lobby's map
+// @desc   Add user to chat lobby's map of SocketIds
 // @route  POST /addToChatLobby
 // @access Public
 export const addToMap = asyncHandler(async (req, res) => {
-	const { username, socketId } = req.body
+	const { senderUsername, senderSocketId, receiverUsername } = req.body
 
-	const socketIds = userSockets.get(username) || []
+	const socketIds = userSockets.get(senderUsername) || []
 
-	if (!socketIds.includes(socketId)) {
-		socketIds.push(socketId)
-		userSockets.set(username, socketIds)
+	if (!socketIds.includes(senderSocketId)) {
+		socketIds.push(senderSocketId)
+		userSockets.set(senderUsername, socketIds)
 	}
+	const usernames = [senderUsername, receiverUsername].sort()
 
-	return res.json({ username, socketIds })
+	const messageHistory = await MessageHistoryService.getMessageHistory(usernames)
+
+	return res.json({ messageHistory: messageHistory })
 })
 
 // @desc   Remove user from chat lobby's map
