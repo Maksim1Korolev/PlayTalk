@@ -111,7 +111,7 @@ export const useReceiveMessage = (
   onlineSocket.on("receive-message", receiveMessage);
 
   return () => {
-    onlineSocket.off("update-chat");
-    onlineSocket.off("receive-message");
+    onlineSocket.off("update-chat", updateChatHistory);
+    onlineSocket.off("receive-message", receiveMessage);
   };
 };
