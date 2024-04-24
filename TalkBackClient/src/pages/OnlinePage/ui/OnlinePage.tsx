@@ -54,7 +54,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
   };
 
   const handleOpenNewChat = (user: User) => {
-    if (chatModals && chatModals.length >= 5) {
+    if (chatModals && chatModals.length > 5) {
       alert(resources.chatModalQuantityError);
       return;
     }
@@ -85,6 +85,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
         handleCloseModal={handleCloseChat}
       />
     ));
+    
   }, [chatModals, currentUser.username, handleCloseChat, handleUserMessage]);
   if (isLoading) {
     return <Loader />;

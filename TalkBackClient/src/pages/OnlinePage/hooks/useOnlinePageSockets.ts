@@ -6,13 +6,11 @@ import { useInviteGameSocket, useReceiveInvite } from "./useInviteGameSocket";
 export const useOnlinePageSockets = ({ data }: { data?: User[] }) => {
   const [isInvitedToGame, setIsInvitedToGame] = useState(false);
   const [gameInviteSenderUsername, setGameInviteSenderUsername] = useState("");
-  const [usersWithUpdatedStatus, setUsersWithUpdatedStatus] =
-    useState<User[]>();
+  useState<User[]>();
 
   const updateUsersStatus = (users: User[]) => {
     const usersWithOnlineStatus = setUsersOnline(onlineUsernames, users);
     setUsersGameStatus(inGameUsernames, usersWithOnlineStatus);
-    setUsersWithUpdatedStatus(usersWithGameStatus);
   };
 
   const {
@@ -51,7 +49,7 @@ export const useOnlinePageSockets = ({ data }: { data?: User[] }) => {
   }, []);
 
   return {
-    usersWithUpdatedStatus,
+    usersWithUpdatedStatus: usersWithGameStatus,
     isInvitedToGame,
     gameInviteSenderUsername,
     chatModals,
