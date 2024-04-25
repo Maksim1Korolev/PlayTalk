@@ -1,16 +1,11 @@
 import { User } from "@/entities/User";
-import { Message } from "@/features/Chat/ui/ChatMessage/ui/ChatMessage";
 import { onlineSocket } from "@/shared/api/sockets";
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-export interface ChatModalStateProps {
-  user: User;
-}
 
 export const useOnlineSocket = ({ data }: { data?: User[] }) => {
   const [onlineUsernames, setOnlineUsernames] = useState<string[]>([]);
   const [usersWithOnlineStatus, setUsersWithOnlineStatus] = useState<User[]>();
-  const [chatModals, setChatModals] = useState<ChatModalStateProps[]>();
   const [cookies] = useCookies();
   const { user }: { user: User } = cookies["jwt-cookie"];
 
@@ -74,44 +69,9 @@ export const useOnlineSocket = ({ data }: { data?: User[] }) => {
     };
   }, []);
 
-  const handleUserMessage = useCallback(
-    (receiverUsername: string, message: Message) => {
-      onlineSocket.emit("send-message", {
-        senderUsername: user.username,
-        receiverUsername,
-        message,
-      });
-    },
-    [user.username]
-  );
-
   return {
     setUsersOnline,
-    chatModals,
-    setChatModals,
-    handleUserMessage,
     onlineUsernames,
     usersWithOnlineStatus,
-  };
-};
-
-export const useReceiveMessage = (
-  receiverUsername: string,
-  receiveMessage: ({
-    senderUsername,
-    message,
-  }: {
-    senderUsername: string;
-    message: Message;
-  }) => void,
-  updateChatHistory: (messages: Message[], receiverUsername: string) => void
-) => {
-  onlineSocket.emit("on-chat-open", receiverUsername);
-  onlineSocket.on("update-chat", updateChatHistory);
-  onlineSocket.on("receive-message", receiveMessage);
-
-  return () => {
-    onlineSocket.off("update-chat", updateChatHistory);
-    onlineSocket.off("receive-message", receiveMessage);
   };
 };

@@ -13,16 +13,10 @@ export const useOnlinePageSockets = ({ data }: { data?: User[] }) => {
     setUsersGameStatus(inGameUsernames, usersWithOnlineStatus);
   };
 
-  const {
-    onlineUsernames,
-    usersWithOnlineStatus,
-    chatModals,
-    setChatModals,
-    setUsersOnline,
-    handleUserMessage,
-  } = useOnlineSocket({
-    data,
-  });
+  const { onlineUsernames, usersWithOnlineStatus, setUsersOnline } =
+    useOnlineSocket({
+      data,
+    });
 
   const {
     inGameUsernames,
@@ -52,10 +46,7 @@ export const useOnlinePageSockets = ({ data }: { data?: User[] }) => {
     usersWithUpdatedStatus: usersWithGameStatus,
     isInvitedToGame,
     gameInviteSenderUsername,
-    chatModals,
-    setChatModals,
     updateUsersStatus,
-    handleUserMessage,
     handleUserInvite,
   };
 };

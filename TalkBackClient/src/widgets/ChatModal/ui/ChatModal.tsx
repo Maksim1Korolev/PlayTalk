@@ -5,7 +5,7 @@ import { Chat } from "@/features/Chat";
 
 import { ChatCircle } from "@/features/Chat/ui/ChatCircle";
 import { Message } from "@/features/Chat/ui/ChatMessage/ui/ChatMessage";
-import { useReceiveMessage } from "@/pages/OnlinePage/hooks/useOnlineSocket";
+import { useReceiveMessage } from "@/pages/OnlinePage/hooks/useChatModals";
 import { cx } from "@/shared/lib/cx";
 import { Rnd } from "react-rnd";
 import cls from "./ChatModal.module.scss";

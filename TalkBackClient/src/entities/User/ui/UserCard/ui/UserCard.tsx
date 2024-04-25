@@ -6,16 +6,16 @@ import { UserOnlineIndicator } from "../../UserOnlineIndicator";
 export const UserCard = ({
   className,
   user,
-  handleUserChatButton,
   handleInviteButton,
+  handleChatButton,
 }: {
   className?: string;
   user: User;
-  handleUserChatButton: (user: User) => void;
   handleInviteButton: (invitedUsername: string) => void;
+  handleChatButton: (user: User) => void;
 }) => {
-  const handleChatButton = () => {
-    handleUserChatButton(user);
+  const onChatButton = () => {
+    handleChatButton(user);
   };
 
   const handlePlayButton = () => {
@@ -25,7 +25,7 @@ export const UserCard = ({
     <Card className={`${cls.UserCard} ${className}`}>
       <HStack>
         <UiText>{user.username}</UiText>
-        <UiButton onClick={handleChatButton}>Chat</UiButton>
+        <UiButton onClick={onChatButton}>Chat</UiButton>
         <UiButton onClick={handlePlayButton}>Play</UiButton>
         <UserOnlineIndicator isOnline={user.isOnline} />
       </HStack>
