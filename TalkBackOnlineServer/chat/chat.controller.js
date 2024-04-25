@@ -21,20 +21,31 @@ export const connectUserToChat = async (username, socket, receiverUsername) => {
     }
   );
 
-  return await PostUser(username, socket.id, receiverUsername);
+  return (await GetMessageHistory([username, receiverUsername])) || [];
 };
 
-const PostUser = async (senderUsername, senderSocketId, receiverUsername) => {
+export const PostUser = async (addedUserUsername, addedUserSocketId) => {
   return await axios
     .post(`${process.env.CHAT_SERVER_URL}/addToChatLobby`, {
-      senderUsername,
-      senderSocketId,
-      receiverUsername,
+      addedUserUsername,
+      addedUserSocketId,
     })
     .catch((e) => {
       console.log("Server is not connected or returns an error");
     });
 };
+const GetMessageHistory = async (usernames) => {
+  const query = usernames
+    .map((u) => `usernames=${encodeURIComponent(u)}`)
+    .join("&");
+  console.log(`Query for GetMessageHistory: ${query}`);
+  return await axios
+    .get(`${process.env.CHAT_SERVER_URL}/messageHistory?${query}`)
+    .catch((e) => {
+      console.log("Server is not connected or returns an error", e);
+    });
+};
+
 const GetUserIds = async (usernames, message) => {
   return await axios
     .post(`${process.env.CHAT_SERVER_URL}/messages/message`, {
