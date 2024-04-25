@@ -1,28 +1,4 @@
 import axios from "axios";
-import { io } from "../index.js";
-
-export const connectUserToChat = async (username, socket, receiverUsername) => {
-  socket.on(
-    "send-message",
-    async ({ senderUsername, receiverUsername, message }) => {
-      const usernames = [senderUsername, receiverUsername];
-      usernames.sort();
-      const { data } = await GetUserIds(usernames, message);
-      if (!data) {
-        return;
-      }
-
-      const { receiversSocketIds } = data;
-
-      io.to(receiversSocketIds).emit(`receive-message`, {
-        senderUsername,
-        message,
-      });
-    }
-  );
-
-  return (await GetMessageHistory([username, receiverUsername])) || [];
-};
 
 export const PostUser = async (addedUserUsername, addedUserSocketId) => {
   return await axios
@@ -34,7 +10,7 @@ export const PostUser = async (addedUserUsername, addedUserSocketId) => {
       console.log("Server is not connected or returns an error");
     });
 };
-const GetMessageHistory = async (usernames) => {
+export const GetMessageHistory = async (usernames) => {
   const query = usernames
     .map((u) => `usernames=${encodeURIComponent(u)}`)
     .join("&");
@@ -46,7 +22,7 @@ const GetMessageHistory = async (usernames) => {
     });
 };
 
-const GetUserIds = async (usernames, message) => {
+export const GetUserIds = async (usernames, message) => {
   return await axios
     .post(`${process.env.CHAT_SERVER_URL}/messages/message`, {
       usernames,

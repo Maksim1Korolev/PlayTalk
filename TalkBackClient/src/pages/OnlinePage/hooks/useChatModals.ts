@@ -10,6 +10,8 @@ export interface ChatModalStateProps {
 export const useChatModals = (currentUser: User) => {
   const handleUserMessage = useCallback(
     (receiverUsername: string, message: Message) => {
+        console.log(receiverUsername);
+        
       onlineSocket.emit("send-message", {
         senderUsername: currentUser.username,
         receiverUsername,

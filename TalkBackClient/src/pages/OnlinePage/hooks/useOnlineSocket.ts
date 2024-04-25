@@ -28,6 +28,7 @@ export const useOnlineSocket = ({ data }: { data?: User[] }) => {
 
   useEffect(() => {
     const onConnect = () => {
+
       onlineSocket.emit("online-ping", user.username);
     };
 
@@ -57,7 +58,7 @@ export const useOnlineSocket = ({ data }: { data?: User[] }) => {
         });
       });
     };
-
+    
     /////////////////////////////////////////////////////
     onlineSocket.on("connect", onConnect);
     onlineSocket.on("online-users", updateOnlineUsers);

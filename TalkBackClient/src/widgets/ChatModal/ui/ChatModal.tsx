@@ -88,6 +88,7 @@ export const ChatModal = memo(
             username: currentUsername,
           };
         };
+        
         const newMessage = wrapMessage(message);
         handleSendMessage(receiverUser.username, newMessage);
         AddMessageToHistory(newMessage);

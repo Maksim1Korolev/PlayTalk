@@ -1,7 +1,8 @@
 import {
   PostUser,
   DeleteUser,
-  connectUserToChat,
+  GetUserIds,
+  GetMessageHistory,
 } from "../chat/chat.controller.js";
 import { io } from "../index.js";
 
@@ -37,11 +38,10 @@ export const connectOnline = async () => {
 
       socket.on("on-chat-open", async (receiverUsername) => {
         try {
-          const { data } = await connectUserToChat(
-            savedUsername,
-            socket,
-            receiverUsername
-          );
+          const { data } = await GetMessageHistory([
+            username,
+            receiverUsername,
+          ]);
           if (data) {
             const { messageHistory } = data;
             socket.emit("update-chat", messageHistory, receiverUsername);
@@ -51,6 +51,25 @@ export const connectOnline = async () => {
         }
       });
     });
+
+    socket.on(
+      "send-message",
+      async ({ senderUsername, receiverUsername, message }) => {
+        const usernames = [senderUsername, receiverUsername];
+        usernames.sort();
+        try {
+          const { data } = await GetUserIds(usernames, message);
+          const { receiversSocketIds } = data;
+
+          io.to(receiversSocketIds).emit(`receive-message`, {
+            senderUsername,
+            message,
+          });
+        } catch (error) {
+          console.log("Error receiving userIds: " + error);
+        }
+      }
+    );
 
     socket.on("disconnect", async () => {
       if (savedUsername) {
