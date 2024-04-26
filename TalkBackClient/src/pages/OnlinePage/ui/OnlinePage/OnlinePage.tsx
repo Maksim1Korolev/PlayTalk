@@ -1,18 +1,17 @@
-import { User } from '@/entities/User'
-import { GameRequest } from '@/features/GameRequest'
-import { UserList } from '@/features/UserList'
-import resources from '@/shared/assets/locales/en/OnlinePageResources.json'
-import { cx } from '@/shared/lib/cx'
-import { Loader, UiButton, UiText } from '@/shared/ui'
-import { useState } from 'react'
-import { useCookies } from 'react-cookie'
-import { useQuery } from 'react-query'
-import { useNavigate } from 'react-router-dom'
-import { apiService } from '../../api/apiUsersService'
-import { ChatModalStateProps } from '../../hooks/useInviteGameSocket'
-import { useOnlinePageSockets } from '../../hooks/useOnlinePageSockets'
-import { ChatModals } from '../ChatModals'
-import cls from './OnlinePage.module.scss'
+import { User } from "@/entities/User";
+import { GameRequest } from "@/features/GameRequest";
+import { UserList } from "@/features/UserList";
+import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
+import { Loader, UiButton, UiText } from "@/shared/ui";
+import { ChatModal } from "@/widgets/ChatModal";
+import { useCallback } from "react";
+import { useCookies } from "react-cookie";
+import { useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { apiService } from "../api/apiUsersService";
+import { useOnlinePageSockets } from "../hooks/useOnlinePageSockets";
+import { ChatModalStateProps } from "../hooks/useOnlineSocket";
+import cls from "./OnlinePage.module.scss";
 
 const OnlinePage = ({ className }: { className?: string }) => {
 	const [cookies, , removeCookie] = useCookies(['jwt-cookie'])
@@ -35,33 +34,23 @@ const OnlinePage = ({ className }: { className?: string }) => {
 
 	const navigate = useNavigate()
 
-	const { data, isLoading, isError, error } = useQuery<User[], Error>(
-		'users',
-		() => apiService.getUsers(token),
-		{
-			enabled: !!token,
-			onSuccess: fetchedUsers => {
-				const otherUsers = fetchedUsers.filter(user => user._id !== currentUser._id)
-
-				updateUsersStatus(otherUsers)
-			},
-		}
-	)
+	
+	
 
 	const {
 		usersWithUpdatedStatus,
 		isInvitedToGame,
 		gameInviteSenderUsername,
-		updateUsersStatus,
+		handleUserMessage,
 		handleUserInvite,
 	} = useOnlinePageSockets({
 		data,
 	})
 
-	const handleLogout = () => {
-		removeCookie('jwt-cookie')
-		navigate('/auth')
-	}
+  const handleLogout = () => {
+    removeCookie("jwt-cookie");
+    navigate("/auth");
+  };
 
 	if (isLoading) {
 		return <Loader />
@@ -89,4 +78,4 @@ const OnlinePage = ({ className }: { className?: string }) => {
 	)
 }
 
-export default OnlinePage
+export default OnlinePage;

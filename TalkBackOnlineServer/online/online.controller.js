@@ -26,12 +26,15 @@ export const connectOnline = async () => {
 		socket.on('online-ping', async username => {
 			savedUsername = username
 
-			// Online logic
-			onlineUsernames.add(savedUsername)
-			console.log(`Online users after ${savedUsername} connected:`, onlineUsernames)
-			socket.emit('online-users', Array.from(onlineUsernames))
+      // Online logic
+      onlineUsers.add(savedUsername);
+      console.log(
+        `Online users after ${savedUsername} connected:`,
+        onlineUsers
+      );
+      socket.emit("online-users", Array.from(onlineUsers));
 
-			socket.broadcast.emit(`user-connection`, savedUsername, true)
+      socket.broadcast.emit(`user-connection`, savedUsername, true);
 
 			// Chat logic
 			try {

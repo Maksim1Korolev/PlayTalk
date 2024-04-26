@@ -1,70 +1,70 @@
-import { io } from '../index.js'
-import PlayerService from '../service/PlayerService.js'
-
-let connectedPlayers = []
-
-export const getInGameUsernames = async (req, res, next) => {
-	try {
-		const inGameUsernames = connectedPlayers
-			.filter(player => player.inGame)
-			.map(player => player.username)
-		return res.status(200).json({ inGameUsernames })
-	} catch (err) {
-		console.log(err)
-		res.status(500).send(err)
-	}
-}
+import { io } from "../index.js";
+import PlayerService from "../service/PlayerService.js";
 
 export const connectToGameLobby = () => {
-	io.on('connection', async socket => {
-		console.log('player connected')
-		let savedUsername
-		socket.on('online-ping', async username => {
-			savedUsername = username
+  let connectedPlayers = [];
 
-			let addedPlayer = await PlayerService.getPlayerByUsername(savedUsername)
-			if (!addedPlayer) {
-				addedPlayer = await PlayerService.addPlayer({
-					username: savedUsername,
-				})
-			}
+  io.on("connection", async (socket) => {
+    console.log("player connected");
+    let savedUsername;
+    socket.on("online-ping", async (username) => {
+      savedUsername = username;
 
-			// Online logic
-			addedPlayer.socketId = socket.id
-			connectedPlayers.push(addedPlayer)
+      let addedPlayer = await PlayerService.getPlayerByUsername(savedUsername);
+      if (!addedPlayer) {
+        addedPlayer = await PlayerService.addPlayer({
+          username: savedUsername,
+        });
+      }
 
-			console.log(
-				`Online players after ${savedUsername} connected:`,
-				connectedPlayers.map(player => player.username)
-			)
-			socket.emit('in-game-players')
+      // Online logic
+      addedPlayer.socketId = socket.id;
+      connectedPlayers.push(addedPlayer);
 
-			// socket.broadcast.emit(`players-started-game`, savedUsername, true);
-		})
+      console.log(
+        `Online players after ${savedUsername} connected:`,
+        connectedPlayers.map((player) => player.username)
+      );
+      socket.emit(
+        "in-game-players",
+        connectedPlayers
+          .filter((player) => player.inGame)
+          .map((player) => player.username)
+      );
 
-		socket.on('invite-to-play', async ({ senderUsername, receiverUsername }) => {
-			const player = connectedPlayers.find(p => p.username === receiverUsername)
-			console.log(senderUsername)
-			if (player) {
-				const receiverSocketId = player.socketId
-				io.to(receiverSocketId).emit('receive-game-invite', {
-					senderUsername: senderUsername,
-				})
-			} else {
-				console.log('Receiver not found in connected players.')
-			}
-		})
+      // socket.broadcast.emit(`players-started-game`, savedUsername, true);
+    });
 
-		socket.on('disconnect', async () => {
-			if (savedUsername) {
-				connectedPlayers = connectedPlayers.filter(player => player.username !== savedUsername)
-				console.log(
-					`Online players after ${savedUsername} disconnected:`,
-					connectedPlayers.map(player => player.username)
-				)
+    socket.on(
+      "invite-to-play",
+      async ({ senderUsername, receiverUsername }) => {
+        const player = connectedPlayers.find(
+          (p) => p.username === receiverUsername
+        );
+        console.log(senderUsername);
+        if (player) {
+          const receiverSocketId = player.socketId;
+          io.to(receiverSocketId).emit("receive-game-invite", {
+            senderUsername: senderUsername,
+          });
+        } else {
+          console.log("Receiver not found in connected players.");
+        }
+      }
+    );
 
-				socket.broadcast.emit('player-connection', savedUsername, false)
-			}
-		})
-	})
-}
+    socket.on("disconnect", async () => {
+      if (savedUsername) {
+        connectedPlayers = connectedPlayers.filter(
+          (player) => player.username !== savedUsername
+        );
+        console.log(
+          `Online players after ${savedUsername} disconnected:`,
+          connectedPlayers.map((player) => player.username)
+        );
+
+        socket.broadcast.emit("player-connection", savedUsername, false);
+      }
+    });
+  });
+};
