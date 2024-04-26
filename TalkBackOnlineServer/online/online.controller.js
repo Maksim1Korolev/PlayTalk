@@ -1,5 +1,6 @@
 import { DeleteUser, GetMessageHistory, GetUserIds, PostUser } from '../chat/chat.controller.js'
 import { io } from '../index.js'
+
 const onlineUsernames = new Set()
 
 export const getOnlineUsernames = async (req, res, next) => {
@@ -17,8 +18,6 @@ export const getOnlineUsernames = async (req, res, next) => {
 }
 
 export const connectOnline = async () => {
-	const onlineUsers = new Set()
-
 	io.on('connection', async socket => {
 		console.log('User connected')
 		let savedUsername
@@ -26,17 +25,19 @@ export const connectOnline = async () => {
 		socket.on('online-ping', async username => {
 			savedUsername = username
 
-      // Online logic
-      onlineUsers.add(savedUsername);
-      console.log(
-        `Online users after ${savedUsername} connected:`,
-        onlineUsers
-      );
-      socket.emit("online-users", Array.from(onlineUsers));
+			// Online logic
+			onlineUsernames.add(savedUsername)
+			console.log(`Online users after ${savedUsername} connected:`, onlineUsernames)
+			socket.emit('online-users', Array.from(onlineUsernames))
 
-      socket.broadcast.emit(`user-connection`, savedUsername, true);
+			socket.broadcast.emit(`user-connection`, savedUsername, true)
+			// Online logic
+			onlineUsernames.add(savedUsername)
+			console.log(`Online users after ${savedUsername} connected:`, onlineUsernames)
+			socket.emit('online-users', Array.from(onlineUsernames))
+			socket.broadcast.emit('user-connection', savedUsername, true)
 
-			// Chat logic
+			//Chat logic
 			try {
 				await PostUser(savedUsername, socket.id)
 				console.log('PostUser call succeeded. Continuing with the rest of the code.')

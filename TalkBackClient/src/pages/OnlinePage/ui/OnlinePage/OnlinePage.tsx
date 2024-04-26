@@ -1,17 +1,17 @@
-import { User } from "@/entities/User";
-import { GameRequest } from "@/features/GameRequest";
-import { UserList } from "@/features/UserList";
-import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
-import { Loader, UiButton, UiText } from "@/shared/ui";
-import { ChatModal } from "@/widgets/ChatModal";
-import { useCallback } from "react";
-import { useCookies } from "react-cookie";
-import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
-import { apiService } from "../api/apiUsersService";
-import { useOnlinePageSockets } from "../hooks/useOnlinePageSockets";
-import { ChatModalStateProps } from "../hooks/useOnlineSocket";
-import cls from "./OnlinePage.module.scss";
+import { User } from '@/entities/User'
+import { GameRequest } from '@/features/GameRequest'
+import { UserList } from '@/features/UserList'
+import resources from '@/shared/assets/locales/en/OnlinePageResources.json'
+import { cx } from '@/shared/lib/cx'
+import { UiButton, UiText } from '@/shared/ui'
+import { useState } from 'react'
+import { useCookies } from 'react-cookie'
+import { useNavigate } from 'react-router-dom'
+import { useUsersStatus } from '../../api/updateUsersStatusApiService'
+import { ChatModalStateProps } from '../../hooks/useInviteGameSocket'
+import { useOnlinePageSockets } from '../../hooks/useOnlinePageSockets'
+import { ChatModals } from '../ChatModals'
+import cls from './OnlinePage.module.scss'
 
 const OnlinePage = ({ className }: { className?: string }) => {
 	const [cookies, , removeCookie] = useCookies(['jwt-cookie'])
@@ -34,41 +34,38 @@ const OnlinePage = ({ className }: { className?: string }) => {
 
 	const navigate = useNavigate()
 
-	
-	
-
 	const {
-		usersWithUpdatedStatus,
+		upToDateUsers,
 		isInvitedToGame,
 		gameInviteSenderUsername,
-		handleUserMessage,
+		updateUsers,
 		handleUserInvite,
-	} = useOnlinePageSockets({
-		data,
-	})
+	} = useOnlinePageSockets()
 
-  const handleLogout = () => {
-    removeCookie("jwt-cookie");
-    navigate("/auth");
-  };
+	useUsersStatus(token, updateUsers, currentUser)
 
-	if (isLoading) {
-		return <Loader />
+	const handleLogout = () => {
+		removeCookie('jwt-cookie')
+		navigate('/auth')
 	}
 
-	if (isError && error) {
-		{
-			isError && error ? (
-				<UiText>{`${resources.errorMessagePrefix} ${error.message}`}</UiText>
-			) : null
-		}
-	}
+	//if (isLoading) {
+	//	return <Loader />
+	//}
+
+	//if (isError && error) {
+	//	{
+	//		isError && error ? (
+	//			<UiText>{`${resources.errorMessagePrefix} ${error.message}`}</UiText>
+	//		) : null
+	//	}
+	//}
 	return (
 		<div className={cx(cls.OnlinePage, {}, [className])}>
 			<UiButton onClick={handleLogout}>{resources.logoutButton}</UiButton>
 			<UiText size="xl">{resources.onlineUsersHeading}</UiText>
 			<UserList
-				users={usersWithUpdatedStatus}
+				users={upToDateUsers}
 				handleUserChatButton={handleOpenChatModal}
 				handleUserInviteButton={handleUserInvite}
 			/>
@@ -78,4 +75,4 @@ const OnlinePage = ({ className }: { className?: string }) => {
 	)
 }
 
-export default OnlinePage;
+export default OnlinePage

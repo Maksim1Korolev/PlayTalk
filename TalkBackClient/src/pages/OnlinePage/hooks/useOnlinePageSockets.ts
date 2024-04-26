@@ -1,52 +1,41 @@
-import { User } from "@/entities/User";
-import { useCallback, useEffect, useState } from "react";
-import { useOnlineSocket } from "./useOnlineSocket";
-import { useInviteGameSocket, useReceiveInvite } from "./useInviteGameSocket";
+import { User } from '@/entities/User'
+import { useCallback, useState } from 'react'
+import { useInviteGameSocket, useReceiveInvite } from './useInviteGameSocket'
+import { useOnlineSocket } from './useOnlineSocket'
 
-export const useOnlinePageSockets = ({ data }: { data?: User[] }) => {
-  const [isInvitedToGame, setIsInvitedToGame] = useState(false);
-  const [gameInviteSenderUsername, setGameInviteSenderUsername] = useState("");
-  useState<User[]>();
+export const useOnlinePageSockets = () => {
+	const [isInvitedToGame, setIsInvitedToGame] = useState(false)
+	const [upToDateUsers, setUpToDateUsers] = useState<User[]>()
+	const [gameInviteSenderUsername, setGameInviteSenderUsername] = useState('')
+	useState<User[]>()
 
-  const updateUsersStatus = (users: User[]) => {
-    const usersWithOnlineStatus = setUsersOnline(onlineUsernames, users);
-    setUsersGameStatus(inGameUsernames, usersWithOnlineStatus);
-  };
+	const updateUsers = (users: User[]) => {
+		setUpToDateUsers(users)
+	}
 
-  const { onlineUsernames, usersWithOnlineStatus, setUsersOnline } =
-    useOnlineSocket({
-      data,
-    });
+	const { onlineUsernames } = useOnlineSocket({
+		upToDateUsers,
+		setUpToDateUsers,
+	})
 
-  const {
-    inGameUsernames,
-    usersWithGameStatus,
-    setUsersGameStatus,
-    handleUserInvite,
-  } = useInviteGameSocket({
-    data: usersWithOnlineStatus,
-  });
+	const { handleUserInvite } = useInviteGameSocket({
+		upToDateUsers,
+		setUpToDateUsers,
+	})
 
-  const receiveInviteSubscribe = useCallback(
-    ({ senderUsername }: { senderUsername: string }) => {
-      console.log(senderUsername);
-      setGameInviteSenderUsername(senderUsername);
-      setIsInvitedToGame(true);
-    },
-    []
-  );
-  useEffect(() => {
-    const disconnect = useReceiveInvite(receiveInviteSubscribe);
-    return () => {
-      disconnect();
-    };
-  }, []);
+	const receiveInviteSubscribe = useCallback(({ senderUsername }: { senderUsername: string }) => {
+		console.log(senderUsername)
+		setGameInviteSenderUsername(senderUsername)
+		setIsInvitedToGame(true)
+	}, [])
 
-  return {
-    usersWithUpdatedStatus: usersWithGameStatus,
-    isInvitedToGame,
-    gameInviteSenderUsername,
-    updateUsersStatus,
-    handleUserInvite,
-  };
-};
+	useReceiveInvite(receiveInviteSubscribe)
+
+	return {
+		upToDateUsers,
+		isInvitedToGame,
+		gameInviteSenderUsername,
+		updateUsers,
+		handleUserInvite,
+	}
+}
