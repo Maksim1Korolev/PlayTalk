@@ -74,7 +74,6 @@ export const getMessageHistory = asyncHandler(async (req, res) => {
 export const removeFromMap = asyncHandler(async (req, res) => {
   const { socketId } = req.params;
 
-  // Find the user associated with the socketId
   let usernameToDisconnect;
   for (const [username, socketIds] of userSockets.entries()) {
     if (socketIds.includes(socketId)) {
@@ -83,25 +82,19 @@ export const removeFromMap = asyncHandler(async (req, res) => {
     }
   }
 
-  // If user found, proceed to modify their socketIds
   if (usernameToDisconnect) {
-    // Get the current list of socketIds for the user
     const socketIds = userSockets.get(usernameToDisconnect);
-    // Filter out the socketId that is to be disconnected
     const updatedSocketIds = socketIds.filter((id) => id !== socketId);
 
     if (updatedSocketIds.length === 0) {
-      // If no socketIds are left, remove the user from the map
       userSockets.delete(usernameToDisconnect);
     } else {
-      // Otherwise, update the user's socketIds in the map
       userSockets.set(usernameToDisconnect, updatedSocketIds);
     }
     return res
       .status(200)
       .send("Socket disconnected and user updated or removed as necessary.");
   } else {
-    // If no user was associated with the socketId, send an error response
     return res.status(404).send("Socket ID not found in user sockets map.");
   }
 });
