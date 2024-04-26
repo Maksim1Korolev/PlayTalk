@@ -5,6 +5,7 @@ import http from "http";
 import { Server } from "socket.io";
 import { connectToGameLobby } from "./connection/connection.controller.js";
 import cors from "cors";
+import connectionRouter from "./connection/connection.routes.js";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ const app = express();
 async function main() {
   app.use(cors());
   app.use(express.json());
+  app.use("/api/connection", connectionRouter);
 }
 const server = http.createServer(app);
 export const io = new Server(server, {
