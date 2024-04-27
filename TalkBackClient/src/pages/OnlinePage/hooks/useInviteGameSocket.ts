@@ -2,9 +2,6 @@ import { User } from '@/entities/User'
 import { gameSocket } from '@/shared/api/sockets'
 import { useCallback, useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
-export interface ChatModalStateProps {
-	user: User
-}
 
 export const useInviteGameSocket = ({
 	upToDateUsers,
