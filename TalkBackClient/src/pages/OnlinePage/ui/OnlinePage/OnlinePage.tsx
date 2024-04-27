@@ -61,6 +61,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
   //		) : null
   //	}
   //}
+
   return (
     <div className={cx(cls.OnlinePage, {}, [className])}>
       <UiButton onClick={handleLogout}>{resources.logoutButton}</UiButton>

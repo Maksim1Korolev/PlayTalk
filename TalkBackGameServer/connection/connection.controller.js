@@ -72,6 +72,25 @@ export const connectToGameLobby = () => {
       }
     );
 
+    // socket.on("disconnect", () => {
+    //   if (savedUsername && playerSockets.has(savedUsername)) {
+    //     playerSockets.get(savedUsername).delete(socket.id);
+    //     console.log(
+    //       `Socket ID ${
+    //         socket.id
+    //       } for player ${savedUsername} disconnected. Remaining sockets: ${
+    //         playerSockets.get(savedUsername).size
+    //       }`
+    //     );
+    //     if (playerSockets.get(savedUsername).size === 0) {
+    //       console.log(
+    //         `All sockets for ${savedUsername} are disconnected. Player remains in the map with 0 sockets.`
+    //       );
+    //       socket.broadcast.emit("player-connection", savedUsername, false);
+    //     }
+    //   }
+    // });
+
     socket.on("disconnect", () => {
       if (savedUsername && playerSockets.has(savedUsername)) {
         playerSockets.get(savedUsername).delete(socket.id);

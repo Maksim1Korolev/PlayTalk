@@ -37,6 +37,7 @@ export const UserCard = ({
         <UiButton onClick={onPlayButton}>Play</UiButton>
         <UserOnlineIndicator isOnline={user.isOnline} />
       </HStack>
+        <div> Is in game: {user.inGame ? "da" : "net"}</div>
     </Card>
   );
 };

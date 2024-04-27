@@ -1,5 +1,6 @@
 import { User } from "@/entities/User";
 import { gameSocket } from "@/shared/api/sockets";
+import { send } from "process";
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 export interface ChatModalStateProps {
@@ -33,19 +34,42 @@ export const useInviteGameSocket = ({
     [setUpToDateUsers, upToDateUsers]
   );
 
+  const updateUsersGameStatus = (usernames: string[]) => {
+    setInGameUsernames(usernames);
+    setUpToDateUsers((prev) =>
+      prev?.map((user: User) => ({
+        ...user,
+        inGame: usernames.includes(user.username),
+      }))
+    );
+    if (!upToDateUsers) setUsersGameStatus(usernames);
+  };
+
+  const handleBackgammonConnection = ({
+    senderUsername = user.username,
+    receiverUsername,
+    areBusy = true,
+  }: {
+    senderUsername?: string;
+    receiverUsername: string;
+    areBusy?: boolean;
+  }) => {
+    updateUsersGameStatus([senderUsername, receiverUsername]);
+
+    gameSocket.emit("backgammon-connection", {
+      senderUsername,
+      receiverUsername,
+      areBusy,
+    });
+  };
+
   useEffect(() => {
     const onConnect = () => {
       gameSocket.emit("online-ping", user.username);
     };
 
-    const updateUsersGameStatus = (usernames: string[]) => {
-      setInGameUsernames(usernames);
-      if (!upToDateUsers) setUsersGameStatus(usernames);
-    };
-
     const updatePlayingUsersStatus = (
-      senderUsername: string,
-      receiverUsername: string,
+      [senderUsername, receiverUsername]: string[],
       areInGame: boolean
     ) => {
       setInGameUsernames((prev) => {
@@ -84,22 +108,6 @@ export const useInviteGameSocket = ({
       gameSocket.close();
     };
   }, []);
-
-  const handleBackgammonConnection = ({
-    senderUsername = user.username,
-    receiverUsername,
-    areBusy = true,
-  }: {
-    senderUsername?: string;
-    receiverUsername: string;
-    areBusy?: boolean;
-  }) => {
-    gameSocket.emit("backgammon-connection", {
-      senderUsername,
-      receiverUsername,
-      areBusy,
-    });
-  };
 
   return {
     setUsersGameStatus,
