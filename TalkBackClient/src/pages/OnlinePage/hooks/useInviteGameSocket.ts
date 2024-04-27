@@ -90,9 +90,9 @@ export const useInviteGameSocket = ({
     receiverUsername,
     areBusy = true,
   }: {
-    senderUsername: string;
+    senderUsername?: string;
     receiverUsername: string;
-    areBusy: boolean;
+    areBusy?: boolean;
   }) => {
     gameSocket.emit("backgammon-connection", {
       senderUsername,

@@ -11,22 +11,30 @@ export const UserCard = ({
 }: {
   className?: string;
   user: User;
-  handleInviteButton: (invitedUsername: string) => void;
+  handleInviteButton: ({
+    senderUsername,
+    receiverUsername,
+    areBusy,
+  }: {
+    senderUsername?: string;
+    receiverUsername: string;
+    areBusy?: boolean;
+  }) => void;
   handleChatButton: (user: User) => void;
 }) => {
   const onChatButton = () => {
     handleChatButton(user);
   };
 
-  const handlePlayButton = () => {
-    handleInviteButton(user.username);
+  const onPlayButton = () => {
+    handleInviteButton({ receiverUsername: user.username });
   };
   return (
     <Card className={`${cls.UserCard} ${className}`}>
       <HStack>
         <UiText>{user.username}</UiText>
         <UiButton onClick={onChatButton}>Chat</UiButton>
-        <UiButton onClick={handlePlayButton}>Play</UiButton>
+        <UiButton onClick={onPlayButton}>Play</UiButton>
         <UserOnlineIndicator isOnline={user.isOnline} />
       </HStack>
     </Card>

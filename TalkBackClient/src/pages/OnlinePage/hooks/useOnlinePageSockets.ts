@@ -19,7 +19,7 @@ export const useOnlinePageSockets = () => {
     setUpToDateUsers,
   });
 
-  const { handleUserInvite } = useInviteGameSocket({
+  const { handleBackgammonConnection } = useInviteGameSocket({
     upToDateUsers,
     setUpToDateUsers,
   });
@@ -40,6 +40,6 @@ export const useOnlinePageSockets = () => {
     isInvitedToGame,
     gameInviteSenderUsername,
     updateUsers,
-    handleUserInvite,
+    handleBackgammonConnection,
   };
 };
