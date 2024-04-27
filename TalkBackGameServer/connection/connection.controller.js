@@ -2,17 +2,16 @@ import { io } from "../index.js";
 
 const playerSockets = new Map();
 
-export const getInGameUsernames = async (req, res) => {
+export const getBusyUsernames = async (req, res) => {
   try {
-    const inGameUsernames = Array.from(playerSockets.keys()).filter(
-      (username) =>
-        Array.from(playerSockets.get(username).values()).some(
-          (details) => details.inGame
-        )
+    const busyUsernames = Array.from(playerSockets.keys()).filter((username) =>
+      Array.from(playerSockets.get(username).values()).some(
+        (details) => details.busy
+      )
     );
-    return res.status(200).json({ inGameUsernames });
+    return res.status(200).json({ busyUsernames });
   } catch (err) {
-    console.log("Error retrieving in-game usernames:", err);
+    console.log("Error retrieving busy usernames:", err);
     res.status(500).send("Internal server error");
   }
 };
@@ -22,12 +21,12 @@ export const connectToGameLobby = () => {
     console.log("Player connected");
     let savedUsername;
 
-    socket.on("online-ping", async (username) => {
+    socket.on("online-ping", (username) => {
       savedUsername = username;
       if (!playerSockets.has(savedUsername)) {
         playerSockets.set(savedUsername, new Map());
       }
-      playerSockets.get(savedUsername).set(socket.id, { inGame: false });
+      playerSockets.get(savedUsername).set(socket.id, { busy: false });
       console.log(
         `Player ${savedUsername} connected with socket ID ${socket.id}. Current online players:`,
         Array.from(playerSockets.keys())
@@ -35,47 +34,43 @@ export const connectToGameLobby = () => {
       socket.emit("in-game-players", Array.from(playerSockets.keys()));
     });
 
-    socket.on("invite-to-play", ({ senderUsername, receiverUsername }) => {
-      if (
-        playerSockets.has(receiverUsername) &&
-        playerSockets.get(receiverUsername).size > 0
-      ) {
-        const receiverSocketIds = Array.from(
-          playerSockets.get(receiverUsername).keys()
-        );
-        receiverSocketIds.forEach((socketId) => {
-          io.to(socketId).emit("receive-game-invite", {
-            senderUsername,
-            receiverUsername,
+    socket.on(
+      "backgammon-connection",
+      ({ senderUsername, receiverUsername, areBusy }) => {
+        if (
+          playerSockets.has(receiverUsername) &&
+          playerSockets.get(receiverUsername).size > 0
+        ) {
+          const receiverSocketIds = Array.from(
+            playerSockets.get(receiverUsername).keys()
+          );
+          receiverSocketIds.forEach((socketId) => {
+            io.to(socketId).emit("receive-game-invite", {
+              senderUsername,
+              receiverUsername,
+            });
           });
-        });
-        console.log(
-          `Game invite sent from ${senderUsername} to ${receiverUsername}.`
-        );
-      } else {
-        console.log("Receiver not found in connected players.");
-      }
-    });
+          console.log(
+            `Backgammon connection initiated from ${senderUsername} to ${receiverUsername}.`
+          );
 
-    socket.on("accept-invite", ({ senderUsername, receiverUsername }) => {
-      if (
-        playerSockets.has(senderUsername) &&
-        playerSockets.has(receiverUsername)
-      ) {
-        [senderUsername, receiverUsername].forEach((username) => {
-          playerSockets.get(username).forEach((details, socketId) => {
-            details.inGame = true;
-            io.to(socketId).emit("game-start", { inGame: true });
+          [senderUsername, receiverUsername].forEach((username) => {
+            if (playerSockets.has(username)) {
+              playerSockets.get(username).forEach((details) => {
+                details.busy = areBusy;
+              });
+            }
           });
-        });
-        console.log(
-          `Game started between ${senderUsername} and ${receiverUsername}.`
-        );
-        io.emit("players-started-game", senderUsername, receiverUsername, true);
-      } else {
-        console.log("One of the players not found in connected players.");
+          io.emit(
+            "update-busy-status",
+            [senderUsername, receiverUsername],
+            areBusy
+          );
+        } else {
+          console.log("Receiver not found in connected players.");
+        }
       }
-    });
+    );
 
     socket.on("disconnect", () => {
       if (savedUsername && playerSockets.has(savedUsername)) {

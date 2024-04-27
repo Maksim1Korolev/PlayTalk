@@ -1,8 +1,8 @@
-import express from 'express'
-import { getInGameUsernames } from './connection.controller.js'
+import express from "express";
+import { getBusyUsernames } from "./connection.controller.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/inGameUsernames', getInGameUsernames)
+router.get("/inGameUsernames", getBusyUsernames);
 
-export default router
+export default router;

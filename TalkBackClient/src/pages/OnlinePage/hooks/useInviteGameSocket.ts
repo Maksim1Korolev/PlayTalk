@@ -1,101 +1,120 @@
-import { User } from '@/entities/User'
-import { gameSocket } from '@/shared/api/sockets'
-import { useCallback, useEffect, useState } from 'react'
-import { useCookies } from 'react-cookie'
+import { User } from "@/entities/User";
+import { gameSocket } from "@/shared/api/sockets";
+import { useCallback, useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 export interface ChatModalStateProps {
-	user: User
+  user: User;
 }
 
 export const useInviteGameSocket = ({
-	upToDateUsers,
-	setUpToDateUsers,
+  upToDateUsers,
+  setUpToDateUsers,
 }: {
-	upToDateUsers?: User[]
-	setUpToDateUsers: React.Dispatch<React.SetStateAction<User[] | undefined>>
+  upToDateUsers?: User[];
+  setUpToDateUsers: React.Dispatch<React.SetStateAction<User[] | undefined>>;
 }) => {
-	const [inGameUsernames, setInGameUsernames] = useState<string[]>([])
-	const [cookies] = useCookies()
-	const { user }: { user: User } = cookies['jwt-cookie']
+  const [inGameUsernames, setInGameUsernames] = useState<string[]>([]);
+  const [cookies] = useCookies();
+  const { user }: { user: User } = cookies["jwt-cookie"];
 
-	const setUsersGameStatus = useCallback(
-		(usernames: string[]) => {
-			const usersToUpdate = upToDateUsers
-			if (!usersToUpdate) return
+  const setUsersGameStatus = useCallback(
+    (usernames: string[]) => {
+      const usersToUpdate = upToDateUsers;
+      if (!usersToUpdate) return;
 
-			const updatedUsers = usersToUpdate.map((user: User) => ({
-				...user,
-				inGame: usernames.includes(user.username),
-			}))
+      const updatedUsers = usersToUpdate.map((user: User) => ({
+        ...user,
+        inGame: usernames.includes(user.username),
+      }));
 
-			setUpToDateUsers(updatedUsers)
-			return { updatedUsers }
-		},
-		[setUpToDateUsers, upToDateUsers]
-	)
+      setUpToDateUsers(updatedUsers);
+      return { updatedUsers };
+    },
+    [setUpToDateUsers, upToDateUsers]
+  );
 
-	useEffect(() => {
-		const onConnect = () => {
-			gameSocket.emit('online-ping', user.username)
-		}
+  useEffect(() => {
+    const onConnect = () => {
+      gameSocket.emit("online-ping", user.username);
+    };
 
-		const updateUsersGameStatus = (usernames: string[]) => {
-			setInGameUsernames(usernames)
-			if (!upToDateUsers) setUsersGameStatus(usernames)
-		}
+    const updateUsersGameStatus = (usernames: string[]) => {
+      setInGameUsernames(usernames);
+      if (!upToDateUsers) setUsersGameStatus(usernames);
+    };
 
-		const updatePlayingUsersStatus = (username1: string, username2: string, areInGame: boolean) => {
-			setInGameUsernames(prev => {
-				if (areInGame) {
-					return [...new Set([...prev, username1, username2])]
-				} else {
-					return prev.filter(u => u !== username1 && u !== username2)
-				}
-			})
+    const updatePlayingUsersStatus = (
+      senderUsername: string,
+      receiverUsername: string,
+      areInGame: boolean
+    ) => {
+      setInGameUsernames((prev) => {
+        if (areInGame) {
+          return [...new Set([...prev, senderUsername, receiverUsername])];
+        } else {
+          return prev.filter(
+            (u) => u !== senderUsername && u !== receiverUsername
+          );
+        }
+      });
 
-			setUpToDateUsers(prevUsers => {
-				if (!prevUsers) return []
+      setUpToDateUsers((prevUsers) => {
+        if (!prevUsers) return [];
 
-				return prevUsers.map(user => {
-					if (user.username === username1 || user.username === username2) {
-						return { ...user, inGame: areInGame }
-					}
-					return user
-				})
-			})
-		}
+        return prevUsers.map((user) => {
+          if (
+            user.username === senderUsername ||
+            user.username === receiverUsername
+          ) {
+            return { ...user, inGame: areInGame };
+          }
+          return user;
+        });
+      });
+    };
 
-		/////////////////////////////////////////////////////
-		gameSocket.on('connect', onConnect)
-		gameSocket.on('in-game-players', updateUsersGameStatus)
-		gameSocket.on('players-started-game', updatePlayingUsersStatus)
-		/////////////////////////////////////////////////////
+    gameSocket.on("connect", onConnect);
+    gameSocket.on("in-game-players", updateUsersGameStatus);
+    gameSocket.on("update-busy-status", updatePlayingUsersStatus);
 
-		return () => {
-			gameSocket.close()
-		}
-	}, [])
+    return () => {
+      gameSocket.off("connect", onConnect);
+      gameSocket.off("in-game-players", updateUsersGameStatus);
+      gameSocket.off("update-busy-status", updatePlayingUsersStatus);
+      gameSocket.close();
+    };
+  }, []);
 
-	const handleUserInvite = (receiverUsername: string) => {
-		gameSocket.emit('invite-to-play', {
-			senderUsername: user.username,
-			receiverUsername,
-		})
-	}
+  const handleBackgammonConnection = ({
+    senderUsername = user.username,
+    receiverUsername,
+    areBusy = true,
+  }: {
+    senderUsername: string;
+    receiverUsername: string;
+    areBusy: boolean;
+  }) => {
+    gameSocket.emit("backgammon-connection", {
+      senderUsername,
+      receiverUsername,
+      areBusy,
+    });
+  };
 
-	return {
-		setUsersGameStatus,
-		handleUserInvite,
-		inGameUsernames,
-	}
-}
+  return {
+    setUsersGameStatus,
+    handleBackgammonConnection,
+    inGameUsernames,
+  };
+};
 
 export const useReceiveInvite = (
-	receiveInvite: ({ senderUsername }: { senderUsername: string }) => void
+  receiveInvite: ({ senderUsername }: { senderUsername: string }) => void
 ) => {
-	useEffect(() => {
-		gameSocket.on('receive-game-invite', receiveInvite)
-		return () => {
-			gameSocket.off('receive-game-invite')
-		}
-	}, [receiveInvite])
-}
+  useEffect(() => {
+    gameSocket.on("receive-game-invite", receiveInvite);
+    return () => {
+      gameSocket.off("receive-game-invite", receiveInvite);
+    };
+  }, [receiveInvite]);
+};
