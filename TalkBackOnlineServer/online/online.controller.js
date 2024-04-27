@@ -53,7 +53,10 @@ export const connectOnline = async () => {
 
     socket.on("on-chat-open", async (receiverUsername) => {
       try {
-        const data = await GetMessageHistory([savedUsername, receiverUsername]);
+        const { data } = await GetMessageHistory([
+          savedUsername,
+          receiverUsername,
+        ]);
         if (data && data.messageHistory) {
           socket.emit("update-chat", data.messageHistory, receiverUsername);
           console.log(
