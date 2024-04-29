@@ -1,50 +1,52 @@
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
-import path from "path";
-import dotenv from "dotenv";
+import cors from 'cors'
+import dotenv from 'dotenv'
+import express from 'express'
+import mongoose from 'mongoose'
+import path from 'path'
 
-import authRoutes from "./app/auth/auth.routes.js";
-import usersRoutes from "./app/users/users.routes.js";
+import authRoutes from './app/auth/auth.routes.js'
+import UserService from './app/service/UserService.js'
+import usersRoutes from './app/users/users.routes.js'
 
-import { errorHandler, notFound } from "./app/middleware/error.middleware.js";
-dotenv.config();
+import { errorHandler, notFound } from './app/middleware/error.middleware.js'
+dotenv.config()
 
-const app = express();
+const app = express()
+UserService.loadAvatars()
 
 async function main() {
-  app.use(cors());
-  app.use(express.json());
+	app.use(cors())
+	app.use(express.json())
 
-  const __dirname = path.resolve();
+	const __dirname = path.resolve()
 
-  app.use("/static", express.static(path.join(__dirname, "/static/")));
+	app.use('/public', express.static(path.join(__dirname, 'public')))
 
-  app.use("/api/auth", authRoutes);
-  app.use("/api/users", usersRoutes);
+	app.use('/api/auth', authRoutes)
+	app.use('/api/users', usersRoutes)
 
-  app.use(notFound);
-  app.use(errorHandler);
+	app.use(notFound)
+	app.use(errorHandler)
 }
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000
 
-const mongoURL = process.env.DATABASE_URL;
+const mongoURL = process.env.DATABASE_URL
 
-console.log(mongoURL);
+console.log(mongoURL)
 
 mongoose
-  .connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("Successfully connected to MongoDB"))
-  .catch((err) => console.error("Connection error", err));
+	.connect(mongoURL)
+	.then(() => console.log('Successfully connected to MongoDB'))
+	.catch(err => console.error('Connection error', err))
 
 app.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
-});
+	console.log(`Server listening at http://localhost:${PORT}`)
+})
 
 main()
-  .then(async () => {})
-  .catch(async (e) => {
-    console.error(e);
-    await mongoose.disconnect();
-    process.exit(1);
-  });
+	.then(async () => {})
+	.catch(async e => {
+		console.error(e)
+		await mongoose.disconnect()
+		process.exit(1)
+	})
