@@ -5,11 +5,9 @@ const playerSockets = new Map();
 
 export const getBusyUsernames = async (req, res) => {
   try {
-    const busyUsernames = Array.from(playerSockets.keys()).filter((username) =>
-      Array.from(playerSockets.get(username).values()).some(
-        (details) => details.busy
-      )
-    );
+    const busyUsernames = Array.from(playerSockets.entries())
+      .filter(([username, { busy }]) => busy)
+      .map(([username]) => username);
 
     return res.status(200).json({ busyUsernames });
   } catch (err) {
@@ -27,7 +25,7 @@ export const connectToGameLobby = () => {
       savedUsername = username;
 
       if (!playerSockets.has(savedUsername)) {
-        playerSockets.set(savedUsername, new Map());
+        playerSockets.set(savedUsername, { socketIds: new Set(), busy: false });
 
         try {
           let player = await PlayerService.getPlayerByUsername(savedUsername);
@@ -39,46 +37,34 @@ export const connectToGameLobby = () => {
           console.log("Error accessing PlayerService:", error);
         }
       }
-      playerSockets.get(savedUsername).set(socket.id, { busy: false });
+
+      const playerData = playerSockets.get(savedUsername);
+      playerData.socketIds.add(socket.id);
+
       console.log(
         `Player ${savedUsername} connected with socket ID ${socket.id}. Current online players:`,
         Array.from(playerSockets.keys())
       );
-      socket.emit("in-game-players", Array.from(playerSockets.keys()));
+      socket.broadcast.emit(
+        "in-game-players",
+        Array.from(playerSockets.keys())
+      );
     });
 
     socket.on(
       "backgammon-connection",
       ({ senderUsername, receiverUsername, areBusy }) => {
-        if (
-          playerSockets.has(receiverUsername) &&
-          playerSockets.get(receiverUsername).size > 0
-        ) {
-          const receiverSocketIds = Array.from(
-            playerSockets.get(receiverUsername).keys()
-          );
-          receiverSocketIds.forEach((socketId) => {
+        if (playerSockets.has(receiverUsername)) {
+          const senderData = playerSockets.get(senderUsername);
+          const receiverData = playerSockets.get(receiverUsername);
+
+          senderData.busy = receiverData.busy = areBusy;
+
+          receiverData.socketIds.forEach((socketId) => {
             io.to(socketId).emit("receive-game-invite", {
               senderUsername,
               receiverUsername,
             });
-          });
-          console.log(
-            `Backgammon connection initiated from ${senderUsername} to ${receiverUsername}.`
-          );
-
-          [senderUsername, receiverUsername].forEach((username) => {
-            if (playerSockets.has(username)) {
-              const userSockets = playerSockets.get(username);
-              userSockets.forEach((details, socketId) => {
-                details.busy = areBusy;
-                console.log(
-                  `User ${username} on socket ${socketId} is now ${
-                    areBusy ? "busy" : "not busy"
-                  }.`
-                );
-              });
-            }
           });
 
           io.emit(
@@ -113,20 +99,20 @@ export const connectToGameLobby = () => {
 
     socket.on("disconnect", () => {
       if (savedUsername && playerSockets.has(savedUsername)) {
-        playerSockets.get(savedUsername).delete(socket.id);
+        const userData = playerSockets.get(savedUsername);
+        userData.socketIds.delete(socket.id);
+
         console.log(
-          `Socket ID ${
-            socket.id
-          } for player ${savedUsername} disconnected. Remaining sockets: ${
-            playerSockets.get(savedUsername).size
-          }`
+          `Socket ID ${socket.id} for player ${savedUsername} disconnected. Remaining sockets: ${userData.socketIds.size}`
         );
-        if (playerSockets.get(savedUsername).size === 0) {
+
+        if (userData.socketIds.size === 0) {
+          userData.busy = false;
           playerSockets.delete(savedUsername);
           console.log(
             `All sockets for ${savedUsername} are disconnected. Removing from online players.`
           );
-          socket.broadcast.emit("player-connection", savedUsername, false);
+          io.emit("player-connection", savedUsername, false);
         }
       }
     });
