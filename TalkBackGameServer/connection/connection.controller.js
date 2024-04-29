@@ -58,15 +58,26 @@ export const connectToGameLobby = () => {
         `Player ${savedUsername} connected with socket ID ${socket.id}. Current online players:`,
         Array.from(playerSockets.keys())
       );
-
     });
 
     socket.on(
       "backgammon-connection",
       ({ senderUsername, receiverUsername, areBusy }) => {
         if (playerSockets.has(receiverUsername)) {
-          const senderData = playerSockets.get(senderUsername);
           const receiverData = playerSockets.get(receiverUsername);
+
+          if (receiverData.busy) {
+            console.log(
+              `Connection failed: ${receiverUsername} is already busy.`
+            );
+
+            // io.to(socket.id).emit("connection-error", {
+            //   message: `${receiverUsername} is currently busy.`,
+            // });
+            return;
+          }
+
+          const senderData = playerSockets.get(senderUsername);
 
           senderData.busy = receiverData.busy = areBusy;
 
