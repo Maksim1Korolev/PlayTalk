@@ -1,4 +1,5 @@
 import { io } from "../index.js";
+import PlayerService from "../service/PlayerService.js";
 
 const playerSockets = new Map();
 
@@ -18,14 +19,25 @@ export const getBusyUsernames = async (req, res) => {
 };
 
 export const connectToGameLobby = () => {
-  io.on("connection", (socket) => {
+  io.on("connection", async (socket) => {
     console.log("Player connected");
     let savedUsername;
 
-    socket.on("online-ping", (username) => {
+    socket.on("online-ping", async (username) => {
       savedUsername = username;
+
       if (!playerSockets.has(savedUsername)) {
         playerSockets.set(savedUsername, new Map());
+
+        try {
+          let player = await PlayerService.getPlayerByUsername(savedUsername);
+          if (!player) {
+            player = await PlayerService.addPlayer({ username: savedUsername });
+            console.log(`New player added to database: ${player.username}`);
+          }
+        } catch (error) {
+          console.log("Error accessing PlayerService:", error);
+        }
       }
       playerSockets.get(savedUsername).set(socket.id, { busy: false });
       console.log(
