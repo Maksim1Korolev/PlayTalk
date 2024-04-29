@@ -66,7 +66,7 @@ export const connectToGameLobby = () => {
         if (playerSockets.has(receiverUsername)) {
           const receiverData = playerSockets.get(receiverUsername);
 
-          if (receiverData.busy) {
+          if (areBusy && receiverData.busy) {
             console.log(
               `Connection failed: ${receiverUsername} is already busy.`
             );
@@ -81,12 +81,14 @@ export const connectToGameLobby = () => {
 
           senderData.busy = receiverData.busy = areBusy;
 
-          receiverData.socketIds.forEach((socketId) => {
-            io.to(socketId).emit("receive-game-invite", {
-              senderUsername,
-              receiverUsername,
+          if (areBusy) {
+            receiverData.socketIds.forEach((socketId) => {
+              io.to(socketId).emit("receive-game-invite", {
+                senderUsername,
+                receiverUsername,
+              });
             });
-          });
+          }
 
           io.emit(
             "update-busy-status",

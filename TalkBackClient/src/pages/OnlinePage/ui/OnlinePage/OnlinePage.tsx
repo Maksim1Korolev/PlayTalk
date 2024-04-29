@@ -100,7 +100,11 @@ const OnlinePage = ({ className }: { className?: string }) => {
         setChatModals={setChatModals}
       />
       {isInvitedToGame && (
-        <GameRequest senderUsername={gameInviteSenderUsername} />
+        <GameRequest
+          handleYesButton={() => {}}
+          handleNoButton={handleBackgammonConnection}
+          senderUsername={gameInviteSenderUsername}
+        />
       )}
     </div>
   );
