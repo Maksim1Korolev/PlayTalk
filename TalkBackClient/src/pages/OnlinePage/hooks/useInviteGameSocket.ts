@@ -14,6 +14,7 @@ export const useInviteGameSocket = ({
   const [cookies] = useCookies();
   const { user }: { user: User } = cookies["jwt-cookie"];
 
+  //TODO:Check if this function needed
   const setUsersGameStatus = useCallback(
     (usernames: string[]) => {
       const usersToUpdate = upToDateUsers;
@@ -39,29 +40,35 @@ export const useInviteGameSocket = ({
       }))
     );
 
-    console.log("ZHOPAAAAAAA");
-    console.log(usernames);
-
     if (!upToDateUsers) setUsersGameStatus(usernames);
   };
 
-  const handleBackgammonConnection = ({
-    senderUsername = user.username,
-    receiverUsername,
-    areBusy = true,
-  }: {
-    senderUsername?: string;
-    receiverUsername: string;
-    areBusy?: boolean;
-  }) => {
-    updateUsersGameStatus([senderUsername, receiverUsername]);
-
-    gameSocket.emit("backgammon-connection", {
-      senderUsername,
+  const handleBackgammonConnection = useCallback(
+    ({
       receiverUsername,
-      areBusy,
-    });
-  };
+      areBusy = true,
+    }: {
+      receiverUsername: string;
+      areBusy?: boolean;
+    }) => {
+      updateUsersGameStatus([user.username, receiverUsername]);
+
+      gameSocket.emit("backgammon-connection", {
+        receiverUsername,
+        areBusy,
+      });
+    },
+    []
+  );
+
+  const handleAcceptGame = useCallback(
+    ({ receiverUsername }: { receiverUsername: string }) => {
+      gameSocket.emit("accept-game", {
+        receiverUsername,
+      });
+    },
+    []
+  );
 
   useEffect(() => {
     const onConnect = () => {
@@ -108,8 +115,8 @@ export const useInviteGameSocket = ({
   }, []);
 
   return {
-    setUsersGameStatus,
     handleBackgammonConnection,
+    handleAcceptGame,
     // inGameUsernames,
   };
 };

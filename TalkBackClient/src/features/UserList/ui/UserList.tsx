@@ -7,11 +7,9 @@ interface UserListProps {
   users?: User[];
   handleUserChatButton: (user: User) => void;
   handleUserInviteButton: ({
-    senderUsername,
     receiverUsername,
     areBusy,
   }: {
-    senderUsername?: string;
     receiverUsername: string;
     areBusy?: boolean;
   }) => void;

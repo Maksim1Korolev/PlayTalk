@@ -12,11 +12,9 @@ export const UserCard = ({
   className?: string;
   user: User;
   handleInviteButton: ({
-    senderUsername,
     receiverUsername,
     areBusy,
   }: {
-    senderUsername?: string;
     receiverUsername: string;
     areBusy?: boolean;
   }) => void;

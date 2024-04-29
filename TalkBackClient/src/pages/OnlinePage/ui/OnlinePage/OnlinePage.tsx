@@ -65,6 +65,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
     gameInviteSenderUsername,
     updateUsers,
     handleBackgammonConnection,
+    handleAcceptGame,
   } = useOnlinePageSockets();
 
   useUsersStatus(token, updateUsers, currentUser);
@@ -101,7 +102,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
       />
       {isInvitedToGame && (
         <GameRequest
-          handleYesButton={() => {}}
+          handleYesButton={handleAcceptGame}
           handleNoButton={handleBackgammonConnection}
           senderUsername={gameInviteSenderUsername}
         />

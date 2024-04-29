@@ -60,46 +60,72 @@ export const connectToGameLobby = () => {
       );
     });
 
-    socket.on(
-      "backgammon-connection",
-      ({ senderUsername, receiverUsername, areBusy }) => {
-        if (playerSockets.has(receiverUsername)) {
-          const receiverData = playerSockets.get(receiverUsername);
+    socket.on("backgammon-connection", ({ receiverUsername, areBusy }) => {
+      const senderUsername = savedUsername;
 
-          if (areBusy && receiverData.busy) {
-            console.log(
-              `Connection failed: ${receiverUsername} is already busy.`
-            );
+      if (playerSockets.has(receiverUsername)) {
+        const receiverData = playerSockets.get(receiverUsername);
 
-            // io.to(socket.id).emit("connection-error", {
-            //   message: `${receiverUsername} is currently busy.`,
-            // });
-            return;
-          }
-
-          const senderData = playerSockets.get(senderUsername);
-
-          senderData.busy = receiverData.busy = areBusy;
-
-          if (areBusy) {
-            receiverData.socketIds.forEach((socketId) => {
-              io.to(socketId).emit("receive-game-invite", {
-                senderUsername,
-                receiverUsername,
-              });
-            });
-          }
-
-          io.emit(
-            "update-busy-status",
-            [senderUsername, receiverUsername],
-            areBusy
+        if (areBusy && receiverData.busy) {
+          console.log(
+            `Connection failed: ${receiverUsername} is already busy.`
           );
-        } else {
-          console.log("Receiver not found in connected players.");
+
+          // io.to(socket.id).emit("connection-error", {
+          //   message: `${receiverUsername} is currently busy.`,
+          // });
+          return;
         }
+
+        const senderData = playerSockets.get(senderUsername);
+
+        senderData.busy = receiverData.busy = areBusy;
+
+        if (areBusy) {
+          receiverData.socketIds.forEach((socketId) => {
+            io.to(socketId).emit("receive-game-invite", {
+              senderUsername,
+              receiverUsername,
+            });
+          });
+        }
+
+        io.emit(
+          "update-busy-status",
+          [senderUsername, receiverUsername],
+          areBusy
+        );
+      } else {
+        console.log("Receiver not found in connected players.");
       }
-    );
+    });
+
+    socket.on("accept-game", ({ receiverUsername }) => {
+      const senderUsername = savedUsername;
+
+      if (
+        playerSockets.has(senderUsername) &&
+        playerSockets.has(receiverUsername)
+      ) {
+        const senderData = playerSockets.get(senderUsername);
+        const receiverData = playerSockets.get(receiverUsername);
+
+        [...senderData.socketIds, ...receiverData.socketIds].forEach(
+          (socketId) => {
+            io.to(socketId).emit("start-game");
+          }
+        );
+
+        console.log(
+          `Game started between ${senderUsername} and ${receiverUsername}.`
+        );
+      } else {
+        console.log("One of the players is not found in connected players.");
+        // io.to(socket.id).emit("start-game-error", {
+        //   message: "One of the players is not found in connected players.",
+        // });
+      }
+    });
 
     // socket.on("disconnect", () => {
     //   if (savedUsername && playerSockets.has(savedUsername)) {
