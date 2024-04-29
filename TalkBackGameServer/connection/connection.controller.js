@@ -9,6 +9,7 @@ export const getBusyUsernames = async (req, res) => {
         (details) => details.busy
       )
     );
+
     return res.status(200).json({ busyUsernames });
   } catch (err) {
     console.log("Error retrieving busy usernames:", err);
@@ -56,8 +57,14 @@ export const connectToGameLobby = () => {
 
           [senderUsername, receiverUsername].forEach((username) => {
             if (playerSockets.has(username)) {
-              playerSockets.get(username).forEach((details) => {
+              const userSockets = playerSockets.get(username);
+              userSockets.forEach((details, socketId) => {
                 details.busy = areBusy;
+                console.log(
+                  `User ${username} on socket ${socketId} is now ${
+                    areBusy ? "busy" : "not busy"
+                  }.`
+                );
               });
             }
           });
