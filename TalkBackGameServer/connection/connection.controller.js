@@ -24,8 +24,15 @@ export const connectToGameLobby = () => {
     socket.on("online-ping", async (username) => {
       savedUsername = username;
 
+      // console.log("YOUREHEREEEE");
+      // console.log(playerSockets);
+
       if (!playerSockets.has(savedUsername)) {
-        playerSockets.set(savedUsername, { socketIds: new Set(), busy: false });
+        playerSockets.set(savedUsername, {
+          socketIds: new Set(),
+          busy: false,
+          timeoutHandle: null,
+        });
 
         try {
           let player = await PlayerService.getPlayerByUsername(savedUsername);
@@ -41,14 +48,17 @@ export const connectToGameLobby = () => {
       const playerData = playerSockets.get(savedUsername);
       playerData.socketIds.add(socket.id);
 
+      if (playerData.timeoutHandle) {
+        clearTimeout(playerData.timeoutHandle);
+        playerData.timeoutHandle = null;
+        console.log(`Disconnection timeout cleared for ${savedUsername}.`);
+      }
+
       console.log(
         `Player ${savedUsername} connected with socket ID ${socket.id}. Current online players:`,
         Array.from(playerSockets.keys())
       );
-      socket.broadcast.emit(
-        "in-game-players",
-        Array.from(playerSockets.keys())
-      );
+
     });
 
     socket.on(
@@ -99,20 +109,32 @@ export const connectToGameLobby = () => {
 
     socket.on("disconnect", () => {
       if (savedUsername && playerSockets.has(savedUsername)) {
-        const userData = playerSockets.get(savedUsername);
-        userData.socketIds.delete(socket.id);
+        const playerData = playerSockets.get(savedUsername);
+        playerData.socketIds.delete(socket.id);
 
         console.log(
-          `Socket ID ${socket.id} for player ${savedUsername} disconnected. Remaining sockets: ${userData.socketIds.size}`
+          `Socket ID ${socket.id} for player ${savedUsername} disconnected. Remaining sockets: ${playerData.socketIds.size}`
         );
 
-        if (userData.socketIds.size === 0) {
-          userData.busy = false;
-          playerSockets.delete(savedUsername);
+        if (playerData.socketIds.size === 0) {
           console.log(
-            `All sockets for ${savedUsername} are disconnected. Removing from online players.`
+            `Waiting 60 seconds before potentially removing ${savedUsername} from online players.`
           );
+
+          const timeoutHandle = setTimeout(() => {
+            if (playerData.socketIds.size === 0) {
+              playerSockets.delete(savedUsername);
+              playerData.busy = false;
+
+              console.log(
+                `All sockets for ${savedUsername} are disconnected after waiting period. Removing from online players.`
+              );
+            }
+          }, 60000);
+
           io.emit("player-connection", savedUsername, false);
+
+          playerData.timeoutHandle = timeoutHandle;
         }
       }
     });

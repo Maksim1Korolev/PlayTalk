@@ -38,6 +38,10 @@ export const useInviteGameSocket = ({
         inGame: usernames.includes(user.username),
       }))
     );
+
+    console.log("ZHOPAAAAAAA");
+    console.log(usernames);
+
     if (!upToDateUsers) setUsersGameStatus(usernames);
   };
 
@@ -94,12 +98,10 @@ export const useInviteGameSocket = ({
     };
 
     gameSocket.on("connect", onConnect);
-    gameSocket.on("in-game-players", updateUsersGameStatus);
     gameSocket.on("update-busy-status", updatePlayingUsersStatus);
 
     return () => {
       gameSocket.off("connect", onConnect);
-      gameSocket.off("in-game-players", updateUsersGameStatus);
       gameSocket.off("update-busy-status", updatePlayingUsersStatus);
       gameSocket.close();
     };
