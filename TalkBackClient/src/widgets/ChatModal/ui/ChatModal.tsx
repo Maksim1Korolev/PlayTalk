@@ -139,6 +139,7 @@ export const ChatModal = memo(
 					enableResizing={false}
 				>
 					<ChatCircle
+						imageSrc={receiverUser.avatarPath}
 						className={cx(cls.ChatModal, {}, [className])}
 						onClick={handleOpenChatModal}
 					/>
