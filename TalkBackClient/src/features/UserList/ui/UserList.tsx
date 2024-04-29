@@ -24,6 +24,8 @@ export const UserList = memo(
     handleUserChatButton,
     handleUserInviteButton,
   }: UserListProps) => {
+    console.log("USERSSSS::::");
+    console.log(users);
     if (!users || users.length === 0) {
       return <p>No users available.</p>;
     }

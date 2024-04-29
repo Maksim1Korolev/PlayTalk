@@ -16,12 +16,12 @@ export const useUsersStatus = async (
 
       const onlineUsernames = await onlineApiService.getOnlineUsernames(token);
 
-      const usersInGame = await gameConnectionApiService.getInGameUsernames(
+      const inGameUsernames = await gameConnectionApiService.getInGameUsernames(
         token
       );
 
       const onlineSet = new Set(onlineUsernames);
-      const inGameSet = new Set(usersInGame);
+      const inGameSet = new Set(inGameUsernames);
 
       const updatedUsers = users.map((user: User) => ({
         ...user,
@@ -29,7 +29,7 @@ export const useUsersStatus = async (
         inGame: inGameSet.has(user.username),
       }));
 
-      console.log("Updated Users:", updatedUsers);
+      //console.log("Updated Users:", updatedUsers);
       return updatedUsers;
     },
     {

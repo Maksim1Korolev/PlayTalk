@@ -61,6 +61,7 @@ export const connectToGameLobby = () => {
               });
             }
           });
+
           io.emit(
             "update-busy-status",
             [senderUsername, receiverUsername],
