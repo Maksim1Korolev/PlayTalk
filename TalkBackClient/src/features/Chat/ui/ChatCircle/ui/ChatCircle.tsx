@@ -1,3 +1,4 @@
+import { cx } from '@/shared/lib/cx'
 import { AppImage } from '@/shared/ui/AppImage'
 import { memo } from 'react'
 import cls from './ChatCircle.module.scss'
@@ -6,10 +7,12 @@ export const ChatCircle = memo(
 	({
 		className,
 		imageSrc,
+		isOnline,
 		onClick,
 	}: {
 		className?: string
 		imageSrc?: string
+		isOnline?: boolean
 		onClick: () => void
 	}) => {
 		const avatarSrc = `${import.meta.env.VITE_AUTH_SERVER_STATIC_URL}${imageSrc}`
@@ -24,6 +27,8 @@ export const ChatCircle = memo(
 						draggable="false"
 					/>
 				</div>
+				<span className={cx(cls.onlineIndicator, { [cls.active]: isOnline })}></span>
+				<div className={cls.messageIndicator}>8</div>
 			</div>
 		)
 	}
