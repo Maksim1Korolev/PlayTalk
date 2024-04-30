@@ -3,8 +3,9 @@ import asyncHandler from "express-async-handler";
 import MessageHistoryService from "../service/MessageHistoryService.js";
 
 const userSockets = new Map();
+const missingMessages = new Map();
 
-// @desc   Add message to Message History
+// @desc   Add message to Message History and update missing message List
 //         return Socket ids
 // @route  POST /messages/message
 // @access Public
@@ -13,10 +14,10 @@ export const addMessageToHistory = asyncHandler(async (req, res) => {
   MessageHistoryService.addMessage(usernames, message);
 
   const receiversSocketIds = [];
-  usernames.map((username) => {
+  usernames.map(username => {
     const currentUserSockets = userSockets.get(username);
     if (currentUserSockets) {
-      currentUserSockets.map((socketId) => receiversSocketIds.push(socketId));
+      currentUserSockets.map(socketId => receiversSocketIds.push(socketId));
     }
   });
   return res.json({ receiversSocketIds });
@@ -84,7 +85,7 @@ export const removeFromMap = asyncHandler(async (req, res) => {
 
   if (usernameToDisconnect) {
     const socketIds = userSockets.get(usernameToDisconnect);
-    const updatedSocketIds = socketIds.filter((id) => id !== socketId);
+    const updatedSocketIds = socketIds.filter(id => id !== socketId);
 
     if (updatedSocketIds.length === 0) {
       userSockets.delete(usernameToDisconnect);

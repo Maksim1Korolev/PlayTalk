@@ -1,45 +1,43 @@
-import { memo } from "react";
-import { User, UserCard } from "@/entities/User";
-import cls from "./UserList.module.scss";
+import { User, UserCard } from '@/entities/User'
+import { memo } from 'react'
+import { sortUsers } from '../model/userListUtils'
+import cls from './UserList.module.scss'
 
 interface UserListProps {
-  className?: string;
-  users?: User[];
-  handleUserChatButton: (user: User) => void;
-  handleUserInviteButton: ({
-    receiverUsername,
-    areBusy,
-  }: {
-    receiverUsername: string;
-    areBusy?: boolean;
-  }) => void;
+	className?: string
+	users?: User[]
+	handleUserChatButton: (user: User) => void
+	handleUserInviteButton: ({
+		receiverUsername,
+		areBusy,
+	}: {
+		receiverUsername: string
+		areBusy?: boolean
+	}) => void
 }
 
 export const UserList = memo(
-  ({
-    className,
-    users,
-    handleUserChatButton,
-    handleUserInviteButton,
-  }: UserListProps) => {
-    console.log("USERSSSS::::");
-    console.log(users);
-    if (!users || users.length === 0) {
-      return <p>No users available.</p>;
-    }
+	({ className, users, handleUserChatButton, handleUserInviteButton }: UserListProps) => {
+		console.log('USERSSSS::::')
+		console.log(users)
+		if (!users || users.length === 0) {
+			return <p>No users available.</p>
+		}
 
-    return (
-      <ul className={`${cls.UserList} ${className || ""}`}>
-        {users?.map((user) => (
-          <UserCard
-            key={user._id}
-            user={user}
-            className={cls.userCard}
-            handleInviteButton={handleUserInviteButton}
-            handleChatButton={handleUserChatButton}
-          />
-        ))}
-      </ul>
-    );
-  }
-);
+		const sortedUsers = [...users].sort(sortUsers)
+
+		return (
+			<ul className={`${cls.UserList} ${className || ''}`}>
+				{sortedUsers?.map(user => (
+					<UserCard
+						key={user._id}
+						user={user}
+						className={cls.userCard}
+						handleInviteButton={handleUserInviteButton}
+						handleChatButton={handleUserChatButton}
+					/>
+				))}
+			</ul>
+		)
+	}
+)
