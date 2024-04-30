@@ -1,36 +1,43 @@
+version: "3.8"
 services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80" # Expose NGINX on port 80 of the host
+    volumes:
+      - ./nginx:/etc/nginx/conf.d # Mount custom configuration directory
+    depends_on:
+      - auth_server
+      - game_server
+      - chat_server
+      - online_server
+    networks:
+      - talkback-network
+
   game_server:
     build: ./TalkBackGameServer
-    ports:
-      - "4200:4200"
     networks:
       - talkback-network
 
   auth_server:
     build: ./TalkBackAuthServer
-    ports:
-      - '4036:4036'
     networks:
       - talkback-network
 
   chat_server:
     build: ./TalkBackChatServer
-    ports:
-      - '4100:4100'
     networks:
       - talkback-network
 
   online_server:
     build: ./TalkBackOnlineServer
-    ports:
-      - '4000:4000'
     networks:
       - talkback-network
 
   client:
     build: ./TalkBackClient
     ports:
-      - '5173:5173'
+      - "5173:5173"
     networks:
       - talkback-network
     tty: true
