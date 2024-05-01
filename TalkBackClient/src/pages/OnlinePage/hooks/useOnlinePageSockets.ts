@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import {
   useConnectionGameSocket,
   useReceiveInvite,
-} from "./useInviteGameSocket";
+} from "./useConnectionGameSocket";
 import { useOnlineSocket } from "./useOnlineSocket";
 
 //TODO: Separate users update, so that if game Server crashes, online will work
