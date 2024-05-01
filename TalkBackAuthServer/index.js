@@ -22,8 +22,8 @@ async function main() {
 
   app.use("/public", express.static(path.join(__dirname, "public")));
 
-  app.use("/auth", authRoutes);
-  app.use("/users", usersRoutes);
+  app.use("/api/auth", authRoutes);
+  app.use("/api/users", usersRoutes);
 
   app.use(notFound);
   app.use(errorHandler);
@@ -37,7 +37,7 @@ console.log(mongoURL);
 mongoose
   .connect(mongoURL)
   .then(() => console.log("Successfully connected to MongoDB"))
-  .catch((err) => console.error("Connection error", err));
+  .catch(err => console.error("Connection error", err));
 
 app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`);
@@ -45,7 +45,7 @@ app.listen(PORT, () => {
 
 main()
   .then(async () => {})
-  .catch(async (e) => {
+  .catch(async e => {
     console.error(e);
     await mongoose.disconnect();
     process.exit(1);
