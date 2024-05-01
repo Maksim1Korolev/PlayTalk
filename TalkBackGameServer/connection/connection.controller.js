@@ -17,11 +17,11 @@ export const getBusyUsernames = async (req, res) => {
 };
 
 export const connectToGameLobby = () => {
-  io.on("connection", async (socket) => {
+  io.on("connection", async socket => {
     console.log("Player connected");
     let savedUsername;
 
-    socket.on("online-ping", async (username) => {
+    socket.on("online-ping", async username => {
       savedUsername = username;
 
       // console.log("YOUREHEREEEE");
@@ -82,7 +82,7 @@ export const connectToGameLobby = () => {
         senderData.busy = receiverData.busy = areBusy;
 
         if (areBusy) {
-          receiverData.socketIds.forEach((socketId) => {
+          receiverData.socketIds.forEach(socketId => {
             io.to(socketId).emit("receive-game-invite", {
               senderUsername,
               receiverUsername,
@@ -110,11 +110,17 @@ export const connectToGameLobby = () => {
         const senderData = playerSockets.get(senderUsername);
         const receiverData = playerSockets.get(receiverUsername);
 
-        [...senderData.socketIds, ...receiverData.socketIds].forEach(
-          (socketId) => {
-            io.to(socketId).emit("start-game");
-          }
-        );
+        senderData.socketIds.forEach(socketId => {
+          io.to(socketId).emit("start-game", {
+            opponentUsername: receiverUsername,
+          });
+        });
+
+        receiverData.socketIds.forEach(socketId => {
+          io.to(socketId).emit("start-game", {
+            opponentUsername: senderUsername,
+          });
+        });
 
         console.log(
           `Game started between ${senderUsername} and ${receiverUsername}.`

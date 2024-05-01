@@ -131,3 +131,14 @@ export const useReceiveInvite = (
     };
   }, [receiveInvite]);
 };
+
+export const useStartGame = (
+  startGame: ({ opponentUsername }: { opponentUsername: string }) => void
+) => {
+  useEffect(() => {
+    gameSocket.on("start-game", startGame);
+    return () => {
+      gameSocket.off("start-game", startGame);
+    };
+  }, [startGame]);
+};
