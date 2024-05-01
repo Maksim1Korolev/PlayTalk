@@ -3,7 +3,7 @@ import { gameSocket } from "@/shared/api/sockets";
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-export const useInviteGameSocket = ({
+export const useConnectionGameSocket = ({
   upToDateUsers,
   setUpToDateUsers,
 }: {
@@ -33,7 +33,7 @@ export const useInviteGameSocket = ({
 
   const updateUsersGameStatus = (usernames: string[]) => {
     // setInGameUsernames(usernames);
-    setUpToDateUsers((prev) =>
+    setUpToDateUsers(prev =>
       prev?.map((user: User) => ({
         ...user,
         inGame: usernames.includes(user.username),
@@ -89,10 +89,10 @@ export const useInviteGameSocket = ({
       //     }
       //   });
 
-      setUpToDateUsers((prevUsers) => {
+      setUpToDateUsers(prevUsers => {
         if (!prevUsers) return [];
 
-        return prevUsers.map((user) => {
+        return prevUsers.map(user => {
           if (
             user.username === senderUsername ||
             user.username === receiverUsername
