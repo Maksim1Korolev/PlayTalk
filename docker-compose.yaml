@@ -48,6 +48,8 @@ services:
     build: ./TalkBackClient
     ports:
       - "5173:5173"
+    networks:
+      - talkback-network
     environment:
       - CHAT_SERVER_URL=http://chat_server:4100/api
       - AUTH_SERVER_URL=http://auth_server:4036/api/auth
