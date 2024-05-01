@@ -54,7 +54,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
 
     const newChatModalProps: ChatModalStateProps = { user, position };
 
-    setChatModals((prev) => [...(prev || []), newChatModalProps]);
+    setChatModals(prev => [...(prev || []), newChatModalProps]);
   };
 
   const navigate = useNavigate();

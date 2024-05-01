@@ -57,6 +57,13 @@ services:
       - USERS_SERVER_URL=http://auth_server:4036/api/users
       - ONLINE_SOCKET_URL=http://online_server:4000
       - GAME_SOCKET_URL=http://game_server:4200
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./TalkBackClient
+          target: /usr/src/app
+          action: sync
 
 networks:
   talkback-network:
