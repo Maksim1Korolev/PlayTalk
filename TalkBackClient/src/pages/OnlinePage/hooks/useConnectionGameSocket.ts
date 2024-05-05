@@ -23,6 +23,7 @@ export const useConnectionGameSocket = ({
       setCookie("jwt-cookie", {
         ...cookies,
         user: {
+          ...user,
           inGame: usernames.includes(user.username),
         },
       });
