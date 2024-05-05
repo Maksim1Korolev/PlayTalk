@@ -8,7 +8,7 @@ export const useConnectionGameSocket = ({
 }: {
   setUpToDateUsers: React.Dispatch<React.SetStateAction<User[] | undefined>>;
 }) => {
-  const [cookies] = useCookies(["jwt-cookie"]);
+  const [cookies, setCookie] = useCookies(["jwt-cookie"]);
   const { user }: { user: User } = cookies["jwt-cookie"];
 
   const updateUsersGameStatus = useCallback(
@@ -19,6 +19,13 @@ export const useConnectionGameSocket = ({
           inGame: usernames.includes(user.username),
         }))
       );
+
+      setCookie("jwt-cookie", {
+        ...cookies,
+        user: {
+          inGame: usernames.includes(user.username),
+        },
+      });
     },
     [setUpToDateUsers]
   );
@@ -85,24 +92,6 @@ export const useReceiveInvite = (
 export const useConnectToGame = (
   connectToGame: ({ opponentUsername }: { opponentUsername: string }) => void
 ) => {
-  // const [cookies, setCookies] = useCookies(["jwt-cookie"]);
-  // const { user }: { user: User } = cookies["jwt-cookie"];
-
-  // const setCookiesOnConnect = ({
-  //   opponentUsername,
-  // }: {
-  //   opponentUsername: string;
-  // }) => {
-  //   console.log(cookies);
-
-  //   setCookies("jwt-cookie", {
-  //     ...cookies,
-  //     user: {
-  //       inGame: true,
-  //     },
-  //   });
-  //   connectToGame({ opponentUsername });
-  // };
   useEffect(() => {
     gameSocket.on("backgammon-connection", connectToGame);
     return () => {

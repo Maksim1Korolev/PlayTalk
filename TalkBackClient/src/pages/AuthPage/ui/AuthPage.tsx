@@ -28,7 +28,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState<string>();
   const navigate = useNavigate();
-  const [, setCookies] = useCookies(["jwt-cookie"]);
+  const [, setCookie] = useCookies(["jwt-cookie"]);
 
   const handleUsernameChange = (value: string) => {
     setUsername(value);
@@ -41,7 +41,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
     () => apiService.login(username, password),
     {
       onSuccess: data => {
-        setCookies("jwt-cookie", data, { path: "/" });
+        setCookie("jwt-cookie", data, { path: "/" });
         setIsAuthenticated(true);
       },
       onError: ({ response }) => {
@@ -54,7 +54,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
     () => apiService.register(username, password),
     {
       onSuccess: data => {
-        setCookies("jwt-cookie", data, { path: "/" });
+        setCookie("jwt-cookie", data, { path: "/" });
         setIsAuthenticated(true);
       },
       onError: ({ response }) => {
