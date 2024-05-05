@@ -6,11 +6,13 @@ import cls from "./UserCard.module.scss";
 export const UserCard = ({
   className,
   user,
+  inGame,
   handleInviteButton,
   handleChatButton,
 }: {
   className?: string;
   user: User;
+  inGame?: boolean
   handleInviteButton: ({
     receiverUsername,
   }: {
@@ -32,7 +34,7 @@ export const UserCard = ({
         <UiButton onClick={onChatButton}>Chat</UiButton>
         <UiButton
           onClick={onPlayButton}
-          disabled={user.inGame || !user.isOnline}
+          disabled={user.inGame || inGame || !user.isOnline}
         >
           Play
         </UiButton>

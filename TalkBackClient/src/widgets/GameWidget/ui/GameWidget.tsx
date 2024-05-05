@@ -2,7 +2,7 @@ import cls from "./GameWidget.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { Backgammon } from "./Backgammon";
 import { useState } from "react";
-import { useStartGame } from "@/pages/OnlinePage/hooks/useConnectionGameSocket";
+import { useConnectToGame } from "@/pages/OnlinePage/hooks/useConnectionGameSocket";
 
 export const GameWidget = ({ className }: { className?: string }) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -11,7 +11,7 @@ export const GameWidget = ({ className }: { className?: string }) => {
     setIsPlaying(true);
   };
   //TODO:Maybe move to onlinePage and pass from there
-  useStartGame(startGame);
+  useConnectToGame(startGame);
 
   return (
     <div className={cx(cls.GameWidget, {}, [className])}>

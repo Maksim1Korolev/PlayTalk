@@ -18,7 +18,7 @@ import { GameWidget } from "@/widgets/GameWidget";
 const OnlinePage = ({ className }: { className?: string }) => {
   const [cookies, , removeCookie] = useCookies(["jwt-cookie"]);
   const token = cookies["jwt-cookie"]?.token;
-  const currentUser = cookies["jwt-cookie"]?.user;
+  const currentUser: User = cookies["jwt-cookie"]?.user;
 
   const [chatModals, setChatModals] = useState<ChatModalStateProps[]>();
   const findNewModalPosition = (modals: ChatModalStateProps[]) => {
@@ -95,6 +95,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
           <UiButton onClick={handleLogout}>{resources.logoutButton}</UiButton>
           <UiText size="xl">{resources.onlineUsersHeading}</UiText>
           <UserList
+            inGame={currentUser.inGame}
             users={upToDateUsers}
             handleUserChatButton={handleOpenChatModal}
             handleUserInviteButton={handleSendGameInvite}

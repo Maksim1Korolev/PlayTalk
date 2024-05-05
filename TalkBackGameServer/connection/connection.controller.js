@@ -49,6 +49,13 @@ export const connectToGameLobby = () => {
 
       const playerData = playerSockets.get(savedUsername);
       playerData.socketIds.add(socket.id);
+
+      if (playerData.inGame && playerData.opponentUsername) {
+        socket.emit("backgammon-connection", {
+          opponentUsername: playerData.opponentUsername,
+        });
+      }
+
       console.log(
         `Player ${savedUsername} connected with socket ID ${socket.id}.`
       );
@@ -163,10 +170,14 @@ export const connectToGameLobby = () => {
         const receiverData = playerSockets.get(receiverUsername);
         updateBusyStatus([senderUsername, receiverUsername], false, true);
         senderData.socketIds.forEach(id => {
-          io.to(id).emit("start-game", { opponentUsername: receiverUsername });
+          io.to(id).emit("backgammon-connection", {
+            opponentUsername: receiverUsername,
+          });
         });
         receiverData.socketIds.forEach(id => {
-          io.to(id).emit("start-game", { opponentUsername: senderUsername });
+          io.to(id).emit("backgammon-connection", {
+            opponentUsername: senderUsername,
+          });
         });
         console.log(
           `Game started between ${senderUsername} and ${receiverUsername}.`

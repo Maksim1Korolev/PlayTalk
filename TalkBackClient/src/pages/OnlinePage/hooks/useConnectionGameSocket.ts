@@ -82,13 +82,31 @@ export const useReceiveInvite = (
   }, [receiveInvite]);
 };
 
-export const useStartGame = (
-  startGame: ({ opponentUsername }: { opponentUsername: string }) => void
+export const useConnectToGame = (
+  connectToGame: ({ opponentUsername }: { opponentUsername: string }) => void
 ) => {
+  // const [cookies, setCookies] = useCookies(["jwt-cookie"]);
+  // const { user }: { user: User } = cookies["jwt-cookie"];
+
+  // const setCookiesOnConnect = ({
+  //   opponentUsername,
+  // }: {
+  //   opponentUsername: string;
+  // }) => {
+  //   console.log(cookies);
+
+  //   setCookies("jwt-cookie", {
+  //     ...cookies,
+  //     user: {
+  //       inGame: true,
+  //     },
+  //   });
+  //   connectToGame({ opponentUsername });
+  // };
   useEffect(() => {
-    gameSocket.on("start-game", startGame);
+    gameSocket.on("backgammon-connection", connectToGame);
     return () => {
-      gameSocket.off("start-game", startGame);
+      gameSocket.off("backgammon-connection", connectToGame);
     };
-  }, [startGame]);
+  }, [connectToGame]);
 };
