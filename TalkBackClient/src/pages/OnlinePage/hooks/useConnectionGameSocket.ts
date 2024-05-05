@@ -1,107 +1,57 @@
 import { User } from "@/entities/User";
 import { gameSocket } from "@/shared/api/sockets";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useCookies } from "react-cookie";
 
 export const useConnectionGameSocket = ({
-  upToDateUsers,
   setUpToDateUsers,
 }: {
-  upToDateUsers?: User[];
   setUpToDateUsers: React.Dispatch<React.SetStateAction<User[] | undefined>>;
 }) => {
-  // const [inGameUsernames, setInGameUsernames] = useState<string[]>([]);
-  const [cookies] = useCookies();
+  const [cookies] = useCookies(["jwt-cookie"]);
   const { user }: { user: User } = cookies["jwt-cookie"];
 
-  //TODO:Check if this function needed
-  const setUsersGameStatus = useCallback(
+  const updateUsersGameStatus = useCallback(
     (usernames: string[]) => {
-      const usersToUpdate = upToDateUsers;
-      if (!usersToUpdate) return;
-
-      const updatedUsers = usersToUpdate.map((user: User) => ({
-        ...user,
-        inGame: usernames.includes(user.username),
-      }));
-
-      setUpToDateUsers(updatedUsers);
-      return { updatedUsers };
+      setUpToDateUsers(prev =>
+        prev?.map(user => ({
+          ...user,
+          inGame: usernames.includes(user.username),
+        }))
+      );
     },
-    [setUpToDateUsers, upToDateUsers]
+    [setUpToDateUsers]
   );
 
-  const updateUsersGameStatus = (usernames: string[]) => {
-    // setInGameUsernames(usernames);
-    setUpToDateUsers(prev =>
-      prev?.map((user: User) => ({
-        ...user,
-        inGame: usernames.includes(user.username),
-      }))
-    );
-
-    if (!upToDateUsers) setUsersGameStatus(usernames);
-  };
-
-  const handleBackgammonConnection = useCallback(
-    ({
-      receiverUsername,
-      areBusy = true,
-    }: {
-      receiverUsername: string;
-      areBusy?: boolean;
-    }) => {
-      updateUsersGameStatus([user.username, receiverUsername]);
-
-      gameSocket.emit("backgammon-connection", {
-        receiverUsername,
-        areBusy,
-      });
-    },
-    []
-  );
-
-  const handleAcceptGame = useCallback(
+  const handleSendGameInvite = useCallback(
     ({ receiverUsername }: { receiverUsername: string }) => {
-      gameSocket.emit("accept-game", {
-        receiverUsername,
-      });
+      updateUsersGameStatus([user.username, receiverUsername]);
+      gameSocket.emit("send-game-invite", { receiverUsername });
     },
-    []
+    [updateUsersGameStatus, user.username]
   );
+
+  const handleAcceptGame = useCallback(() => {
+    gameSocket.emit("accept-game");
+  }, []);
+
+  const handleEndGame = useCallback(() => {
+    gameSocket.emit("end-game");
+  }, []);
 
   useEffect(() => {
     const onConnect = () => {
       gameSocket.emit("online-ping", user.username);
     };
 
-    const updatePlayingUsersStatus = (
-      [senderUsername, receiverUsername]: string[],
-      areInGame: boolean
-    ) => {
-      //   setInGameUsernames((prev) => {
-      //     if (areInGame) {
-      //       return [...new Set([...prev, senderUsername, receiverUsername])];
-      //     } else {
-      //       return prev.filter(
-      //         (u) => u !== senderUsername && u !== receiverUsername
-      //       );
-      //     }
-      //   });
-
-      setUpToDateUsers(prevUsers => {
-        if (!prevUsers) return [];
-
-        return prevUsers.map(user => {
-          if (
-            user.username === senderUsername ||
-            user.username === receiverUsername
-          ) {
-            return { ...user, inGame: areInGame };
-          }
-          return user;
-        });
-      });
+    const updatePlayingUsersStatus = ({
+      usernames,
+      busy,
+    }: {
+      usernames: string[];
+      busy: boolean;
+    }) => {
+      updateUsersGameStatus(busy ? usernames : []);
     };
 
     gameSocket.on("connect", onConnect);
@@ -112,12 +62,12 @@ export const useConnectionGameSocket = ({
       gameSocket.off("update-busy-status", updatePlayingUsersStatus);
       gameSocket.close();
     };
-  }, []);
+  }, [updateUsersGameStatus, user.username]);
 
   return {
-    handleBackgammonConnection,
+    handleSendGameInvite,
     handleAcceptGame,
-    // inGameUsernames,
+    handleEndGame,
   };
 };
 

@@ -22,9 +22,8 @@ export const useOnlinePageSockets = () => {
     setUpToDateUsers,
   });
 
-  const { handleBackgammonConnection, handleAcceptGame } =
+  const { handleSendGameInvite, handleAcceptGame, handleEndGame } =
     useConnectionGameSocket({
-      upToDateUsers,
       setUpToDateUsers,
     });
 
@@ -43,7 +42,8 @@ export const useOnlinePageSockets = () => {
     isInvitedToGame,
     gameInviteSenderUsername,
     updateUsers,
-    handleBackgammonConnection,
+    handleSendGameInvite,
     handleAcceptGame,
+    handleEndGame,
   };
 };

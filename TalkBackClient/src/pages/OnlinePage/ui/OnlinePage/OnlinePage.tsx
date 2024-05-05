@@ -65,8 +65,9 @@ const OnlinePage = ({ className }: { className?: string }) => {
     isInvitedToGame,
     gameInviteSenderUsername,
     updateUsers,
-    handleBackgammonConnection,
+    handleSendGameInvite,
     handleAcceptGame,
+    handleEndGame,
   } = useOnlinePageSockets();
 
   useUsersStatus(token, updateUsers, currentUser);
@@ -96,7 +97,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
           <UserList
             users={upToDateUsers}
             handleUserChatButton={handleOpenChatModal}
-            handleUserInviteButton={handleBackgammonConnection}
+            handleUserInviteButton={handleSendGameInvite}
           />
           <ChatModals
             currentUser={currentUser}
@@ -106,7 +107,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
           {isInvitedToGame && (
             <GameRequest
               handleYesButton={handleAcceptGame}
-              handleNoButton={handleBackgammonConnection}
+              handleNoButton={handleEndGame}
               senderUsername={gameInviteSenderUsername}
             />
           )}

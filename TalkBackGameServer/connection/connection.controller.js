@@ -3,10 +3,13 @@ import PlayerService from "../service/PlayerService.js";
 
 const playerSockets = new Map();
 
+// Helper function to get busy status
+const isPlayerBusy = playerData => playerData.inInvite || playerData.inGame;
+
 export const getBusyUsernames = async (req, res) => {
   try {
     const busyUsernames = Array.from(playerSockets.entries())
-      .filter(([username, { busy }]) => busy)
+      .filter(([_, playerData]) => isPlayerBusy(playerData))
       .map(([username]) => username);
 
     return res.status(200).json({ busyUsernames });
@@ -17,20 +20,19 @@ export const getBusyUsernames = async (req, res) => {
 };
 
 export const connectToGameLobby = () => {
-  io.on("connection", async socket => {
+  io.on("connection", socket => {
     console.log("Player connected");
     let savedUsername;
 
     socket.on("online-ping", async username => {
       savedUsername = username;
 
-      // console.log("YOUREHEREEEE");
-      // console.log(playerSockets);
-
       if (!playerSockets.has(savedUsername)) {
         playerSockets.set(savedUsername, {
           socketIds: new Set(),
-          busy: false,
+          inInvite: false,
+          inGame: false,
+          opponentUsername: null,
           timeoutHandle: null,
         });
 
@@ -47,141 +49,131 @@ export const connectToGameLobby = () => {
 
       const playerData = playerSockets.get(savedUsername);
       playerData.socketIds.add(socket.id);
-
-      if (playerData.timeoutHandle) {
-        clearTimeout(playerData.timeoutHandle);
-        playerData.timeoutHandle = null;
-        console.log(`Disconnection timeout cleared for ${savedUsername}.`);
-      }
-
       console.log(
-        `Player ${savedUsername} connected with socket ID ${socket.id}. Current online players:`,
-        Array.from(playerSockets.keys())
+        `Player ${savedUsername} connected with socket ID ${socket.id}.`
       );
     });
 
-    socket.on("backgammon-connection", ({ receiverUsername, areBusy }) => {
-      const senderUsername = savedUsername;
+    socket.on("send-game-invite", ({ receiverUsername }) => {
+      sendGameInvite(savedUsername, receiverUsername);
+    });
 
-      if (playerSockets.has(receiverUsername)) {
-        const receiverData = playerSockets.get(receiverUsername);
-
-        if (areBusy && receiverData.busy) {
-          console.log(
-            `Connection failed: ${receiverUsername} is already busy.`
-          );
-
-          // io.to(socket.id).emit("connection-error", {
-          //   message: `${receiverUsername} is currently busy.`,
-          // });
-          return;
-        }
-
-        const senderData = playerSockets.get(senderUsername);
-
-        senderData.busy = receiverData.busy = areBusy;
-
-        if (areBusy) {
-          receiverData.socketIds.forEach(socketId => {
-            io.to(socketId).emit("receive-game-invite", {
-              senderUsername,
-              receiverUsername,
-            });
-          });
-        }
-
-        io.emit(
-          "update-busy-status",
-          [senderUsername, receiverUsername],
-          areBusy
-        );
-      } else {
-        console.log("Receiver not found in connected players.");
+    socket.on("accept-game", () => {
+      const receiverUsername =
+        playerSockets.get(savedUsername)?.opponentUsername;
+      if (receiverUsername) {
+        startGameConnection(savedUsername, receiverUsername);
       }
     });
 
-    socket.on("accept-game", ({ receiverUsername }) => {
-      const senderUsername = savedUsername;
+    socket.on("end-game", () => {
+      const opponentUsername =
+        playerSockets.get(savedUsername)?.opponentUsername;
+      if (opponentUsername) {
+        updateBusyStatus([savedUsername, opponentUsername], false, false);
+      }
+    });
 
+    socket.on("disconnect", () => {
+      const playerData = playerSockets.get(savedUsername);
+      if (
+        playerData &&
+        playerData.socketIds.delete(socket.id) &&
+        playerData.socketIds.size === 0
+      ) {
+        if (playerData.inGame) {
+          console.log(`Waiting 60 seconds for ${savedUsername} to reconnect.`);
+          playerData.timeoutHandle = setTimeout(() => {
+            if (playerData.socketIds.size === 0) {
+              playerSockets.delete(savedUsername);
+              updateBusyStatus([savedUsername], false, false);
+              console.log(
+                `Player ${savedUsername} disconnected and removed after waiting period.`
+              );
+            }
+          }, 60000);
+        } else {
+          if (playerData.opponentUsername) {
+            updateBusyStatus(
+              [savedUsername, playerData.opponentUsername],
+              false,
+              false
+            );
+          }
+          playerSockets.delete(savedUsername);
+          console.log(
+            `Player ${savedUsername} disconnected and removed immediately.`
+          );
+        }
+      }
+    });
+
+    function updateBusyStatus(usernames, inInvite, inGame) {
+      usernames.forEach(username => {
+        const playerData = playerSockets.get(username);
+        if (playerData) {
+          playerData.inInvite = inInvite;
+          playerData.inGame = inGame;
+          playerData.opponentUsername =
+            inInvite || inGame
+              ? username !== savedUsername
+                ? savedUsername
+                : playerData.opponentUsername
+              : null;
+          io.emit("update-busy-status", {
+            usernames,
+            busy: isPlayerBusy(playerData),
+          });
+        }
+      });
+    }
+
+    function sendGameInvite(senderUsername, receiverUsername) {
+      if (
+        playerSockets.has(receiverUsername) &&
+        playerSockets.has(senderUsername)
+      ) {
+        const receiverData = playerSockets.get(receiverUsername);
+        const senderData = playerSockets.get(senderUsername);
+
+        if (!isPlayerBusy(receiverData) && !isPlayerBusy(senderData)) {
+          receiverData.inInvite = senderData.inInvite = true;
+          senderData.opponentUsername = receiverUsername;
+          receiverData.opponentUsername = senderUsername;
+          receiverData.socketIds.forEach(socketId => {
+            io.to(socketId).emit("receive-game-invite", { senderUsername });
+          });
+          updateBusyStatus([senderUsername, receiverUsername], true, false);
+        } else {
+          console.log(
+            `Invite failed: ${receiverUsername} or ${senderUsername} is already busy.`
+          );
+        }
+      } else {
+        console.log("Receiver or Sender not found in connected players.");
+      }
+    }
+
+    function startGameConnection(senderUsername, receiverUsername) {
       if (
         playerSockets.has(senderUsername) &&
         playerSockets.has(receiverUsername)
       ) {
         const senderData = playerSockets.get(senderUsername);
         const receiverData = playerSockets.get(receiverUsername);
-
-        senderData.socketIds.forEach(socketId => {
-          io.to(socketId).emit("start-game", {
-            opponentUsername: receiverUsername,
-          });
+        updateBusyStatus([senderUsername, receiverUsername], false, true);
+        senderData.socketIds.forEach(id => {
+          io.to(id).emit("start-game", { opponentUsername: receiverUsername });
         });
-
-        receiverData.socketIds.forEach(socketId => {
-          io.to(socketId).emit("start-game", {
-            opponentUsername: senderUsername,
-          });
+        receiverData.socketIds.forEach(id => {
+          io.to(id).emit("start-game", { opponentUsername: senderUsername });
         });
-
         console.log(
           `Game started between ${senderUsername} and ${receiverUsername}.`
         );
       } else {
         console.log("One of the players is not found in connected players.");
-        // io.to(socket.id).emit("start-game-error", {
-        //   message: "One of the players is not found in connected players.",
-        // });
       }
-    });
-
-    // socket.on("disconnect", () => {
-    //   if (savedUsername && playerSockets.has(savedUsername)) {
-    //     playerSockets.get(savedUsername).delete(socket.id);
-    //     console.log(
-    //       `Socket ID ${
-    //         socket.id
-    //       } for player ${savedUsername} disconnected. Remaining sockets: ${
-    //         playerSockets.get(savedUsername).size
-    //       }`
-    //     );
-    //     if (playerSockets.get(savedUsername).size === 0) {
-    //       console.log(
-    //         `All sockets for ${savedUsername} are disconnected. Player remains in the map with 0 sockets.`
-    //       );
-    //       socket.broadcast.emit("player-connection", savedUsername, false);
-    //     }
-    //   }
-    // });
-
-    socket.on("disconnect", () => {
-      if (savedUsername && playerSockets.has(savedUsername)) {
-        const playerData = playerSockets.get(savedUsername);
-        playerData.socketIds.delete(socket.id);
-
-        console.log(
-          `Socket ID ${socket.id} for player ${savedUsername} disconnected. Remaining sockets: ${playerData.socketIds.size}`
-        );
-
-        if (playerData.socketIds.size === 0) {
-          console.log(
-            `Waiting 60 seconds before potentially removing ${savedUsername} from online players.`
-          );
-
-          const timeoutHandle = setTimeout(() => {
-            if (playerData.socketIds.size === 0) {
-              playerSockets.delete(savedUsername);
-              playerData.busy = false;
-
-              console.log(
-                `All sockets for ${savedUsername} are disconnected after waiting period. Removing from online players.`
-              );
-            }
-          }, 60000);
-
-          io.emit("player-connection", savedUsername, false);
-
-          playerData.timeoutHandle = timeoutHandle;
-        }
-      }
-    });
+    }
   });
 };
