@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 import { connectToGameLobby } from "./connection/connection.controller.js";
 import cors from "cors";
 import connectionRouter from "./connection/connection.routes.js";
+import path from "path";
 
 dotenv.config();
 

@@ -81,10 +81,11 @@ services:
     environment:
       - CHAT_SERVER_URL=http://chat_server:4100/api
       - AUTH_SERVER_URL=http://auth_server:4036/api/auth
-      - AUTH_SERVER_STATIC_URL=http://auth_server:4036
+      - AUTH_SERVER_STATIC_URL=http://auth_server:4036/public
       - USERS_SERVER_URL=http://auth_server:4036/api/users
       - ONLINE_SOCKET_URL=http://online_server:4000
       - GAME_SOCKET_URL=http://game_server:4200
+      - VITE_GAME_SERVER_STATIC_URL=http://localhost:4200/public
     develop:
       watch:
         - path: ./app/package.json
