@@ -2,10 +2,6 @@ import { cx } from "@/shared/lib/cx";
 import { AppImage } from "@/shared/ui/AppImage";
 import { memo } from "react";
 import cls from "./ChatCircle.module.scss";
-import { cx } from "@/shared/lib/cx";
-import { AppImage } from "@/shared/ui/AppImage";
-import { memo } from "react";
-import cls from "./ChatCircle.module.scss";
 
 export const ChatCircle = memo(
   ({
