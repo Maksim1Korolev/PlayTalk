@@ -20,6 +20,13 @@ services:
       - "4200:4200"
     networks:
       - talkback-network
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./TalkBackGameServer
+          target: /usr/src/app
+          action: sync
 
   auth_server:
     build: ./TalkBackAuthServer
@@ -27,6 +34,13 @@ services:
       - "4036:4036"
     networks:
       - talkback-network
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./TalkBackAuthServer
+          target: /usr/src/app
+          action: sync
 
   chat_server:
     build: ./TalkBackChatServer
@@ -34,6 +48,13 @@ services:
       - "4100:4100"
     networks:
       - talkback-network
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./TalkBackChatServer
+          target: /usr/src/app
+          action: sync
 
   online_server:
     build: ./TalkBackOnlineServer
@@ -43,18 +64,35 @@ services:
       - talkback-network
     environment:
       - CHAT_SERVER_URL=http://chat_server:4100/api
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./TalkBackOnlineServer
+          target: /usr/src/app
+          action: sync
 
   client:
     build: ./TalkBackClient
     ports:
       - "5173:5173"
+    networks:
+      - talkback-network
     environment:
       - CHAT_SERVER_URL=http://chat_server:4100/api
       - AUTH_SERVER_URL=http://auth_server:4036/api/auth
-      - AUTH_SERVER_STATIC_URL=http://auth_server:4036
+      - AUTH_SERVER_STATIC_URL=http://auth_server:4036/public
       - USERS_SERVER_URL=http://auth_server:4036/api/users
       - ONLINE_SOCKET_URL=http://online_server:4000
       - GAME_SOCKET_URL=http://game_server:4200
+      - VITE_GAME_SERVER_STATIC_URL=http://localhost:4200/public
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./TalkBackClient
+          target: /usr/src/app
+          action: sync
 
 networks:
   talkback-network:

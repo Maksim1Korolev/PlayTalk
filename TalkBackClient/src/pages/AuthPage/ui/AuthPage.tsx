@@ -40,7 +40,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
   const signInMutation = useMutation(
     () => apiService.login(username, password),
     {
-      onSuccess: (data) => {
+      onSuccess: data => {
         setCookie("jwt-cookie", data, { path: "/" });
         setIsAuthenticated(true);
       },
@@ -53,7 +53,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
   const signUpMutation = useMutation(
     () => apiService.register(username, password),
     {
-      onSuccess: (data) => {
+      onSuccess: data => {
         setCookie("jwt-cookie", data, { path: "/" });
         setIsAuthenticated(true);
       },

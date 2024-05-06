@@ -1,6 +1,9 @@
 import { User } from "@/entities/User";
 import { useCallback, useState } from "react";
-import { useInviteGameSocket, useReceiveInvite } from "./useInviteGameSocket";
+import {
+  useConnectionGameSocket,
+  useReceiveInvite,
+} from "./useConnectionGameSocket";
 import { useOnlineSocket } from "./useOnlineSocket";
 
 //TODO: Separate users update, so that if game Server crashes, online will work
@@ -19,14 +22,13 @@ export const useOnlinePageSockets = () => {
     setUpToDateUsers,
   });
 
-  const { handleBackgammonConnection, handleAcceptGame } = useInviteGameSocket({
-    upToDateUsers,
-    setUpToDateUsers,
-  });
+  const { handleSendGameInvite, handleAcceptGame, handleEndGame } =
+    useConnectionGameSocket({
+      setUpToDateUsers,
+    });
 
   const receiveInviteSubscribe = useCallback(
     ({ senderUsername }: { senderUsername: string }) => {
-      console.log(senderUsername);
       setGameInviteSenderUsername(senderUsername);
       setIsInvitedToGame(true);
     },
@@ -40,7 +42,8 @@ export const useOnlinePageSockets = () => {
     isInvitedToGame,
     gameInviteSenderUsername,
     updateUsers,
-    handleBackgammonConnection,
+    handleSendGameInvite,
     handleAcceptGame,
+    handleEndGame,
   };
 };

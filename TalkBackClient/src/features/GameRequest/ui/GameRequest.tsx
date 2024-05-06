@@ -9,21 +9,15 @@ export const GameRequest = ({
 }: {
   className?: string;
   senderUsername: string;
-  handleYesButton: ({ receiverUsername }: { receiverUsername: string }) => void;
-  handleNoButton: ({
-    receiverUsername,
-    areBusy,
-  }: {
-    receiverUsername: string;
-    areBusy?: boolean;
-  }) => void;
+  handleYesButton: () => void;
+  handleNoButton: () => void;
 }) => {
   const handleStartGame = () => {
-    handleYesButton({ receiverUsername: senderUsername });
+    handleYesButton();
   };
 
   const handleRejectGame = () => {
-    handleNoButton({ receiverUsername: senderUsername, areBusy: false });
+    handleNoButton();
   };
 
   return (

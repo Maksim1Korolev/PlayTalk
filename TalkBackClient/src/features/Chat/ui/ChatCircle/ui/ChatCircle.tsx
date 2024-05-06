@@ -2,6 +2,10 @@ import { cx } from "@/shared/lib/cx";
 import { AppImage } from "@/shared/ui/AppImage";
 import { memo } from "react";
 import cls from "./ChatCircle.module.scss";
+import { cx } from "@/shared/lib/cx";
+import { AppImage } from "@/shared/ui/AppImage";
+import { memo } from "react";
+import cls from "./ChatCircle.module.scss";
 
 export const ChatCircle = memo(
   ({
@@ -19,7 +23,7 @@ export const ChatCircle = memo(
   }) => {
     const avatarSrc = `${
       import.meta.env.VITE_AUTH_SERVER_STATIC_URL
-    }${imageSrc}`;
+    }/avatars/${imageSrc}`;
     return (
       <div onClick={onClick} className={`${cls.ChatCircle} ${className}`}>
         <div className={cls.chatOverlay}>
