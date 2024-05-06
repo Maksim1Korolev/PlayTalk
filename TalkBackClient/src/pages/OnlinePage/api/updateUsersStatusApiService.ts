@@ -20,13 +20,20 @@ export const useUsersStatus = async (
         token
       );
 
+      const unreadMessageCounts = await onlineApiService.getUnreadMessageCount(
+        currentUser.username,
+        token
+      );
+
       const onlineSet = new Set(onlineUsernames);
       const inGameSet = new Set(inGameUsernames);
+			const usernamesCountsSet = new Map(unreadMessageCounts)
 
       const updatedUsers = users.map((user: User) => ({
         ...user,
         isOnline: onlineSet.has(user.username),
         inGame: inGameSet.has(user.username),
+				unreadMessageCount: usernamesCountsSet.get(user.username),
       }));
 
       //console.log("Updated Users:", updatedUsers);
@@ -36,7 +43,7 @@ export const useUsersStatus = async (
       enabled: !!token,
       onSuccess: (fetchedUsers: User[]) => {
         const otherUsers = fetchedUsers.filter(
-          (user) => user._id !== currentUser._id
+          user => user._id !== currentUser._id
         );
 
         updateUsers(otherUsers);

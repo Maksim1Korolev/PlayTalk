@@ -1,6 +1,6 @@
 import { User } from "@/entities/User";
 import { onlineSocket } from "@/shared/api/sockets";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useCookies } from "react-cookie";
 
 export const useOnlineSocket = ({
@@ -50,12 +50,12 @@ export const useOnlineSocket = ({
       //       return prev.filter((u) => u !== username);
       //     }
       //   });
-      setUpToDateUsers((prevUsers) => {
+      setUpToDateUsers(prevUsers => {
         if (!prevUsers) return [];
 
         prevUsers.reduce;
 
-        return prevUsers?.map((user) => {
+        return prevUsers?.map(user => {
           if (user.username == username) {
             return { ...user, isOnline };
           }

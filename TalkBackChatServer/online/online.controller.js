@@ -69,6 +69,95 @@ export const getMessageHistory = asyncHandler(async (req, res) => {
   return res.json({ messageHistory });
 });
 
+// @desc   Get unread Messages count for specific chats
+// @route  GET /unread/:requestingUsername
+// @access Public
+export const getUnreadMessageCount = asyncHandler(async (req, res) => {
+  try {
+    const { requestingUsername } = req.params;
+    const { usernames } = req.body;
+
+    if (!requestingUsername) {
+      return res.status(400).json({ message: "Username is required." });
+    }
+    if (!usernames) {
+      return res
+        .status(401)
+        .json({ message: "Usernames of MessageHistory are required." });
+    }
+
+    const sortedUsernames = Array.isArray(usernames)
+      ? usernames.sort()
+      : [usernames].sort();
+
+    const count = await MessageHistoryService.getUnreadMessagesCount(
+      sortedUsernames,
+      requestingUsername
+    );
+
+    return res.json(count);
+  } catch (err) {
+    res.status(500).json(err.toString());
+  }
+});
+
+// @desc   Get unread Messages count for specific chats
+// @route  GET /markAsRead/:requestingUsername
+// @access Public
+export const markAsRead = asyncHandler(async (req, res) => {
+  try {
+    const { requestingUsername } = req.params;
+
+    const { usernames } = req.body;
+
+    if (!requestingUsername) {
+      return res.status(400).json({ message: "Username is required." });
+    }
+
+    if (!usernames) {
+      return res
+        .status(401)
+        .json({ message: "Usernames of MessageHistory are required." });
+    }
+
+    const sortedUsernames = Array.isArray(usernames)
+      ? usernames.sort()
+      : [usernames].sort();
+
+    const result = await MessageHistoryService.markAsRead(
+      sortedUsernames,
+      requestingUsername
+    );
+    res.json({
+      message: result
+        ? "Messages marked as read"
+        : "Messages didn't mark as read",
+    });
+  } catch (err) {
+    res.status(500).json(err.toString());
+  }
+});
+// @desc   Get unread Messages count for specific chats
+// @route  GET /unread/:requestingUsername
+// @access Public
+export const getAllUnreadMessageCount = asyncHandler(async (req, res) => {
+  try {
+    const { requestingUsername } = req.params;
+
+    if (!requestingUsername) {
+      return res.status(400).json({ message: "Username is required." });
+    }
+
+    const count = await MessageHistoryService.getAllUnreadMessagesCount(
+      requestingUsername
+    );
+
+    return res.json(count);
+  } catch (err) {
+    res.status(500).json(err.toString());
+  }
+});
+
 // @desc   Remove user from chat lobby's map of SocketIds based on socket disconnection
 // @route  DELETE /:socketId
 // @access Public

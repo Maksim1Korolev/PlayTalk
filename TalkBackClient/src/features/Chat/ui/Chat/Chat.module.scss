@@ -41,6 +41,7 @@
 }
 
 .chatInput {
+	flex-grow: 0.5;
   background: var(--dark-bg-redesigned);
   position:relative;
 	height: 100%;
@@ -68,6 +69,7 @@
 .chatLogs {
 	padding:15px; 
   height:100%;
+	flex-grow: 1;
   overflow-y:scroll;
 	scroll-behavior: smooth;
 }
