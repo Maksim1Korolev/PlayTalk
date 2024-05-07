@@ -1,0 +1,1 @@
+export { BoardBorder } from './ui/BoardBorder'

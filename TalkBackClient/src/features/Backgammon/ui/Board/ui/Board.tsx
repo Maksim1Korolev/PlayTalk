@@ -9,13 +9,14 @@ export const Board = ({ className }: { className?: string }) => {
 
   return (
     <div className={cx(cls.Board, {}, [className])}>
+      {" "}
       <AppImage
         className={cls.backgammonBoard}
         width={1200}
         height={800}
         src={boardSrc}
         draggable="false"
-      />
+      ></AppImage>
     </div>
   );
 };
