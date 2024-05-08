@@ -13,6 +13,9 @@ export const useConnectionGameSocket = ({
 
   const updateUsersGameStatus = useCallback(
     (usernames: string[]) => {
+      console.log("OIUHFOISUEHGROEIUGHGHOESIRGUUHESROGIUHSERIGGUU");
+      console.log(usernames.includes(user.username));
+
       setUpToDateUsers(prev =>
         prev?.map(user => ({
           ...user,
@@ -21,7 +24,7 @@ export const useConnectionGameSocket = ({
       );
 
       setCookie("jwt-cookie", {
-        ...cookies,
+        ...cookies["jwt-cookie"],
         user: {
           ...user,
           inGame: usernames.includes(user.username),
@@ -33,7 +36,6 @@ export const useConnectionGameSocket = ({
 
   const handleSendGameInvite = useCallback(
     ({ receiverUsername }: { receiverUsername: string }) => {
-      updateUsersGameStatus([user.username, receiverUsername]);
       gameSocket.emit("send-game-invite", { receiverUsername });
     },
     [updateUsersGameStatus, user.username]

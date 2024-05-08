@@ -18,6 +18,8 @@ import cls from "./OnlinePage.module.scss";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const [cookies, , removeCookie] = useCookies(["jwt-cookie"]);
+  console.log(cookies);
+  
   const token = cookies["jwt-cookie"]?.token;
   const currentUser: User = cookies["jwt-cookie"]?.user;
 

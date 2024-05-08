@@ -121,17 +121,19 @@ export const connectToGameLobby = () => {
         if (playerData) {
           playerData.inInvite = inInvite;
           playerData.inGame = inGame;
+
           playerData.opponentUsername =
             inInvite || inGame
               ? username !== savedUsername
                 ? savedUsername
                 : playerData.opponentUsername
               : null;
-          io.emit("update-busy-status", {
-            usernames,
-            busy: isPlayerBusy(playerData),
-          });
         }
+      });
+
+      io.emit("update-busy-status", {
+        usernames: usernames,
+        busy: inInvite || inGame,
       });
     }
 
