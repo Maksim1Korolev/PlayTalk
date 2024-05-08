@@ -1,6 +1,7 @@
 import { ReactNode, memo } from "react";
 import cls from "./BoardBorder.module.scss";
 import { cx } from "@/shared/lib/cx";
+import { Card } from "@/shared/ui";
 
 export const BoardBorder = ({
   className,
@@ -9,5 +10,9 @@ export const BoardBorder = ({
   className?: string;
   children?: ReactNode;
 }) => {
-  return <div className={cx(cls.BoardBorder, {}, [className])}>{children}</div>;
+  return (
+    <Card className={cx(cls.BoardBorder, {}, [className])} max>
+      {children}
+    </Card>
+  );
 };
