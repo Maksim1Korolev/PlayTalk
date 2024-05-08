@@ -1,5 +1,5 @@
 import { cx } from "@/shared/lib/cx";
-import { RefObject, memo } from "react";
+import { forwardRef } from "react";
 
 import cls from "./ChatMessage.module.scss";
 
@@ -11,18 +11,14 @@ export interface Message {
   readAt?: Date;
 }
 
-export const ChatMessage = memo(
-  ({
-    className,
-    isRight,
-    message,
-    ref,
-  }: {
-    className?: string;
-    isRight?: boolean;
-    message: Message;
-    ref?: RefObject<HTMLDivElement>;
-  }) => {
+interface ChatMessageProps {
+  className?: string;
+  isRight?: boolean;
+  message: Message;
+}
+
+export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
+  ({ className, isRight, message }, ref) => {
     return (
       //Message Direction
       //<VStack align={isRight ? 'end' : 'start'} className={cx(cls.messageDirection, {}, [])} max>

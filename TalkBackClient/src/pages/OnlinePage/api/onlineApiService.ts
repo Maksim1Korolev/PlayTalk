@@ -11,13 +11,15 @@ export const onlineApiService = {
     });
     return response.data.onlineUsernames;
   },
-  getUnreadMessageCount: async (token: string, currentUsername: string) => {
+  getUnreadMessageCount: async (currentUsername: string, token: string) => {
     const response = await $onlineApi.get(
       `/api/chat/unread/${currentUsername}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-    return response.data.onlineUsernames;
+
+
+    return response.data;
   },
 };

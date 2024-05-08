@@ -20,6 +20,7 @@ export const ChatCircle = memo(
     const avatarSrc = `${
       import.meta.env.VITE_AUTH_SERVER_STATIC_URL
     }/avatars/${imageSrc}`;
+    //TODO: Add Max Unread Messages Count value and something
     return (
       <div onClick={onClick} className={`${cls.ChatCircle} ${className}`}>
         <div className={cls.chatOverlay}>
@@ -34,6 +35,7 @@ export const ChatCircle = memo(
         <span
           className={cx(cls.onlineIndicator, { [cls.active]: isOnline })}
         ></span>
+
         {unreadMessagesCount && (
           <div className={cls.messageIndicator}>{unreadMessagesCount}</div>
         )}

@@ -1,53 +1,36 @@
 import { User } from "@/entities/User";
-import { useQuery } from "react-query";
 import { gameConnectionApiService } from "./gameConnectionApiService";
 import { onlineApiService } from "./onlineApiService";
 import { usersApiService } from "./usersApiService";
 
-export const useUsersStatus = async (
+export const fetchUsersStatus = async (
   token: string,
-  updateUsers: (users: User[]) => void,
   currentUser: User
-) => {
-  return useQuery<User[], Error>(
-    "userStatuses",
-    async () => {
-      const users = await usersApiService.getUsers(token);
+): Promise<User[]> => {
+  const users = await usersApiService.getUsers(token);
 
-      const onlineUsernames = await onlineApiService.getOnlineUsernames(token);
+  const results = await Promise.allSettled([
+    onlineApiService.getOnlineUsernames(token),
+    gameConnectionApiService.getInGameUsernames(token),
+    onlineApiService.getUnreadMessageCount(currentUser.username, token),
+  ]);
 
-      const inGameUsernames = await gameConnectionApiService.getInGameUsernames(
-        token
-      );
+  const onlineUsernames =
+    results[0].status === "fulfilled" ? results[0].value : [];
+  const inGameUsernames =
+    results[1].status === "fulfilled" ? results[1].value : [];
+  const unreadMessageCounts =
+    results[2].status === "fulfilled" ? results[2].value : {};
 
-      const unreadMessageCounts = await onlineApiService.getUnreadMessageCount(
-        currentUser.username,
-        token
-      );
+  const onlineSet = new Set(onlineUsernames);
+  const inGameSet = new Set(inGameUsernames);
 
-      const onlineSet = new Set(onlineUsernames);
-      const inGameSet = new Set(inGameUsernames);
-			const usernamesCountsSet = new Map(unreadMessageCounts)
+  const updatedUsers = users.map((user: User) => ({
+    ...user,
+    isOnline: onlineSet.has(user.username),
+    inGame: inGameSet.has(user.username),
+    unreadMessageCount: unreadMessageCounts[user.username] || 0,
+  }));
 
-      const updatedUsers = users.map((user: User) => ({
-        ...user,
-        isOnline: onlineSet.has(user.username),
-        inGame: inGameSet.has(user.username),
-				unreadMessageCount: usernamesCountsSet.get(user.username),
-      }));
-
-      //console.log("Updated Users:", updatedUsers);
-      return updatedUsers;
-    },
-    {
-      enabled: !!token,
-      onSuccess: (fetchedUsers: User[]) => {
-        const otherUsers = fetchedUsers.filter(
-          user => user._id !== currentUser._id
-        );
-
-        updateUsers(otherUsers);
-      },
-    }
-  );
+  return updatedUsers;
 };
