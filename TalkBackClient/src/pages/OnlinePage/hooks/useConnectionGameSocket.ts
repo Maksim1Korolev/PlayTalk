@@ -12,24 +12,23 @@ export const useConnectionGameSocket = ({
   const { user }: { user: User } = cookies["jwt-cookie"];
 
   const updateUsersGameStatus = useCallback(
-    (usernames: string[]) => {
-      console.log("OIUHFOISUEHGROEIUGHGHOESIRGUUHESROGIUHSERIGGUU");
-      console.log(usernames.includes(user.username));
-
+    (usernames: string[], busy: boolean) => {
       setUpToDateUsers(prev =>
         prev?.map(user => ({
           ...user,
-          inGame: usernames.includes(user.username),
+          inGame: usernames.includes(user.username) ? busy : user.inGame,
         }))
       );
 
-      setCookie("jwt-cookie", {
-        ...cookies["jwt-cookie"],
-        user: {
-          ...user,
-          inGame: usernames.includes(user.username),
-        },
-      });
+      if (usernames.includes(user.username)) {
+        setCookie("jwt-cookie", {
+          ...cookies["jwt-cookie"],
+          user: {
+            ...user,
+            inGame: busy,
+          },
+        });
+      }
     },
     [cookies, setCookie, setUpToDateUsers, user]
   );
@@ -61,7 +60,7 @@ export const useConnectionGameSocket = ({
       usernames: string[];
       busy: boolean;
     }) => {
-      updateUsersGameStatus(busy ? usernames : []);
+      updateUsersGameStatus(usernames, busy);
     };
 
     gameSocket.on("connect", onConnect);

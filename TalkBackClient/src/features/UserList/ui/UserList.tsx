@@ -6,7 +6,7 @@ import cls from "./UserList.module.scss";
 interface UserListProps {
   className?: string;
   users?: User[];
-  inGame?: boolean
+  inGame?: boolean;
   handleUserChatButton: (user: User) => void;
   handleUserInviteButton: ({
     receiverUsername,
