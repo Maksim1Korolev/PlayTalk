@@ -14,14 +14,14 @@ import cls from "./ChatModal.module.scss";
 
 export const ChatModal = ({
   className,
-  currentUsername,
+  currentUser,
   receiverUser,
   position,
   handleCloseModal,
   handleSendMessage,
 }: {
   className?: string;
-  currentUsername: string;
+  currentUser: User;
   receiverUser: User;
   position?: { x: number; y: number };
   handleCloseModal: (userId: string) => void;
@@ -45,7 +45,7 @@ export const ChatModal = ({
 
   const { messageHistory, onUserSend, AddMessagesToHistory } = useModalMessages(
     {
-      currentUsername,
+      currentUsername: currentUser.username,
       receiverUsername: receiverUser.username,
       handleSendMessage,
     }
@@ -66,15 +66,14 @@ export const ChatModal = ({
       minWidth={isOpen ? 365 : 80}
       minHeight={isOpen ? 280 : 80}
       bounds="window"
-      enableResizing={false}
+      enableResizing={isOpen}
     >
       {isOpen ? (
         <Chat
           className={cx(cls.ChatModal, {}, [className])}
           handleSendMessage={onUserSend}
-          currentUsername={currentUsername}
+          receiverUser={receiverUser}
           messageHistory={messageHistory}
-          receiverUsername={receiverUser.username}
           onClose={() => handleCloseModal(receiverUser._id)}
           onCollapse={handleCloseChatModal}
         />

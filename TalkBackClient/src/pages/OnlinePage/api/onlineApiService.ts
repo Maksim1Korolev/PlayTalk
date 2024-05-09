@@ -18,8 +18,20 @@ export const onlineApiService = {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-
-
+    return response.data;
+  },
+  postAllReadMessages: async (
+    currentUsername: string,
+    receiverUsername: string,
+    token: string
+  ) => {
+    const response = await $onlineApi.post(
+      `/api/chat/markAsRead/${currentUsername}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        data: { usernames: [currentUsername, receiverUsername] },
+      }
+    );
     return response.data;
   },
 };

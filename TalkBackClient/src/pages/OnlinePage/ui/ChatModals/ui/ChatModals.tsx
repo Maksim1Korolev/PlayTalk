@@ -36,20 +36,14 @@ export const ChatModals = memo(
         <ChatModal
           className={cx(cls.ChatModals, {}, [className])}
           key={`${user._id}`}
-          currentUsername={currentUser.username}
+          currentUser={currentUser}
           receiverUser={user}
           handleSendMessage={handleUserMessage}
           handleCloseModal={handleCloseChatModal}
           position={position}
         />
       ));
-    }, [
-      chatModals,
-      className,
-      currentUser.username,
-      handleCloseChatModal,
-      handleUserMessage,
-    ]);
+    }, [chatModals, className, currentUser, handleCloseChatModal, handleUserMessage]);
 
     return <>{renderChatModals()}</>;
   }

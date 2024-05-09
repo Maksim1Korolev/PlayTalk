@@ -13,6 +13,20 @@ export const getAllUnreadMessageCounts = async (req, res, next) => {
     res.status(500).send(err);
   }
 };
+export const readAllUnreadMessage = async (req, res) => {
+  try {
+    const { requestingUsername } = req.params;
+
+    const { data } = await axios.get(
+      `${process.env.CHAT_SERVER_URL}/markAsRead/${requestingUsername}`,
+      { usernames: req.body.usernames }
+    );
+    return res.status(200).json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+};
 
 export const ChatSubscribes = async (socket, savedUsername) => {
   //TODO: reset users new messages

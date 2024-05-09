@@ -1,9 +1,12 @@
+import { User } from "@/entities/User";
+import { onlineApiService } from "@/pages/OnlinePage/api/onlineApiService";
 import { cx } from "@/shared/lib/cx";
 import { Card, HStack, UiButton, UiText, VStack } from "@/shared/ui";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
 import SendIcon from "@mui/icons-material/Send";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { useCookies } from "react-cookie";
 import { ChatInput } from "../ChatInput";
 import { ChatMessage } from "../ChatMessage";
 import { Message } from "../ChatMessage/ui/ChatMessage";
@@ -13,8 +16,7 @@ export const Chat = memo(
   ({
     className,
     messageHistory,
-    currentUsername,
-    receiverUsername,
+    receiverUser,
     handleSendMessage,
 
     onClose,
@@ -22,45 +24,31 @@ export const Chat = memo(
   }: {
     className?: string;
     messageHistory?: Message[];
-    currentUsername?: string;
-    receiverUsername?: string;
+    receiverUser: User;
     handleSendMessage: (message: string) => void;
     onClose: () => void;
     onCollapse: () => void;
   }) => {
     const [inputMessage, setInputMessage] = useState<string>("");
 
-    const messageRefs = useRef(
-      new Map<string, React.RefObject<HTMLDivElement>>()
-    );
-    const firstUnreadMessageRef =
-      useRef<React.RefObject<HTMLDivElement> | null>(null);
+    const [cookies] = useCookies(["jwt-cookie"]);
+
+    const { user: currentUser, token } = cookies["jwt-cookie"];
+
+    const dummy = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = useCallback(() => {
-      firstUnreadMessageRef.current?.current?.scrollIntoView({
+      dummy.current?.scrollIntoView({
         behavior: "smooth",
       });
-      if (firstUnreadMessageRef.current) {
-        //setReadAt(firstUnreadMessageRef.current.id);
-      }
-    }, [firstUnreadMessageRef]);
+    }, []);
 
     const handleSendButton = useCallback(() => {
+      if (inputMessage.trim() === "") return;
       handleSendMessage(inputMessage);
       setInputMessage("");
-    }, [handleSendMessage, inputMessage]);
-
-    useEffect(() => {
-      const firstUnreadMessage = messageHistory?.find(
-        message => message.username !== currentUsername && !message.readAt
-      );
-      const unreadRef = messageRefs.current.get(firstUnreadMessage?._id || "");
-      if (unreadRef) {
-        firstUnreadMessageRef.current = unreadRef;
-      } else {
-        firstUnreadMessageRef.current = null;
-      }
-    }, [messageHistory, currentUsername]);
+      scrollToBottom();
+    }, [handleSendMessage, inputMessage, scrollToBottom]);
 
     const handleKeyDown = useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -73,25 +61,48 @@ export const Chat = memo(
       },
       [handleSendButton]
     );
+
+    const setReadAll = useCallback(async () => {
+      try {
+        await onlineApiService.postAllReadMessages(
+          currentUser.username,
+          receiverUser.username,
+          token
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }, [currentUser.username, receiverUser.username, token]);
+
     useEffect(() => {
       scrollToBottom();
-    }, [messageHistory?.length, scrollToBottom]);
+      setReadAll();
+    }, [messageHistory?.length, scrollToBottom, setReadAll]);
 
     const renderMessageHistory = useCallback(() => {
       return messageHistory?.map((message, index) => (
         <ChatMessage
-          ref={messageRefs.current.get(message._id || "")}
           message={message}
           key={`${index} ${message.date}`}
-          isRight={currentUsername == message.username}
+          isRight={currentUser.username == message.username}
+          avatarSrc={
+            currentUser.username == message.username
+              ? currentUser.avatarPath
+              : receiverUser.avatarPath
+          }
         />
       ));
-    }, [messageHistory, currentUsername]);
+    }, [
+      messageHistory,
+      currentUser.username,
+      currentUser.avatarPath,
+      receiverUser.avatarPath,
+    ]);
 
     return (
       <VStack className={cx(cls.Chat, {}, [className])} justify="start" max>
         <HStack className={cx(cls.chatBoxHeader, {}, ["drag-handle"])} max>
-          <UiText max>{receiverUsername}</UiText>
+          <UiText max>{receiverUser.username}</UiText>
           <HStack className={cls.controlButtons}>
             <UiButton
               variant="clear"
@@ -119,12 +130,12 @@ export const Chat = memo(
           <div className={cls.chatBoxOverlay}></div>
           <div className={cls.chatLogs}>
             {renderMessageHistory()}
-            <div />
+            <div ref={dummy} />
           </div>
         </Card>
         <div className={cls.chatInput} onKeyDown={handleKeyDown}>
           <ChatInput
-            className={cls.chatInput}
+            className={cls.chatInputField}
             text={inputMessage}
             placeholder="Type your message here..."
             onChange={e => setInputMessage(e)}
