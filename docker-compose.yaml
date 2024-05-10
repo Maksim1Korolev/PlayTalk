@@ -17,7 +17,7 @@ services:
   game_server:
     build: ./TalkBackGameServer
     ports:
-      - "4200:4200"
+      - "3030:3030"
     networks:
       - talkback-network
     develop:
@@ -31,7 +31,7 @@ services:
   auth_server:
     build: ./TalkBackAuthServer
     ports:
-      - "4036:4036"
+      - "3010:3010"
     networks:
       - talkback-network
     develop:
@@ -45,7 +45,7 @@ services:
   chat_server:
     build: ./TalkBackChatServer
     ports:
-      - "4100:4100"
+      - "3020:3020"
     networks:
       - talkback-network
     develop:
@@ -59,11 +59,11 @@ services:
   online_server:
     build: ./TalkBackOnlineServer
     ports:
-      - "4000:4000"
+      - "3000:3000"
     networks:
       - talkback-network
     environment:
-      - CHAT_SERVER_URL=http://chat_server:4100/api
+      - CHAT_SERVER_URL=http://chat_server:3020/api
     develop:
       watch:
         - path: ./app/package.json
@@ -79,13 +79,13 @@ services:
     networks:
       - talkback-network
     environment:
-      - CHAT_SERVER_URL=http://chat_server:4100/api
-      - AUTH_SERVER_URL=http://auth_server:4036/api/auth
-      - AUTH_SERVER_STATIC_URL=http://auth_server:4036/public
-      - USERS_SERVER_URL=http://auth_server:4036/api/users
-      - ONLINE_SOCKET_URL=http://online_server:4000
-      - GAME_SOCKET_URL=http://game_server:4200
-      - VITE_GAME_SERVER_STATIC_URL=http://localhost:4200/public
+      - CHAT_SERVER_URL=http://chat_server:3020/api
+      - AUTH_SERVER_URL=http://auth_server:3010/api/auth
+      - AUTH_SERVER_STATIC_URL=http://auth_server:3010/public
+      - USERS_SERVER_URL=http://auth_server:3010/api/users
+      - ONLINE_SOCKET_URL=http://online_server:3000
+      - GAME_SOCKET_URL=http://game_server:3030
+      - VITE_GAME_SERVER_STATIC_URL=http://localhost:3030/public
     develop:
       watch:
         - path: ./app/package.json

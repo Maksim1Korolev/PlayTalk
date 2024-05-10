@@ -18,7 +18,7 @@ export const io = new Server(server, {
 
 await connectOnline();
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 
 async function main() {
   app.use(cors());

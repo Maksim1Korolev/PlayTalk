@@ -27,7 +27,7 @@ export const io = new Server(server, {
 
 connectToGameLobby();
 
-const PORT = process.env.PORT || 4200;
+const PORT = process.env.PORT || 3030;
 
 const mongoURL = process.env.DATABASE_URL;
 
