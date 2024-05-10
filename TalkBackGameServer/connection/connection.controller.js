@@ -3,7 +3,6 @@ import PlayerService from "../service/PlayerService.js";
 
 const playerSockets = new Map();
 
-// Helper function to get busy status
 const isPlayerBusy = playerData => playerData.inInvite || playerData.inGame;
 
 export const getBusyUsernames = async (req, res) => {

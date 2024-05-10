@@ -30,7 +30,7 @@ export const useConnectionGameSocket = ({
         });
       }
     },
-    [cookies, setCookie, setUpToDateUsers, user]
+    [setUpToDateUsers]
   );
 
   const handleSendGameInvite = useCallback(
