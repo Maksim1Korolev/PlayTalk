@@ -48,6 +48,8 @@ export const connectToGameLobby = () => {
         } catch (error) {
           console.log("Error accessing PlayerService:", error);
         }
+
+        updateBusyStatus([savedUsername], false, false);
       }
 
       const playerData = playerSockets.get(savedUsername);
@@ -207,19 +209,23 @@ export const connectToGameLobby = () => {
         const receiverData = playerSockets.get(receiverUsername);
         updateBusyStatus([senderUsername, receiverUsername], false, true);
 
-        io.to([senderData.socketIds]).emit("backgammon-connection", {
-          opponentUsername: receiverUsername,
+        senderData.socketIds.forEach(socketId => {
+          io.to(socketId).emit("backgammon-connection", {
+            opponentUsername: receiverUsername,
+          });
+          console.log(
+            `Notified ${senderUsername} (socket ID: ${socketId}) of connection with ${receiverUsername}`
+          );
         });
-        console.log(
-          `Notified ${senderUsername} (socket ID: ${id}) of connection with ${receiverUsername}`
-        );
 
-        io.to(receiverData.socketIds).emit("backgammon-connection", {
-          opponentUsername: senderUsername,
+        receiverData.socketIds.forEach(socketId => {
+          io.to(socketId).emit("backgammon-connection", {
+            opponentUsername: senderUsername,
+          });
+          console.log(
+            `Notified ${receiverUsername} (socket ID: ${socketId}) of connection with ${senderUsername}`
+          );
         });
-        console.log(
-          `Notified ${receiverUsername} (socket ID: ${id}) of connection with ${senderUsername}`
-        );
 
         console.log(
           `Game started between ${senderUsername} and ${receiverUsername}.`
