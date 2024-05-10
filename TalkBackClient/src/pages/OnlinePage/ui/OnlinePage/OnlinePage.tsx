@@ -4,12 +4,11 @@ import { UserList } from "@/features/UserList";
 import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
 import { cx } from "@/shared/lib/cx";
 import { HStack, Loader, UiButton, UiText, VStack } from "@/shared/ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
 import { GameWidget } from "@/widgets/GameWidget";
-import { useQuery } from "react-query";
 import { fetchUsersStatus } from "../../api/updateUsersStatusApiService";
 import { ChatModalStateProps } from "../../hooks/useChatModals";
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
@@ -19,7 +18,10 @@ import cls from "./OnlinePage.module.scss";
 const OnlinePage = ({ className }: { className?: string }) => {
   const [cookies, , removeCookie] = useCookies(["jwt-cookie"]);
   console.log(cookies);
-  
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [error, setError] = useState<Error | null>();
+
   const token = cookies["jwt-cookie"]?.token;
   const currentUser: User = cookies["jwt-cookie"]?.user;
 
@@ -73,20 +75,22 @@ const OnlinePage = ({ className }: { className?: string }) => {
     handleEndGame,
   } = useOnlinePageSockets();
 
-  const { error, isError, isLoading } = useQuery<User[], Error>(
-    "userStatuses",
-    () => fetchUsersStatus(token, currentUser),
-    {
-      enabled: !!token,
-      onSuccess: (fetchedUsers: User[]) => {
-        const otherUsers = fetchedUsers.filter(
-          user => user._id !== currentUser._id
-        );
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchUsersStatus({
+        setError,
+        setIsError,
+        setIsLoading,
+        token,
+        currentUser,
+        updateUsers,
+      });
+    };
 
-        updateUsers(otherUsers);
-      },
+    if (token) {
+      fetchData();
     }
-  );
+  }, []);
 
   const handleLogout = () => {
     removeCookie("jwt-cookie");
