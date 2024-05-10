@@ -68,9 +68,13 @@ export const useOnlineSocket = ({
     onlineSocket.on("connect", onConnect);
     onlineSocket.on("online-users", updateOnlineUsers);
     onlineSocket.on("user-connection", updateUserOnline);
+
     /////////////////////////////////////////////////////
 
     return () => {
+      onlineSocket.off("connect", onConnect);
+      onlineSocket.off("online-users", updateOnlineUsers);
+      onlineSocket.off("user-connection", updateUserOnline);
       onlineSocket.close();
     };
   }, []);
