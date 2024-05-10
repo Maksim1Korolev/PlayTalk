@@ -207,22 +207,21 @@ export const connectToGameLobby = () => {
         const senderData = playerSockets.get(senderUsername);
         const receiverData = playerSockets.get(receiverUsername);
         updateBusyStatus([senderUsername, receiverUsername], false, true);
-        senderData.socketIds.forEach(id => {
-          io.to(id).emit("backgammon-connection", {
-            opponentUsername: receiverUsername,
-          });
-          console.log(
-            `Notified ${senderUsername} (socket ID: ${id}) of connection with ${receiverUsername}`
-          );
+
+        io.to([senderData.socketIds]).emit("backgammon-connection", {
+          opponentUsername: receiverUsername,
         });
-        receiverData.socketIds.forEach(id => {
-          io.to(id).emit("backgammon-connection", {
-            opponentUsername: senderUsername,
-          });
-          console.log(
-            `Notified ${receiverUsername} (socket ID: ${id}) of connection with ${senderUsername}`
-          );
+        console.log(
+          `Notified ${senderUsername} (socket ID: ${id}) of connection with ${receiverUsername}`
+        );
+
+        io.to(receiverData.socketIds).emit("backgammon-connection", {
+          opponentUsername: senderUsername,
         });
+        console.log(
+          `Notified ${receiverUsername} (socket ID: ${id}) of connection with ${senderUsername}`
+        );
+
         console.log(
           `Game started between ${senderUsername} and ${receiverUsername}.`
         );
