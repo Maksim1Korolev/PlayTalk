@@ -6,20 +6,20 @@ import cls from "./ChatCircle.module.scss";
 export const ChatCircle = memo(
   ({
     className,
-    imageSrc,
+    avatarFileName,
     isOnline,
     unreadMessagesCount,
     onClick,
   }: {
     className?: string;
-    imageSrc?: string;
+    avatarFileName?: string;
     isOnline?: boolean;
     unreadMessagesCount?: number;
     onClick: () => void;
   }) => {
     const avatarSrc = `${
       import.meta.env.VITE_AUTH_SERVER_STATIC_URL
-    }/avatars/${imageSrc}`;
+    }/avatars/${avatarFileName}`;
     //TODO: Add Max Unread Messages Count value and something
     return (
       <div onClick={onClick} className={`${cls.ChatCircle} ${className}`}>

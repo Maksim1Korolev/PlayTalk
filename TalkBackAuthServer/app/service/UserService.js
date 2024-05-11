@@ -24,12 +24,12 @@ class UserService {
     return this.avatars[randomIndex];
   }
 
-  static async addUser({ username, password, avatarPath }) {
+  static async addUser({ username, password, avatarFileName }) {
     // Add user with random avatar
     const user = await User.create({
       username,
       password,
-      avatarPath: avatarPath || this.getRandomAvatar(),
+      avatarFileName: avatarFileName || this.getRandomAvatar(),
     });
     //await user.save()
     return user;
