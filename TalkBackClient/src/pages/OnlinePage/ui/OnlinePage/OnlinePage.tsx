@@ -133,7 +133,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
             />
           )}
         </VStack>
-        <GameWidget />
+        <GameWidget handleConcede={handleEndGame} inGame={currentUser.inGame} />
       </HStack>
     </div>
   );
