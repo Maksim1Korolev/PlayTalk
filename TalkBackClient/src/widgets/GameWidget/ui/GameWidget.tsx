@@ -1,7 +1,7 @@
 import cls from "./GameWidget.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { Backgammon } from "./Backgammon";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useConnectToGame } from "@/pages/OnlinePage/hooks/useConnectionGameSocket";
 
 export const GameWidget = ({
@@ -15,18 +15,24 @@ export const GameWidget = ({
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const startGame = ({ opponentUsername }: { opponentUsername: string }) => {
-    setIsPlaying(true);
-  };
+  const startGame = useCallback(() => {
+    console.log("123123123123123123123123");
 
-  useEffect(() => {
-    if (!inGame) {
-      setIsPlaying(false);
-    }
-  }, [inGame]);
+    setIsPlaying(true);
+  }, []);
 
   //TODO:Maybe move to onlinePage and pass from there
   useConnectToGame(startGame);
+
+  useEffect(() => {
+    console.log("ZHOPAAAAAAAAAAAAAAAAAAAA");
+
+    if (!inGame) {
+      console.log("WEP{OPOSPP{{QQQ@@@@@@@@@@@@@@@@@@@@@@@@");
+
+      setIsPlaying(false);
+    }
+  }, [inGame]);
 
   const handleConcedeButton = () => {
     handleConcede();

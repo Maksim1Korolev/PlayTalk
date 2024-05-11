@@ -5,16 +5,31 @@ import {
   useReceiveInvite,
 } from "./useConnectionGameSocket";
 import { useOnlineSocket } from "./useOnlineSocket";
+import { useCookies } from "react-cookie";
 
 //TODO: Separate users update, so that if game Server crashes, online will work
 export const useOnlinePageSockets = () => {
+  const [cookies] = useCookies();
+  const { user: currentUser } = cookies["jwt-cookie"];
   const [isInvitedToGame, setIsInvitedToGame] = useState(false);
   const [upToDateUsers, setUpToDateUsers] = useState<User[]>();
   const [gameInviteSenderUsername, setGameInviteSenderUsername] = useState("");
   useState<User[]>();
 
   const updateUsers = useCallback((users: User[]) => {
-    setUpToDateUsers(users);
+    const otherUsers = users.filter(
+      (user: User) => user._id !== currentUser._id
+    );
+    setUpToDateUsers(otherUsers);
+    const userWithInGame = users.find(
+      user => user.username === currentUser.username
+    );
+    if (userWithInGame) {
+      console.log("684684646846846846846846846846468468464684684684684684");
+      console.log(userWithInGame?.inGame);
+      
+      updateUsersGameStatus([userWithInGame.username], userWithInGame?.inGame);
+    }
   }, []);
 
   useOnlineSocket({
@@ -22,10 +37,14 @@ export const useOnlinePageSockets = () => {
     setUpToDateUsers,
   });
 
-  const { handleSendGameInvite, handleAcceptGame, handleEndGame } =
-    useConnectionGameSocket({
-      setUpToDateUsers,
-    });
+  const {
+    handleSendGameInvite,
+    handleAcceptGame,
+    handleEndGame,
+    updateUsersGameStatus,
+  } = useConnectionGameSocket({
+    setUpToDateUsers,
+  });
 
   const receiveInviteSubscribe = useCallback(
     ({ senderUsername }: { senderUsername: string }) => {

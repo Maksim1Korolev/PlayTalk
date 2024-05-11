@@ -95,6 +95,7 @@ export const useConnectionGameSocket = ({
   }, []);
 
   return {
+    updateUsersGameStatus,
     handleSendGameInvite,
     handleAcceptGame,
     handleEndGame,
@@ -113,7 +114,7 @@ export const useReceiveInvite = (
 };
 
 export const useConnectToGame = (
-  connectToGame: ({ opponentUsername }: { opponentUsername: string }) => void
+  connectToGame: () => void
 ) => {
   useEffect(() => {
     gameSocket.on("backgammon-connection", connectToGame);

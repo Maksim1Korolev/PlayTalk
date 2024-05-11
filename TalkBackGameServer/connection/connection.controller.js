@@ -59,9 +59,7 @@ export const connectToGameLobby = () => {
         console.log(
           `Player ${savedUsername} is currently in a game with ${playerData.opponentUsername}`
         );
-        socket.emit("backgammon-connection", {
-          opponentUsername: playerData.opponentUsername,
-        });
+        socket.emit("backgammon-connection");
       }
 
       console.log(
@@ -210,18 +208,14 @@ export const connectToGameLobby = () => {
         updateBusyStatus([senderUsername, receiverUsername], false, true);
 
         senderData.socketIds.forEach(socketId => {
-          io.to(socketId).emit("backgammon-connection", {
-            opponentUsername: receiverUsername,
-          });
+          io.to(socketId).emit("backgammon-connection");
           console.log(
             `Notified ${senderUsername} (socket ID: ${socketId}) of connection with ${receiverUsername}`
           );
         });
 
         receiverData.socketIds.forEach(socketId => {
-          io.to(socketId).emit("backgammon-connection", {
-            opponentUsername: senderUsername,
-          });
+          io.to(socketId).emit("backgammon-connection");
           console.log(
             `Notified ${receiverUsername} (socket ID: ${socketId}) of connection with ${senderUsername}`
           );

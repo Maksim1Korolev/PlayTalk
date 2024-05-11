@@ -45,11 +45,8 @@ export const fetchUsersStatus = async ({
       unreadMessageCount: unreadMessageCounts[user.username] || 0,
     }));
 
-    const otherUsers = updatedUsers.filter(
-      (user: User) => user._id !== currentUser._id
-    );
 
-    updateUsers(otherUsers);
+    updateUsers(updatedUsers);
     setIsLoading(false);
     setIsError(false);
     setError(null);
