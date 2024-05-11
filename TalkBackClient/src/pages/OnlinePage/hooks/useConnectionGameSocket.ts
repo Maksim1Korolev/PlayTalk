@@ -71,6 +71,7 @@ export const useConnectionGameSocket = ({
     gameSocket.emit("end-game");
   }, []);
 
+  const connectToGame = () => {};
   useEffect(() => {
     const onConnect = () => {
       console.log(`Connected as user: ${user.username}`);
@@ -91,10 +92,12 @@ export const useConnectionGameSocket = ({
 
     gameSocket.on("connect", onConnect);
     gameSocket.on("update-game-statuses", updateGameStatuses);
+    gameSocket.on("backgammon-connection", connectToGame);
 
     return () => {
       gameSocket.off("connect", onConnect);
       gameSocket.off("update-game-statuses", updateGameStatuses);
+      gameSocket.off("backgammon-connection", connectToGame);
       gameSocket.close();
     };
   }, []);
@@ -116,13 +119,4 @@ export const useReceiveInvite = (
       gameSocket.off("receive-game-invite", receiveInvite);
     };
   }, [receiveInvite]);
-};
-
-export const useConnectToGame = (connectToGame: () => void) => {
-  useEffect(() => {
-    gameSocket.on("backgammon-connection", connectToGame);
-    return () => {
-      gameSocket.off("backgammon-connection", connectToGame);
-    };
-  }, [connectToGame]);
 };
