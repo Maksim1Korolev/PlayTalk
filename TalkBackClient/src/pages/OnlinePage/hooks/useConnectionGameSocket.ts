@@ -12,20 +12,22 @@ export const useConnectionGameSocket = ({
   const { user }: { user: User } = cookies["jwt-cookie"];
 
   const updateUsersGameStatus = useCallback(
-    (usernames: string[], busy: boolean) => {
+    (usernames: string[], inInvite: boolean, inGame: boolean) => {
       console.log("Updating users game status:");
       console.log("Usernames:", usernames);
-      console.log("Busy:", busy);
+      console.log("InInvite:", inInvite);
+      console.log("InGame:", inGame);
 
       setUpToDateUsers(prev => {
         const updatedUsers = prev?.map(user => {
           if (usernames.includes(user.username)) {
             console.log(
-              `Updating inGame status for user: ${user.username} to ${busy}`
+              `Updating statuses for user: ${user.username} to inInvite=${inInvite}, inGame=${inGame}`
             );
             return {
               ...user,
-              inGame: busy,
+              inInvite: inInvite,
+              inGame: inGame,
             };
           }
           return user;
@@ -36,13 +38,14 @@ export const useConnectionGameSocket = ({
 
       if (usernames.includes(user.username)) {
         console.log(
-          `Updating inGame status in cookie for user: ${user.username} to ${busy}`
+          `Updating statuses in cookie for user: ${user.username} to inInvite=${inInvite}, inGame=${inGame}`
         );
         setCookie("jwt-cookie", {
           ...cookies["jwt-cookie"],
           user: {
             ...user,
-            inGame: busy,
+            inInvite: inInvite,
+            inGame: inGame,
           },
         });
       }
@@ -55,7 +58,7 @@ export const useConnectionGameSocket = ({
       console.log(`Sending game invite to: ${receiverUsername}`);
       gameSocket.emit("send-game-invite", { receiverUsername });
     },
-    [updateUsersGameStatus, user.username]
+    [user.username]
   );
 
   const handleAcceptGame = useCallback(() => {
@@ -74,22 +77,24 @@ export const useConnectionGameSocket = ({
       gameSocket.emit("online-ping", user.username);
     };
 
-    const updatePlayingUsersStatus = ({
+    const updateGameStatuses = ({
       usernames,
-      busy,
+      inInvite,
+      inGame,
     }: {
       usernames: string[];
-      busy: boolean;
+      inInvite: boolean;
+      inGame: boolean;
     }) => {
-      updateUsersGameStatus(usernames, busy);
+      updateUsersGameStatus(usernames, inInvite, inGame);
     };
 
     gameSocket.on("connect", onConnect);
-    gameSocket.on("update-busy-status", updatePlayingUsersStatus);
+    gameSocket.on("update-game-statuses", updateGameStatuses);
 
     return () => {
       gameSocket.off("connect", onConnect);
-      gameSocket.off("update-busy-status", updatePlayingUsersStatus);
+      gameSocket.off("update-game-statuses", updateGameStatuses);
       gameSocket.close();
     };
   }, []);
@@ -113,9 +118,7 @@ export const useReceiveInvite = (
   }, [receiveInvite]);
 };
 
-export const useConnectToGame = (
-  connectToGame: () => void
-) => {
+export const useConnectToGame = (connectToGame: () => void) => {
   useEffect(() => {
     gameSocket.on("backgammon-connection", connectToGame);
     return () => {

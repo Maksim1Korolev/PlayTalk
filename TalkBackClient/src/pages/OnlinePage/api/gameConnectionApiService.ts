@@ -5,10 +5,10 @@ export const $gameApi = axios.create({
 });
 
 export const gameConnectionApiService = {
-  getInGameUsernames: async (token: string) => {
-    const response = await $gameApi.get(`/api/connection/busyUsernames`, {
+  getUsersGameStatuses: async (token: string) => {
+    const response = await $gameApi.get(`/api/connection/usersGameStatuses`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    return response.data.busyUsernames;
+    return response.data.gameStatuses;
   },
 };

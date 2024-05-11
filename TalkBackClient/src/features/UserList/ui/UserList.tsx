@@ -6,7 +6,7 @@ import cls from "./UserList.module.scss";
 interface UserListProps {
   className?: string;
   users?: User[];
-  inGame?: boolean;
+  busy?: boolean;
   handleUserChatButton: (user: User) => void;
   handleUserInviteButton: ({
     receiverUsername,
@@ -19,11 +19,11 @@ export const UserList = memo(
   ({
     className,
     users,
-    inGame,
+    busy,
     handleUserChatButton,
     handleUserInviteButton,
   }: UserListProps) => {
-    console.log("USERSSSS::::");
+    console.log("USERSSSS:::: (from userlist)");
     console.log(users);
     if (!users || users.length === 0) {
       return <p>No users available.</p>;
@@ -37,7 +37,7 @@ export const UserList = memo(
           <UserCard
             key={user._id}
             user={user}
-            inGame={inGame}
+            busy={busy}
             className={cls.userCard}
             handleInviteButton={handleUserInviteButton}
             handleChatButton={handleUserChatButton}

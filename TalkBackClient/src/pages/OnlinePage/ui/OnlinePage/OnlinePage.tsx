@@ -115,7 +115,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
           <UiButton onClick={handleLogout}>{resources.logoutButton}</UiButton>
           <UiText size="xl">{resources.onlineUsersHeading}</UiText>
           <UserList
-            inGame={currentUser.inGame}
+            busy={currentUser.inGame || currentUser.inInvite}
             users={upToDateUsers}
             handleUserChatButton={handleOpenChatModal}
             handleUserInviteButton={handleSendGameInvite}

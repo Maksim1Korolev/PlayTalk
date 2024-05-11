@@ -21,14 +21,19 @@ export const useOnlinePageSockets = () => {
       (user: User) => user._id !== currentUser._id
     );
     setUpToDateUsers(otherUsers);
-    const userWithInGame = users.find(
+
+    const userWithGameStatuses = users.find(
       user => user.username === currentUser.username
     );
-    if (userWithInGame) {
+    if (userWithGameStatuses) {
       console.log("684684646846846846846846846846468468464684684684684684");
-      console.log(userWithInGame?.inGame);
-      
-      updateUsersGameStatus([userWithInGame.username], userWithInGame?.inGame);
+      console.log(userWithGameStatuses?.inGame);
+
+      updateUsersGameStatus(
+        [userWithGameStatuses.username],
+        userWithGameStatuses?.inInvite,
+        userWithGameStatuses?.inGame
+      );
     }
   }, []);
 

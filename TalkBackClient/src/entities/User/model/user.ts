@@ -4,6 +4,7 @@ export interface User {
   password: string;
   avatarPath: string;
   isOnline: boolean;
+  inInvite: boolean;
   inGame: boolean;
   unreadMessageCount?: number;
 }

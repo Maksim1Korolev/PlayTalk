@@ -4,18 +4,24 @@ import PlayerService from "../service/PlayerService.js";
 const playerSockets = new Map();
 
 const isPlayerBusy = playerData => playerData.inInvite || playerData.inGame;
-
-export const getBusyUsernames = async (req, res) => {
+export const getUsersGameStatuses = async (req, res) => {
   try {
-    console.log("Fetching busy usernames");
-    const busyUsernames = Array.from(playerSockets.entries())
-      .filter(([_, playerData]) => isPlayerBusy(playerData))
-      .map(([username]) => username);
+    console.log("Fetching busy statuses of users");
 
-    console.log("Busy usernames retrieved:", busyUsernames);
-    return res.status(200).json({ busyUsernames });
+    const gameStatuses = Array.from(playerSockets.entries())
+      .filter(([_, playerData]) => playerData.inInvite || playerData.inGame)
+      .reduce((accumulator, [username, playerData]) => {
+        accumulator[username] = {
+          inInvite: playerData.inInvite,
+          inGame: playerData.inGame,
+        };
+        return accumulator;
+      }, {});
+
+    console.log("Game statuses retrieved:", gameStatuses);
+    return res.status(200).json({ gameStatuses });
   } catch (err) {
-    console.log("Error retrieving busy usernames:", err);
+    console.log("Error retrieving busy statuses:", err);
     res.status(500).send("Internal server error");
   }
 };
@@ -49,7 +55,7 @@ export const connectToGameLobby = () => {
           console.log("Error accessing PlayerService:", error);
         }
 
-        updateBusyStatus([savedUsername], false, false);
+        updateGameStatuses([savedUsername], false, false);
       }
 
       const playerData = playerSockets.get(savedUsername);
@@ -92,7 +98,7 @@ export const connectToGameLobby = () => {
         `Ending game for ${savedUsername} against ${opponentUsername}`
       );
       if (opponentUsername) {
-        updateBusyStatus([savedUsername, opponentUsername], false, false);
+        updateGameStatuses([savedUsername, opponentUsername], false, false);
       }
     });
 
@@ -111,7 +117,7 @@ export const connectToGameLobby = () => {
           playerData.timeoutHandle = setTimeout(() => {
             if (playerData.socketIds.size === 0) {
               playerSockets.delete(savedUsername);
-              updateBusyStatus([savedUsername], false, false);
+              updateGameStatuses([savedUsername], false, false);
               console.log(
                 `Player ${savedUsername} disconnected and removed after waiting period.`
               );
@@ -120,7 +126,7 @@ export const connectToGameLobby = () => {
         } else {
           if (playerData.opponentUsername) {
             console.log(`Clearing opponent status for ${savedUsername}`);
-            updateBusyStatus(
+            updateGameStatuses(
               [savedUsername, playerData.opponentUsername],
               false,
               false
@@ -134,7 +140,7 @@ export const connectToGameLobby = () => {
       }
     });
 
-    function updateBusyStatus(usernames, inInvite, inGame) {
+    function updateGameStatuses(usernames, inInvite, inGame) {
       console.log(
         `Updating busy status for users: ${usernames}, inInvite: ${inInvite}, inGame: ${inGame}`
       );
@@ -156,11 +162,12 @@ export const connectToGameLobby = () => {
         }
       });
 
-      io.emit("update-busy-status", {
+      io.emit("update-game-statuses", {
         usernames: usernames,
-        busy: inInvite || inGame,
+        inInvite: inInvite,
+        inGame: inGame,
       });
-      console.log(`Emitted update-busy-status for users: ${usernames}`);
+      console.log(`Emitted update-game-statuses for users: ${usernames}`);
     }
 
     function sendGameInvite(senderUsername, receiverUsername) {
@@ -184,7 +191,7 @@ export const connectToGameLobby = () => {
               `Game invite sent to ${receiverUsername} (socket ID: ${socketId}) from ${senderUsername}`
             );
           });
-          updateBusyStatus([senderUsername, receiverUsername], true, false);
+          updateGameStatuses([senderUsername, receiverUsername], true, false);
         } else {
           console.log(
             `Invite failed: ${receiverUsername} or ${senderUsername} is already busy.`
@@ -205,7 +212,7 @@ export const connectToGameLobby = () => {
       ) {
         const senderData = playerSockets.get(senderUsername);
         const receiverData = playerSockets.get(receiverUsername);
-        updateBusyStatus([senderUsername, receiverUsername], false, true);
+        updateGameStatuses([senderUsername, receiverUsername], false, true);
 
         senderData.socketIds.forEach(socketId => {
           io.to(socketId).emit("backgammon-connection");
