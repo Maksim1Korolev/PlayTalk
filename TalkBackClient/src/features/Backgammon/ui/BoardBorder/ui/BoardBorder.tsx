@@ -1,4 +1,4 @@
-import { ReactNode, memo } from "react";
+import { ReactNode } from "react";
 import cls from "./BoardBorder.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { Card } from "@/shared/ui";

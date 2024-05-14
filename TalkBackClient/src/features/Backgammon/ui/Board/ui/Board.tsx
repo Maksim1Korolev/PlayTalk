@@ -1,6 +1,7 @@
-import { AppImage } from "@/shared/ui/AppImage";
+import { AppImage } from "@/shared/ui";
 import cls from "./Board.module.scss";
 import { cx } from "@/shared/lib/cx";
+import { Point } from "../../Point";
 
 export const Board = ({ className }: { className?: string }) => {
   const boardSrc = `${
@@ -9,7 +10,6 @@ export const Board = ({ className }: { className?: string }) => {
 
   return (
     <div className={cx(cls.Board, {}, [className])}>
-      {" "}
       <AppImage
         className={cls.backgammonBoard}
         width={1200}
@@ -17,6 +17,9 @@ export const Board = ({ className }: { className?: string }) => {
         src={boardSrc}
         draggable="false"
       ></AppImage>
+      <div>
+        <Point />
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { cx } from "@/shared/lib/cx";
-import { AppImage } from "@/shared/ui/AppImage";
+import { AppImage } from "@/shared/ui";
 import { memo } from "react";
 import cls from "./ChatCircle.module.scss";
 
