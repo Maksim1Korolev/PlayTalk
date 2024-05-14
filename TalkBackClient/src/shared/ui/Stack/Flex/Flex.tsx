@@ -50,6 +50,7 @@ export interface FlexProps extends DivProps {
   wrap?: FlexWrap;
   direction?: FlexDirection;
   gap?: FlexGap;
+  isReverted?: boolean;
   max?: boolean;
 }
 
@@ -62,6 +63,7 @@ export const Flex = memo(
     direction = "row",
     gap,
     max,
+    isReverted,
     wrap = "nowrap",
     ...otherProps
   }: FlexProps) => {
@@ -76,6 +78,7 @@ export const Flex = memo(
 
     const mods: Mods = {
       [cls.max]: max,
+      [cls.isReverted]: isReverted,
     };
 
     return (

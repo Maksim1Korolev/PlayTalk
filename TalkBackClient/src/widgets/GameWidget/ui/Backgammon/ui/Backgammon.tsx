@@ -14,7 +14,6 @@ export const Backgammon = ({
   return (
     <Card className={cx(cls.Backgammon, {}, [className])}>
       <BoardBorder>
-      {/* <OuterBoard/> */}
         <Board />
       </BoardBorder>
       <UiButton onClick={handleConcedeButton}>Concede</UiButton>
