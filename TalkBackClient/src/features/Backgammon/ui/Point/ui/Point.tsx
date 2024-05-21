@@ -1,7 +1,9 @@
-import { AppSvg } from "@/shared/ui/";
 import cls from "./Point.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { memo } from "react";
+import { ReactComponent as HollowPoint } from "@/shared/assets/svg/hollow-point.svg";
+import { AppSvg } from "@/shared/ui";
+import { BackgroundColor, BackgroundType } from "@/shared/ui/AppSvg/ui/AppSvg";
 
 export interface PointProps {
   className?: string;
@@ -9,13 +11,14 @@ export interface PointProps {
 }
 
 export const Point = memo(({ className, pointIndex }: PointProps) => {
-  const pointSrc = `${
-    import.meta.env.VITE_GAME_SERVER_STATIC_URL
-  }/hollow-point.svg`;
-
   return (
     <div className={cx(cls.Point, {}, [className])}>
-      <AppSvg className={cls.hollowPoint} src={pointSrc}></AppSvg>
+      <AppSvg
+        className={cls.hollowPoint}
+        Svg={HollowPoint}
+        backgroundColor={BackgroundColor.PRIMARY_COLOR}
+        backgroundType={BackgroundType.FILL}
+      />
     </div>
   );
 });
