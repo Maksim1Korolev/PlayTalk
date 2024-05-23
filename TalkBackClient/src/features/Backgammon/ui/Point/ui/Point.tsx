@@ -1,7 +1,7 @@
 import cls from "./Point.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { memo } from "react";
-import { ReactComponent as HollowPoint } from "@/shared/assets/svg/hollow-point.svg";
+import { ReactComponent as HollowPoint } from "@/features/Backgammon/assets/svg/hollow-point.svg";
 import { AppSvg } from "@/shared/ui";
 import { BackgroundColor, BackgroundType } from "@/shared/ui/AppSvg/ui/AppSvg";
 

@@ -3,14 +3,11 @@ import { cx } from "@/shared/lib/cx";
 import cls from "./Board.module.scss";
 import { Point } from "../../Point";
 import { HStack, VStack } from "@/shared/ui";
+import backgroundImageSrc from "@/features/Backgammon/assets/game-background.jpeg";
 
 export const Board = ({ className }: { className?: string }) => {
-  const boardSrc = `${
-    import.meta.env.VITE_GAME_SERVER_STATIC_URL
-  }/game-background.jpeg`;
-
   const backgroundImageStyle = {
-    backgroundImage: `url(${boardSrc})`,
+    backgroundImage: `url(${backgroundImageSrc})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     width: "70vw",
