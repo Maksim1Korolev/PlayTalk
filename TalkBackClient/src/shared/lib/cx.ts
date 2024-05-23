@@ -3,7 +3,7 @@ export type Mods = Record<string, boolean | string | undefined>;
 export function cx(
   cls: string,
   mods: Mods = {},
-  additional: Array<string | undefined> = [],
+  additional: Array<string | undefined> = []
 ): string {
   return [
     cls,
@@ -11,5 +11,5 @@ export function cx(
     ...Object.entries(mods)
       .filter(([_, value]) => Boolean(value))
       .map(([cls]) => cls),
-  ].join(' ');
+  ].join(" ");
 }

@@ -2,9 +2,8 @@ import { Mods, cx } from "@/shared/lib/cx";
 import cls from "./UiButton.module.scss";
 import { ButtonHTMLAttributes } from "react";
 
-export type ButtonVariant = "outlined" | "clear" | "filled";
-
-export type ButtonColor = "default" | "success" | "blue";
+type ButtonVariant = "outlined" | "clear" | "filled";
+type ButtonColor = "default" | "success" | "blue";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;

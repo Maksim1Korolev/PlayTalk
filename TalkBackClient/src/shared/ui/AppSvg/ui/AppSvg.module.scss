@@ -1,23 +1,33 @@
+.fillWhite {
+  fill: var(--white-color);
+  color: var(--white-color);
+}
+
+.fillBlack {
+  fill: var(--black-color);
+  color: var(--black-color);
+}
+
 .fillPrimary {
-    fill: var(--primary-color);
-    color: var(--primary-color);
-  }
-  
-  .fillSecondary {
-    fill: var(--secondary-color);
-    color: var(--secondary-color);
-  }
-  
-  .strokePrimary path {
-    stroke: var(--primary-color);
-    color: var(--primary-color);
-  }
-  
-  .strokeSecondary {
-    stroke: var(--secondary-color);
-    color: var(--secondary-color);
-  }
-  
-  .pointer {
-    cursor: pointer;
-  }
+  fill: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.strokeWhite path {
+  stroke: var(--white-color);
+  color: var(--white-color);
+}
+
+.strokeBlack {
+  stroke: var(--black-color);
+  color: var(--black-color);
+}
+
+.strokePrimary {
+  stroke: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.pointer {
+  cursor: pointer;
+}

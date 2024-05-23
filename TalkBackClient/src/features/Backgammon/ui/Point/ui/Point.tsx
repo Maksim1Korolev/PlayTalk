@@ -1,23 +1,24 @@
 import cls from "./Point.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { memo } from "react";
-import { ReactComponent as HollowPoint } from "@/features/Backgammon/assets/svg/hollow-point.svg";
+import { ReactComponent as FilledPoint } from "@/features/Backgammon/assets/svg/filled-point.svg";
 import { AppSvg } from "@/shared/ui";
-import { BackgroundColor, BackgroundType } from "@/shared/ui/AppSvg/ui/AppSvg";
 
-export interface PointProps {
+type PointProps = {
   className?: string;
   pointIndex: number;
-}
+};
 
 export const Point = memo(({ className, pointIndex }: PointProps) => {
+  const backgroundColor = pointIndex % 2 === 0 ? "white" : "primary";
+
   return (
     <div className={cx(cls.Point, {}, [className])}>
       <AppSvg
         className={cls.hollowPoint}
-        Svg={HollowPoint}
-        backgroundColor={BackgroundColor.PRIMARY_COLOR}
-        backgroundType={BackgroundType.FILL}
+        Svg={FilledPoint}
+        backgroundColor={backgroundColor}
+        backgroundType="fill"
       />
     </div>
   );

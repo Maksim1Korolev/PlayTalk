@@ -3,11 +3,11 @@ import { DetailedHTMLProps, HTMLAttributes, ReactNode, memo } from "react";
 import cls from "./Flex.module.scss";
 import { Mods, cx } from "@/shared/lib/cx";
 
-export type FlexJustify = "start" | "center" | "end" | "between";
-export type FlexWrap = "nowrap" | "wrap";
-export type FlexAlign = "start" | "center" | "end";
-export type FlexDirection = "row" | "column";
-export type FlexGap = "4" | "8" | "16" | "24" | "32" | "45" | "60";
+type FlexJustify = "start" | "center" | "end" | "between";
+type FlexWrap = "nowrap" | "wrap";
+type FlexAlign = "start" | "center" | "end";
+type FlexDirection = "row" | "column";
+type FlexGap = "4" | "8" | "16" | "24" | "32" | "45" | "60";
 
 const justifyClasses: Record<FlexJustify, string> = {
   start: cls.justifyStart,
