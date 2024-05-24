@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import path from "path";
 
 import authRoutes from "./auth/auth.routes.js";
-import UserService from "./service/UserService.js";
+import UserService from "./services/UserService.js";
 import usersRoutes from "./users/users.routes.js";
 
 import { errorHandler, notFound } from "./middleware/error.middleware.js";

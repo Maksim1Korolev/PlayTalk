@@ -18,10 +18,10 @@ async function main() {
   app.use("/api/users", usersRoutes);
 
   const PORT = process.env.PORT || 3011;
-  const DB_URI = process.env.DB_URI;
+  const DB_URL = process.env.DATABASE_URL;
 
   mongoose
-    .connect(DB_URI)
+    .connect(DB_URL)
     .then(async () => {
       console.log("Successfully connected to MongoDB Atlas");
       await loadLocalData();
