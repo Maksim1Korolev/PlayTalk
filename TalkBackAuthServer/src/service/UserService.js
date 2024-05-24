@@ -1,7 +1,7 @@
 import fs from "fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import User from "../../models/User.js";
+import User from "../models/User.js";
 
 export const getFolderFullPath = folderPath => {
   const __filename = fileURLToPath(import.meta.url);
