@@ -10,7 +10,7 @@ export const getFolderFullPath = folderPath => {
 };
 
 class UserService {
-  static avatars = []; // This will hold available avatar paths
+  static avatars = [];
 
   static loadAvatars() {
     const avatarDirectory = getFolderFullPath("../../public/avatars");
@@ -19,13 +19,11 @@ class UserService {
   }
 
   static getRandomAvatar() {
-    // Select a random avatar from the available list
     const randomIndex = Math.floor(Math.random() * this.avatars.length);
     return this.avatars[randomIndex];
   }
 
   static async addUser({ username, password, avatarFileName }) {
-    // Add user with random avatar
     const user = await User.create({
       username,
       password,
