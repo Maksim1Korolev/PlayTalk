@@ -4,7 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 
 import usersRoutes from "./users/users.routes.js";
-import { syncWithAtlas, loadLocalData } from "./controllers/sync.js";
+import { syncWithAtlas, loadLocalData } from "./sync/sync.controller.js";
 import schedule from "node-schedule";
 
 dotenv.config();
