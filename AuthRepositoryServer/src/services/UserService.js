@@ -1,5 +1,3 @@
-import User from "../models/User.js";
-
 class UserService {
   static usersMap = new Map();
 

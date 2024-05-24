@@ -12,7 +12,6 @@ import { errorHandler, notFound } from "./middleware/error.middleware.js";
 dotenv.config();
 
 const app = express();
-UserService.loadAvatars();
 
 async function main() {
   app.use(cors());
