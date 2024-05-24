@@ -1,11 +1,10 @@
 import axios from "axios";
 
-const AUTH_REPOSITORY_URL = process.env.AUTH_REPOSITORY_URL;
-
 class UserService {
   static getUsers = async () => {
     try {
-      const response = await axios.get(AUTH_REPOSITORY_URL);
+      const url = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users`;
+      const response = await axios.get(url);
       return response.data.users;
     } catch (err) {
       console.error("Failed to fetch users from AuthRepositoryServer", err);
@@ -15,7 +14,8 @@ class UserService {
 
   static addUser = async user => {
     try {
-      await axios.post(AUTH_REPOSITORY_URL, { user });
+      const url = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users`;
+      await axios.post(url, { user });
     } catch (err) {
       console.error("Failed to add user to AuthRepositoryServer", err);
       throw err;
@@ -24,7 +24,8 @@ class UserService {
 
   static deleteUser = async userId => {
     try {
-      await axios.delete(`${AUTH_REPOSITORY_URL}/${userId}`);
+      const url = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users/${userId}`;
+      await axios.delete(url);
     } catch (err) {
       console.error("Failed to delete user from AuthRepositoryServer", err);
       throw err;
@@ -33,9 +34,9 @@ class UserService {
 
   static getUserByUsername = async username => {
     try {
-      const response = await axios.get(
-        `${AUTH_REPOSITORY_URL}/username/${username}`
-      );
+      const url = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users/username/${username}`;
+      console.log(process.env.AUTH_REPOSITORY_SERVER_URL);
+      const response = await axios.get(url);
       return response.data;
     } catch (err) {
       console.error(
@@ -48,7 +49,8 @@ class UserService {
 
   static getUserById = async userId => {
     try {
-      const response = await axios.get(`${AUTH_REPOSITORY_URL}/id/${userId}`);
+      const url = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users/id/${userId}`;
+      const response = await axios.get(url);
       return response.data;
     } catch (err) {
       console.error(
@@ -61,10 +63,8 @@ class UserService {
 
   static updateUser = async user => {
     try {
-      const response = await axios.put(
-        `${AUTH_REPOSITORY_URL}/${user._id}`,
-        user
-      );
+      const url = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users/${user._id}`;
+      const response = await axios.put(url, user);
       return response.data;
     } catch (err) {
       console.error("Failed to update user in AuthRepositoryServer", err);

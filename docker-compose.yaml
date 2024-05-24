@@ -28,20 +28,6 @@ services:
           target: /usr/src/app
           action: sync
 
-  auth_server:
-    build: ./TalkBackAuthServer
-    ports:
-      - "3010:3010"
-    networks:
-      - talkback-network
-    develop:
-      watch:
-        - path: ./app/package.json
-          action: rebuild
-        - path: ./TalkBackAuthServer
-          target: /usr/src/app
-          action: sync
-
   auth_repository_server:
     build: ./AuthRepositoryServer
     ports:
@@ -53,6 +39,22 @@ services:
         - path: ./app/package.json
           action: rebuild
         - path: ./AuthRepositoryServer
+          target: /usr/src/app
+          action: sync
+
+  auth_server:
+    build: ./TalkBackAuthServer
+    ports:
+      - "3010:3010"
+    networks:
+      - talkback-network
+    environment:
+      - AUTH_REPOSITORY_SERVER_URL=http://auth_repository_server:3011/api
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./TalkBackAuthServer
           target: /usr/src/app
           action: sync
 
