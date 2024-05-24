@@ -31,7 +31,7 @@ async function main() {
     })
     .catch(err => console.error("Connection error", err));
 
-  schedule.scheduleJob("0 0 * * *", syncWithAtlas);
+  schedule.scheduleJob("0 */12 * * *", syncWithAtlas);
 
   process.on("SIGTERM", async () => {
     await syncWithAtlas();

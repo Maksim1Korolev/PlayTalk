@@ -16,7 +16,7 @@ export const getUsers = async () => {
 
 export const addUser = async user => {
   try {
-    await axios.post(`${AUTH_REPOSITORY_URL}/auth-repository/users`, { user });
+    await axios.post(`${AUTH_REPOSITORY_URL}/users`, { user });
   } catch (err) {
     console.error("Failed to add user to AuthRepositoryServer", err);
     throw err;
@@ -25,9 +25,7 @@ export const addUser = async user => {
 
 export const deleteUser = async userId => {
   try {
-    await axios.delete(
-      `${AUTH_REPOSITORY_URL}/auth-repository/users/${userId}`
-    );
+    await axios.delete(`${AUTH_REPOSITORY_URL}/users/${userId}`);
   } catch (err) {
     console.error("Failed to delete user from AuthRepositoryServer", err);
     throw err;
@@ -37,7 +35,7 @@ export const deleteUser = async userId => {
 export const getUserByUsername = async username => {
   try {
     const response = await axios.get(
-      `${AUTH_REPOSITORY_URL}/auth-repository/users/username/${username}`
+      `${AUTH_REPOSITORY_URL}/users/username/${username}`
     );
     return response.data;
   } catch (err) {
@@ -52,7 +50,7 @@ export const getUserByUsername = async username => {
 export const getUserById = async userId => {
   try {
     const response = await axios.get(
-      `${AUTH_REPOSITORY_URL}/auth-repository/users/id/${userId}`
+      `${AUTH_REPOSITORY_URL}/users/id/${userId}`
     );
     return response.data;
   } catch (err) {
@@ -64,7 +62,7 @@ export const getUserById = async userId => {
 export const updateUser = async user => {
   try {
     const response = await axios.put(
-      `${AUTH_REPOSITORY_URL}/auth-repository/users/${user._id}`,
+      `${AUTH_REPOSITORY_URL}/users/id/${user._id}`,
       user
     );
     return response.data;

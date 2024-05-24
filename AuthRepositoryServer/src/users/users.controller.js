@@ -1,11 +1,11 @@
 import asyncHandler from "express-async-handler";
-import UserService from "../users/users.service.js";
+import UserService from "../services/UserService.js";
 
 // @desc   Get users
 // @route  GET /auth-repository/users
 // @access Public
 export const getUsers = asyncHandler(async (req, res) => {
-  const users = await UserService.getUsers();
+  const users = UserService.getUsers();
   res.json({ users });
 });
 
@@ -14,7 +14,7 @@ export const getUsers = asyncHandler(async (req, res) => {
 // @access Public
 export const addUser = asyncHandler(async (req, res) => {
   const { user } = req.body;
-  await UserService.addUser(user);
+  UserService.addUser(user);
   res.status(201).json({ message: "User added successfully" });
 });
 
@@ -23,7 +23,7 @@ export const addUser = asyncHandler(async (req, res) => {
 // @access Public
 export const deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  await UserService.deleteUser(id);
+  UserService.deleteUser(id);
   res.status(200).json({ message: "User deleted successfully" });
 });
 
@@ -32,7 +32,7 @@ export const deleteUser = asyncHandler(async (req, res) => {
 // @access Public
 export const getUserByUsername = asyncHandler(async (req, res) => {
   const { username } = req.params;
-  const user = await UserService.getUserByUsername(username);
+  const user = UserService.getUserByUsername(username);
   res.json(user);
 });
 
@@ -41,7 +41,7 @@ export const getUserByUsername = asyncHandler(async (req, res) => {
 // @access Public
 export const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const user = await UserService.getUserById(id);
+  const user = UserService.getUserById(id);
   res.json(user);
 });
 
@@ -50,6 +50,6 @@ export const getUserById = asyncHandler(async (req, res) => {
 // @access Public
 export const updateUser = asyncHandler(async (req, res) => {
   const user = req.body;
-  const updatedUser = await UserService.updateUser(user);
+  const updatedUser = UserService.updateUser(user);
   res.json(updatedUser);
 });
