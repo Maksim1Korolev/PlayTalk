@@ -10,8 +10,10 @@ export const Board = ({ className }: { className?: string }) => {
     backgroundImage: `url(${backgroundImageSrc})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
-    width: "70vw",
-    height: "80vh",
+    width: "70vw", // Board width
+    height: "40vw", // Board height to maintain a 7:4 aspect ratio
+    maxWidth: "1000px", // Maximum width to ensure it doesn't get too large
+    maxHeight: "600px", // Maximum height to ensure it doesn't get too large
   };
 
   const [points, setPoints] = useState<JSX.Element[]>([]);

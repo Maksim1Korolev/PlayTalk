@@ -50,6 +50,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
     }
   );
 
+  //TODO:Send the newly added user straight to all the clients
   const signUpMutation = useMutation(
     () => apiService.register(username, password),
     {
