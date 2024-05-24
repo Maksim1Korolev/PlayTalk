@@ -1,9 +1,11 @@
 import axios from "axios";
 
 class UserService {
+  static repositoryServerUrl = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users`;
+
   static getUsers = async () => {
     try {
-      const url = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users`;
+      const url = this.repositoryServerUrl;
       const response = await axios.get(url);
       return response.data.users;
     } catch (err) {
@@ -14,7 +16,7 @@ class UserService {
 
   static addUser = async user => {
     try {
-      const url = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users`;
+      const url = this.repositoryServerUrl;
       await axios.post(url, { user });
     } catch (err) {
       console.error("Failed to add user to AuthRepositoryServer", err);
@@ -24,7 +26,7 @@ class UserService {
 
   static deleteUser = async userId => {
     try {
-      const url = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users/${userId}`;
+      const url = `${this.repositoryServerUrl}/${userId}`;
       await axios.delete(url);
     } catch (err) {
       console.error("Failed to delete user from AuthRepositoryServer", err);
@@ -34,9 +36,9 @@ class UserService {
 
   static getUserByUsername = async username => {
     try {
-      const url = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users/username/${username}`;
-      console.log(process.env.AUTH_REPOSITORY_SERVER_URL);
-      const response = await axios.get(url);
+      const response = await axios.get(
+        `${this.repositoryServerUrl}/username/${username}`
+      );
       return response.data;
     } catch (err) {
       console.error(
@@ -49,7 +51,7 @@ class UserService {
 
   static getUserById = async userId => {
     try {
-      const url = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users/id/${userId}`;
+      const url = `${this.repositoryServerUrl}/id/${userId}`;
       const response = await axios.get(url);
       return response.data;
     } catch (err) {
@@ -63,7 +65,7 @@ class UserService {
 
   static updateUser = async user => {
     try {
-      const url = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users/${user._id}`;
+      const url = `${this.repositoryServerUrl}/${user._id}`;
       const response = await axios.put(url, user);
       return response.data;
     } catch (err) {
