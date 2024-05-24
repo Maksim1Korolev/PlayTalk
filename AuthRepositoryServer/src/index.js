@@ -4,32 +4,21 @@ import express from "express";
 import mongoose from "mongoose";
 import path from "path";
 
-import authRoutes from "./auth/auth.routes.js";
-import UserService from "./service/UserService.js";
-import usersRoutes from "./users/users.routes.js";
-
 import { errorHandler, notFound } from "./middleware/error.middleware.js";
 dotenv.config();
 
 const app = express();
-UserService.loadAvatars();
 
 async function main() {
   app.use(cors());
   app.use(express.json());
 
-  const __dirname = path.resolve();
+  //app.use("/api/auth", authRoutes);
 
-  app.use("/public", express.static(path.join(__dirname, "../public")));
-  console.log(__dirname);
-
-  app.use("/api/auth", authRoutes);
-  app.use("/api/users", usersRoutes);
-
-  app.use(notFound);
-  app.use(errorHandler);
+  //   app.use(notFound);
+  //   app.use(errorHandler);
 }
-const PORT = process.env.PORT || 3010;
+const PORT = process.env.PORT || 3011;
 
 const mongoURL = process.env.DATABASE_URL;
 
