@@ -4,11 +4,11 @@ import express from "express";
 import mongoose from "mongoose";
 import path from "path";
 
-import authRoutes from "./app/auth/auth.routes.js";
-import UserService from "./app/service/UserService.js";
-import usersRoutes from "./app/users/users.routes.js";
+import authRoutes from "./auth/auth.routes.js";
+import UserService from "./service/UserService.js";
+import usersRoutes from "./users/users.routes.js";
 
-import { errorHandler, notFound } from "./app/middleware/error.middleware.js";
+import { errorHandler, notFound } from "./middleware/error.middleware.js";
 dotenv.config();
 
 const app = express();
