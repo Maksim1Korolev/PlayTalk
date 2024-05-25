@@ -20,7 +20,7 @@ class UserService {
 
   static getUserById(userId) {
     for (let user of this.usersMap.values()) {
-      if (user._id.toString() === userId) {
+      if (user._id === userId) {
         return user;
       }
     }
