@@ -1,5 +1,5 @@
 import { io } from "../index.js";
-import PlayerService from "../service/PlayerService.js";
+import PlayerService from "../services/PlayerService.js";
 
 const playerSockets = new Map();
 
