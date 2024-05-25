@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import UserService from "../services/UserService.js";
+import mongoose from "mongoose";
 
 export const loadLocalData = async () => {
   try {
@@ -17,8 +18,8 @@ export const syncWithAtlas = async () => {
     await User.bulkWrite(
       users.map(user => ({
         updateOne: {
-          filter: { _id: user._id },
-          update: user,
+          filter: { _id: user._id || new mongoose.Types.ObjectId() },
+          update: { $set: user },
           upsert: true,
         },
       }))
