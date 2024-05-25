@@ -16,7 +16,6 @@ export const authUser = asyncHandler(async (req, res) => {
   try {
     const isValidPassword = await verify(user.password, password);
     if (user && isValidPassword) {
-      console.log("In try");
       const token = generateToken(user.id);
       res.json({ user, token });
     } else {
@@ -45,7 +44,8 @@ export const registerUser = asyncHandler(async (req, res) => {
     username,
     password: await hash(password),
   });
-
+  console.log("ERSGERGESRGEGERGERG");
+  console.log(user);
   const token = generateToken(user._id);
 
   res.json({ user, token });

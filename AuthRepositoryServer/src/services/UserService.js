@@ -7,6 +7,7 @@ class UserService {
 
   static addUser(user) {
     this.usersMap.set(user.username, user);
+    return this.usersMap.get(user.username);
   }
 
   static getUsers() {
