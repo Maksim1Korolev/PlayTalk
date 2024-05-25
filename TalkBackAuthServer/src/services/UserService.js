@@ -9,7 +9,7 @@ class UserService {
       const response = await axios.get(url);
       return response.data.users;
     } catch (err) {
-      console.error("Failed to fetch users from AuthRepositoryServer", err);
+      console.error("Failed to fetch users from auth-repository-server", err);
       throw err;
     }
   };
@@ -20,7 +20,7 @@ class UserService {
       const response = await axios.post(url, { user });
       return response.data.user;
     } catch (err) {
-      console.error("Failed to add user to AuthRepositoryServer", err);
+      console.error("Failed to add user to auth-repository-server", err);
       throw err;
     }
   };
@@ -31,7 +31,7 @@ class UserService {
       const response = await axios.delete(url);
       return response.data.user;
     } catch (err) {
-      console.error("Failed to delete user from AuthRepositoryServer", err);
+      console.error("Failed to delete user from auth-repository-server", err);
       throw err;
     }
   };
@@ -45,7 +45,7 @@ class UserService {
       return response.data.user;
     } catch (err) {
       console.error(
-        "Failed to fetch user by username from AuthRepositoryServer",
+        "Failed to fetch user by username from auth-repository-server",
         err
       );
       throw err;
@@ -60,7 +60,7 @@ class UserService {
       return response.data.user;
     } catch (err) {
       console.error(
-        "Failed to fetch user by ID from AuthRepositoryServer",
+        "Failed to fetch user by ID from auth-repository-server",
         err
       );
       throw err;
@@ -73,7 +73,7 @@ class UserService {
       const response = await axios.put(url, user);
       return response.data.user;
     } catch (err) {
-      console.error("Failed to update user in AuthRepositoryServer", err);
+      console.error("Failed to update user in auth-repository-server", err);
       throw err;
     }
   };
