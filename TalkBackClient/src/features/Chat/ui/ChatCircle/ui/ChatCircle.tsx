@@ -1,5 +1,6 @@
 import { cx } from "@/shared/lib/cx";
-import { AppImage } from "@/shared/ui";
+import { AppImage } from "@/shared/ui/AppImage";
+import { getAvatarPath } from "@/shared/ui/AppImage/ui/AppImage";
 import { memo } from "react";
 import cls from "./ChatCircle.module.scss";
 
@@ -17,9 +18,6 @@ export const ChatCircle = memo(
     unreadMessagesCount?: number;
     onClick: () => void;
   }) => {
-    const avatarSrc = `${
-      import.meta.env.VITE_AUTH_SERVER_STATIC_URL
-    }/avatars/${avatarFileName}`;
     //TODO: Add Max Unread Messages Count value and something
     return (
       <div onClick={onClick} className={`${cls.ChatCircle} ${className}`}>
@@ -28,7 +26,7 @@ export const ChatCircle = memo(
             className={cls.profileImage}
             width={80}
             height={80}
-            src={avatarSrc}
+            src={getAvatarPath(imageSrc)}
             draggable="false"
           />
         </div>
