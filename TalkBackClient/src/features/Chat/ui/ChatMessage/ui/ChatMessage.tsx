@@ -1,6 +1,8 @@
 import { cx } from "@/shared/lib/cx";
 import { forwardRef } from "react";
 
+import { AppImage } from "@/shared/ui/AppImage";
+import { getAvatarPath } from "@/shared/ui/AppImage/ui/AppImage";
 import cls from "./ChatMessage.module.scss";
 
 export interface Message {
@@ -15,13 +17,12 @@ interface ChatMessageProps {
   className?: string;
   isRight?: boolean;
   message: Message;
+  avatarSrc?: string;
 }
 
 export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
-  ({ className, isRight, message }, ref) => {
+  ({ className, isRight, message, avatarSrc }, ref) => {
     return (
-      //Message Direction
-      //<VStack align={isRight ? 'end' : 'start'} className={cx(cls.messageDirection, {}, [])} max>
       <div
         ref={ref}
         className={cx(
@@ -31,15 +32,10 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
         )}
       >
         <span className={cls.msgAvatar}>
-          {/*<AppImage src="https://image.crisp.im/avatar/operator/196af8cc-f6ad-4ef7-afd1-c45d5231387c/240/?1483361727745" />*/}
+          {avatarSrc && <AppImage src={getAvatarPath(avatarSrc)} />}
         </span>
         <div className={cls.cmMsgText}>{message.message}</div>
       </div>
-
-      //	<Card padding="8" className={cx(cls.ChatMessage, {}, [className])}>
-      //		<UiText>{message.message}</UiText>
-      //	</Card>
-      //</VStack>
     );
   }
 );

@@ -17,6 +17,7 @@ export const getOnlineUsernames = async (req, res, next) => {
   }
 };
 
+
 export const connectOnline = async () => {
   io.on("connection", async socket => {
     console.log("User connected");
