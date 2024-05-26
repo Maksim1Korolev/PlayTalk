@@ -14,7 +14,7 @@ services:
   #     - talkback-network
 
   game_server:
-    build: ./TalkBackGameServer
+    build: ./game-server
     ports:
       - "3030:3030"
     networks:
@@ -23,7 +23,7 @@ services:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./TalkBackGameServer
+        - path: ./game-server
           target: /usr/src/app
           action: sync
 
@@ -42,7 +42,7 @@ services:
           action: sync
 
   auth_server:
-    build: ./TalkBackAuthServer
+    build: ./auth-server
     ports:
       - "3010:3010"
     networks:
@@ -53,12 +53,12 @@ services:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./TalkBackAuthServer
+        - path: ./auth-server
           target: /usr/src/app
           action: sync
 
   chat_server:
-    build: ./TalkBackChatServer
+    build: ./chat-server
     ports:
       - "3020:3020"
     networks:
@@ -67,12 +67,12 @@ services:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./TalkBackChatServer
+        - path: ./chat-server
           target: /usr/src/app
           action: sync
 
   online_server:
-    build: ./TalkBackOnlineServer
+    build: ./online-server
     ports:
       - "3000:3000"
     networks:
@@ -83,12 +83,12 @@ services:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./TalkBackOnlineServer
+        - path: ./online-server
           target: /usr/src/app
           action: sync
 
   client:
-    build: ./TalkBackClient
+    build: ./client
     ports:
       - "5173:5173"
     networks:
@@ -105,7 +105,7 @@ services:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./TalkBackClient
+        - path: ./client
           target: /usr/src/app
           action: sync
 
