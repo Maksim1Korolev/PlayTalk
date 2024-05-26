@@ -1,12 +1,14 @@
 import axios from "axios";
+import { io } from "../index.js";
 
-export const getAllUnreadMessageCounts = async (req, res, next) => {
+export const getAllUnreadMessageCounts = async (req, res) => {
   try {
     const { requestingUsername } = req.params;
 
     const { data } = await axios.get(
       `${process.env.CHAT_SERVER_URL}/unread/all/${requestingUsername}`
     );
+    console.log(data);
     return res.status(200).json(data);
   } catch (err) {
     console.log(err);
@@ -16,11 +18,14 @@ export const getAllUnreadMessageCounts = async (req, res, next) => {
 export const readAllUnreadMessage = async (req, res) => {
   try {
     const { requestingUsername } = req.params;
-
-    const { data } = await axios.get(
-      `${process.env.CHAT_SERVER_URL}/markAsRead/${requestingUsername}`,
-      { usernames: req.body.usernames }
-    );
+    console.log("readAllUnreadMessage");
+    console.log(requestingUsername);
+    const { usernames } = req.body;
+    const url = `${process.env.CHAT_SERVER_URL}/markAsRead/${requestingUsername}`;
+    console.log(url);
+    const { data } = await axios.post(url, {
+      usernames,
+    });
     return res.status(200).json(data);
   } catch (err) {
     console.log(err);
@@ -32,14 +37,6 @@ export const ChatSubscribes = async (socket, savedUsername) => {
   //TODO: reset users new messages
   socket.on("on-chat-open", async receiverUsername => {
     try {
-      console.log(
-        receiverUsername +
-          "  asfdjnhhiuasdh fiuahf iuohiuf hasdiuf ghjhasdg fuhyagshd hjf gsdajh gjhdsafhg"
-      );
-      console.log(
-        savedUsername +
-          "  asfdjnhhiuasdh fiuahf iuohiuf hasdiuf ghjhasdg fuhyagshd hjf gsdajh gjhdsafhg"
-      );
       const { data } = await GetMessageHistory([
         savedUsername,
         receiverUsername,
@@ -58,12 +55,37 @@ export const ChatSubscribes = async (socket, savedUsername) => {
     }
   });
 
+  socket.on("on-read-messages", async ({ requestingUsername, usernames }) => {
+    try {
+      const url = `${process.env.CHAT_SERVER_URL}/markAsRead/${requestingUsername}`;
+      console.log(url);
+
+      const response = await axios.post(url, { usernames });
+
+      if (response.status === 200) {
+        //TODO: update it for groupChats
+        const otherUserInChat = usernames.find(
+          username => username !== requestingUsername
+        );
+        socket.emit("unread-count-messages", otherUserInChat, 0);
+      } else {
+        console.error(
+          `Failed to mark messages as read. Status code: ${response.status}`
+        );
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  });
+
   socket.on(
     "send-message",
     async ({ senderUsername, receiverUsername, message }) => {
       const usernames = [senderUsername, receiverUsername].sort();
       try {
-        const { receiversSocketIds } = await GetUserIds(usernames, message);
+        const { data } = await GetUserIds(usernames, message);
+        const { receiversSocketIds } = data;
+        console.log(receiversSocketIds);
         io.to(receiversSocketIds).emit("receive-message", {
           senderUsername,
           message,
@@ -107,16 +129,6 @@ export const GetMessageHistory = async usernames => {
 export const getUnreadMessagesCount = async (usernames, requestingUsername) => {
   return await axios
     .get(`${process.env.CHAT_SERVER_URL}/unread/${requestingUsername}`, {
-      usernames,
-    })
-    .catch(e => {
-      console.log("Server is not connected or returns an error" + e);
-    });
-};
-
-export const markAllMessagesAsRead = async (usernames, requestingUsername) => {
-  return await axios
-    .post(`${process.env.CHAT_SERVER_URL}/markAsRead/${requestingUsername}`, {
       usernames,
     })
     .catch(e => {

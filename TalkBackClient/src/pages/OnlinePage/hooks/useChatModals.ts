@@ -25,13 +25,24 @@ export const useChatModals = (currentUser: User) => {
     [currentUser.username]
   );
 
+  const readAllUnreadMessages = useCallback(
+    (usernames: string[]) => {
+      onlineSocket.emit("on-read-messages", {
+        requestingUsername: currentUser.username,
+        usernames,
+      });
+    },
+    [currentUser.username]
+  );
+
   return {
     handleUserMessage,
+    readAllUnreadMessages,
   };
 };
 
 export const useReceiveMessage = (
-  receiverUsername: string,
+  currentReceiverUsername: string,
   AddMessagesToHistory: (messages: Message[]) => void
 ) => {
   useEffect(() => {
@@ -41,7 +52,7 @@ export const useReceiveMessage = (
     ) => {
       console.log(messages);
 
-      if (receiverUsername === receiverUsername) {
+      if (currentReceiverUsername === receiverUsername) {
         AddMessagesToHistory(messages);
       }
     };
@@ -53,12 +64,13 @@ export const useReceiveMessage = (
       senderUsername: string;
       message: Message;
     }) => {
-      if (senderUsername === receiverUsername) {
+      if (senderUsername === currentReceiverUsername) {
         AddMessagesToHistory([message]);
       }
     };
 
-    onlineSocket.emit("on-chat-open", receiverUsername);
+    onlineSocket.emit("on-chat-open", currentReceiverUsername);
+
     onlineSocket.on("update-chat", updateChatHistory);
     onlineSocket.on("receive-message", receiveMessageSubscribe);
 
@@ -66,5 +78,5 @@ export const useReceiveMessage = (
       onlineSocket.off("update-chat", updateChatHistory);
       onlineSocket.off("receive-message", receiveMessageSubscribe);
     };
-  }, [AddMessagesToHistory, receiverUsername]);
+  }, [AddMessagesToHistory, currentReceiverUsername]);
 };

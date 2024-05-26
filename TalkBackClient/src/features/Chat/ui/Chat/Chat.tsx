@@ -15,6 +15,7 @@ import cls from "./Chat.module.scss";
 export const Chat = memo(
   ({
     className,
+    isOpen,
     messageHistory,
     receiverUser,
     handleSendMessage,
@@ -23,6 +24,7 @@ export const Chat = memo(
     onCollapse,
   }: {
     className?: string;
+    isOpen: boolean;
     messageHistory?: Message[];
     receiverUser: User;
     handleSendMessage: (message: string) => void;
@@ -31,7 +33,7 @@ export const Chat = memo(
   }) => {
     const [inputMessage, setInputMessage] = useState<string>("");
 
-    const [cookies] = useCookies(["jwt-cookie"]);
+    const [cookies, setCookie] = useCookies(["jwt-cookie"]);
 
     const { user: currentUser, token } = cookies["jwt-cookie"];
 
@@ -69,16 +71,24 @@ export const Chat = memo(
           receiverUser.username,
           token
         );
+        setCookie("jwt-cookie", {
+          ...cookies["jwt-cookie"],
+          user: {
+            ...currentUser,
+            unreadMessages: 0,
+          },
+        });
       } catch (error) {
         console.error(error);
       }
-    }, [currentUser.username, receiverUser.username, token]);
+    }, [cookies, currentUser, receiverUser.username, setCookie, token]);
 
     useEffect(() => {
-      scrollToBottom();
-      setReadAll();
-    }, [messageHistory?.length, scrollToBottom, setReadAll]);
-
+      if (isOpen) {
+        setReadAll();
+        scrollToBottom();
+      }
+    }, [messageHistory?.length, isOpen]);
     const renderMessageHistory = useCallback(() => {
       return messageHistory?.map((message, index) => (
         <ChatMessage

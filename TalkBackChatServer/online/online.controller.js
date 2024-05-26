@@ -11,6 +11,8 @@ const missingMessages = new Map();
 // @access Public
 export const addMessageToHistory = asyncHandler(async (req, res) => {
   const { usernames, message } = req.body;
+  console.log("FKJHKFJHSAJKDFHKJSFDHKJFDSHJK");
+  console.log(usernames, message);
   MessageHistoryService.addMessage(usernames, message);
 
   const receiversSocketIds = [];
@@ -20,7 +22,8 @@ export const addMessageToHistory = asyncHandler(async (req, res) => {
       currentUserSockets.map(socketId => receiversSocketIds.push(socketId));
     }
   });
-  return res.json({ receiversSocketIds });
+  console.log(receiversSocketIds);
+  return res.status(200).json({ receiversSocketIds });
 });
 
 // @desc   Add user to chat lobby's map of SocketIds
@@ -109,7 +112,7 @@ export const markAsRead = asyncHandler(async (req, res) => {
     const { requestingUsername } = req.params;
 
     const { usernames } = req.body;
-
+    console.log(usernames);
     if (!requestingUsername) {
       return res.status(400).json({ message: "Username is required." });
     }
@@ -122,17 +125,17 @@ export const markAsRead = asyncHandler(async (req, res) => {
 
     const sortedUsernames = Array.isArray(usernames)
       ? usernames.sort()
-      : [usernames].sort();
+      : [usernames];
 
     const result = await MessageHistoryService.markAsRead(
       sortedUsernames,
       requestingUsername
     );
-    res.json({
-      message: result
-        ? "Messages marked as read"
-        : "Messages didn't mark as read",
-    });
+    if (result) {
+      res.status(200).json({ message: "Messages marked as read." });
+    } else {
+      res.status(404).json({ message: "Messages not found." });
+    }
   } catch (err) {
     res.status(500).json(err.toString());
   }

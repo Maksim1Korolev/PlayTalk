@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { User } from "@/entities/User";
 import { Chat } from "@/features/Chat";
@@ -17,6 +17,7 @@ export const ChatModal = ({
   currentUser,
   receiverUser,
   position,
+  handleReadAllUnreadMessages,
   handleCloseModal,
   handleSendMessage,
 }: {
@@ -24,6 +25,7 @@ export const ChatModal = ({
   currentUser: User;
   receiverUser: User;
   position?: { x: number; y: number };
+  handleReadAllUnreadMessages: (usernames: string[]) => void;
   handleCloseModal: (userId: string) => void;
   handleSendMessage: (receiverUsername: string, message: Message) => void;
 }) => {
@@ -36,6 +38,19 @@ export const ChatModal = ({
       setIsOpen(true);
     }
   };
+  useEffect(() => {
+    if (isOpen) {
+      handleReadAllUnreadMessages([
+        currentUser.username,
+        receiverUser.username,
+      ]);
+    }
+  }, [
+    currentUser.username,
+    isOpen,
+    handleReadAllUnreadMessages,
+    receiverUser.username,
+  ]);
 
   const handleCloseChatModal = () => {
     if (!isDragged) {
@@ -71,6 +86,7 @@ export const ChatModal = ({
       {isOpen ? (
         <Chat
           className={cx(cls.ChatModal, {}, [className])}
+          isOpen={isOpen}
           handleSendMessage={onUserSend}
           receiverUser={receiverUser}
           messageHistory={messageHistory}

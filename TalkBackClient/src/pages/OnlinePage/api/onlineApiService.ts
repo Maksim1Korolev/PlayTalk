@@ -25,11 +25,12 @@ export const onlineApiService = {
     receiverUsername: string,
     token: string
   ) => {
+    const usernames = [currentUsername, receiverUsername];
     const response = await $onlineApi.post(
       `/api/chat/markAsRead/${currentUsername}`,
       {
         headers: { Authorization: `Bearer ${token}` },
-        data: { usernames: [currentUsername, receiverUsername] },
+        usernames,
       }
     );
     return response.data;

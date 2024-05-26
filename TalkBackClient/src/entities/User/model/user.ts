@@ -6,4 +6,5 @@ export interface User {
   isOnline: boolean;
   inGame: boolean;
   unreadMessageCount?: number;
+	isChatOpen?: boolean;
 }
