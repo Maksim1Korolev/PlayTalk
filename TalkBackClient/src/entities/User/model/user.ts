@@ -7,4 +7,5 @@ export interface User {
   inInvite: boolean;
   inGame: boolean;
   unreadMessageCount?: number;
+	isChatOpen?: boolean;
 }

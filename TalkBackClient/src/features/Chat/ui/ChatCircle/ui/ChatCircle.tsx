@@ -1,5 +1,6 @@
 import { cx } from "@/shared/lib/cx";
-import { AppImage } from "@/shared/ui";
+import { AppImage } from "@/shared/ui/AppImage";
+import { getAvatarPath } from "@/shared/ui/AppImage/ui/AppImage";
 import { memo } from "react";
 import cls from "./ChatCircle.module.scss";
 
@@ -28,7 +29,7 @@ export const ChatCircle = memo(
             className={cls.profileImage}
             width={80}
             height={80}
-            src={avatarSrc}
+            src={getAvatarPath(imageSrc)}
             draggable="false"
           />
         </div>

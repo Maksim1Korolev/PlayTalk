@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { User } from "@/entities/User";
 import { Chat } from "@/features/Chat";
@@ -14,16 +14,18 @@ import cls from "./ChatModal.module.scss";
 
 export const ChatModal = ({
   className,
-  currentUsername,
+  currentUser,
   receiverUser,
   position,
+  handleReadAllUnreadMessages,
   handleCloseModal,
   handleSendMessage,
 }: {
   className?: string;
-  currentUsername: string;
+  currentUser: User;
   receiverUser: User;
   position?: { x: number; y: number };
+  handleReadAllUnreadMessages: (usernames: string[]) => void;
   handleCloseModal: (userId: string) => void;
   handleSendMessage: (receiverUsername: string, message: Message) => void;
 }) => {
@@ -36,6 +38,19 @@ export const ChatModal = ({
       setIsOpen(true);
     }
   };
+  useEffect(() => {
+    if (isOpen) {
+      handleReadAllUnreadMessages([
+        currentUser.username,
+        receiverUser.username,
+      ]);
+    }
+  }, [
+    currentUser.username,
+    isOpen,
+    handleReadAllUnreadMessages,
+    receiverUser.username,
+  ]);
 
   const handleCloseChatModal = () => {
     if (!isDragged) {
@@ -45,7 +60,7 @@ export const ChatModal = ({
 
   const { messageHistory, onUserSend, AddMessagesToHistory } = useModalMessages(
     {
-      currentUsername,
+      currentUsername: currentUser.username,
       receiverUsername: receiverUser.username,
       handleSendMessage,
     }
@@ -66,15 +81,15 @@ export const ChatModal = ({
       minWidth={isOpen ? 365 : 80}
       minHeight={isOpen ? 280 : 80}
       bounds="window"
-      enableResizing={false}
+      enableResizing={isOpen}
     >
       {isOpen ? (
         <Chat
           className={cx(cls.ChatModal, {}, [className])}
+          isOpen={isOpen}
           handleSendMessage={onUserSend}
-          currentUsername={currentUsername}
+          receiverUser={receiverUser}
           messageHistory={messageHistory}
-          receiverUsername={receiverUser.username}
           onClose={() => handleCloseModal(receiverUser._id)}
           onCollapse={handleCloseChatModal}
         />

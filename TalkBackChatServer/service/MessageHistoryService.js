@@ -96,16 +96,34 @@ class MessageHistoryService {
 
   async markAsRead(usernames, requestingUsername) {
     try {
-      const result = await MessageHistory.updateMany(
-        {
-          usernames,
-          "messages.username": { $ne: requestingUsername },
-          "messages.readAt": { $exists: false },
-        },
-        { $set: { "messages.$.readAt": new Date() } }
-      );
-      console.log(result);
-      return result;
+      const messageHistory = await MessageHistory.findOne({
+        usernames: { $all: usernames },
+      });
+      console.log("messageHistory:", messageHistory);
+      if (messageHistory) {
+        const messages = messageHistory.messages;
+        console.log("messages:", messages);
+        for (let i = 0; i < messages.length; i++) {
+          if (!messages[i].message) {
+            console.warn(
+              `Skipping message ${i} because it has no message field.`
+            );
+            continue;
+          }
+          console.log("messages[i].username:", messages[i].username);
+          console.log("requestingUsername:", requestingUsername);
+          if (
+            messages[i].username !== requestingUsername &&
+            messages[i].readAt === undefined
+          ) {
+            console.log("Marking message as read");
+            messages[i].readAt = new Date();
+          }
+        }
+
+        await messageHistory.save();
+        return messageHistory;
+      }
     } catch (error) {
       console.error("Error To Mark readAt. Error:", error);
       throw error;

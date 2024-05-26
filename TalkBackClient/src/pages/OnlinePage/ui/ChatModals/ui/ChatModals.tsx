@@ -22,7 +22,7 @@ export const ChatModals = memo(
       React.SetStateAction<ChatModalStateProps[] | undefined>
     >;
   }) => {
-    const { handleUserMessage } = useChatModals(currentUser);
+    const { handleUserMessage, readAllUnreadMessages } = useChatModals(currentUser);
 
     const handleCloseChatModal = useCallback(
       (userId: string) => {
@@ -36,20 +36,15 @@ export const ChatModals = memo(
         <ChatModal
           className={cx(cls.ChatModals, {}, [className])}
           key={`${user._id}`}
-          currentUsername={currentUser.username}
+          currentUser={currentUser}
           receiverUser={user}
           handleSendMessage={handleUserMessage}
+					handleReadAllUnreadMessages={readAllUnreadMessages}
           handleCloseModal={handleCloseChatModal}
           position={position}
         />
       ));
-    }, [
-      chatModals,
-      className,
-      currentUser.username,
-      handleCloseChatModal,
-      handleUserMessage,
-    ]);
+    }, [chatModals, className, currentUser, handleCloseChatModal, handleUserMessage]);
 
     return <>{renderChatModals()}</>;
   }
