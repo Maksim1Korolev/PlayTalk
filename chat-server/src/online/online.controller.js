@@ -1,6 +1,6 @@
 import asyncHandler from "express-async-handler";
 
-import MessageHistoryService from "../service/MessageHistoryService.js";
+import MessageHistoryService from "../services/MessageHistoryService.js";
 
 const userSockets = new Map();
 const missingMessages = new Map();

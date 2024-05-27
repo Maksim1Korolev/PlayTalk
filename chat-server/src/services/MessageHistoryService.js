@@ -1,4 +1,4 @@
-import MessageHistory from "../model/MessageHistory.js";
+import MessageHistory from "../models/MessageHistory.js";
 
 class MessageHistoryService {
   async addMessage(usernames, message) {

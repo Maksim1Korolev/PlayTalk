@@ -13,3 +13,5 @@ node_modules
 *.swp
 *.swo
 .DS_Store
+
+.vscode
