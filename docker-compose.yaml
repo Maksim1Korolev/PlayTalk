@@ -110,7 +110,6 @@ services:
     networks:
       - talkback-network
     environment:
-      - CHAT_SERVER_URL=http://chat_server:3020/api
       - AUTH_SERVER_URL=http://auth_server:3010/api/auth
       - AUTH_SERVER_STATIC_URL=http://auth_server:3010/public
       - USERS_SERVER_URL=http://auth_server:3010/api/users
