@@ -100,7 +100,6 @@ services:
       - USERS_SERVER_URL=http://auth_server:3010/api/users
       - ONLINE_SOCKET_URL=http://online_server:3000
       - GAME_SOCKET_URL=http://game_server:3030
-      - VITE_GAME_SERVER_STATIC_URL=http://localhost:3030/public
     develop:
       watch:
         - path: ./app/package.json
