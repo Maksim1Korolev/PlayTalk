@@ -57,6 +57,22 @@ services:
           target: /usr/src/app
           action: sync
 
+  chat_repository_server:
+    build: ./chat-repository-server
+    ports:
+      - "3021:3021"
+    networks:
+      - talkback-network
+    environment:
+      - CHAT_REPOSITORY_SERVER_URL=http://chat_repository_server:3021/api
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./chat-repository-server
+          target: /usr/src/app
+          action: sync
+
   chat_server:
     build: ./chat-server
     ports:

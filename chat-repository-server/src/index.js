@@ -16,9 +16,9 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
-  app.use("/api/users", usersRoutes);
+  //app.use("/api/users", usersRoutes);
 
-  const PORT = process.env.PORT || 3011;
+  const PORT = process.env.PORT || 3021;
   const DB_URL = process.env.DATABASE_URL;
 
   try {
@@ -26,7 +26,7 @@ async function main() {
     console.log("Successfully connected to MongoDB Atlas");
     await loadLocalData();
     app.listen(PORT, () => {
-      console.log(`auth-repository-server is running on port ${PORT}`);
+      console.log(`chat-repository-server is running on port ${PORT}`);
     });
 
     schedule.scheduleJob("0 */12 * * *", syncWithAtlas);
