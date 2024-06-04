@@ -83,7 +83,7 @@ export const ChatSubscribes = async (socket, savedUsername) => {
     async ({ senderUsername, receiverUsername, message }) => {
       const usernames = [senderUsername, receiverUsername].sort();
       try {
-        const { data } = await GetUserIds(usernames, message);
+        const { data } = await setMessage(usernames, message);
         const { receiversSocketIds } = data;
         console.log(receiversSocketIds);
         io.to(receiversSocketIds).emit("receive-message", {
@@ -136,7 +136,7 @@ export const getUnreadMessagesCount = async (usernames, requestingUsername) => {
     });
 };
 
-export const GetUserIds = async (usernames, message) => {
+export const setMessage = async (usernames, message) => {
   return await axios
     .post(`${process.env.CHAT_SERVER_URL}/messages/message`, {
       usernames,
