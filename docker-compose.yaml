@@ -14,7 +14,7 @@ services:
   #     - talkback-network
 
   game_server:
-    build: ./game-server
+    build: ./server/game-server
     ports:
       - "3030:3030"
     networks:
@@ -23,12 +23,12 @@ services:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./game-server
+        - path: ./server/game-server
           target: /usr/src/app
           action: sync
 
   auth_repository_server:
-    build: ./auth-repository-server
+    build: ./server/auth-repository-server
     ports:
       - "3011:3011"
     networks:
@@ -37,12 +37,12 @@ services:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./auth-repository-server
+        - path: ./server/auth-repository-server
           target: /usr/src/app
           action: sync
 
   auth_server:
-    build: ./auth-server
+    build: ./server/auth-server
     ports:
       - "3010:3010"
     networks:
@@ -53,12 +53,12 @@ services:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./auth-server
+        - path: ./server/auth-server
           target: /usr/src/app
           action: sync
 
   chat_repository_server:
-    build: ./chat-repository-server
+    build: ./server/chat-repository-server
     ports:
       - "3021:3021"
     networks:
@@ -69,12 +69,12 @@ services:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./chat-repository-server
+        - path: ./server/chat-repository-server
           target: /usr/src/app
           action: sync
 
   chat_server:
-    build: ./chat-server
+    build: ./server/chat-server
     ports:
       - "3020:3020"
     networks:
@@ -83,12 +83,12 @@ services:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./chat-server
+        - path: ./server/chat-server
           target: /usr/src/app
           action: sync
 
   online_server:
-    build: ./online-server
+    build: ./server/online-server
     ports:
       - "3000:3000"
     networks:
@@ -99,7 +99,7 @@ services:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./online-server
+        - path: ./server/online-server
           target: /usr/src/app
           action: sync
 
