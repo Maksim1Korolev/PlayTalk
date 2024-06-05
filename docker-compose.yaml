@@ -13,7 +13,7 @@ services:
   #   networks:
   #     - talkback-network
 
-  game_server:
+  game_gateway_service:
     build: ./server/game/core/game-gateway-service
     ports:
       - "3030:3030"
@@ -27,7 +27,7 @@ services:
           target: /usr/src/app
           action: sync
 
-  auth_repository_server:
+  auth_repository_service:
     build: ./server/auth/auth-repository-service
     ports:
       - "3011:3011"
@@ -41,14 +41,14 @@ services:
           target: /usr/src/app
           action: sync
 
-  auth_server:
+  auth_service:
     build: ./server/auth/auth-service
     ports:
       - "3010:3010"
     networks:
       - talkback-network
     environment:
-      - AUTH_REPOSITORY_SERVER_URL=http://auth_repository_server:3011/api
+      - AUTH_REPOSITORY_SERVER_URL=http://auth_repository_service:3011/api
     develop:
       watch:
         - path: ./app/package.json
@@ -57,14 +57,14 @@ services:
           target: /usr/src/app
           action: sync
 
-  chat_repository_server:
+  chat_repository_service:
     build: ./server/communication/modules/chat/chat-repository-service
     ports:
       - "3021:3021"
     networks:
       - talkback-network
     environment:
-      - CHAT_REPOSITORY_SERVER_URL=http://chat_repository_server:3021/api
+      - CHAT_REPOSITORY_SERVER_URL=http://chat_repository_service:3021/api
     develop:
       watch:
         - path: ./app/package.json
@@ -73,7 +73,7 @@ services:
           target: /usr/src/app
           action: sync
 
-  chat_server:
+  chat_service:
     build: ./server/communication/modules/chat/chat-service
     ports:
       - "3020:3020"
@@ -87,14 +87,14 @@ services:
           target: /usr/src/app
           action: sync
 
-  online_server:
+  communication_gateway_service:
     build: ./server/communication/core/communication-gateway-service
     ports:
       - "3000:3000"
     networks:
       - talkback-network
     environment:
-      - CHAT_SERVER_URL=http://chat_server:3020/api
+      - CHAT_SERVER_URL=http://chat_service:3020/api
     develop:
       watch:
         - path: ./app/package.json
@@ -110,11 +110,11 @@ services:
     networks:
       - talkback-network
     environment:
-      - AUTH_SERVER_URL=http://auth_server:3010/api/auth
-      - AUTH_SERVER_STATIC_URL=http://auth_server:3010/public
-      - USERS_SERVER_URL=http://auth_server:3010/api/users
-      - ONLINE_SOCKET_URL=http://online_server:3000
-      - GAME_SOCKET_URL=http://game_server:3030
+      - AUTH_SERVER_URL=http://auth_service:3010/api/auth
+      - AUTH_SERVER_STATIC_URL=http://auth_service:3010/public
+      - USERS_SERVER_URL=http://auth_service:3010/api/users
+      - ONLINE_SOCKET_URL=http://communication_gateway_service:3000
+      - GAME_SOCKET_URL=http://game_gateway_service:3030
     develop:
       watch:
         - path: ./app/package.json
