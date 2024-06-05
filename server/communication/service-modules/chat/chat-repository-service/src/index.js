@@ -26,7 +26,7 @@ async function main() {
     console.log("Successfully connected to MongoDB Atlas");
     await loadLocalData();
     app.listen(PORT, () => {
-      console.log(`chat-repository-server is running on port ${PORT}`);
+      console.log(`chat-repository-service is running on port ${PORT}`);
     });
 
     schedule.scheduleJob("0 */12 * * *", syncWithAtlas);
