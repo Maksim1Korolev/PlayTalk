@@ -118,6 +118,14 @@ services:
           target: /usr/src/app
           action: sync
 
+  # Redis
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - talkback-network
+
 networks:
   talkback-network:
     driver: bridge
