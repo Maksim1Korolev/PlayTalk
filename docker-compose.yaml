@@ -1,32 +1,7 @@
+version: "3.8"
+
 services:
-  # nginx:
-  #   image: nginx:alpine
-  #   ports:
-  #     - "80:80" # Expose NGINX on port 80 of the host
-  #   volumes:
-  #     - ./nginx:/etc/nginx/conf.d # Mount custom configuration directory
-  #   depends_on:
-  #     - auth_server
-  #     - game_server
-  #     - chat_server
-  #     - online_server
-  #   networks:
-  #     - talkback-network
-
-  game_gateway_service:
-    build: ./server/game/core/game-gateway-service
-    ports:
-      - "3030:3030"
-    networks:
-      - talkback-network
-    develop:
-      watch:
-        - path: ./app/package.json
-          action: rebuild
-        - path: ./server/game/core/game-gateway-service
-          target: /usr/src/app
-          action: sync
-
+  # Auth
   auth_repository_service:
     build: ./server/auth/auth-repository-service
     ports:
@@ -57,6 +32,24 @@ services:
           target: /usr/src/app
           action: sync
 
+  # Communication
+  communication_gateway_service:
+    build: ./server/communication/core/communication-gateway-service
+    ports:
+      - "3000:3000"
+    networks:
+      - talkback-network
+    environment:
+      - CHAT_SERVER_URL=http://chat_service:3020/api
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./server/communication/core/communication-gateway-service
+          target: /usr/src/app
+          action: sync
+
+  # Chat
   chat_repository_service:
     build: ./server/communication/modules/chat/chat-repository-service
     ports:
@@ -87,22 +80,24 @@ services:
           target: /usr/src/app
           action: sync
 
-  communication_gateway_service:
-    build: ./server/communication/core/communication-gateway-service
+  # Game
+  game_gateway_service:
+    build: ./server/game/core/game-gateway-service
     ports:
-      - "3000:3000"
+      - "3030:3030"
     networks:
       - talkback-network
-    environment:
-      - CHAT_SERVER_URL=http://chat_service:3020/api
     develop:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./server/communication/core/communication-gateway-service
+        - path: ./server/game/core/game-gateway-service
           target: /usr/src/app
           action: sync
 
+  # TicTacToe
+
+  # Client
   client:
     build: ./client
     ports:
