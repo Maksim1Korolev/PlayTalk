@@ -60,7 +60,8 @@ services:
     networks:
       - talkback-network
     environment:
-      - CHAT_REPOSITORY_SERVICE_URL=http://chat_repository_service:3021/api
+      - REDIS_HOST=redis://redis
+      - REDIS_PORT=6379
     develop:
       watch:
         - path: ./app/package.json
@@ -75,6 +76,8 @@ services:
       - "3020:3020"
     networks:
       - talkback-network
+    environment:
+      - CHAT_REPOSITORY_SERVICE_URL=http://chat_repository_service:3021/api
     develop:
       watch:
         - path: ./app/package.json
