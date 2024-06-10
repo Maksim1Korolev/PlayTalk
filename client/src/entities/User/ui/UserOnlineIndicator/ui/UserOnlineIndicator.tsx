@@ -1,3 +1,4 @@
+import { cx } from "@/shared/lib/cx";
 import cls from "./UserOnlineIndicator.module.scss";
 
 export const UserOnlineIndicator = ({
@@ -5,11 +6,13 @@ export const UserOnlineIndicator = ({
   isOnline = false,
 }: {
   className?: string;
-  isOnline: boolean;
+  isOnline?: boolean;
 }) => {
   return (
-    <p className={`${cls.UserOnlineIndicator} ${className}`}>
-      {`Connected: ${isOnline}`}
-    </p>
+    <span
+      className={cx(cls.UserOnlineIndicator, { [cls.active]: isOnline }, [
+        className,
+      ])}
+    ></span>
   );
 };
