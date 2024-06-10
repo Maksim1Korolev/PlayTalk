@@ -8,6 +8,9 @@ services:
       - "3011:3011"
     networks:
       - talkback-network
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     develop:
       watch:
         - path: ./app/package.json
