@@ -1,51 +1,86 @@
+import redisClient from "../utils/redisClient.js";
+import User from "../models/User.js";
+import mongoose from "mongoose";
+
 class UserService {
-  static usersMap = new Map();
-
-  static loadUsers(users) {
-    users.forEach(user => this.usersMap.set(user.username, user));
-  }
-
-  static addUser(user) {
-    this.usersMap.set(user.username, user);
-    return this.usersMap.get(user.username);
-  }
-
-  static getUsers() {
-    return Array.from(this.usersMap.values());
-  }
-
-  static getUserByUsername(username) {
-    return this.usersMap.get(username);
-  }
-
-  static getUserById(userId) {
-    for (let user of this.usersMap.values()) {
-      if (user._id === userId) {
-        return user;
-      }
+  static async getUsers() {
+    const cacheKey = "users";
+    const cachedUsers = await redisClient.get(cacheKey);
+    if (cachedUsers) {
+      return JSON.parse(cachedUsers);
     }
-    return null;
+
+    const users = await User.find();
+    await redisClient.set(cacheKey, JSON.stringify(users), {
+      EX: 3600,
+    });
+    return users;
   }
 
-  static updateUser(updatedUser) {
-    if (this.usersMap.has(updatedUser.username)) {
-      this.usersMap.set(updatedUser.username, {
-        ...this.usersMap.get(updatedUser.username),
-        ...updatedUser,
+  static async addUser(user) {
+    const newUser = await User.create(user);
+    await redisClient.del("users");
+    return newUser;
+  }
+
+  static async deleteUser(id) {
+    if (!id) {
+      throw new Error("Invalid user ID");
+    }
+    const deletedUser = await User.findByIdAndDelete(id);
+    await redisClient.del("users");
+    return deletedUser;
+  }
+
+  static async getUserByUsername(username) {
+    const cacheKey = `user:username:${username}`;
+    const cachedUser = await redisClient.get(cacheKey);
+    if (cachedUser) {
+      return JSON.parse(cachedUser);
+    }
+
+    const user = await User.findOne({ username });
+    if (user) {
+      await redisClient.set(cacheKey, JSON.stringify(user), {
+        EX: 3600,
       });
-      return this.usersMap.get(updatedUser.username);
     }
-    throw new Error("User not found");
+    return user;
   }
 
-  static deleteUser(userId) {
-    for (let [username, user] of this.usersMap) {
-      if (user._id.toString() === userId) {
-        this.usersMap.delete(username);
-        return user;
-      }
+  static async getUserById(id) {
+    const cacheKey = `user:id:${id}`;
+    const cachedUser = await redisClient.get(cacheKey);
+    if (cachedUser) {
+      return JSON.parse(cachedUser);
     }
-    throw new Error("User not found");
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      throw new Error("Invalid user ID");
+    }
+
+    const user = await User.findById(id);
+    if (user) {
+      await redisClient.set(cacheKey, JSON.stringify(user), {
+        EX: 3600,
+      });
+    }
+    return user;
+  }
+
+  static async updateUser(user) {
+    if (!user._id) {
+      throw new Error("Invalid user ID");
+    }
+    const updatedUser = await User.findByIdAndUpdate(user._id, user, {
+      new: true,
+    });
+    await redisClient.del("users");
+    if (updatedUser) {
+      await redisClient.del(`user:id:${updatedUser._id}`);
+      await redisClient.del(`user:username:${updatedUser.username}`);
+    }
+    return updatedUser;
   }
 }
 

@@ -11,19 +11,23 @@ import UserService from "../services/UserService.js";
 export const authUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
 
-  const user = await UserService.getUserByUsername(username);
-
   try {
-    const isValidPassword = await verify(user.password, password);
-    if (user && isValidPassword) {
-      const token = generateToken(user.id);
-      res.json({ user, token });
-    } else {
-      throw new Error();
+    const user = await UserService.getUserByUsername(username);
+    if (!user) {
+      res.status(401);
+      throw new Error("Username or password is incorrect");
     }
+
+    const isValidPassword = await verify(user.password, password);
+    if (!isValidPassword) {
+      res.status(401);
+      throw new Error("Username or password is incorrect");
+    }
+
+    const token = generateToken(user._id);
+    res.json({ user, token });
   } catch (error) {
-    res.status(401);
-    throw new Error("Username or password is incorrect");
+    res.status(401).json({ message: error.message });
   }
 });
 
@@ -33,20 +37,24 @@ export const authUser = asyncHandler(async (req, res) => {
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
-  const existingUser = await UserService.getUserByUsername(username);
 
-  if (existingUser) {
-    res.status(400);
-    throw new Error("Username already taken");
+  try {
+    const existingUser = await UserService.getUserByUsername(username);
+
+    if (existingUser) {
+      res.status(400);
+      throw new Error("Username already taken");
+    }
+
+    const hashedPassword = await hash(password);
+    const user = await UserService.addUser({
+      username,
+      password: hashedPassword,
+    });
+
+    const token = generateToken(user._id);
+    res.json({ user, token });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
-
-  const user = await UserService.addUser({
-    username,
-    password: await hash(password),
-  });
-  console.log("ERSGERGESRGEGERGERG");
-  console.log(user);
-  const token = generateToken(user._id);
-
-  res.json({ user, token });
 });

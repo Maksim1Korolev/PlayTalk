@@ -9,7 +9,7 @@ services:
     networks:
       - talkback-network
     environment:
-      - REDIS_HOST=redis
+      - REDIS_HOST=redis://redis
       - REDIS_PORT=6379
     develop:
       watch:

@@ -5,8 +5,12 @@ import UserService from "../services/UserService.js";
 // @route  GET /api/users
 // @access Public
 export const getUsers = asyncHandler(async (req, res) => {
-  const users = await UserService.getUsers();
-  res.json({ users });
+  try {
+    const users = await UserService.getUsers();
+    res.json({ users });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // @desc   Add a user
@@ -14,8 +18,12 @@ export const getUsers = asyncHandler(async (req, res) => {
 // @access Public
 export const addUser = asyncHandler(async (req, res) => {
   const { user } = req.body;
-  const newUser = await UserService.addUser(user);
-  res.status(201).json({ user: newUser });
+  try {
+    const newUser = await UserService.addUser(user);
+    res.status(201).json({ user: newUser });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // @desc   Delete a user
@@ -23,8 +31,12 @@ export const addUser = asyncHandler(async (req, res) => {
 // @access Public
 export const deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const deletedUser = await UserService.deleteUser(id);
-  res.status(200).json({ user: deletedUser });
+  try {
+    const deletedUser = await UserService.deleteUser(id);
+    res.status(200).json({ user: deletedUser });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // @desc   Get user by username
@@ -32,8 +44,12 @@ export const deleteUser = asyncHandler(async (req, res) => {
 // @access Public
 export const getUserByUsername = asyncHandler(async (req, res) => {
   const { username } = req.params;
-  const user = await UserService.getUserByUsername(username);
-  res.json({ user });
+  try {
+    const user = await UserService.getUserByUsername(username);
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // @desc   Get user by ID
@@ -41,8 +57,13 @@ export const getUserByUsername = asyncHandler(async (req, res) => {
 // @access Public
 export const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const user = await UserService.getUserById(id);
-  res.json({ user });
+  console.log("Fetching user with ID:", id);
+  try {
+    const user = await UserService.getUserById(id);
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // @desc   Update a user
@@ -50,6 +71,10 @@ export const getUserById = asyncHandler(async (req, res) => {
 // @access Public
 export const updateUser = asyncHandler(async (req, res) => {
   const user = req.body;
-  const updatedUser = await UserService.updateUser(user);
-  res.json({ user: updatedUser });
+  try {
+    const updatedUser = await UserService.updateUser(user);
+    res.json({ user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });

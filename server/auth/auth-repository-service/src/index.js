@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 import schedule from "node-schedule";
 
-import { syncWithAtlas, loadLocalData } from "./sync/sync.controller.js";
+//import { syncWithAtlas, loadLocalData } from "./sync/sync.controller.js";
 import usersRoutes from "./users/users.routes.js";
 import redisClient from "./utils/redisClient.js";
 import {
@@ -14,7 +14,7 @@ import {
 dotenv.config();
 
 const app = express();
-let shuttingDown = false;
+//let shuttingDown = false;
 
 async function main() {
   app.use(cors());
@@ -26,27 +26,29 @@ async function main() {
 
   try {
     await connectToMongoDB();
-    await loadLocalData();
+    await redisClient.connect();
+
+    //await loadLocalData();
     app.listen(PORT, () => {
       console.log(`auth-repository-service is running on port ${PORT}`);
     });
 
-    schedule.scheduleJob("0 */12 * * *", syncWithAtlas);
+    //schedule.scheduleJob("0 */12 * * *", syncWithAtlas);
 
-    const shutdown = async signal => {
-      if (shuttingDown) return;
-      shuttingDown = true;
-      console.log(`Received ${signal}, shutting down gracefully...`);
-      await syncWithAtlas();
-      await disconnectFromMongoDB();
-      redisClient.quit();
-      console.log("Disconnected from MongoDB and Redis");
-      process.exit(0);
-    };
+    // const shutdown = async signal => {
+    //   if (shuttingDown) return;
+    //   shuttingDown = true;
+    //   console.log(`Received ${signal}, shutting down gracefully...`);
+    //   await syncWithAtlas();
+    //   await disconnectFromMongoDB();
+    //   redisClient.quit();
+    //   console.log("Disconnected from MongoDB and Redis");
+    //   process.exit(0);
+    // };
 
-    process.on("SIGINT", shutdown);
-    process.on("SIGTERM", shutdown);
-    process.on("SIGUSR2", shutdown);
+    // process.on("SIGINT", shutdown);
+    // process.on("SIGTERM", shutdown);
+    // process.on("SIGUSR2", shutdown);
   } catch (err) {
     console.error("Connection error", err);
     process.exit(1);

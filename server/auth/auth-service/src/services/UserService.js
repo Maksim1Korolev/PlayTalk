@@ -9,8 +9,10 @@ class UserService {
       const response = await axios.get(url);
       return response.data.users;
     } catch (err) {
-      console.error("Failed to fetch users from auth-repository-service", err);
-      throw err;
+      console.error(
+        "Failed to fetch users from auth-repository-service",
+        err.message
+      );
     }
   };
 
@@ -20,8 +22,10 @@ class UserService {
       const response = await axios.post(url, { user });
       return response.data.user;
     } catch (err) {
-      console.error("Failed to add user to auth-repository-service", err);
-      throw err;
+      console.error(
+        "Failed to add user to auth-repository-service",
+        err.message
+      );
     }
   };
 
@@ -31,8 +35,10 @@ class UserService {
       const response = await axios.delete(url);
       return response.data.user;
     } catch (err) {
-      console.error("Failed to delete user from auth-repository-service", err);
-      throw err;
+      console.error(
+        "Failed to delete user from auth-repository-service",
+        err.message
+      );
     }
   };
 
@@ -46,9 +52,8 @@ class UserService {
     } catch (err) {
       console.error(
         "Failed to fetch user by username from auth-repository-service",
-        err
+        err.message
       );
-      throw err;
     }
   };
 
@@ -56,14 +61,17 @@ class UserService {
     try {
       const url = `${this.repositoryServerUrl}/id/${userId}`;
       const response = await axios.get(url);
+      console.log("userId");
+      console.log("userId");
+      console.log("userId");
+      console.log(userId);
 
       return response.data.user;
     } catch (err) {
       console.error(
         "Failed to fetch user by ID from auth-repository-service",
-        err
+        err.message
       );
-      throw err;
     }
   };
 
@@ -73,8 +81,10 @@ class UserService {
       const response = await axios.put(url, user);
       return response.data.user;
     } catch (err) {
-      console.error("Failed to update user in auth-repository-service", err);
-      throw err;
+      console.error(
+        "Failed to update user in auth-repository-service",
+        err.message
+      );
     }
   };
 }
