@@ -32,7 +32,7 @@ const PORT = process.env.PORT || 3030;
 const mongoURL = process.env.DATABASE_URL;
 
 mongoose
-  .connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(mongoURL)
   .then(() => console.log("Successfully connected to MongoDB"))
   .catch(err => console.error("Connection error", err));
 

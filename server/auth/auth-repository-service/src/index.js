@@ -1,11 +1,15 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import mongoose from "mongoose";
-
-import usersRoutes from "./users/users.routes.js";
-import { syncWithAtlas, loadLocalData } from "./sync/sync.controller.js";
 import schedule from "node-schedule";
+
+import { syncWithAtlas, loadLocalData } from "./sync/sync.controller.js";
+import usersRoutes from "./users/users.routes.js";
+import redisClient from "./utils/redisClient.js";
+import {
+  connectToMongoDB,
+  disconnectFromMongoDB,
+} from "./utils/mongooseClient.js";
 
 dotenv.config();
 
@@ -19,11 +23,9 @@ async function main() {
   app.use("/api/users", usersRoutes);
 
   const PORT = process.env.PORT || 3011;
-  const DB_URL = process.env.DATABASE_URL;
 
   try {
-    await mongoose.connect(DB_URL);
-    console.log("Successfully connected to MongoDB Atlas");
+    await connectToMongoDB();
     await loadLocalData();
     app.listen(PORT, () => {
       console.log(`auth-repository-service is running on port ${PORT}`);
@@ -36,8 +38,9 @@ async function main() {
       shuttingDown = true;
       console.log(`Received ${signal}, shutting down gracefully...`);
       await syncWithAtlas();
-      await mongoose.disconnect();
-      console.log("Disconnected from MongoDB");
+      await disconnectFromMongoDB();
+      redisClient.quit();
+      console.log("Disconnected from MongoDB and Redis");
       process.exit(0);
     };
 
@@ -52,6 +55,7 @@ async function main() {
 
 main().catch(async e => {
   console.error(e);
-  await mongoose.disconnect();
+  await disconnectFromMongoDB();
+  redisClient.quit();
   process.exit(1);
 });
