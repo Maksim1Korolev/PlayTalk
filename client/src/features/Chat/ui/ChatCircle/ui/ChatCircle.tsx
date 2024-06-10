@@ -18,7 +18,7 @@ export const ChatCircle = memo(
     onClick: () => void;
   }) => {
     const avatarSrc = `${
-      import.meta.env.VITE_AUTH_SERVER_STATIC_URL
+      import.meta.env.VITE_AUTH_SERVICE_STATIC_URL
     }/avatars/${avatarFileName}`;
     //TODO: Add Max Unread Messages Count value and something
     return (

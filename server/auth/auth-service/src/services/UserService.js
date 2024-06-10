@@ -1,11 +1,11 @@
 import axios from "axios";
 
 class UserService {
-  static repositoryServerUrl = `${process.env.AUTH_REPOSITORY_SERVER_URL}/users`;
+  static repositoryServiceUrl = `${process.env.AUTH_REPOSITORY_SERVICE_URL}/users`;
 
   static getUsers = async () => {
     try {
-      const url = this.repositoryServerUrl;
+      const url = this.repositoryServiceUrl;
       const response = await axios.get(url);
       return response.data.users;
     } catch (err) {
@@ -18,7 +18,7 @@ class UserService {
 
   static addUser = async user => {
     try {
-      const url = this.repositoryServerUrl;
+      const url = this.repositoryServiceUrl;
       const response = await axios.post(url, { user });
       return response.data.user;
     } catch (err) {
@@ -31,7 +31,7 @@ class UserService {
 
   static deleteUser = async userId => {
     try {
-      const url = `${this.repositoryServerUrl}/${userId}`;
+      const url = `${this.repositoryServiceUrl}/${userId}`;
       const response = await axios.delete(url);
       return response.data.user;
     } catch (err) {
@@ -45,9 +45,9 @@ class UserService {
   static getUserByUsername = async username => {
     try {
       const response = await axios.get(
-        `${this.repositoryServerUrl}/username/${username}`
+        `${this.repositoryServiceUrl}/username/${username}`
       );
-      console.log(`${this.repositoryServerUrl}/username/${username}`);
+      console.log(`${this.repositoryServiceUrl}/username/${username}`);
       return response.data.user;
     } catch (err) {
       console.error(
@@ -59,7 +59,7 @@ class UserService {
 
   static getUserById = async userId => {
     try {
-      const url = `${this.repositoryServerUrl}/id/${userId}`;
+      const url = `${this.repositoryServiceUrl}/id/${userId}`;
       const response = await axios.get(url);
       console.log("userId");
       console.log("userId");
@@ -77,7 +77,7 @@ class UserService {
 
   static updateUser = async user => {
     try {
-      const url = `${this.repositoryServerUrl}/${user._id}`;
+      const url = `${this.repositoryServiceUrl}/${user._id}`;
       const response = await axios.put(url, user);
       return response.data.user;
     } catch (err) {

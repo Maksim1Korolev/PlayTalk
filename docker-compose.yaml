@@ -26,7 +26,7 @@ services:
     networks:
       - talkback-network
     environment:
-      - AUTH_REPOSITORY_SERVER_URL=http://auth_repository_service:3011/api
+      - AUTH_REPOSITORY_SERVICE_URL=http://auth_repository_service:3011/api
     develop:
       watch:
         - path: ./app/package.json
@@ -43,7 +43,7 @@ services:
     networks:
       - talkback-network
     environment:
-      - CHAT_SERVER_URL=http://chat_service:3020/api
+      - CHAT_SERVICE_URL=http://chat_service:3020/api
     develop:
       watch:
         - path: ./app/package.json
@@ -60,7 +60,7 @@ services:
     networks:
       - talkback-network
     environment:
-      - CHAT_REPOSITORY_SERVER_URL=http://chat_repository_service:3021/api
+      - CHAT_REPOSITORY_SERVICE_URL=http://chat_repository_service:3021/api
     develop:
       watch:
         - path: ./app/package.json
@@ -108,9 +108,9 @@ services:
     networks:
       - talkback-network
     environment:
-      - AUTH_SERVER_URL=http://auth_service:3010/api/auth
-      - AUTH_SERVER_STATIC_URL=http://auth_service:3010/public
-      - USERS_SERVER_URL=http://auth_service:3010/api/users
+      - AUTH_SERVICE_URL=http://auth_service:3010/api/auth
+      - AUTH_SERVICE_STATIC_URL=http://auth_service:3010/public
+      - USERS_SERVICE_URL=http://auth_service:3010/api/users
       - ONLINE_SOCKET_URL=http://communication_gateway_service:3000
       - GAME_SOCKET_URL=http://game_gateway_service:3030
     develop:

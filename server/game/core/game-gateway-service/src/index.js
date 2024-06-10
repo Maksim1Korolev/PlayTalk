@@ -37,7 +37,7 @@ mongoose
   .catch(err => console.error("Connection error", err));
 
 server.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
+  console.log(`game-gateway-service is running on port ${PORT}`);
 });
 
 main()

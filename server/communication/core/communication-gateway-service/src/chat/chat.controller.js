@@ -6,7 +6,7 @@ export const getAllUnreadMessageCounts = async (req, res) => {
     const { requestingUsername } = req.params;
 
     const { data } = await axios.get(
-      `${process.env.CHAT_SERVER_URL}/unread/all/${requestingUsername}`
+      `${process.env.CHAT_SERVICE_URL}/unread/all/${requestingUsername}`
     );
     console.log(data);
     return res.status(200).json(data);
@@ -21,7 +21,7 @@ export const readAllUnreadMessage = async (req, res) => {
     console.log("readAllUnreadMessage");
     console.log(requestingUsername);
     const { usernames } = req.body;
-    const url = `${process.env.CHAT_SERVER_URL}/markAsRead/${requestingUsername}`;
+    const url = `${process.env.CHAT_SERVICE_URL}/markAsRead/${requestingUsername}`;
     console.log(url);
     const { data } = await axios.post(url, {
       usernames,
@@ -57,7 +57,7 @@ export const ChatSubscribes = async (socket, savedUsername) => {
 
   socket.on("on-read-messages", async ({ requestingUsername, usernames }) => {
     try {
-      const url = `${process.env.CHAT_SERVER_URL}/markAsRead/${requestingUsername}`;
+      const url = `${process.env.CHAT_SERVICE_URL}/markAsRead/${requestingUsername}`;
       console.log(url);
 
       const response = await axios.post(url, { usernames });
@@ -106,7 +106,7 @@ export const ChatSubscribes = async (socket, savedUsername) => {
 };
 export const PostUser = async (addedUserUsername, addedUserSocketId) => {
   return await axios
-    .post(`${process.env.CHAT_SERVER_URL}/addToChatLobby`, {
+    .post(`${process.env.CHAT_SERVICE_URL}/addToChatLobby`, {
       addedUserUsername,
       addedUserSocketId,
     })
@@ -120,7 +120,7 @@ export const GetMessageHistory = async usernames => {
     .join("&");
   console.log(`Query for GetMessageHistory: ${query}`);
   return await axios
-    .get(`${process.env.CHAT_SERVER_URL}/messageHistory?${query}`)
+    .get(`${process.env.CHAT_SERVICE_URL}/messageHistory?${query}`)
     .catch(e => {
       console.log("Server is not connected or returns an error", e);
     });
@@ -128,7 +128,7 @@ export const GetMessageHistory = async usernames => {
 
 export const getUnreadMessagesCount = async (usernames, requestingUsername) => {
   return await axios
-    .get(`${process.env.CHAT_SERVER_URL}/unread/${requestingUsername}`, {
+    .get(`${process.env.CHAT_SERVICE_URL}/unread/${requestingUsername}`, {
       usernames,
     })
     .catch(e => {
@@ -138,7 +138,7 @@ export const getUnreadMessagesCount = async (usernames, requestingUsername) => {
 
 export const setMessage = async (usernames, message) => {
   return await axios
-    .post(`${process.env.CHAT_SERVER_URL}/messages/message`, {
+    .post(`${process.env.CHAT_SERVICE_URL}/messages/message`, {
       usernames,
       message,
     })
@@ -148,7 +148,7 @@ export const setMessage = async (usernames, message) => {
 };
 export const DeleteUser = async socketId => {
   return await axios
-    .delete(`${process.env.CHAT_SERVER_URL}/${socketId}`)
+    .delete(`${process.env.CHAT_SERVICE_URL}/${socketId}`)
     .catch(() => {
       console.log("Server is not connected or returns an error");
     });

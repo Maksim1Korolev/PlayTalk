@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const $usersApi = axios.create({
-	baseURL: import.meta.env.VITE_USERS_SERVER_URL,
+	baseURL: import.meta.env.VITE_USERS_SERVICE_URL,
 })
 
 export const usersApiService = {
