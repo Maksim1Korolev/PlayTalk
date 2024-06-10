@@ -1,7 +1,6 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import path from "path";
 
 import authRoutes from "./auth/auth.routes.js";
 import usersRoutes from "./users/users.routes.js";
@@ -14,10 +13,6 @@ const app = express();
 async function main() {
   app.use(cors());
   app.use(express.json());
-
-  const __dirname = path.resolve();
-
-  app.use("/public", express.static(path.join(__dirname, "../public")));
 
   app.use("/api/auth", authRoutes);
   app.use("/api/users", usersRoutes);

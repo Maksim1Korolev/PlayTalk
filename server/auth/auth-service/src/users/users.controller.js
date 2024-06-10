@@ -43,10 +43,6 @@ export const getUserByUsername = asyncHandler(async (req, res) => {
 // @route  GET /api/users/id/:id
 // @access Protected
 export const getUserById = asyncHandler(async (req, res) => {
-  console.log("a");
-  console.log(req.params);
-  console.log("lo");
-  console.log(id);
   const { id } = req.params;
   const user = await UserService.getUserById(id);
   res.json(user);

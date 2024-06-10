@@ -10,7 +10,7 @@ class UserService {
       return response.data.users;
     } catch (err) {
       console.error(
-        "Failed to fetch users from auth-repository-service",
+        "Failed to fetch users from auth-repository-service, error:",
         err.message
       );
     }
@@ -23,7 +23,7 @@ class UserService {
       return response.data.user;
     } catch (err) {
       console.error(
-        "Failed to add user to auth-repository-service",
+        "Failed to add user to auth-repository-service, error:",
         err.message
       );
     }
@@ -44,6 +44,8 @@ class UserService {
 
   static getUserByUsername = async username => {
     try {
+      console.log("this.repositoryServiceUrl");
+      console.log(this.repositoryServiceUrl);
       const response = await axios.get(
         `${this.repositoryServiceUrl}/username/${username}`
       );
@@ -51,7 +53,7 @@ class UserService {
       return response.data.user;
     } catch (err) {
       console.error(
-        "Failed to fetch user by username from auth-repository-service",
+        "Failed to fetch user by username from auth-repository-service, error:",
         err.message
       );
     }
@@ -69,7 +71,7 @@ class UserService {
       return response.data.user;
     } catch (err) {
       console.error(
-        "Failed to fetch user by ID from auth-repository-service",
+        "Failed to fetch user by ID from auth-repository-service, error:",
         err.message
       );
     }
@@ -82,7 +84,7 @@ class UserService {
       return response.data.user;
     } catch (err) {
       console.error(
-        "Failed to update user in auth-repository-service",
+        "Failed to update user in auth-repository-service, error:",
         err.message
       );
     }
