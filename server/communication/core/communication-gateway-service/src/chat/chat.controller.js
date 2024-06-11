@@ -47,10 +47,10 @@ export const ChatSubscribes = async (socket, savedUsername) => {
           `Chat history sent for ${savedUsername} and ${receiverUsername}.`
         );
       }
-    } catch (error) {
+    } catch (err) {
       console.error(
-        `Error retrieving chat history for ${savedUsername} and ${receiverUsername}:`,
-        error.message
+        `Error retrieving chat history for ${savedUsername} and ${receiverUsername}: `,
+        err.message
       );
     }
   });
@@ -73,8 +73,8 @@ export const ChatSubscribes = async (socket, savedUsername) => {
           `Failed to mark messages as read. Status code: ${response.status}`
         );
       }
-    } catch (error) {
-      console.error("An error occurred:", error.message);
+    } catch (err) {
+      console.error("An error occurred: ", err.message);
     }
   });
 
@@ -97,7 +97,7 @@ export const ChatSubscribes = async (socket, savedUsername) => {
         );
       } catch (err) {
         console.error(
-          `Error sending message from ${senderUsername} to ${receiverUsername}:`,
+          `Error sending message from ${senderUsername} to ${receiverUsername}: `,
           err.message
         );
       }
@@ -132,7 +132,9 @@ export const getUnreadMessagesCount = async (usernames, requestingUsername) => {
       usernames,
     })
     .catch(err => {
-      console.log("Server is not connected or returns an error" + err.message);
+      console.log(
+        "Server is not connected or returns an error: " + err.message
+      );
     });
 };
 
@@ -142,14 +144,14 @@ export const setMessage = async (usernames, message) => {
       usernames,
       message,
     })
-    .catch(e => {
-      console.log("Server is not connected or returns an error");
+    .catch(err => {
+      console.log("Server is not connected or returns an error: ", err.message);
     });
 };
 export const DeleteUser = async socketId => {
   return await axios
     .delete(`${process.env.CHAT_SERVICE_URL}/${socketId}`)
-    .catch(() => {
-      console.log("Server is not connected or returns an error");
+    .catch(err => {
+      console.log("Server is not connected or returns an error: ", err.message);
     });
 };
