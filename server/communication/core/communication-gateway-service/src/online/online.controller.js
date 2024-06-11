@@ -17,7 +17,6 @@ export const getOnlineUsernames = async (req, res, next) => {
   }
 };
 
-
 export const connectOnline = async () => {
   io.on("connection", async socket => {
     console.log("User connected");
@@ -50,7 +49,7 @@ export const connectOnline = async () => {
       } catch (error) {
         console.error(
           `Error in PostUser for ${savedUsername} with socket ID ${socket.id}:`,
-          error
+          error.message
         );
       }
     });
@@ -80,7 +79,7 @@ export const connectOnline = async () => {
         } catch (error) {
           console.error(
             `Error in DeleteUser for socket ID ${socket.id}:`,
-            error
+            error.message
           );
         }
       }
