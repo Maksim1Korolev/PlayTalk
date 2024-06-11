@@ -11,24 +11,21 @@ export const getAllUnreadMessageCounts = async (req, res) => {
     console.log(data);
     return res.status(200).json(data);
   } catch (err) {
-    console.log(err.message);
+    console.log("Error retrieving  UnreadMessageCounts:", err.message);
     res.status(500).send(err);
   }
 };
 export const readAllUnreadMessage = async (req, res) => {
   try {
     const { requestingUsername } = req.params;
-    console.log("readAllUnreadMessage");
-    console.log(requestingUsername);
     const { usernames } = req.body;
     const url = `${process.env.CHAT_SERVICE_URL}/markAsRead/${requestingUsername}`;
-    console.log(url);
     const { data } = await axios.post(url, {
       usernames,
     });
     return res.status(200).json(data);
   } catch (err) {
-    console.log(err.message);
+    console.log("Error posting previously now read messages: ", err.message);
     res.status(500).send(err);
   }
 };
@@ -132,9 +129,7 @@ export const getUnreadMessagesCount = async (usernames, requestingUsername) => {
       usernames,
     })
     .catch(err => {
-      console.log(
-        "Server is not connected or returns an error: " + err.message
-      );
+      console.log("Server is not connected or returns an error: ", err.message);
     });
 };
 
