@@ -11,8 +11,6 @@ const missingMessages = new Map();
 // @access Public
 export const addMessageToHistory = asyncHandler(async (req, res) => {
   const { usernames, message } = req.body;
-  console.log("FKJHKFJHSAJKDFHKJSFDHKJFDSHJK");
-  console.log(usernames, message);
   MessageHistoryService.addMessage(usernames, message);
 
   const receiversSocketIds = [];
@@ -56,7 +54,6 @@ export const addToMap = asyncHandler(async (req, res) => {
 // @access Public
 export const getMessageHistory = asyncHandler(async (req, res) => {
   const usernames = req.query.usernames;
-
   if (!usernames) {
     return res.status(400).json({ message: "Usernames are required." });
   }
@@ -112,7 +109,6 @@ export const markAsRead = asyncHandler(async (req, res) => {
     const { requestingUsername } = req.params;
 
     const { usernames } = req.body;
-    console.log(usernames);
     if (!requestingUsername) {
       return res.status(400).json({ message: "Username is required." });
     }
