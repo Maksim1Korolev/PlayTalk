@@ -8,9 +8,11 @@ services:
       - "3011:3011"
     networks:
       - talkback-network
+    env_file:
+      - .env
     environment:
-      - REDIS_HOST=redis://redis
-      - REDIS_PORT=6379
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
     develop:
       watch:
         - path: ./app/package.json
@@ -25,8 +27,10 @@ services:
       - "3010:3010"
     networks:
       - talkback-network
+    env_file:
+      - .env
     environment:
-      - AUTH_REPOSITORY_SERVICE_URL=http://auth_repository_service:3011/api
+      - AUTH_REPOSITORY_SERVICE_URL=${AUTH_REPOSITORY_SERVICE_URL}
     develop:
       watch:
         - path: ./app/package.json
@@ -42,8 +46,10 @@ services:
       - "3000:3000"
     networks:
       - talkback-network
+    env_file:
+      - .env
     environment:
-      - CHAT_SERVICE_URL=http://chat_service:3020/api
+      - CHAT_SERVICE_URL=${CHAT_REPOSITORY_SERVICE_URL}
     develop:
       watch:
         - path: ./app/package.json
@@ -59,9 +65,11 @@ services:
       - "3021:3021"
     networks:
       - talkback-network
+    env_file:
+      - .env
     environment:
-      - REDIS_HOST=redis://redis
-      - REDIS_PORT=6379
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
     develop:
       watch:
         - path: ./app/package.json
@@ -76,8 +84,10 @@ services:
       - "3020:3020"
     networks:
       - talkback-network
+    env_file:
+      - .env
     environment:
-      - CHAT_REPOSITORY_SERVICE_URL=http://chat_repository_service:3021/api
+      - CHAT_REPOSITORY_SERVICE_URL=${CHAT_REPOSITORY_SERVICE_URL}
     develop:
       watch:
         - path: ./app/package.json
@@ -101,8 +111,6 @@ services:
           target: /usr/src/app
           action: sync
 
-  # TicTacToe
-
   # Client
   client:
     build: ./client
@@ -110,12 +118,13 @@ services:
       - "5173:5173"
     networks:
       - talkback-network
+    env_file:
+      - .env
     environment:
-      - AUTH_SERVICE_URL=http://auth_service:3010/api/auth
-      - AUTH_SERVICE_STATIC_URL=http://auth_service:3010/public
-      - USERS_SERVICE_URL=http://auth_service:3010/api/users
-      - ONLINE_SOCKET_URL=http://communication_gateway_service:3000
-      - GAME_SOCKET_URL=http://game_gateway_service:3030
+      - AUTH_SERVICE_URL=${AUTH_SERVICE_URL}
+      - USERS_SERVICE_URL=${USERS_SERVICE_URL}
+      - ONLINE_SOCKET_URL=${ONLINE_SOCKET_URL}
+      - GAME_SOCKET_URL=${GAME_SOCKET_URL}
     develop:
       watch:
         - path: ./app/package.json
