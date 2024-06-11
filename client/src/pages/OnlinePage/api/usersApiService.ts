@@ -1,14 +1,14 @@
-import axios from 'axios'
+import axios from "axios";
 
 export const $usersApi = axios.create({
-	baseURL: import.meta.env.VITE_USERS_SERVICE_URL,
-})
+  baseURL: import.meta.env.VITE_USERS_SERVICE_URL,
+});
 
 export const usersApiService = {
-	getUsers: async (token: string) => {
-		const response = await $usersApi.get(`/`, {
-			headers: { Authorization: `Bearer ${token}` },
-		})
-		return response.data.users
-	},
-}
+  getUsers: async (token: string) => {
+    const response = await $usersApi.get(`/`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data.users;
+  },
+};

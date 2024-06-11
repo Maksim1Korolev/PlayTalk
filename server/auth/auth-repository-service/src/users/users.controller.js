@@ -57,7 +57,6 @@ export const getUserByUsername = asyncHandler(async (req, res) => {
 // @access Public
 export const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  console.log("Fetching user with ID:", id);
   try {
     const user = await UserService.getUserById(id);
     res.json({ user });

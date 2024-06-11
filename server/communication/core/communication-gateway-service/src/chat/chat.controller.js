@@ -11,7 +11,7 @@ export const getAllUnreadMessageCounts = async (req, res) => {
     console.log(data);
     return res.status(200).json(data);
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
     res.status(500).send(err);
   }
 };
@@ -28,7 +28,7 @@ export const readAllUnreadMessage = async (req, res) => {
     });
     return res.status(200).json(data);
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
     res.status(500).send(err);
   }
 };

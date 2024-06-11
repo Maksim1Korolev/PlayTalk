@@ -29,7 +29,7 @@ async function main() {
       console.log(`chat-repository-service is running on port ${PORT}`);
     });
   } catch (err) {
-    console.error("Connection error", err);
+    console.error("Connection error", err.message);
     process.exit(1);
   }
 }

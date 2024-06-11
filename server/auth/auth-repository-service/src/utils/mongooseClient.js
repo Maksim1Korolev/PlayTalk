@@ -5,7 +5,7 @@ const connectToMongoDB = async () => {
     await mongoose.connect(process.env.DATABASE_URL);
     console.log("Successfully connected to MongoDB Atlas");
   } catch (err) {
-    console.error("Connection error", err);
+    console.error("Connection error", err.message);
     process.exit(1);
   }
 };
@@ -15,7 +15,7 @@ const disconnectFromMongoDB = async () => {
     await mongoose.disconnect();
     console.log("Disconnected from MongoDB Atlas");
   } catch (err) {
-    console.error("Disconnection error", err);
+    console.error("Disconnection error", err.message);
   }
 };
 

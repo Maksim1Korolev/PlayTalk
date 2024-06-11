@@ -24,7 +24,7 @@ const mongoURL = process.env.DATABASE_URL;
 mongoose
   .connect(mongoURL)
   .then(() => console.log("Successfully connected to MongoDB"))
-  .catch(err => console.error("Connection error", err));
+  .catch(err => console.error("Connection error", err.message));
 
 server.listen(PORT, () => {
   console.log(`chat-service is running on port ${PORT}`);

@@ -21,7 +21,7 @@ export const getUsersGameStatuses = async (req, res) => {
     console.log("Game statuses retrieved:", gameStatuses);
     return res.status(200).json({ gameStatuses });
   } catch (err) {
-    console.log("Error retrieving busy statuses:", err);
+    console.log("Error retrieving busy statuses:", err.message);
     res.status(500).send("Internal server error");
   }
 };
