@@ -1,15 +1,13 @@
 import asyncHandler from "express-async-handler";
-import axios from "axios";
-
-const repositoryServiceUrl = `${process.env.AUTH_REPOSITORY_SERVICE_URL}/users`;
+import UserService from "../services/UserService.js";
 
 // @desc   Get users
 // @route  GET /api/users/
 // @access Protected
 export const getUsers = asyncHandler(async (req, res) => {
   try {
-    const response = await axios.get(repositoryServiceUrl);
-    res.json({ users: response.data.users });
+    const users = await UserService.getUsers();
+    res.json({ users });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -21,10 +19,8 @@ export const getUsers = asyncHandler(async (req, res) => {
 export const addUser = asyncHandler(async (req, res) => {
   const { user } = req.body;
   try {
-    const response = await axios.post(repositoryServiceUrl, { user });
-    res
-      .status(201)
-      .json({ user: response.data.user, message: "User added successfully" });
+    const newUser = await UserService.addUser(user);
+    res.status(201).json({ user: newUser, message: "User added successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -36,11 +32,10 @@ export const addUser = asyncHandler(async (req, res) => {
 export const deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
-    const url = `${repositoryServiceUrl}/${id}`;
-    const response = await axios.delete(url);
+    const deletedUser = await UserService.deleteUser(id);
     res
       .status(200)
-      .json({ user: response.data.user, message: "User deleted successfully" });
+      .json({ user: deletedUser, message: "User deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -52,10 +47,8 @@ export const deleteUser = asyncHandler(async (req, res) => {
 export const getUserByUsername = asyncHandler(async (req, res) => {
   const { username } = req.params;
   try {
-    const response = await axios.get(
-      `${repositoryServiceUrl}/username/${username}`
-    );
-    res.json({ user: response.data.user });
+    const user = await UserService.getUserByUsername(username);
+    res.json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -67,8 +60,8 @@ export const getUserByUsername = asyncHandler(async (req, res) => {
 export const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
-    const response = await axios.get(`${repositoryServiceUrl}/id/${id}`);
-    res.json({ user: response.data.user });
+    const user = await UserService.getUserById(id);
+    res.json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -80,9 +73,8 @@ export const getUserById = asyncHandler(async (req, res) => {
 export const updateUser = asyncHandler(async (req, res) => {
   const { user } = req.body;
   try {
-    const url = `${repositoryServiceUrl}/${user._id}`;
-    const response = await axios.put(url, user);
-    res.json({ user: response.data.user });
+    const updatedUser = await UserService.updateUser(user);
+    res.json(updatedUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

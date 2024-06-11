@@ -9,10 +9,6 @@ export const protect = asyncHandler(async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(token);
-    console.log(decoded);
-    console.log("zhopa");
-    console.log(decoded.userId);
     const userFound = UserService.getUserById(decoded.userId);
 
     if (userFound) {
