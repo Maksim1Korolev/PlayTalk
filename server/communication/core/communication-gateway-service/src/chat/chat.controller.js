@@ -50,7 +50,7 @@ export const ChatSubscribes = async (socket, savedUsername) => {
     } catch (error) {
       console.error(
         `Error retrieving chat history for ${savedUsername} and ${receiverUsername}:`,
-        error
+        error.message
       );
     }
   });
@@ -74,7 +74,7 @@ export const ChatSubscribes = async (socket, savedUsername) => {
         );
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error("An error occurred:", error.message);
     }
   });
 
@@ -95,10 +95,10 @@ export const ChatSubscribes = async (socket, savedUsername) => {
             ", "
           )}`
         );
-      } catch (error) {
+      } catch (err) {
         console.error(
           `Error sending message from ${senderUsername} to ${receiverUsername}:`,
-          error
+          err.message
         );
       }
     }
@@ -110,8 +110,8 @@ export const PostUser = async (addedUserUsername, addedUserSocketId) => {
       addedUserUsername,
       addedUserSocketId,
     })
-    .catch(e => {
-      console.log("Server is not connected or returns an error");
+    .catch(err => {
+      console.log("Server is not connected or returns an error:", err.message);
     });
 };
 export const GetMessageHistory = async usernames => {
@@ -121,8 +121,8 @@ export const GetMessageHistory = async usernames => {
   console.log(`Query for GetMessageHistory: ${query}`);
   return await axios
     .get(`${process.env.CHAT_SERVICE_URL}/messageHistory?${query}`)
-    .catch(e => {
-      console.log("Server is not connected or returns an error", e);
+    .catch(err => {
+      console.log("Server is not connected or returns an error", err.message);
     });
 };
 
@@ -131,8 +131,8 @@ export const getUnreadMessagesCount = async (usernames, requestingUsername) => {
     .get(`${process.env.CHAT_SERVICE_URL}/unread/${requestingUsername}`, {
       usernames,
     })
-    .catch(e => {
-      console.log("Server is not connected or returns an error" + e);
+    .catch(err => {
+      console.log("Server is not connected or returns an error" + err.message);
     });
 };
 

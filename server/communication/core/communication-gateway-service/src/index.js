@@ -25,13 +25,12 @@ async function main() {
   app.use(express.json());
   app.use("/api/online", onlineRouter);
   app.use("/api/chat", chatRouter);
-
-  // const __dirname = path.resolve();
-  //app.use('/uploads', express.static(path.join(__dirname, '/uploads/')))
 }
 
 server.listen(PORT, () => {
-  console.log(`server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  console.log(
+    `communication-gateway-service is running in ${process.env.NODE_ENV} mode on port ${PORT}`
+  );
 });
 
 main();
