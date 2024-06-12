@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const $onlineApi = axios.create({
-  baseURL: import.meta.env.VITE_ONLINE_SOCKET_URL,
+  baseURL: import.meta.env.VITE_COMMUNICATION_SOCKET_URL,
 });
 
 export const onlineApiService = {

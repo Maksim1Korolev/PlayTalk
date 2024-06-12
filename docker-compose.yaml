@@ -1,6 +1,26 @@
 version: "3.8"
 
 services:
+  # Client
+  client:
+    build: ./client
+    ports:
+      - "5173:5173"
+    networks:
+      - talkback-network
+    environment:
+      - AUTH_SERVICE_URL=${AUTH_SERVICE_URL}
+      - USERS_SERVICE_URL=${USERS_SERVICE_URL}
+      - COMMUNICATION_SOCKET_URL=${COMMUNICATION_SOCKET_URL}
+      - GAME_SOCKET_URL=${GAME_SOCKET_URL}
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./client
+          target: /usr/src/app
+          action: sync
+
   # Auth
   auth_repository_service:
     build: ./server/auth/auth-repository-service
@@ -101,25 +121,25 @@ services:
           target: /usr/src/app
           action: sync
 
-  # Client
-  client:
-    build: ./client
+  # Zookeeper
+  zookeeper:
+    image: wurstmeister/zookeeper
     ports:
-      - "5173:5173"
+      - "2181:2181"
     networks:
       - talkback-network
+
+  # Kafka
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
     environment:
-      - AUTH_SERVICE_URL=${AUTH_SERVICE_URL}
-      - USERS_SERVICE_URL=${USERS_SERVICE_URL}
-      - ONLINE_SOCKET_URL=${ONLINE_SOCKET_URL}
-      - GAME_SOCKET_URL=${GAME_SOCKET_URL}
-    develop:
-      watch:
-        - path: ./app/package.json
-          action: rebuild
-        - path: ./client
-          target: /usr/src/app
-          action: sync
+      - KAFKA_LISTENERS=${KAFKA_LISTENERS}
+      - KAFKA_ADVERTISED_LISTENERS=${KAFKA_ADVERTISED_LISTENERS}
+      - KAFKA_ZOOKEEPER_CONNECT=${KAFKA_ZOOKEEPER_CONNECT}
+    networks:
+      - talkback-network
 
   # Redis
   redis:

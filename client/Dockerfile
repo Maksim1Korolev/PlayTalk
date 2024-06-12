@@ -4,11 +4,6 @@ FROM node:16-alpine
 # Create and set app directory
 WORKDIR /usr/src/app
 
-# ENV VITE_NODE_ENV=development
-# ENV VITE_AUTH_SERVICE_URL=http://localhost:5000/api/auth
-# ENV VITE_USERS_SERVICE_URL=http://localhost:5000/api/users
-# ENV VITE_ONLINE_SOCKET_URL=http://localhost:4000
-
 # Install app dependencies by copying package.json and package-lock.json
 COPY package*.json ./
 
