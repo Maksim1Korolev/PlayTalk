@@ -1,6 +1,6 @@
 import redis from "redis";
 
-const redisUrl = `${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`;
+const redisUrl = `${process.env.REDIS_URL}`;
 
 const redisClient = redis.createClient({
   url: redisUrl,

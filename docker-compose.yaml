@@ -29,8 +29,7 @@ services:
     networks:
       - talkback-network
     environment:
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_URL=${REDIS_URL}
     develop:
       watch:
         - path: ./app/package.json
@@ -80,8 +79,7 @@ services:
     networks:
       - talkback-network
     environment:
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_URL=${REDIS_URL}
     develop:
       watch:
         - path: ./app/package.json
