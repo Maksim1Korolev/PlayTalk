@@ -9,6 +9,7 @@ import {
 } from "./utils/mongooseClient.js";
 
 import messageHistoriesRoutes from "./messageHistories/messageHistories.routes.js";
+import unreadRoutes from "./unread/unread.routes.js";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ async function main() {
   app.use(express.json());
 
   app.use("/api/messageHistories", messageHistoriesRoutes);
+  app.use("/api/unread", unreadRoutes);
 
   const PORT = process.env.PORT || 3021;
 

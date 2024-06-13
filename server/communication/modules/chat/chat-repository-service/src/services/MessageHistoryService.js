@@ -1,6 +1,7 @@
 import MessageHistory from "../models/MessageHistory.js";
 
 class MessageHistoryService {
+  ///////////////messageHistories
   async addMessage(usernames, message) {
     const messageHistory = await MessageHistory.findOne({ usernames });
     if (messageHistory) {
@@ -25,6 +26,7 @@ class MessageHistoryService {
     return messageHistory.messages || [];
   }
 
+  ///////////////unread
   async getUnreadMessagesCount(usernames, requestingUsername) {
     const result = await MessageHistory.aggregate([
       { $unwind: "$messages" },

@@ -27,7 +27,7 @@ export const onlineApiService = {
   ) => {
     const usernames = [currentUsername, receiverUsername];
     const response = await $onlineApi.post(
-      `/api/chat/markAsRead/${currentUsername}`,
+      `/api/chat/unread/markAsRead/${currentUsername}`,
       {
         headers: { Authorization: `Bearer ${token}` },
         usernames,

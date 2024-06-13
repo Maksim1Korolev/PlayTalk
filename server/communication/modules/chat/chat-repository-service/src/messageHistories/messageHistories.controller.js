@@ -1,5 +1,4 @@
 import asyncHandler from "express-async-handler";
-
 import MessageHistoryService from "../services/MessageHistoryService.js";
 
 const userSockets = new Map();
@@ -10,17 +9,22 @@ const userSockets = new Map();
 // @access Public
 export const addMessageToHistory = asyncHandler(async (req, res) => {
   const { usernames, message } = req.body;
-  MessageHistoryService.addMessage(usernames, message);
+  try {
+    await MessageHistoryService.addMessage(usernames, message);
 
-  const receiversSocketIds = [];
-  usernames.map(username => {
-    const currentUserSockets = userSockets.get(username);
-    if (currentUserSockets) {
-      currentUserSockets.map(socketId => receiversSocketIds.push(socketId));
-    }
-  });
-  console.log(receiversSocketIds);
-  return res.status(200).json({ receiversSocketIds });
+    const receiversSocketIds = [];
+    usernames.map(username => {
+      const currentUserSockets = userSockets.get(username);
+      if (currentUserSockets) {
+        currentUserSockets.map(socketId => receiversSocketIds.push(socketId));
+      }
+    });
+    console.log(receiversSocketIds);
+    return res.status(200).json({ receiversSocketIds });
+  } catch (error) {
+    console.error("Error adding message to history:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 // @desc   Add user to chat lobby's map of SocketIds
@@ -61,99 +65,15 @@ export const getMessageHistory = asyncHandler(async (req, res) => {
     ? usernames.sort()
     : [usernames].sort();
 
-  const messageHistory = await MessageHistoryService.getMessageHistory(
-    sortedUsernames
-  );
-
-  return res.json({ messageHistory });
-});
-
-// @desc   Get unread Messages count for specific chats
-// @route  GET /unread/:requestingUsername
-// @access Public
-export const getUnreadMessageCount = asyncHandler(async (req, res) => {
   try {
-    const { requestingUsername } = req.params;
-    const { usernames } = req.body;
-
-    if (!requestingUsername) {
-      return res.status(400).json({ message: "Username is required." });
-    }
-    if (!usernames) {
-      return res
-        .status(401)
-        .json({ message: "Usernames of MessageHistory are required." });
-    }
-
-    const sortedUsernames = Array.isArray(usernames)
-      ? usernames.sort()
-      : [usernames].sort();
-
-    const count = await MessageHistoryService.getUnreadMessagesCount(
-      sortedUsernames,
-      requestingUsername
+    const messageHistory = await MessageHistoryService.getMessageHistory(
+      sortedUsernames
     );
 
-    return res.json(count);
-  } catch (err) {
-    res.status(500).json(err.toString());
-  }
-});
-
-// @desc   Get unread Messages count for specific chats
-// @route  GET /markAsRead/:requestingUsername
-// @access Public
-export const markAsRead = asyncHandler(async (req, res) => {
-  try {
-    const { requestingUsername } = req.params;
-
-    const { usernames } = req.body;
-    if (!requestingUsername) {
-      return res.status(400).json({ message: "Username is required." });
-    }
-
-    if (!usernames) {
-      return res
-        .status(401)
-        .json({ message: "Usernames of MessageHistory are required." });
-    }
-
-    const sortedUsernames = Array.isArray(usernames)
-      ? usernames.sort()
-      : [usernames];
-
-    const result = await MessageHistoryService.markAsRead(
-      sortedUsernames,
-      requestingUsername
-    );
-    if (result) {
-      res.status(200).json({ message: "Messages marked as read." });
-    } else {
-      res.status(404).json({ message: "Messages not found." });
-    }
-  } catch (err) {
-    res.status(500).json(err.toString());
-  }
-});
-
-// @desc   Get unread Messages count for specific chats
-// @route  GET /unread/:requestingUsername
-// @access Public
-export const getAllUnreadMessageCount = asyncHandler(async (req, res) => {
-  try {
-    const { requestingUsername } = req.params;
-
-    if (!requestingUsername) {
-      return res.status(400).json({ message: "Username is required." });
-    }
-
-    const count = await MessageHistoryService.getAllUnreadMessagesCount(
-      requestingUsername
-    );
-
-    return res.json(count);
-  } catch (err) {
-    res.status(500).json(err.toString());
+    return res.json({ messageHistory });
+  } catch (error) {
+    console.error("Error fetching message history:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -163,27 +83,32 @@ export const getAllUnreadMessageCount = asyncHandler(async (req, res) => {
 export const removeFromMap = asyncHandler(async (req, res) => {
   const { socketId } = req.params;
 
-  let usernameToDisconnect;
-  for (const [username, socketIds] of userSockets.entries()) {
-    if (socketIds.includes(socketId)) {
-      usernameToDisconnect = username;
-      break;
+  try {
+    let usernameToDisconnect;
+    for (const [username, socketIds] of userSockets.entries()) {
+      if (socketIds.includes(socketId)) {
+        usernameToDisconnect = username;
+        break;
+      }
     }
-  }
 
-  if (usernameToDisconnect) {
-    const socketIds = userSockets.get(usernameToDisconnect);
-    const updatedSocketIds = socketIds.filter(id => id !== socketId);
+    if (usernameToDisconnect) {
+      const socketIds = userSockets.get(usernameToDisconnect);
+      const updatedSocketIds = socketIds.filter(id => id !== socketId);
 
-    if (updatedSocketIds.length === 0) {
-      userSockets.delete(usernameToDisconnect);
+      if (updatedSocketIds.length === 0) {
+        userSockets.delete(usernameToDisconnect);
+      } else {
+        userSockets.set(usernameToDisconnect, updatedSocketIds);
+      }
+      return res
+        .status(200)
+        .send("Socket disconnected and user updated or removed as necessary.");
     } else {
-      userSockets.set(usernameToDisconnect, updatedSocketIds);
+      return res.status(404).send("Socket ID not found in user sockets map.");
     }
-    return res
-      .status(200)
-      .send("Socket disconnected and user updated or removed as necessary.");
-  } else {
-    return res.status(404).send("Socket ID not found in user sockets map.");
+  } catch (error) {
+    console.error("Error removing socket from map:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });

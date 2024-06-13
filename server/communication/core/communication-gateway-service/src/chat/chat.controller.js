@@ -6,7 +6,7 @@ export const getAllUnreadMessageCounts = async (req, res) => {
     const { requestingUsername } = req.params;
 
     const { data } = await axios.get(
-      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/unread/all/${requestingUsername}`
+      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/unread/all/${requestingUsername}`
     );
     console.log(data);
     return res.status(200).json(data);
@@ -20,7 +20,7 @@ export const readAllUnreadMessage = async (req, res) => {
   try {
     const { requestingUsername } = req.params;
     const { usernames } = req.body;
-    const url = `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/markAsRead/${requestingUsername}`;
+    const url = `${process.env.CHAT_REPOSITORY_SERVICE_URL}/unread/markAsRead/${requestingUsername}`;
     const { data } = await axios.post(url, {
       usernames,
     });
@@ -55,7 +55,7 @@ export const ChatSubscribes = async (socket, savedUsername) => {
 
   socket.on("on-read-messages", async ({ requestingUsername, usernames }) => {
     try {
-      const url = `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/markAsRead/${requestingUsername}`;
+      const url = `${process.env.CHAT_REPOSITORY_SERVICE_URL}/unread/markAsRead/${requestingUsername}`;
       console.log(url);
 
       const response = await axios.post(url, { usernames });
@@ -133,7 +133,7 @@ export const GetMessageHistory = async usernames => {
 export const getUnreadMessagesCount = async (usernames, requestingUsername) => {
   return await axios
     .get(
-      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/unread/${requestingUsername}`,
+      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/unread/${requestingUsername}`,
       {
         usernames,
       }
