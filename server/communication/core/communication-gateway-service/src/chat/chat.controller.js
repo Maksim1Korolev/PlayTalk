@@ -6,7 +6,7 @@ export const getAllUnreadMessageCounts = async (req, res) => {
     const { requestingUsername } = req.params;
 
     const { data } = await axios.get(
-      `${process.env.CHAT_SERVICE_URL}/unread/all/${requestingUsername}`
+      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/unread/all/${requestingUsername}`
     );
     console.log(data);
     return res.status(200).json(data);
@@ -15,17 +15,18 @@ export const getAllUnreadMessageCounts = async (req, res) => {
     res.status(500).send(err);
   }
 };
+
 export const readAllUnreadMessage = async (req, res) => {
   try {
     const { requestingUsername } = req.params;
     const { usernames } = req.body;
-    const url = `${process.env.CHAT_SERVICE_URL}/markAsRead/${requestingUsername}`;
+    const url = `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/markAsRead/${requestingUsername}`;
     const { data } = await axios.post(url, {
       usernames,
     });
     return res.status(200).json(data);
   } catch (err) {
-    console.log("Error posting previously now read messages: ", err.message);
+    console.log("Error posting previously unread messages: ", err.message);
     res.status(500).send(err);
   }
 };
@@ -54,7 +55,7 @@ export const ChatSubscribes = async (socket, savedUsername) => {
 
   socket.on("on-read-messages", async ({ requestingUsername, usernames }) => {
     try {
-      const url = `${process.env.CHAT_SERVICE_URL}/markAsRead/${requestingUsername}`;
+      const url = `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/markAsRead/${requestingUsername}`;
       console.log(url);
 
       const response = await axios.post(url, { usernames });
@@ -101,12 +102,16 @@ export const ChatSubscribes = async (socket, savedUsername) => {
     }
   );
 };
+
 export const PostUser = async (addedUserUsername, addedUserSocketId) => {
   return await axios
-    .post(`${process.env.CHAT_SERVICE_URL}/addToChatLobby`, {
-      addedUserUsername,
-      addedUserSocketId,
-    })
+    .post(
+      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/addToChatLobby`,
+      {
+        addedUserUsername,
+        addedUserSocketId,
+      }
+    )
     .catch(err => {
       console.log("Server is not connected or returns an error:", err.message);
     });
@@ -117,7 +122,9 @@ export const GetMessageHistory = async usernames => {
     .join("&");
   console.log(`Query for GetMessageHistory: ${query}`);
   return await axios
-    .get(`${process.env.CHAT_SERVICE_URL}/messageHistory?${query}`)
+    .get(
+      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/messageHistory?${query}`
+    )
     .catch(err => {
       console.log("Server is not connected or returns an error", err.message);
     });
@@ -125,9 +132,12 @@ export const GetMessageHistory = async usernames => {
 
 export const getUnreadMessagesCount = async (usernames, requestingUsername) => {
   return await axios
-    .get(`${process.env.CHAT_SERVICE_URL}/unread/${requestingUsername}`, {
-      usernames,
-    })
+    .get(
+      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/unread/${requestingUsername}`,
+      {
+        usernames,
+      }
+    )
     .catch(err => {
       console.log("Server is not connected or returns an error: ", err.message);
     });
@@ -135,17 +145,23 @@ export const getUnreadMessagesCount = async (usernames, requestingUsername) => {
 
 export const setMessage = async (usernames, message) => {
   return await axios
-    .post(`${process.env.CHAT_SERVICE_URL}/messages/message`, {
-      usernames,
-      message,
-    })
+    .post(
+      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/messages/message`,
+      {
+        usernames,
+        message,
+      }
+    )
     .catch(err => {
       console.log("Server is not connected or returns an error: ", err.message);
     });
 };
+
 export const DeleteUser = async socketId => {
   return await axios
-    .delete(`${process.env.CHAT_SERVICE_URL}/${socketId}`)
+    .delete(
+      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/${socketId}`
+    )
     .catch(err => {
       console.log("Server is not connected or returns an error: ", err.message);
     });

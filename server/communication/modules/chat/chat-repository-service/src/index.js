@@ -2,12 +2,13 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
-//import messageHistoriesRoutes from "./messageHistories/messageHistories.routes.js";
 import redisClient from "./utils/redisClient.js";
 import {
   connectToMongoDB,
   disconnectFromMongoDB,
 } from "./utils/mongooseClient.js";
+
+import messageHistoriesRoutes from "./messageHistories/messageHistories.routes.js";
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
-  //app.use("/api/messageHistories", usersRoutes);
+  app.use("/api/messageHistories", messageHistoriesRoutes);
 
   const PORT = process.env.PORT || 3021;
 

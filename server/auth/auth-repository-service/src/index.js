@@ -2,12 +2,13 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
-import usersRoutes from "./users/users.routes.js";
 import redisClient from "./utils/redisClient.js";
 import {
   connectToMongoDB,
   disconnectFromMongoDB,
 } from "./utils/mongooseClient.js";
+
+import usersRoutes from "./users/users.routes.js";
 
 dotenv.config();
 

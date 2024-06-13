@@ -62,7 +62,7 @@ services:
     networks:
       - talkback-network
     environment:
-      - CHAT_SERVICE_URL=${CHAT_SERVICE_URL}
+      - CHAT_REPOSITORY_SERVICE_URL=${CHAT_REPOSITORY_SERVICE_URL}
     develop:
       watch:
         - path: ./app/package.json
@@ -85,22 +85,6 @@ services:
         - path: ./app/package.json
           action: rebuild
         - path: ./server/communication/modules/chat/chat-repository-service
-          target: /usr/src/app
-          action: sync
-
-  chat_service:
-    build: ./server/communication/modules/chat/chat-service
-    ports:
-      - "3020:3020"
-    networks:
-      - talkback-network
-    environment:
-      - CHAT_REPOSITORY_SERVICE_URL=${CHAT_REPOSITORY_SERVICE_URL}
-    develop:
-      watch:
-        - path: ./app/package.json
-          action: rebuild
-        - path: ./server/communication/modules/chat/chat-service
           target: /usr/src/app
           action: sync
 
