@@ -136,6 +136,7 @@ export const markAsRead = asyncHandler(async (req, res) => {
     res.status(500).json(err.toString());
   }
 });
+
 // @desc   Get unread Messages count for specific chats
 // @route  GET /unread/:requestingUsername
 // @access Public
