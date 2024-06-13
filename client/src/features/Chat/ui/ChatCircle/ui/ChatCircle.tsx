@@ -1,7 +1,7 @@
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 import { cx } from "@/shared/lib/cx";
-import { AppImage } from "@/shared/ui/AppImage";
+import { Avatar } from "@/shared/ui/Avatar";
 import { memo } from "react";
 import cls from "./ChatCircle.module.scss";
 
@@ -26,14 +26,9 @@ export const ChatCircle = memo(
     return (
       <div onClick={onClick} className={cx(cls.ChatCircle, {}, [className])}>
         <div className={cls.chatOverlay}>
-          <AppImage
-            className={cls.profileImage}
-            width={80}
-            height={80}
-            src={avatarSrc}
-            draggable="false"
-          />
+          <Avatar className={cls.profileImage} src={avatarSrc} />
         </div>
+
         <UserOnlineIndicator
           className={cls.onlineIndicator}
           isOnline={isOnline}

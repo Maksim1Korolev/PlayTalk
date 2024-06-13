@@ -1,4 +1,6 @@
 import { User } from "@/entities/User";
+import { AvatarWithProps } from "@/features/AvatarWithProps";
+import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 import { cx } from "@/shared/lib/cx";
 import { HStack, UiButton, UiText } from "@/shared/ui";
 import { UserOnlineIndicator } from "../../UserOnlineIndicator";
@@ -30,7 +32,19 @@ export const UserListCard = ({
   };
   return (
     //<Card variant="light" className={`${cls.UserListCard} ${className}`}>
-    <HStack className={cx(cls.UserListCard, {}, [className])}>
+    <HStack className={cx(cls.UserListCard, {}, [className])} gap="8">
+      <AvatarWithProps
+        size={50}
+        avatarSrc={user.avatarFileName}
+        unreadMessageCount={user.unreadMessageCount}
+        isOnline={user.isOnline}
+        addonTopRight={<UserOnlineIndicator isOnline={user.isOnline} />}
+        addonBottomRight={
+          <UnreadMessagesCountIndicator
+            unreadMessagesCount={user.unreadMessageCount}
+          />
+        }
+      />
       <UiText>{user.username}</UiText>
       <UiButton onClick={onChatButton}>Chat</UiButton>
       <UiButton
@@ -39,7 +53,6 @@ export const UserListCard = ({
       >
         Play
       </UiButton>
-      <UserOnlineIndicator isOnline={user.isOnline} />
       {/*<div> Is invited: {user.inInvite ? "da" : "net"}</div>
       <div> Is in game: {user.inGame ? "da" : "net"}</div>*/}
     </HStack>

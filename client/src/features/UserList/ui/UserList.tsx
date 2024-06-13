@@ -35,15 +35,17 @@ export const UserList = memo(
     return (
       <Card>
         <VStack gap="16" className={`${cls.UserList} ${className || ""}`}>
-          {sortedUsers?.map(user => (
-            <UserListCard
-              key={user._id}
-              user={user}
-              busy={busy}
-              className={cls.userCard}
-              handleInviteButton={handleUserInviteButton}
-              handleChatButton={handleUserChatButton}
-            />
+          {sortedUsers?.map((user, index) => (
+            <div key={user._id}>
+              <UserListCard
+                user={user}
+                busy={busy}
+                className={cls.userCard}
+                handleInviteButton={handleUserInviteButton}
+                handleChatButton={handleUserChatButton}
+              />
+              {index < sortedUsers.length - 1 && <hr />}
+            </div>
           ))}
         </VStack>
       </Card>
