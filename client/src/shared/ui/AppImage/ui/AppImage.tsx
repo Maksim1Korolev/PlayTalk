@@ -25,7 +25,7 @@ interface AppImageProps extends HTMLImageAttributes {
   height?: number | string;
 }
 
-export const getAvatarPath= (avatar?: string) => {
+export const getAvatarPath = (avatar?: string) => {
   return avatar
     ? `${import.meta.env.VITE_AUTH_SERVICE_STATIC_URL}/avatars${avatar}`
     : "";

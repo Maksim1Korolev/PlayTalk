@@ -1,5 +1,7 @@
+import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
+import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 import { cx } from "@/shared/lib/cx";
-import { AppImage } from "@/shared/ui/AppImage";
+import { Avatar } from "@/shared/ui/Avatar";
 import { memo } from "react";
 import cls from "./ChatCircle.module.scss";
 
@@ -22,23 +24,20 @@ export const ChatCircle = memo(
     }/avatars/${avatarFileName}`;
     //TODO: Add Max Unread Messages Count value and something
     return (
-      <div onClick={onClick} className={`${cls.ChatCircle} ${className}`}>
+      <div onClick={onClick} className={cx(cls.ChatCircle, {}, [className])}>
         <div className={cls.chatOverlay}>
-          <AppImage
-            className={cls.profileImage}
-            width={80}
-            height={80}
-            src={avatarSrc}
-            draggable="false"
-          />
+          <Avatar className={cls.profileImage} src={avatarSrc} />
         </div>
-        <span
-          className={cx(cls.onlineIndicator, { [cls.active]: isOnline })}
-        ></span>
 
-        {unreadMessagesCount && (
-          <div className={cls.messageIndicator}>{unreadMessagesCount}</div>
-        )}
+        <UserOnlineIndicator
+          className={cls.onlineIndicator}
+          isOnline={isOnline}
+        />
+
+        <UnreadMessagesCountIndicator
+          className={cls.messagesIndicator}
+          unreadMessagesCount={unreadMessagesCount}
+        />
       </div>
     );
   }

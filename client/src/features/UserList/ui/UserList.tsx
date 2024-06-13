@@ -1,4 +1,5 @@
-import { User, UserCard } from "@/entities/User";
+import { User, UserListCard } from "@/entities/User";
+import { Card, VStack } from "@/shared/ui";
 import { memo } from "react";
 import { sortUsers } from "../model/userListUtils";
 import cls from "./UserList.module.scss";
@@ -32,18 +33,22 @@ export const UserList = memo(
     const sortedUsers = [...users].sort(sortUsers);
 
     return (
-      <ul className={`${cls.UserList} ${className || ""}`}>
-        {sortedUsers?.map(user => (
-          <UserCard
-            key={user._id}
-            user={user}
-            busy={busy}
-            className={cls.userCard}
-            handleInviteButton={handleUserInviteButton}
-            handleChatButton={handleUserChatButton}
-          />
-        ))}
-      </ul>
+      <Card>
+        <VStack gap="16" className={`${cls.UserList} ${className || ""}`}>
+          {sortedUsers?.map((user, index) => (
+            <div key={user._id}>
+              <UserListCard
+                user={user}
+                busy={busy}
+                className={cls.userCard}
+                handleInviteButton={handleUserInviteButton}
+                handleChatButton={handleUserChatButton}
+              />
+              {index < sortedUsers.length - 1 && <hr />}
+            </div>
+          ))}
+        </VStack>
+      </Card>
     );
   }
 );

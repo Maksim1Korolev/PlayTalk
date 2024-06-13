@@ -1,0 +1,15 @@
+.UnreadMessageCountIndicator {
+	display: inline-flex; 
+	justify-content: center; 
+	align-items: center; 
+	border-radius: 9999px; 
+	border-width: 2px; 
+	border-color: #ffffff; 
+	width: 2rem; 
+	height: 2rem; 
+	font-size: 1.5rem;
+	line-height: 1.75rem; 
+	font-weight: 700; 
+	color: #ffffff; 
+	background-color: #EF4444; 
+}

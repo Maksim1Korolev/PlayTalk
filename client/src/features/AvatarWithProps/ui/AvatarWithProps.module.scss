@@ -1,0 +1,31 @@
+.AvatarWithProps {
+	position: relative;
+	display: inline-block;
+}
+
+.addonTopRight {
+	display: flex;
+	position: absolute;
+	top: 0.1rem; 
+	inset-inline-end: 0.1rem;
+}
+
+.addonBottomRight {
+	display: flex;
+	position: absolute;
+	bottom: 0rem; 
+	inset-inline-end: -1rem;
+
+}
+
+.addonTopLeft {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.addonBottomLeft {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
