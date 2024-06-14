@@ -4,9 +4,9 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 
-import chatRouter from "./chat/chat.routes.js";
-import onlineRouter from "./connection/connection.routes.js";
-import { connectOnline } from "./connection/connection.controller.js";
+import unreadRouter from "./unread/unread.routes.js";
+import onlineRouter from "./online/online.routes.js";
+import { connectOnline } from "./online/online.controller.js";
 
 import redisClient from "./utils/redisClient.js";
 
@@ -14,6 +14,7 @@ dotenv.config();
 
 const app = express();
 
+//TODO:Move io
 const server = http.createServer(app);
 export const io = new Server(server, {
   cors: {},
@@ -27,9 +28,8 @@ async function main() {
 
   app.use(cors());
   app.use(express.json());
-  //TODO: Rename
-  app.use("/api/connection", onlineRouter);
-  app.use("/api/chat", chatRouter);
+  app.use("/api/online", onlineRouter);
+  app.use("/api/unread", unreadRouter);
 
   server.listen(PORT, () => {
     console.log(

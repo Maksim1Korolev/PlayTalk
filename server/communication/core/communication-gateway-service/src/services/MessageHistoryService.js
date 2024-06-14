@@ -23,7 +23,7 @@ class MessageHistoryService {
 
   ///////////////unread
   static async getAllUnreadMessageCounts(requestingUsername) {
-    const url = `${CHAT_REPOSITORY_SERVICE_URL}/unread/all/${requestingUsername}`;
+    const url = `${CHAT_REPOSITORY_SERVICE_URL}/unread/getAll/${requestingUsername}`;
     return await axios.get(url);
   }
 

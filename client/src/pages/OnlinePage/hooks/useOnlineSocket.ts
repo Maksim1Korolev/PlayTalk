@@ -39,6 +39,7 @@ export const useOnlineSocket = ({
 
     const updateOnlineUsers = (usernames: string[]) => {
       //setOnlineUsernames(usernames);
+
       setUsersOnline(usernames);
     };
 
@@ -81,12 +82,16 @@ export const useOnlineSocket = ({
     };
 
     //Chat Logic
-    const unreadMessageCountChanged = (username: string, unreadMessageCount: number) => {
+    const unreadMessageCountChanged = (
+      username: string,
+      unreadMessageCount: number
+    ) => {
       updateUserList(username, { unreadMessageCount });
     };
 
     /////////////////////////////////////////////////////
     onlineSocket.on("connect", onConnect);
+    //TODO:Remove???
     onlineSocket.on("online-users", updateOnlineUsers);
     onlineSocket.on("user-connection", updateUserOnline);
 

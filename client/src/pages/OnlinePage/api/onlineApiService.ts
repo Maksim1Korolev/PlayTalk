@@ -6,14 +6,14 @@ export const $onlineApi = axios.create({
 
 export const onlineApiService = {
   getOnlineUsernames: async (token: string) => {
-    const response = await $onlineApi.get(`/api/connection/onlineUsernames`, {
+    const response = await $onlineApi.get(`/api/online/onlineUsernames`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data.onlineUsernames;
   },
   getUnreadMessageCount: async (currentUsername: string, token: string) => {
     const response = await $onlineApi.get(
-      `/api/chat/unread/${currentUsername}`,
+      `/api/unread/getAll/${currentUsername}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -27,7 +27,7 @@ export const onlineApiService = {
   ) => {
     const usernames = [currentUsername, receiverUsername];
     const response = await $onlineApi.post(
-      `/api/chat/unread/markAsRead/${currentUsername}`,
+      `/api/unread/markAsRead/${currentUsername}`,
       {
         headers: { Authorization: `Bearer ${token}` },
         usernames,

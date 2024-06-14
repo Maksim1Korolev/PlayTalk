@@ -7,7 +7,7 @@ import {
 
 const router = express.Router();
 
-router.route("/all/:requestingUsername").get(getAllUnreadMessageCount);
+router.route("/getAll/:requestingUsername").get(getAllUnreadMessageCount);
 router.route("/:requestingUsername").get(getUnreadMessageCount);
 router.route("/markAsRead/:requestingUsername").post(markAsRead);
 
