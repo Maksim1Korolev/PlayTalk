@@ -32,7 +32,6 @@ export const readAllUnreadMessage = async (req, res) => {
 };
 
 export const ChatSubscribes = async (socket, savedUsername) => {
-  //TODO: reset users new messages
   socket.on("on-chat-open", async receiverUsername => {
     try {
       const { data } = await GetMessageHistory([
@@ -116,6 +115,7 @@ export const PostUser = async (addedUserUsername, addedUserSocketId) => {
       console.log("Server is not connected or returns an error:", err.message);
     });
 };
+
 export const GetMessageHistory = async usernames => {
   const query = usernames
     .map(u => `usernames=${encodeURIComponent(u)}`)
