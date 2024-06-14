@@ -1,12 +1,12 @@
 import express from "express";
 import {
   getAllUnreadMessageCounts,
-  readAllUnreadMessage,
+  readAllUnreadMessages,
 } from "./chat.controller.js";
 
 const router = express.Router();
 
 router.get("/unread/:requestingUsername", getAllUnreadMessageCounts);
-router.post("/markAsRead/:requestingUsername", readAllUnreadMessage);
+router.post("/markAsRead/:requestingUsername", readAllUnreadMessages);
 
 export default router;

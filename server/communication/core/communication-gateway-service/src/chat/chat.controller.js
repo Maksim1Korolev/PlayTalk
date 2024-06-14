@@ -2,7 +2,7 @@ import { io } from "../index.js";
 import MessageHistoryService from "../services/MessageHistoryService.js";
 
 ///////////////messageHistories
-export const ChatSubscribes = async (socket, savedUsername) => {
+export const chatSubscribes = async (socket, savedUsername) => {
   socket.on("on-chat-open", async receiverUsername => {
     try {
       const { data } = await MessageHistoryService.getMessageHistory([
@@ -25,7 +25,7 @@ export const ChatSubscribes = async (socket, savedUsername) => {
 
   socket.on("on-read-messages", async ({ requestingUsername, usernames }) => {
     try {
-      const { data } = await MessageHistoryService.readAllUnreadMessage(
+      const { data } = await MessageHistoryService.readAllUnreadMessages(
         requestingUsername,
         usernames
       );
@@ -45,7 +45,7 @@ export const ChatSubscribes = async (socket, savedUsername) => {
     async ({ senderUsername, receiverUsername, message }) => {
       const usernames = [senderUsername, receiverUsername].sort();
       try {
-        const { data } = await MessageHistoryService.setMessage(
+        const { data } = await MessageHistoryService.addMessageToHistory(
           usernames,
           message
         );
@@ -69,7 +69,7 @@ export const ChatSubscribes = async (socket, savedUsername) => {
   );
 };
 
-export const GetMessageHistory = async usernames => {
+export const getMessageHistory = async usernames => {
   try {
     return await MessageHistoryService.getMessageHistory(usernames);
   } catch (err) {
@@ -77,9 +77,9 @@ export const GetMessageHistory = async usernames => {
   }
 };
 
-export const setMessage = async (usernames, message) => {
+export const addMessageToHistory = async (usernames, message) => {
   try {
-    return await MessageHistoryService.setMessage(usernames, message);
+    return await MessageHistoryService.addMessageToHistory(usernames, message);
   } catch (err) {
     console.log("Server is not connected or returns an error: ", err.message);
   }
@@ -100,11 +100,11 @@ export const getAllUnreadMessageCounts = async (req, res) => {
   }
 };
 
-export const readAllUnreadMessage = async (req, res) => {
+export const readAllUnreadMessages = async (req, res) => {
   try {
     const { requestingUsername } = req.params;
     const { usernames } = req.body;
-    const { data } = await MessageHistoryService.readAllUnreadMessage(
+    const { data } = await MessageHistoryService.readAllUnreadMessages(
       requestingUsername,
       usernames
     );

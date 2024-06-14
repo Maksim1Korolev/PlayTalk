@@ -13,7 +13,7 @@ class MessageHistoryService {
     return await axios.get(url);
   }
 
-  static async setMessage(usernames, message) {
+  static async addMessageToHistory(usernames, message) {
     const url = `${CHAT_REPOSITORY_SERVICE_URL}/messageHistories/messages/message`;
     return await axios.post(url, {
       usernames,
@@ -32,7 +32,7 @@ class MessageHistoryService {
     return await axios.get(url, { params: { usernames } });
   }
 
-  static async readAllUnreadMessage(requestingUsername, usernames) {
+  static async readAllUnreadMessages(requestingUsername, usernames) {
     const url = `${CHAT_REPOSITORY_SERVICE_URL}/unread/markAsRead/${requestingUsername}`;
     return await axios.post(url, { usernames });
   }

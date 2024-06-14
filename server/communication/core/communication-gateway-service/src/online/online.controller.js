@@ -1,4 +1,4 @@
-import { ChatSubscribes } from "../chat/chat.controller.js";
+import { chatSubscribes } from "../chat/chat.controller.js";
 import { io } from "../index.js";
 import MessageHistoryService from "../services/MessageHistoryService.js";
 
@@ -21,7 +21,7 @@ export const connectOnline = async () => {
 
     socket.on("online-ping", async username => {
       savedUsername = username;
-      await ChatSubscribes(socket, savedUsername);
+      await chatSubscribes(socket, savedUsername);
 
       if (!onlineUserMappings.has(savedUsername)) {
         onlineUserMappings.set(savedUsername, new Set());
