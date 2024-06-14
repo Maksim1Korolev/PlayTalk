@@ -1,40 +1,11 @@
-import axios from "axios";
 import { io } from "../index.js";
+import MessageHistoryService from "../services/MessageHistoryService.js";
 
-export const getAllUnreadMessageCounts = async (req, res) => {
-  try {
-    const { requestingUsername } = req.params;
-
-    const { data } = await axios.get(
-      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/unread/all/${requestingUsername}`
-    );
-    console.log(data);
-    return res.status(200).json(data);
-  } catch (err) {
-    console.log("Error retrieving  UnreadMessageCounts:", err.message);
-    res.status(500).send(err);
-  }
-};
-
-export const readAllUnreadMessage = async (req, res) => {
-  try {
-    const { requestingUsername } = req.params;
-    const { usernames } = req.body;
-    const url = `${process.env.CHAT_REPOSITORY_SERVICE_URL}/unread/markAsRead/${requestingUsername}`;
-    const { data } = await axios.post(url, {
-      usernames,
-    });
-    return res.status(200).json(data);
-  } catch (err) {
-    console.log("Error posting previously unread messages: ", err.message);
-    res.status(500).send(err);
-  }
-};
-
+///////////////messageHistories
 export const ChatSubscribes = async (socket, savedUsername) => {
   socket.on("on-chat-open", async receiverUsername => {
     try {
-      const { data } = await GetMessageHistory([
+      const { data } = await MessageHistoryService.getMessageHistory([
         savedUsername,
         receiverUsername,
       ]);
@@ -54,21 +25,15 @@ export const ChatSubscribes = async (socket, savedUsername) => {
 
   socket.on("on-read-messages", async ({ requestingUsername, usernames }) => {
     try {
-      const url = `${process.env.CHAT_REPOSITORY_SERVICE_URL}/unread/markAsRead/${requestingUsername}`;
-      console.log(url);
-
-      const response = await axios.post(url, { usernames });
-
-      if (response.status === 200) {
-        //TODO: update it for groupChats
+      const { data } = await MessageHistoryService.readAllUnreadMessage(
+        requestingUsername,
+        usernames
+      );
+      if (data) {
         const otherUserInChat = usernames.find(
           username => username !== requestingUsername
         );
         socket.emit("unread-count-messages", otherUserInChat, 0);
-      } else {
-        console.error(
-          `Failed to mark messages as read. Status code: ${response.status}`
-        );
       }
     } catch (err) {
       console.error("An error occurred: ", err.message);
@@ -80,9 +45,11 @@ export const ChatSubscribes = async (socket, savedUsername) => {
     async ({ senderUsername, receiverUsername, message }) => {
       const usernames = [senderUsername, receiverUsername].sort();
       try {
-        const { data } = await setMessage(usernames, message);
+        const { data } = await MessageHistoryService.setMessage(
+          usernames,
+          message
+        );
         const { receiversSocketIds } = data;
-        console.log(receiversSocketIds);
         io.to(receiversSocketIds).emit("receive-message", {
           senderUsername,
           message,
@@ -102,67 +69,59 @@ export const ChatSubscribes = async (socket, savedUsername) => {
   );
 };
 
-export const PostUser = async (addedUserUsername, addedUserSocketId) => {
-  return await axios
-    .post(
-      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/addToChatLobby`,
-      {
-        addedUserUsername,
-        addedUserSocketId,
-      }
-    )
-    .catch(err => {
-      console.log("Server is not connected or returns an error:", err.message);
-    });
-};
-
 export const GetMessageHistory = async usernames => {
-  const query = usernames
-    .map(u => `usernames=${encodeURIComponent(u)}`)
-    .join("&");
-  console.log(`Query for GetMessageHistory: ${query}`);
-  return await axios
-    .get(
-      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/messageHistory?${query}`
-    )
-    .catch(err => {
-      console.log("Server is not connected or returns an error", err.message);
-    });
-};
-
-export const getUnreadMessagesCount = async (usernames, requestingUsername) => {
-  return await axios
-    .get(
-      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/unread/${requestingUsername}`,
-      {
-        usernames,
-      }
-    )
-    .catch(err => {
-      console.log("Server is not connected or returns an error: ", err.message);
-    });
+  try {
+    return await MessageHistoryService.getMessageHistory(usernames);
+  } catch (err) {
+    console.log("Server is not connected or returns an error", err.message);
+  }
 };
 
 export const setMessage = async (usernames, message) => {
-  return await axios
-    .post(
-      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/messages/message`,
-      {
-        usernames,
-        message,
-      }
-    )
-    .catch(err => {
-      console.log("Server is not connected or returns an error: ", err.message);
-    });
+  try {
+    return await MessageHistoryService.setMessage(usernames, message);
+  } catch (err) {
+    console.log("Server is not connected or returns an error: ", err.message);
+  }
 };
 
-export const DeleteUser = async socketId => {
-  return await axios
-    .delete(
-      `${process.env.CHAT_REPOSITORY_SERVICE_URL}/messageHistories/${socketId}`
-    )
-    .catch(err => {
-      console.log("Server is not connected or returns an error: ", err.message);
-    });
+///////////////unread
+export const getAllUnreadMessageCounts = async (req, res) => {
+  try {
+    const { requestingUsername } = req.params;
+    const { data } = await MessageHistoryService.getAllUnreadMessageCounts(
+      requestingUsername
+    );
+    console.log(data);
+    return res.status(200).json(data);
+  } catch (err) {
+    console.log("Error retrieving UnreadMessageCounts:", err.message);
+    res.status(500).send(err);
+  }
+};
+
+export const readAllUnreadMessage = async (req, res) => {
+  try {
+    const { requestingUsername } = req.params;
+    const { usernames } = req.body;
+    const { data } = await MessageHistoryService.readAllUnreadMessage(
+      requestingUsername,
+      usernames
+    );
+    return res.status(200).json(data);
+  } catch (err) {
+    console.log("Error posting previously unread messages: ", err.message);
+    res.status(500).send(err);
+  }
+};
+
+export const getUnreadMessagesCount = async (usernames, requestingUsername) => {
+  try {
+    return await MessageHistoryService.getUnreadMessagesCount(
+      usernames,
+      requestingUsername
+    );
+  } catch (err) {
+    console.log("Server is not connected or returns an error: ", err.message);
+  }
 };

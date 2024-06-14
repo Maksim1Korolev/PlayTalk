@@ -1,9 +1,6 @@
-import {
-  ChatSubscribes,
-  DeleteUser,
-  PostUser,
-} from "../chat/chat.controller.js";
+import { ChatSubscribes } from "../chat/chat.controller.js";
 import { io } from "../index.js";
+import MessageHistoryService from "../services/MessageHistoryService.js";
 
 const onlineUserMappings = new Map();
 
@@ -42,7 +39,7 @@ export const connectOnline = async () => {
       socket.broadcast.emit("user-connection", savedUsername, true);
 
       try {
-        await PostUser(savedUsername, socket.id);
+        await MessageHistoryService.postUser(savedUsername, socket.id);
         console.log(
           `PostUser successful for ${savedUsername} with socket ID ${socket.id}.`
         );
@@ -72,7 +69,7 @@ export const connectOnline = async () => {
         }
 
         try {
-          await DeleteUser(socket.id);
+          await MessageHistoryService.deleteUser(socket.id);
           console.log(
             `DeleteUser called successfully for socket ID ${socket.id}.`
           );
