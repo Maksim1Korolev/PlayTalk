@@ -63,6 +63,7 @@ services:
       - talkback-network
     environment:
       - CHAT_REPOSITORY_SERVICE_URL=${CHAT_REPOSITORY_SERVICE_URL}
+      - REDIS_URL=${REDIS_URL}
     develop:
       watch:
         - path: ./app/package.json
