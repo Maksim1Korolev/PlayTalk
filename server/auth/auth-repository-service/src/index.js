@@ -23,6 +23,7 @@ async function main() {
   const PORT = process.env.PORT || 3011;
 
   try {
+    //TODO:Move to initialize function of UserService
     await connectToMongoDB();
     await redisClient.connect();
 

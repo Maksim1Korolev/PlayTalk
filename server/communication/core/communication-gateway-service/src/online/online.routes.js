@@ -1,5 +1,5 @@
 import express from "express";
-import { getOnlineUsernames } from "./connection.controller.js";
+import { getOnlineUsernames } from "./online.controller.js";
 
 const router = express.Router();
 

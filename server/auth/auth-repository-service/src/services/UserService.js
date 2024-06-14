@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import mongoose from "mongoose";
 
 class UserService {
+  //TODO:Store "users" in const and then use
   static async getUsers() {
     const cacheKey = "users";
     const cachedUsers = await redisClient.get(cacheKey);
