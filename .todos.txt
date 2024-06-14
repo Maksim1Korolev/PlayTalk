@@ -1,0 +1,5 @@
+To add:
+Auth on all servers, updated auth for some data
+
+To fix:
+ChatModal opens lower than the screen and scrollbar appears

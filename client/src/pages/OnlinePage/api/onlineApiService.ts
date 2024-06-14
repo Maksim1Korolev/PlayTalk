@@ -6,7 +6,7 @@ export const $onlineApi = axios.create({
 
 export const onlineApiService = {
   getOnlineUsernames: async (token: string) => {
-    const response = await $onlineApi.get(`/api/online/onlineUsernames`, {
+    const response = await $onlineApi.get(`/api/connection/onlineUsernames`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data.onlineUsernames;

@@ -4,8 +4,8 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import chatRouter from "./chat/chat.routes.js";
-import { connectOnline } from "./online/online.controller.js";
-import onlineRouter from "./online/online.routes.js";
+import { connectOnline } from "./connection/connection.controller.js";
+import onlineRouter from "./connection/connection.routes.js";
 
 dotenv.config();
 
@@ -23,7 +23,7 @@ const PORT = process.env.PORT || 3000;
 async function main() {
   app.use(cors());
   app.use(express.json());
-  app.use("/api/online", onlineRouter);
+  app.use("/api/connection", onlineRouter);
   app.use("/api/chat", chatRouter);
 }
 
