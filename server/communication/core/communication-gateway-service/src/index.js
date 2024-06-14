@@ -38,8 +38,8 @@ async function main() {
   });
 }
 
-main().catch(async e => {
-  console.error(e);
+main().catch(async err => {
   redisClient.quit();
+  console.error(err.message);
   process.exit(1);
 });

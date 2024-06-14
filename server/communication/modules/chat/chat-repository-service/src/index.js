@@ -37,8 +37,8 @@ async function main() {
   }
 }
 
-main().catch(async e => {
-  console.error(e);
+main().catch(async err => {
+  console.error(err.message);
   await disconnectFromMongoDB();
   redisClient.quit();
   process.exit(1);

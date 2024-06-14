@@ -3,16 +3,16 @@ import User from "../models/User.js";
 import mongoose from "mongoose";
 
 class UserService {
-  //TODO:Store "users" in const and then use
+  static USERS_CACHE_KEY = "users";
+
   static async getUsers() {
-    const cacheKey = "users";
-    const cachedUsers = await redisClient.get(cacheKey);
+    const cachedUsers = await redisClient.get(this.USERS_CACHE_KEY);
     if (cachedUsers) {
       return JSON.parse(cachedUsers);
     }
 
     const users = await User.find();
-    await redisClient.set(cacheKey, JSON.stringify(users), {
+    await redisClient.set(this.USERS_CACHE_KEY, JSON.stringify(users), {
       EX: 3600,
     });
     return users;
@@ -20,7 +20,7 @@ class UserService {
 
   static async addUser(user) {
     const newUser = await User.create(user);
-    await redisClient.del("users");
+    await redisClient.del(this.USERS_CACHE_KEY);
     return newUser;
   }
 
@@ -29,7 +29,7 @@ class UserService {
       throw new Error("Invalid user ID");
     }
     const deletedUser = await User.findByIdAndDelete(id);
-    await redisClient.del("users");
+    await redisClient.del(this.USERS_CACHE_KEY);
     return deletedUser;
   }
 
@@ -76,7 +76,7 @@ class UserService {
     const updatedUser = await User.findByIdAndUpdate(user._id, user, {
       new: true,
     });
-    await redisClient.del("users");
+    await redisClient.del(this.USERS_CACHE_KEY);
     if (updatedUser) {
       await redisClient.del(`user:id:${updatedUser._id}`);
       await redisClient.del(`user:username:${updatedUser.username}`);

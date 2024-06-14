@@ -23,7 +23,6 @@ async function main() {
   const PORT = process.env.PORT || 3011;
 
   try {
-    //TODO:Move to initialize function of UserService
     await connectToMongoDB();
     await redisClient.connect();
 
@@ -36,8 +35,8 @@ async function main() {
   }
 }
 
-main().catch(async e => {
-  console.error(e);
+main().catch(async err => {
+  console.error(err.message);
   await disconnectFromMongoDB();
   redisClient.quit();
   process.exit(1);
