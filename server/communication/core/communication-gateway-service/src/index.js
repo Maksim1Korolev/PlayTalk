@@ -27,6 +27,7 @@ async function main() {
 
   app.use(cors());
   app.use(express.json());
+  //TODO: Rename
   app.use("/api/connection", onlineRouter);
   app.use("/api/chat", chatRouter);
 
