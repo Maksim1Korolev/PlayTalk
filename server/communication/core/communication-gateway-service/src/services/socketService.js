@@ -41,7 +41,6 @@ class SocketService {
 
   static async handleChatSubscriptions(socket, username) {
     socket.on("on-chat-open", async receiverUsername => {
-      console.log("ZHHOPGEGFF");
       try {
         const { data } = await MessageHistoryService.getMessageHistory([
           username,
