@@ -73,10 +73,8 @@ class MessageHistoryService {
     const messageHistory = await MessageHistory.findOne({
       usernames: { $all: usernames },
     });
-    console.log("messageHistory:", messageHistory);
     if (messageHistory) {
       const messages = messageHistory.messages;
-      console.log("messages:", messages);
       for (let i = 0; i < messages.length; i++) {
         if (!messages[i].message) {
           console.warn(
@@ -84,8 +82,6 @@ class MessageHistoryService {
           );
           continue;
         }
-        console.log("messages[i].username:", messages[i].username);
-        console.log("requestingUsername:", requestingUsername);
         if (
           messages[i].username !== requestingUsername &&
           messages[i].readAt === undefined
