@@ -83,11 +83,11 @@ class SocketService {
       async ({ senderUsername, receiverUsername, message }) => {
         const usernames = [senderUsername, receiverUsername].sort();
         try {
-          const { data } = await MessageHistoryService.addMessageToHistory(
-            usernames,
-            message
+          await MessageHistoryService.addMessageToHistory(usernames, message);
+          const receiversSocketIds = await this.getUserSockets(
+            receiverUsername
           );
-          const { receiversSocketIds } = data;
+
           io.to(receiversSocketIds).emit("receive-message", {
             senderUsername,
             message,

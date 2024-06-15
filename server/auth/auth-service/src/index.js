@@ -30,7 +30,7 @@ async function main() {
 
 main()
   .then(async () => {})
-  .catch(async e => {
-    console.error(e);
+  .catch(async err => {
+    console.error(err.message);
     process.exit(1);
   });
