@@ -13,6 +13,7 @@ export const getAllUnreadMessageCounts = async (req, res) => {
   }
 };
 
+//TODO:This function is called twice, choose socket or http request, preferably socket.
 export const readAllUnreadMessages = async (req, res) => {
   try {
     const { requestingUsername } = req.params;

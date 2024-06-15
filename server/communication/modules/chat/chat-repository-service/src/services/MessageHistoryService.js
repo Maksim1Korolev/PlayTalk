@@ -5,51 +5,69 @@ class MessageHistoryService {
   //TODO:Move to .env?
   static MESSAGE_HISTORY_HASH_KEY = "messageHistory";
 
-  static getCacheKey(usernames) {
-    const sortedUsernames = usernames.sort().join("-");
-    return `${this.MESSAGE_HISTORY_HASH_KEY}:${sortedUsernames}`;
+  // Function to get sorted usernames
+  static getSortedUsernames(usernames) {
+    return usernames.sort();
   }
 
   ///////////////messageHistories
   static async addMessage(usernames, message) {
-    const cacheKey = this.getCacheKey(usernames);
+    const sortedUsernames = this.getSortedUsernames(usernames);
+    const cacheKey = sortedUsernames.join("-");
+    console.log(`Adding message. Cache key: ${cacheKey}`);
 
-    const messageHistory = await MessageHistory.findOne({ usernames });
+    const messageHistory = await MessageHistory.findOne({
+      usernames: sortedUsernames,
+    });
     if (messageHistory) {
       const updatedMessageHistory = await MessageHistory.findOneAndUpdate(
-        { usernames },
+        { usernames: sortedUsernames },
         { $push: { messages: message } },
         { new: true }
       );
-      await redisClient.hDel(cacheKey, "messages");
+      await redisClient.hDel(this.MESSAGE_HISTORY_HASH_KEY, cacheKey);
+      console.log(
+        `Updated message history. Cache key invalidated: ${cacheKey}`
+      );
       return updatedMessageHistory;
     }
 
     const addedMessageHistory = await MessageHistory.create({
-      usernames,
+      usernames: sortedUsernames,
       messages: [message],
     });
-    await redisClient.hDel(cacheKey, "messages");
+    await redisClient.hDel(this.MESSAGE_HISTORY_HASH_KEY, cacheKey);
+    console.log(`Added message history. Cache key invalidated: ${cacheKey}`);
 
     return addedMessageHistory;
   }
 
   static async getMessageHistory(usernames) {
-    const cacheKey = this.getCacheKey(usernames);
-    const cachedMessageHistory = await redisClient.hGet(cacheKey, "messages");
-    console.log("Checking cached MessageHistory:");
-    console.log(cachedMessageHistory);
+    const sortedUsernames = this.getSortedUsernames(usernames);
+    const cacheKey = sortedUsernames.join("-");
+    console.log(`Fetching message history. Cache key: ${cacheKey}`);
+
+    const cachedMessageHistory = await redisClient.hGet(
+      this.MESSAGE_HISTORY_HASH_KEY,
+      cacheKey
+    );
     if (cachedMessageHistory) {
+      console.log("Cache hit. Returning cached message history.");
       return JSON.parse(cachedMessageHistory);
+    } else {
+      console.log("Cache miss. No cached message history found.");
     }
 
-    const messageHistory = await MessageHistory.findOne({ usernames });
+    const messageHistory = await MessageHistory.findOne({
+      usernames: sortedUsernames,
+    });
     if (messageHistory) {
       await redisClient.hSet(
+        this.MESSAGE_HISTORY_HASH_KEY,
         cacheKey,
-        "messages",
         JSON.stringify(messageHistory.messages)
       );
+      console.log(`Message history cached. Cache key: ${cacheKey}`);
     }
 
     return messageHistory ? messageHistory.messages : [];
@@ -57,11 +75,12 @@ class MessageHistoryService {
 
   ///////////////unread
   static async getUnreadMessagesCount(usernames, requestingUsername) {
+    const sortedUsernames = this.getSortedUsernames(usernames);
     const result = await MessageHistory.aggregate([
       { $unwind: "$messages" },
       {
         $match: {
-          usernames,
+          usernames: sortedUsernames,
           "messages.username": { $ne: requestingUsername },
           "messages.readAt": { $exists: false },
         },
@@ -99,12 +118,16 @@ class MessageHistoryService {
   }
 
   static async markAsRead(usernames, requestingUsername) {
-    const cacheKey = this.getCacheKey(usernames);
+    const sortedUsernames = this.getSortedUsernames(usernames);
+    const cacheKey = sortedUsernames.join("-");
+    console.log(`Marking messages as read. Cache key: ${cacheKey}`);
+
     const messageHistory = await MessageHistory.findOne({
-      usernames: { $all: usernames },
+      usernames: { $all: sortedUsernames },
     });
     if (messageHistory) {
       const messages = messageHistory.messages;
+      let updated = false;
       for (let i = 0; i < messages.length; i++) {
         if (!messages[i].message) {
           console.warn(
@@ -117,11 +140,21 @@ class MessageHistoryService {
           messages[i].readAt === undefined
         ) {
           messages[i].readAt = new Date();
+          updated = true;
         }
       }
 
-      await messageHistory.save();
-      await redisClient.hDel(cacheKey, "messages");
+      if (updated) {
+        await messageHistory.save();
+        await redisClient.hDel(this.MESSAGE_HISTORY_HASH_KEY, cacheKey);
+        console.log(
+          `Messages marked as read. Cache key invalidated: ${cacheKey}`
+        );
+      } else {
+        console.log(
+          `No messages to mark as read. Cache key not invalidated: ${cacheKey}`
+        );
+      }
       return messageHistory;
     }
   }
