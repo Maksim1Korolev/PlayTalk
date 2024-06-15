@@ -2,12 +2,14 @@ import { io } from "../index.js";
 import redisClient from "../utils/redisClient.js";
 import MessageHistoryService from "../services/MessageHistoryService.js";
 
+const USER_SOCKET_HASH_KEY = "usernameSocketIds";
+
 class SocketService {
   static async connectUser(username, socketId) {
     const userSockets = await this.getUserSockets(username);
     userSockets.push(socketId);
     await redisClient.hSet(
-      "usernameSocketIds",
+      USER_SOCKET_HASH_KEY,
       username,
       JSON.stringify(userSockets)
     );
@@ -19,22 +21,22 @@ class SocketService {
 
     if (updatedSockets.length > 0) {
       await redisClient.hSet(
-        "usernameSocketIds",
+        USER_SOCKET_HASH_KEY,
         username,
         JSON.stringify(updatedSockets)
       );
     } else {
-      await redisClient.hDel("usernameSocketIds", username);
+      await redisClient.hDel(USER_SOCKET_HASH_KEY, username);
     }
   }
 
   static async getUserSockets(username) {
-    const sockets = await redisClient.hGet("usernameSocketIds", username);
+    const sockets = await redisClient.hGet(USER_SOCKET_HASH_KEY, username);
     return sockets ? JSON.parse(sockets) : [];
   }
 
   static async getAllOnlineUsernames() {
-    return await redisClient.hKeys("usernameSocketIds");
+    return await redisClient.hKeys(USER_SOCKET_HASH_KEY);
   }
 
   static async handleChatSubscriptions(socket, username) {
@@ -68,6 +70,7 @@ class SocketService {
           const otherUserInChat = usernames.find(
             username => username !== requestingUsername
           );
+          //TODO:Check need
           socket.emit("unread-count-messages", otherUserInChat, 0);
         }
       } catch (err) {
