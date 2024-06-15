@@ -36,20 +36,6 @@ class MessageHistoryService {
     const url = `${CHAT_REPOSITORY_SERVICE_URL}/unread/markAsRead/${requestingUsername}`;
     return await axios.post(url, { usernames });
   }
-
-  ///////////////move
-  static async postUser(addedUserUsername, addedUserSocketId) {
-    const url = `${CHAT_REPOSITORY_SERVICE_URL}/messageHistories/addToChatLobby`;
-    return await axios.post(url, {
-      addedUserUsername,
-      addedUserSocketId,
-    });
-  }
-
-  static async deleteUser(socketId) {
-    const url = `${CHAT_REPOSITORY_SERVICE_URL}/messageHistories/${socketId}`;
-    return await axios.delete(url);
-  }
 }
 
 export default MessageHistoryService;

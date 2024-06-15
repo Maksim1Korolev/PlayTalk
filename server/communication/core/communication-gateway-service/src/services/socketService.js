@@ -41,6 +41,7 @@ class SocketService {
 
   static async handleChatSubscriptions(socket, username) {
     socket.on("on-chat-open", async receiverUsername => {
+      console.log("ZHHOPGEGFF");
       try {
         const { data } = await MessageHistoryService.getMessageHistory([
           username,
@@ -125,18 +126,6 @@ class SocketService {
         const onlineUsernames = await this.getAllOnlineUsernames();
         socket.emit("online-users", onlineUsernames);
         socket.broadcast.emit("user-connection", savedUsername, true);
-
-        try {
-          await MessageHistoryService.postUser(savedUsername, socket.id);
-          console.log(
-            `PostUser successful for ${savedUsername} with socket ID ${socket.id}.`
-          );
-        } catch (error) {
-          console.error(
-            `Error in PostUser for ${savedUsername} with socket ID ${socket.id}:`,
-            error.message
-          );
-        }
       });
 
       socket.on("disconnect", async () => {
@@ -150,18 +139,6 @@ class SocketService {
           const remainingSockets = await this.getUserSockets(savedUsername);
           if (remainingSockets.length === 0) {
             socket.broadcast.emit("user-connection", savedUsername, false);
-          }
-
-          try {
-            await MessageHistoryService.deleteUser(socket.id);
-            console.log(
-              `DeleteUser called successfully for socket ID ${socket.id}.`
-            );
-          } catch (error) {
-            console.error(
-              `Error in DeleteUser for socket ID ${socket.id}:`,
-              error.message
-            );
           }
         }
       });

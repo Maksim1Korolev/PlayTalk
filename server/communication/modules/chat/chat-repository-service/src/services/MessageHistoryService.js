@@ -1,8 +1,19 @@
+import redisClient from "../utils/redisClient.js";
 import MessageHistory from "../models/MessageHistory.js";
 
 class MessageHistoryService {
+  //TODO:Move to .env?
+  static MESSAGE_HISTORY_HASH_KEY = "messageHistory";
+
+  static getCacheKey(usernames) {
+    const sortedUsernames = usernames.sort().join("-");
+    return `${this.MESSAGE_HISTORY_HASH_KEY}:${sortedUsernames}`;
+  }
+
   ///////////////messageHistories
-  async addMessage(usernames, message) {
+  static async addMessage(usernames, message) {
+    const cacheKey = this.getCacheKey(usernames);
+
     const messageHistory = await MessageHistory.findOne({ usernames });
     if (messageHistory) {
       const updatedMessageHistory = await MessageHistory.findOneAndUpdate(
@@ -10,6 +21,7 @@ class MessageHistoryService {
         { $push: { messages: message } },
         { new: true }
       );
+      await redisClient.hDel(cacheKey, "messages");
       return updatedMessageHistory;
     }
 
@@ -17,17 +29,34 @@ class MessageHistoryService {
       usernames,
       messages: [message],
     });
+    await redisClient.hDel(cacheKey, "messages");
 
     return addedMessageHistory;
   }
 
-  async getMessageHistory(usernames) {
+  static async getMessageHistory(usernames) {
+    const cacheKey = this.getCacheKey(usernames);
+    const cachedMessageHistory = await redisClient.hGet(cacheKey, "messages");
+    console.log("Checking cached MessageHistory:");
+    console.log(cachedMessageHistory);
+    if (cachedMessageHistory) {
+      return JSON.parse(cachedMessageHistory);
+    }
+
     const messageHistory = await MessageHistory.findOne({ usernames });
-    return messageHistory.messages || [];
+    if (messageHistory) {
+      await redisClient.hSet(
+        cacheKey,
+        "messages",
+        JSON.stringify(messageHistory.messages)
+      );
+    }
+
+    return messageHistory ? messageHistory.messages : [];
   }
 
   ///////////////unread
-  async getUnreadMessagesCount(usernames, requestingUsername) {
+  static async getUnreadMessagesCount(usernames, requestingUsername) {
     const result = await MessageHistory.aggregate([
       { $unwind: "$messages" },
       {
@@ -43,7 +72,7 @@ class MessageHistoryService {
     return result.length > 0 ? result[0].unreadCount : 0;
   }
 
-  async getAllUnreadMessagesCount(requestingUsername) {
+  static async getAllUnreadMessagesCount(requestingUsername) {
     const result = await MessageHistory.aggregate([
       { $match: { usernames: requestingUsername } },
       { $unwind: "$messages" },
@@ -69,7 +98,8 @@ class MessageHistoryService {
     return unreadMessageMap;
   }
 
-  async markAsRead(usernames, requestingUsername) {
+  static async markAsRead(usernames, requestingUsername) {
+    const cacheKey = this.getCacheKey(usernames);
     const messageHistory = await MessageHistory.findOne({
       usernames: { $all: usernames },
     });
@@ -86,15 +116,15 @@ class MessageHistoryService {
           messages[i].username !== requestingUsername &&
           messages[i].readAt === undefined
         ) {
-          console.log("Marking message as read");
           messages[i].readAt = new Date();
         }
       }
 
       await messageHistory.save();
+      await redisClient.hDel(cacheKey, "messages");
       return messageHistory;
     }
   }
 }
 
-export default new MessageHistoryService();
+export default MessageHistoryService;

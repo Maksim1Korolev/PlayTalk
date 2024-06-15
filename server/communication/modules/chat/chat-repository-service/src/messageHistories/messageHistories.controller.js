@@ -27,14 +27,9 @@ export const getMessageHistory = asyncHandler(async (req, res) => {
   if (!usernames) {
     return res.status(400).json({ message: "Usernames are required." });
   }
-
-  const sortedUsernames = Array.isArray(usernames)
-    ? usernames.sort()
-    : [usernames].sort();
-
   try {
     const messageHistory = await MessageHistoryService.getMessageHistory(
-      sortedUsernames
+      usernames
     );
 
     return res.json({ messageHistory });
