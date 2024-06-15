@@ -5,7 +5,6 @@ class MessageHistoryService {
   //TODO:Move to .env?
   static MESSAGE_HISTORY_HASH_KEY = "messageHistory";
 
-  // Function to get sorted usernames
   static getSortedUsernames(usernames) {
     return usernames.sort();
   }
