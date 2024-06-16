@@ -3,6 +3,7 @@ import axios from "axios";
 
 const CHAT_REPOSITORY_SERVICE_URL = process.env.CHAT_REPOSITORY_SERVICE_URL;
 
+//TODO:Rename the file to lower case
 class MessageHistoryService {
   ///////////////messageHistories
   static async getMessageHistory(usernames) {

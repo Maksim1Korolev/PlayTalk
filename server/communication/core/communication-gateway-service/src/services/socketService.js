@@ -4,6 +4,7 @@ import MessageHistoryService from "../services/MessageHistoryService.js";
 
 const USER_SOCKET_HASH_KEY = "usernameSocketIds";
 
+//TODO:Divide chat and online logic to separate files
 class SocketService {
   static async connectUser(username, socketId) {
     const userSockets = await this.getUserSockets(username);

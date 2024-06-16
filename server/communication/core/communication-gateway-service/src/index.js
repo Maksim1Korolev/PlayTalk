@@ -21,6 +21,7 @@ export const io = new Server(server, {
 });
 
 async function main() {
+  //TODO:Rename and move
   await connectOnline();
   await redisClient.connect();
 

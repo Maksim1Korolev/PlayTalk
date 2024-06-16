@@ -19,12 +19,8 @@ export const getUnreadMessageCount = asyncHandler(async (req, res) => {
         .json({ message: "Usernames of MessageHistory are required." });
     }
 
-    const sortedUsernames = Array.isArray(usernames)
-      ? usernames.sort()
-      : [usernames].sort();
-
     const count = await MessageHistoryService.getUnreadMessagesCount(
-      sortedUsernames,
+      usernames,
       requestingUsername
     );
 
@@ -52,12 +48,8 @@ export const markAsRead = asyncHandler(async (req, res) => {
         .json({ message: "Usernames of MessageHistory are required." });
     }
 
-    const sortedUsernames = Array.isArray(usernames)
-      ? usernames.sort()
-      : [usernames];
-
     const result = await MessageHistoryService.markAsRead(
-      sortedUsernames,
+      usernames,
       requestingUsername
     );
     if (result) {
