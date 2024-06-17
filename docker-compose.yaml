@@ -131,7 +131,9 @@ services:
       - "6379:6379"
     networks:
       - talkback-network
-    # command: ["sh", "-c", "redis-server & sleep 1 && redis-cli FLUSHALL"]
+    # volumes:
+    #   - ./redis/entrypoint.sh:/usr/local/bin/entrypoint.sh
+    # entrypoint: ["/usr/local/bin/entrypoint.sh"]
 
 networks:
   talkback-network:
