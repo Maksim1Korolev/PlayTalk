@@ -131,6 +131,7 @@ services:
       - "6379:6379"
     networks:
       - talkback-network
+    # command: ["sh", "-c", "redis-server & sleep 1 && redis-cli FLUSHALL"]
 
 networks:
   talkback-network:

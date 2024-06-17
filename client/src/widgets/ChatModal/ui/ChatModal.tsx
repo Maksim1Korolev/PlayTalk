@@ -58,7 +58,7 @@ export const ChatModal = ({
     }
   };
 
-  const { messageHistory, onUserSend, AddMessagesToHistory } = useModalMessages(
+  const { messageHistory, onUserSend, addMessagesToHistory } = useModalMessages(
     {
       currentUsername: currentUser.username,
       receiverUsername: receiverUser.username,
@@ -66,7 +66,7 @@ export const ChatModal = ({
     }
   );
 
-  useReceiveMessage(receiverUser.username, AddMessagesToHistory);
+  useReceiveMessage(receiverUser.username, addMessagesToHistory);
 
   return (
     <Rnd
