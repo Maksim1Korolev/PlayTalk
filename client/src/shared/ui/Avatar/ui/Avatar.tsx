@@ -7,10 +7,12 @@ export const Avatar = ({
   className,
   size = 80,
   src,
+  onClick,
 }: {
   className?: string;
   size?: number;
   src: string;
+  onClick?: () => void;
 }) => {
   const getDefaultAvatar = () => {
     return (
@@ -30,6 +32,7 @@ export const Avatar = ({
       width={size}
       height={size}
       src={src}
+      onClick={onClick}
       draggable="false"
       errorFallback={getDefaultAvatar()}
     />

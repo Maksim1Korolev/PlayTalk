@@ -1,2 +1,18 @@
 .UserListCard {
+  align-items: center;
+	display: flex;
+  opacity: 1;
+  padding: 0 16px;
+}
+
+.collapsed {
+  padding: 0 8px;
+
+	> span,
+	> button {
+		opacity: 0;
+    transition: all 0.2s;
+    width: 0;
+		display: none;
+	}	
 }

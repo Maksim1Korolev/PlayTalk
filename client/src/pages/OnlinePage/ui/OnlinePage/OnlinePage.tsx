@@ -1,14 +1,14 @@
 import { User } from "@/entities/User";
 import { GameRequest } from "@/features/GameRequest";
-import { UserList } from "@/features/UserList";
 import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
 import { cx } from "@/shared/lib/cx";
 import { HStack, Loader, UiButton, UiText, VStack } from "@/shared/ui";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
 import { GameWidget } from "@/widgets/GameWidget";
+import { Sidebar } from "@/widgets/Sidebar";
 import { fetchUsersStatus } from "../../api/updateUsersStatusApiService";
 import { ChatModalStateProps } from "../../hooks/useChatModals";
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
@@ -48,20 +48,23 @@ const OnlinePage = ({ className }: { className?: string }) => {
     return { x, y };
   };
 
-  const handleOpenChatModal = (user: User) => {
-    if (chatModals && chatModals.length > 5) {
-      alert(resources.chatModalQuantityError);
-      return;
-    }
-    if (chatModals?.find(({ user: currentUser }) => currentUser === user))
-      return;
+  const handleOpenChatModal = useCallback(
+    (user: User) => {
+      if (chatModals && chatModals.length > 5) {
+        alert(resources.chatModalQuantityError);
+        return;
+      }
+      if (chatModals?.find(({ user: currentUser }) => currentUser === user))
+        return;
 
-    const position = findNewModalPosition(chatModals || []);
+      const position = findNewModalPosition(chatModals || []);
 
-    const newChatModalProps: ChatModalStateProps = { user, position };
+      const newChatModalProps: ChatModalStateProps = { user, position };
 
-    setChatModals(prev => [...(prev || []), newChatModalProps]);
-  };
+      setChatModals(prev => [...(prev || []), newChatModalProps]);
+    },
+    [chatModals]
+  );
 
   const navigate = useNavigate();
 
@@ -90,6 +93,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
     if (token) {
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogout = () => {
@@ -114,12 +118,13 @@ const OnlinePage = ({ className }: { className?: string }) => {
         <VStack>
           <UiButton onClick={handleLogout}>{resources.logoutButton}</UiButton>
           <UiText size="xl">{resources.onlineUsersHeading}</UiText>
-          <UserList
+          <Sidebar
             busy={currentUser.inGame || currentUser.inInvite}
             users={upToDateUsers}
             handleUserChatButton={handleOpenChatModal}
             handleUserInviteButton={handleSendGameInvite}
           />
+
           <ChatModals
             currentUser={currentUser}
             chatModals={chatModals}

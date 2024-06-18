@@ -2,7 +2,7 @@ import { User } from "@/entities/User";
 import { AvatarWithProps } from "@/features/AvatarWithProps";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 import { cx } from "@/shared/lib/cx";
-import { HStack, UiButton, UiText } from "@/shared/ui";
+import { HStack, UiButton } from "@/shared/ui";
 import { UserOnlineIndicator } from "../../UserOnlineIndicator";
 import cls from "./UserListCard.module.scss";
 
@@ -10,12 +10,14 @@ export const UserListCard = ({
   className,
   user,
   busy,
+  collapsed,
   handleInviteButton,
   handleChatButton,
 }: {
   className?: string;
   user: User;
   busy?: boolean;
+  collapsed?: boolean;
   handleInviteButton: ({
     receiverUsername,
   }: {
@@ -23,21 +25,48 @@ export const UserListCard = ({
   }) => void;
   handleChatButton: (user: User) => void;
 }) => {
-  const onChatButton = () => {
+  const onChatOpen = () => {
     handleChatButton(user);
   };
 
   const onPlayButton = () => {
     handleInviteButton({ receiverUsername: user.username });
   };
+
+  //if (collapsed)
+  //  return (
+  //    <HStack
+  //      className={cx(cls.UserListCard, { [cls.collapsed]: collapsed }, [
+  //        className,
+  //      ])}
+  //      gap="8"
+  //    >
+  //      <AvatarWithProps
+  //        onClick={onChatOpen}
+  //        size={50}
+  //        avatarSrc={user.avatarFileName}
+  //        addonTopRight={<UserOnlineIndicator isOnline={user.isOnline} />}
+  //        addonBottomRight={
+  //          <UnreadMessagesCountIndicator
+  //            unreadMessagesCount={user.unreadMessageCount}
+  //          />
+  //        }
+  //      />
+  //    </HStack>
+  //  );
+
   return (
     //<Card variant="light" className={`${cls.UserListCard} ${className}`}>
-    <HStack className={cx(cls.UserListCard, {}, [className])} gap="8">
+    <HStack
+      className={cx(cls.UserListCard, { [cls.collapsed]: collapsed }, [
+        className,
+      ])}
+      gap="8"
+    >
       <AvatarWithProps
+        onClick={onChatOpen}
         size={50}
         avatarSrc={user.avatarFileName}
-        unreadMessageCount={user.unreadMessageCount}
-        isOnline={user.isOnline}
         addonTopRight={<UserOnlineIndicator isOnline={user.isOnline} />}
         addonBottomRight={
           <UnreadMessagesCountIndicator
@@ -45,11 +74,13 @@ export const UserListCard = ({
           />
         }
       />
-      <UiText>{user.username}</UiText>
-      <UiButton onClick={onChatButton}>Chat</UiButton>
+      <span>{user.username}</span>
       <UiButton
         onClick={onPlayButton}
-        disabled={user.inGame || user.inInvite || busy || !user.isOnline}
+        variant={collapsed ? "clear" : undefined}
+        disabled={
+          user.inGame || user.inInvite || busy || !user.isOnline || collapsed
+        }
       >
         Play
       </UiButton>

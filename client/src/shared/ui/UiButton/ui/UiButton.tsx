@@ -1,6 +1,6 @@
 import { Mods, cx } from "@/shared/lib/cx";
-import cls from "./UiButton.module.scss";
 import { ButtonHTMLAttributes } from "react";
+import cls from "./UiButton.module.scss";
 
 type ButtonVariant = "outlined" | "clear" | "filled";
 type ButtonColor = "default" | "success" | "blue";
@@ -18,11 +18,13 @@ export const UiButton = ({
   color = "default",
   textIsUnderlined,
   max = false,
+  disabled,
   ...otherProps
 }: ButtonProps) => {
   const buttonMods: Mods = {
     [cls.textIsUnderlined]: textIsUnderlined,
     [cls.max]: max,
+    [cls.disabled]: disabled,
   };
   return (
     <button
@@ -32,6 +34,7 @@ export const UiButton = ({
         cls[color],
       ])}
       {...otherProps}
+      disabled={disabled}
     />
   );
 };

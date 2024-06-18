@@ -13,14 +13,14 @@
   color: var(--primary-color);
 }
 
-.strokeWhite path {
-  stroke: var(--white-color);
-  color: var(--white-color);
+.strokeWhite {
+  stroke: var(--text-redesigned);
+  color: var(--text-redesigned);
 }
 
 .strokeBlack {
-  stroke: var(--black-color);
-  color: var(--black-color);
+  stroke: var(--bg-color);
+  color: var(--bg-color);
 }
 
 .strokePrimary {
@@ -28,6 +28,15 @@
   color: var(--primary-color);
 }
 
-.pointer {
+.button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: none;
   cursor: pointer;
+}
+
+.button:hover .icon {
+  color: var(--accent-redesigned);
 }

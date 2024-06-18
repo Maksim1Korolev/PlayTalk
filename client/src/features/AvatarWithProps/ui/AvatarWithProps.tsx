@@ -12,20 +12,21 @@ export const AvatarWithProps = memo(
     addonBottomRight,
     addonTopLeft,
     addonBottomLeft,
+    onClick,
   }: {
     className?: string;
     avatarSrc: string;
     size?: number;
-    unreadMessageCount?: number;
-    isOnline?: boolean;
     addonTopRight?: React.ReactNode;
     addonBottomRight?: React.ReactNode;
     addonTopLeft?: React.ReactNode;
     addonBottomLeft?: React.ReactNode;
+    onClick?: () => void;
   }) => {
     return (
       <div className={cls.AvatarWithProps}>
         <Avatar
+          onClick={onClick}
           className={cx(cls.avatar, {}, [className])}
           src={avatarSrc}
           size={size}
