@@ -1,8 +1,9 @@
 import { User } from "@/entities/User";
 import { AvatarWithProps } from "@/features/AvatarWithProps";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
+import { PlayButton } from "@/features/UserList/ui/PlayButton";
 import { cx } from "@/shared/lib/cx";
-import { HStack, UiButton } from "@/shared/ui";
+import { HStack } from "@/shared/ui";
 import { UserOnlineIndicator } from "../../UserOnlineIndicator";
 import cls from "./UserListCard.module.scss";
 
@@ -60,14 +61,13 @@ export const UserListCard = ({
         <span className={cls.username} ref={userRef}>
           {user.username}
         </span>
-        <UiButton
+        <PlayButton
           className={cls.playButton}
           onClick={onPlayButton}
-          variant={collapsed ? "clear" : undefined}
           disabled={user.inGame || user.inInvite || busy || !user.isOnline}
         >
           Play
-        </UiButton>
+        </PlayButton>
       </HStack>
       {/*<div> Is invited: {user.inInvite ? "da" : "net"}</div>
       <div> Is in game: {user.inGame ? "da" : "net"}</div>*/}

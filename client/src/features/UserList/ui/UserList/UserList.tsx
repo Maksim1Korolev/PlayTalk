@@ -3,7 +3,7 @@ import { User, UserListCard } from "@/entities/User";
 import { cx } from "@/shared/lib/cx";
 import { Card, VStack } from "@/shared/ui";
 import { memo, useEffect, useMemo, useRef } from "react";
-import { sortUsers } from "../model/userListUtils";
+import { sortUsers } from "../../model/userListUtils";
 import cls from "./UserList.module.scss";
 
 export interface UserListProps {

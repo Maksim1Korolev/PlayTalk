@@ -5,7 +5,7 @@ import cls from "./UiButton.module.scss";
 type ButtonVariant = "outlined" | "clear" | "filled";
 type ButtonColor = "default" | "success" | "blue";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   variant?: ButtonVariant;
   color?: ButtonColor;
