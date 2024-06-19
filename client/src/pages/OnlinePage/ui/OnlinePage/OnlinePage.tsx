@@ -125,6 +125,8 @@ const OnlinePage = ({ className }: { className?: string }) => {
             handleUserInviteButton={handleSendGameInvite}
           />
 
+					
+
           <ChatModals
             currentUser={currentUser}
             chatModals={chatModals}

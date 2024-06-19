@@ -13,6 +13,7 @@ export const UserListCard = ({
   collapsed,
   handleInviteButton,
   handleChatButton,
+  userRef,
 }: {
   className?: string;
   user: User;
@@ -24,6 +25,7 @@ export const UserListCard = ({
     receiverUsername: string;
   }) => void;
   handleChatButton: (user: User) => void;
+  userRef: (el: HTMLSpanElement | null) => void;
 }) => {
   const onChatOpen = () => {
     handleChatButton(user);
@@ -33,28 +35,6 @@ export const UserListCard = ({
     handleInviteButton({ receiverUsername: user.username });
   };
 
-  //if (collapsed)
-  //  return (
-  //    <HStack
-  //      className={cx(cls.UserListCard, { [cls.collapsed]: collapsed }, [
-  //        className,
-  //      ])}
-  //      gap="8"
-  //    >
-  //      <AvatarWithProps
-  //        onClick={onChatOpen}
-  //        size={50}
-  //        avatarSrc={user.avatarFileName}
-  //        addonTopRight={<UserOnlineIndicator isOnline={user.isOnline} />}
-  //        addonBottomRight={
-  //          <UnreadMessagesCountIndicator
-  //            unreadMessagesCount={user.unreadMessageCount}
-  //          />
-  //        }
-  //      />
-  //    </HStack>
-  //  );
-
   return (
     //<Card variant="light" className={`${cls.UserListCard} ${className}`}>
     <HStack
@@ -62,8 +42,10 @@ export const UserListCard = ({
         className,
       ])}
       gap="8"
+      max
     >
       <AvatarWithProps
+        clickable
         onClick={onChatOpen}
         size={50}
         avatarSrc={user.avatarFileName}
@@ -74,16 +56,19 @@ export const UserListCard = ({
           />
         }
       />
-      <span>{user.username}</span>
-      <UiButton
-        onClick={onPlayButton}
-        variant={collapsed ? "clear" : undefined}
-        disabled={
-          user.inGame || user.inInvite || busy || !user.isOnline || collapsed
-        }
-      >
-        Play
-      </UiButton>
+      <HStack className={cls.userInfo} max>
+        <span className={cls.username} ref={userRef}>
+          {user.username}
+        </span>
+        <UiButton
+          className={cls.playButton}
+          onClick={onPlayButton}
+          variant={collapsed ? "clear" : undefined}
+          disabled={user.inGame || user.inInvite || busy || !user.isOnline}
+        >
+          Play
+        </UiButton>
+      </HStack>
       {/*<div> Is invited: {user.inInvite ? "da" : "net"}</div>
       <div> Is in game: {user.inGame ? "da" : "net"}</div>*/}
     </HStack>
