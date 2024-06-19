@@ -1,0 +1,15 @@
+src/
+├── components/
+│   ├── Button.js
+│   ├── Input.js
+│   └── ...
+├── pages/
+│   ├── Home.js
+│   ├── About.js
+│   └── ...
+├── utils/
+│   ├── api.js
+│   ├── helpers.js
+│   └── ...
+└── App.js
+npm install fs
