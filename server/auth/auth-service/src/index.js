@@ -24,7 +24,9 @@ async function main() {
   const PORT = process.env.PORT || 3010;
 
   app.listen(PORT, () => {
-    console.log(`auth-service is running on port ${PORT}`);
+    console.log(
+      `auth-service is running in ${process.env.NODE_ENV} mode on port ${PORT}`
+    );
   });
 }
 

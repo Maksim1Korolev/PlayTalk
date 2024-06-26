@@ -43,7 +43,7 @@ export const useChatModals = (currentUser: User) => {
 
 export const useReceiveMessage = (
   currentReceiverUsername: string,
-  AddMessagesToHistory: (messages: Message[]) => void
+  addMessagesToHistory: (messages: Message[]) => void
 ) => {
   useEffect(() => {
     const updateChatHistory = (
@@ -53,7 +53,7 @@ export const useReceiveMessage = (
       console.log(messages);
 
       if (currentReceiverUsername === receiverUsername) {
-        AddMessagesToHistory(messages);
+        addMessagesToHistory(messages);
       }
     };
 
@@ -65,7 +65,7 @@ export const useReceiveMessage = (
       message: Message;
     }) => {
       if (senderUsername === currentReceiverUsername) {
-        AddMessagesToHistory([message]);
+        addMessagesToHistory([message]);
       }
     };
 
@@ -78,5 +78,5 @@ export const useReceiveMessage = (
       onlineSocket.off("update-chat", updateChatHistory);
       onlineSocket.off("receive-message", receiveMessageSubscribe);
     };
-  }, [AddMessagesToHistory, currentReceiverUsername]);
+  }, [addMessagesToHistory, currentReceiverUsername]);
 };

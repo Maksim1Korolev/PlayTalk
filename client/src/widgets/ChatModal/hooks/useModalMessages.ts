@@ -12,7 +12,7 @@ export const useModalMessages = ({
 }) => {
   const [messageHistory, setMessageHistory] = useState<Message[]>();
 
-  const AddMessagesToHistory = useCallback((messages: Message[]) => {
+  const addMessagesToHistory = useCallback((messages: Message[]) => {
     setMessageHistory(prev => [...(prev || []), ...messages]);
   }, []);
 
@@ -28,13 +28,13 @@ export const useModalMessages = ({
 
       const newMessage = wrapMessage(message);
       handleSendMessage(receiverUsername, newMessage);
-      AddMessagesToHistory([newMessage]);
+      addMessagesToHistory([newMessage]);
     },
-    [AddMessagesToHistory, currentUsername, handleSendMessage, receiverUsername]
+    [addMessagesToHistory, currentUsername, handleSendMessage, receiverUsername]
   );
   return {
     messageHistory,
     onUserSend,
-    AddMessagesToHistory,
+    addMessagesToHistory,
   };
 };

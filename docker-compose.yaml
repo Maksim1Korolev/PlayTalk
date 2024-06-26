@@ -131,6 +131,9 @@ services:
       - "6379:6379"
     networks:
       - talkback-network
+    # volumes:
+    #   - ./redis/entrypoint.sh:/usr/local/bin/entrypoint.sh
+    # entrypoint: ["/usr/local/bin/entrypoint.sh"]
 
 networks:
   talkback-network:
