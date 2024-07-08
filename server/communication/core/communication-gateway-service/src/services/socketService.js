@@ -1,6 +1,6 @@
 import { io } from "../index.js";
 import redisClient from "../utils/redisClient.js";
-import MessageHistoryService from "../services/MessageHistoryService.js";
+import MessageHistoryService from "./messageHistoryService.js";
 
 const USER_SOCKET_HASH_KEY = "usernameSocketIds";
 
