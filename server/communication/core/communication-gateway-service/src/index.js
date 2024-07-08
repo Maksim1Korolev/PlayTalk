@@ -20,10 +20,25 @@ export const io = new Server(server, {
   cors: {},
 });
 
+//TODO:Move to .env?
+const USER_SOCKET_HASH_KEY = "usernameSocketIds";
+
+//TODO:Do this only in dev mode?
+async function clearSocketCache() {
+  try {
+    await redisClient.del(USER_SOCKET_HASH_KEY);
+    console.log("Cleared socket ID cache in Redis");
+  } catch (err) {
+    console.error("Error clearing socket ID cache in Redis:", err.message);
+  }
+}
+
 async function main() {
+  await redisClient.connect();
+  await clearSocketCache();
+
   //TODO:Rename and move
   await connectOnline();
-  await redisClient.connect();
 
   const PORT = process.env.PORT || 3000;
 
