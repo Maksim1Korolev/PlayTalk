@@ -1,5 +1,5 @@
 To add:
-Servers should fetch data straight from db if redis is offline (add try/catch maybe finally?)
+Servers should fetch data straight from db if redis is offline
 Automatic login upon clicking "enter"
 
 To fix:
