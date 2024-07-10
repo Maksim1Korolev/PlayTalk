@@ -2,9 +2,6 @@ import redisClient from "../utils/redisClient.js";
 import MessageHistory from "../models/MessageHistory.js";
 
 class MessageHistoryService {
-  //TODO:Move to .env?
-  static MESSAGE_HISTORY_HASH_KEY = "messageHistory";
-
   static getSortedUsernames(usernames) {
     return usernames.sort();
   }
@@ -24,7 +21,10 @@ class MessageHistoryService {
         { $push: { messages: message } },
         { new: true }
       );
-      await redisClient.hDel(this.MESSAGE_HISTORY_HASH_KEY, cacheKey);
+      await redisClient.hDel(
+        process.env.REDIS_MESSAGE_HISTORY_HASH_KEY,
+        cacheKey
+      );
       console.log(
         `Updated message history. Cache key invalidated: ${cacheKey}`
       );
@@ -35,7 +35,10 @@ class MessageHistoryService {
       usernames: sortedUsernames,
       messages: [message],
     });
-    await redisClient.hDel(this.MESSAGE_HISTORY_HASH_KEY, cacheKey);
+    await redisClient.hDel(
+      process.env.REDIS_MESSAGE_HISTORY_HASH_KEY,
+      cacheKey
+    );
     console.log(`Added message history. Cache key invalidated: ${cacheKey}`);
 
     return addedMessageHistory;
@@ -47,7 +50,7 @@ class MessageHistoryService {
     console.log(`Fetching message history. Cache key: ${cacheKey}`);
 
     const cachedMessageHistory = await redisClient.hGet(
-      this.MESSAGE_HISTORY_HASH_KEY,
+      process.env.REDIS_MESSAGE_HISTORY_HASH_KEY,
       cacheKey
     );
     if (cachedMessageHistory) {
@@ -62,7 +65,7 @@ class MessageHistoryService {
     });
     if (messageHistory) {
       await redisClient.hSet(
-        this.MESSAGE_HISTORY_HASH_KEY,
+        process.env.REDIS_MESSAGE_HISTORY_HASH_KEY,
         cacheKey,
         JSON.stringify(messageHistory.messages)
       );
@@ -145,7 +148,10 @@ class MessageHistoryService {
 
       if (updated) {
         await messageHistory.save();
-        await redisClient.hDel(this.MESSAGE_HISTORY_HASH_KEY, cacheKey);
+        await redisClient.hDel(
+          process.env.REDIS_MESSAGE_HISTORY_HASH_KEY,
+          cacheKey
+        );
         console.log(
           `Messages marked as read. Cache key invalidated: ${cacheKey}`
         );
