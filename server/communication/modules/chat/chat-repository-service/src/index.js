@@ -24,17 +24,12 @@ async function main() {
 
   const PORT = process.env.PORT || 3021;
 
-  try {
-    await connectToMongoDB();
-    await redisClient.connect();
+  await connectToMongoDB();
+  await redisClient.connect();
 
-    app.listen(PORT, () => {
-      console.log(`chat-repository-service is running on port ${PORT}`);
-    });
-  } catch (err) {
-    console.error("Connection error", err.message);
-    process.exit(1);
-  }
+  app.listen(PORT, () => {
+    console.log(`chat-repository-service is running on port ${PORT}`);
+  });
 }
 
 main().catch(async err => {
