@@ -104,14 +104,6 @@ services:
           target: /usr/src/app
           action: sync
 
-  # Zookeeper
-  zookeeper:
-    image: wurstmeister/zookeeper
-    ports:
-      - "2181:2181"
-    networks:
-      - talkback-network
-
   # Kafka
   kafka:
     image: wurstmeister/kafka
@@ -121,6 +113,14 @@ services:
       - KAFKA_LISTENERS=${KAFKA_LISTENERS}
       - KAFKA_ADVERTISED_LISTENERS=${KAFKA_ADVERTISED_LISTENERS}
       - KAFKA_ZOOKEEPER_CONNECT=${KAFKA_ZOOKEEPER_CONNECT}
+    networks:
+      - talkback-network
+
+  # Zookeeper
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
     networks:
       - talkback-network
 
