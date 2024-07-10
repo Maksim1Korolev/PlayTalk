@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import UserService from "../services/UserService.js";
+import UserService from "../services/userService.js";
 
 // @desc   Get users
 // @route  GET /api/users/

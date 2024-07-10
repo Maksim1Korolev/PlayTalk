@@ -21,6 +21,7 @@ async function main() {
   app.use("/public", express.static(path.join(__dirname, "public")));
 }
 const server = http.createServer(app);
+
 export const io = new Server(server, {
   cors: {},
 });

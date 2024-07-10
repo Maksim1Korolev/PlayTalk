@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import MessageHistoryService from "../services/MessageHistoryService.js";
+import MessageHistoryService from "../services/messageHistoryService.js";
 
 // @desc   Add message to Message History and update missing message List
 //         return Socket ids
