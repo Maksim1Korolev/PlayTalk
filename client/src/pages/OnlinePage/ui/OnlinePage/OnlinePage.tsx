@@ -2,10 +2,9 @@ import { User } from "@/entities/User";
 import { GameRequest } from "@/features/GameRequest";
 import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
 import { cx } from "@/shared/lib/cx";
-import { HStack, Loader, UiButton, UiText, VStack } from "@/shared/ui";
+import { HStack, Loader, UiText, VStack } from "@/shared/ui";
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
 
 import { GameWidget } from "@/widgets/GameWidget";
 import { Sidebar } from "@/widgets/Sidebar";
@@ -16,7 +15,7 @@ import { ChatModals } from "../ChatModals";
 import cls from "./OnlinePage.module.scss";
 
 const OnlinePage = ({ className }: { className?: string }) => {
-  const [cookies, , removeCookie] = useCookies(["jwt-cookie"]);
+  const [cookies] = useCookies(["jwt-cookie"]);
   console.log(cookies);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -66,8 +65,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
     [chatModals]
   );
 
-  const navigate = useNavigate();
-
   const {
     upToDateUsers,
     isInvitedToGame,
@@ -96,11 +93,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleLogout = () => {
-    removeCookie("jwt-cookie");
-    navigate("/auth");
-  };
-
   if (isLoading) {
     return <Loader />;
   }
@@ -116,7 +108,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
     <div className={cx(cls.OnlinePage, {}, [className])}>
       <HStack max>
         <VStack>
-          <UiButton onClick={handleLogout}>{resources.logoutButton}</UiButton>
           <UiText size="xl">{resources.onlineUsersHeading}</UiText>
           <Sidebar
             busy={currentUser.inGame || currentUser.inInvite}
@@ -124,8 +115,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
             handleUserChatButton={handleOpenChatModal}
             handleUserInviteButton={handleSendGameInvite}
           />
-
-					
 
           <ChatModals
             currentUser={currentUser}

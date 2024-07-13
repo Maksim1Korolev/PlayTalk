@@ -1,5 +1,5 @@
 import { UserList } from "@/features/UserList";
-import { UserListProps } from "@/features/UserList/ui/UserList";
+import { UserListProps } from "@/features/UserList";
 import { ReactComponent as ArrowIcon } from "@/shared/assets/icons/arrow-bottom.svg";
 import { cx } from "@/shared/lib/cx";
 import { AppSvg } from "@/shared/ui";
@@ -14,11 +14,13 @@ export const Sidebar = ({ className, ...otherProps }: SidebarProps) => {
   const onToggle = () => {
     setCollapsed(prev => !prev);
   };
+
   return (
     <aside
       className={cx(cls.Sidebar, { [cls.collapsed]: collapsed }, [className])}
     >
       <UserList className={cls.items} collapsed={collapsed} {...otherProps} />
+			
       <AppSvg
         fill
         backgroundColor="white"
