@@ -6,7 +6,7 @@ import { Server } from "socket.io";
 import { connectToGameLobby } from "./connection/connection.controller.js";
 import cors from "cors";
 import connectionRouter from "./connection/connection.routes.js";
-import path from "path";
+//import path from "path";
 
 dotenv.config();
 
@@ -17,8 +17,8 @@ async function main() {
   app.use(express.json());
   app.use("/api/connection", connectionRouter);
 
-  const __dirname = path.resolve();
-  app.use("/public", express.static(path.join(__dirname, "public")));
+  // const __dirname = path.resolve();
+  // app.use("/public", express.static(path.join(__dirname, "public")));
 }
 const server = http.createServer(app);
 
