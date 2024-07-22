@@ -6,40 +6,38 @@ import { Server } from "socket.io";
 import { connectToGameLobby } from "./connection/connection.controller.js";
 import cors from "cors";
 import connectionRouter from "./connection/connection.routes.js";
-//import path from "path";
 
 dotenv.config();
 
 const app = express();
 
-async function main() {
-  app.use(cors());
-  app.use(express.json());
-  app.use("/api/connection", connectionRouter);
-
-  // const __dirname = path.resolve();
-  // app.use("/public", express.static(path.join(__dirname, "public")));
-}
 const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {},
 });
 
-connectToGameLobby();
+async function main() {
+  app.use(cors());
+  app.use(express.json());
 
-const PORT = process.env.PORT || 3030;
+  app.use("/api/connection", connectionRouter);
 
-const mongoURL = process.env.DATABASE_URL;
+  const PORT = process.env.PORT || 3030;
 
-mongoose
-  .connect(mongoURL)
-  .then(() => console.log("Successfully connected to MongoDB"))
-  .catch(err => console.error("Connection error", err.message));
+  connectToGameLobby();
 
-server.listen(PORT, () => {
-  console.log(`game-gateway-service is running on port ${PORT}`);
-});
+  const mongoURL = process.env.DATABASE_URL;
+
+  mongoose
+    .connect(mongoURL)
+    .then(() => console.log("Successfully connected to MongoDB"))
+    .catch(err => console.error("Connection error", err.message));
+
+  server.listen(PORT, () => {
+    console.log(`game-gateway-service is running on port ${PORT}`);
+  });
+}
 
 main()
   .then(async () => {})
