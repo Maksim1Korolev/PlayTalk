@@ -2,7 +2,7 @@ import { hash, verify } from "argon2";
 import asyncHandler from "express-async-handler";
 
 import { generateToken } from "./generate.token.js";
-import UserService from "../services/UserService.js";
+import UserService from "../services/userService.js";
 
 // @desc   Auth user
 // @route  POST /api/users/login
