@@ -5,11 +5,11 @@
         public Player Player1 { get; }
         public Player Player2 { get; }
 
+        public Player CurrentPlayer { get; private set; }
         public bool HasEnded { get; private set; } = false;
         public Player? Winner { get; private set; } = null;
 
         private char[] _board = new char[9];
-        private Player _currentPlayer;
         private byte _turn = 0;
 
         public Game(Player player1, Player player2)
@@ -19,12 +19,12 @@
 
             Array.Fill(_board, '-');
 
-            _currentPlayer = GetFirstPlayer();
+            CurrentPlayer = GetFirstPlayer();
         }
 
         public bool MakeMove(Player interactingPlayer, byte interactedIndex)
         {
-            if (HasEnded || interactingPlayer != _currentPlayer || interactedIndex < 0 || interactedIndex >= _board.Length || _board[interactedIndex] != '-')
+            if (HasEnded || interactingPlayer != CurrentPlayer || interactedIndex < 0 || interactedIndex >= _board.Length || _board[interactedIndex] != '-')
             {
                 return false;
             }
@@ -80,7 +80,7 @@
 
         private void SwitchPlayer()
         {
-            _currentPlayer = _currentPlayer == Player1 ? Player2 : Player1;
+            CurrentPlayer = CurrentPlayer == Player1 ? Player2 : Player1;
         }
     }
 }
