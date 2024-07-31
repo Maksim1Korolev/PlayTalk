@@ -104,6 +104,22 @@ services:
           target: /usr/src/app
           action: sync
 
+  # Tic Tac Toe
+  tic_tac_toe:
+    build: ./server/game/modules/TicTacToe
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    networks:
+      - talkback-network
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./server/game/modules/TicTacToe
+          target: /usr/src/app
+          action: sync
+
   # Kafka
   kafka:
     image: wurstmeister/kafka
