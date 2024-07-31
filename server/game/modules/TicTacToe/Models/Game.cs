@@ -2,24 +2,24 @@
 {
     public class Game
     {
-        public Player Player1 { get; }
-        public Player Player2 { get; }
+        private Player _player1;
+        private Player _player2;
+        private char[] _board = new char[9];
+        private byte _turn = 0;
 
         public Player CurrentPlayer { get; private set; }
         public bool HasEnded { get; private set; } = false;
         public Player? Winner { get; private set; } = null;
 
-        private char[] _board = new char[9];
-        private byte _turn = 0;
-
         public Game(Player player1, Player player2)
         {
-            Player1 = player1;
-            Player2 = player2;
+            _player1 = player1;
+            _player2 = player2;
 
             Array.Fill(_board, '-');
 
             CurrentPlayer = GetFirstPlayer();
+            SetSigns();
         }
 
         public bool MakeMove(Player interactingPlayer, byte interactedIndex)
@@ -75,12 +75,33 @@
         private Player GetFirstPlayer()
         {
             Random random = new Random();
-            return random.Next(2) == 0 ? Player1 : Player2;
+            var firstPlayer = random.Next(2) == 0 ? _player1 : _player2;
+
+            return firstPlayer;
         }
 
+        private void SetSigns()
+        {
+            if (HasEnded)
+            {
+                _player1.Sign = null;
+                _player2.Sign = null;
+            }
+
+            if (CurrentPlayer == _player1)
+            {
+                _player1.Sign = 'X';
+                _player2.Sign = 'O';
+            }
+            else
+            {
+                _player1.Sign = 'O';
+                _player2.Sign = 'X';
+            }
+        }
         private void SwitchPlayer()
         {
-            CurrentPlayer = CurrentPlayer == Player1 ? Player2 : Player1;
+            CurrentPlayer = CurrentPlayer == _player1 ? _player2 : _player1;
         }
     }
 }

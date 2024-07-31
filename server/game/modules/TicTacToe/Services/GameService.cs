@@ -19,10 +19,40 @@ namespace TicTacToe.Services
             return game;
         }
 
-        public void StartGame(Player player1, Player player2)
+        public Player StartGame(Player player1, Player player2)
         {
+            if (player1 == null || player2 == null)
+            {
+                throw new ArgumentNullException("Player1 and Player2 cannot be null.");
+            }
+
             string gameKey = GenerateGameKey(player1.Username, player2.Username);
-            Game newGame = new Game(player1, player2);
+
+            if (_activeGames.ContainsKey(gameKey))
+            {
+                throw new ArgumentException("A game between these players already exists.");
+            }
+
+            var newGame = new Game(player1, player2);
             _activeGames[gameKey] = newGame;
+            return GetCurrentPlayer(player1, player2);
+        }
+
+        public Player GetCurrentPlayer(Player player1, Player player2)
+        {
+            if (player1 == null || player2 == null)
+            {
+                throw new ArgumentNullException("Player1 and Player2 cannot be null.");
+            }
+
+            var game = GetGame(player1.Username, player2.Username);
+
+            if (game == null)
+            {
+                throw new ArgumentException("No game exists between these players.");
+            }
+
+            return game.CurrentPlayer;
         }
     }
+}
