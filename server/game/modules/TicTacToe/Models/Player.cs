@@ -4,8 +4,8 @@
     {
         public string Username { get; }
 
-        private char? _sign;
-        public char? Sign
+        private char _sign;
+        public char Sign
         {
             get => _sign;
             set
