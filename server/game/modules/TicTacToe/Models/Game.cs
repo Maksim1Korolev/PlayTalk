@@ -19,7 +19,7 @@
 
             Array.Fill(_board, '-');
 
-            ChooseFirstPlayer();
+            _currentPlayer = GetFirstPlayer();
         }
 
         public bool MakeMove(Player interactingPlayer, byte interactedIndex)
@@ -72,10 +72,10 @@
             return false;
         }
 
-        private void ChooseFirstPlayer()
+        private Player GetFirstPlayer()
         {
             Random random = new Random();
-            _currentPlayer = random.Next(2) == 0 ? Player1 : Player2;
+            return random.Next(2) == 0 ? Player1 : Player2;
         }
 
         private void SwitchPlayer()
