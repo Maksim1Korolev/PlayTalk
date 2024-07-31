@@ -6,6 +6,7 @@ namespace TicTacToe.Models
     {
         [Required]
         public string Username { get; set; }
+        public char Sign { get; set; }
         public int Wins { get; set; }
     }
 }

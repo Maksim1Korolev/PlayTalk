@@ -1,6 +1,7 @@
 To add:
 Servers should fetch data straight from db if redis is offline
 Automatic login upon clicking "enter"
+Turns history on tic tac toe server
 
 To fix:
 ChatModal opens lower than the screen and scrollbar appears
