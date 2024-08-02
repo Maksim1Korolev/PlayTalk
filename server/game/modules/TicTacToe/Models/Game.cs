@@ -82,12 +82,6 @@
 
         private void SetSigns()
         {
-            if (HasEnded)
-            {
-                _player1.Sign = null;
-                _player2.Sign = null;
-            }
-
             if (CurrentPlayer == _player1)
             {
                 _player1.Sign = 'X';

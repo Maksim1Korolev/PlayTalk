@@ -54,5 +54,33 @@ namespace TicTacToe.Services
 
             return game.CurrentPlayer;
         }
+
+        public void MakeMove(Player player1, Player player2, Player interactingPlayer, byte interactingIndex)
+        {
+            var game = GetGame(player1.Username, player2.Username);
+
+            if (game == null)
+            {
+                throw new ArgumentException("No game exists between these players.");
+            }
+
+            if (game.MakeMove(interactingPlayer, interactingIndex))
+            {
+                if (game.HasEnded)
+                {
+                    if (game.Winner != null)
+                    {
+
+                    }
+                }
+
+                return;
+            }
+            else
+            {
+                throw new ArgumentException("Impossible to make that move.");
+            }
+
+        }
     }
 }
