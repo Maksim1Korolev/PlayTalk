@@ -1,4 +1,5 @@
-﻿using TicTacToe.Models;
+﻿using TicTacToe.Enums;
+using TicTacToe.Models;
 
 namespace TicTacToe.Services
 {
@@ -55,7 +56,7 @@ namespace TicTacToe.Services
             return game.CurrentPlayer;
         }
 
-        public void MakeMove(Player player1, Player player2, Player interactingPlayer, byte interactingIndex)
+        public MoveResult MakeMove(Player player1, Player player2, Player interactingPlayer, byte interactingIndex)
         {
             var game = GetGame(player1.Username, player2.Username);
 
@@ -64,23 +65,32 @@ namespace TicTacToe.Services
                 throw new ArgumentException("No game exists between these players.");
             }
 
-            if (game.MakeMove(interactingPlayer, interactingIndex))
+            var moveResult = game.MakeMove(interactingPlayer, interactingIndex);
+
+            switch (moveResult)
             {
-                if (game.HasEnded)
-                {
-                    if (game.Winner != null)
-                    {
+                case MoveResult.InvalidMove:
+                    throw new ArgumentException("Impossible to make that move.");
 
-                    }
-                }
+                case MoveResult.Win:
+                    HandleGameEnd(game, $"Player {game.Winner.Username} wins!");
 
-                return;
+                    break;
+
+                case MoveResult.Draw:
+                    HandleGameEnd(game, "The game is a draw!");
+
+                    break;
             }
-            else
-            {
-                throw new ArgumentException("Impossible to make that move.");
-            }
 
+            return moveResult;
+        }
+
+        private void HandleGameEnd(Game game, string message)
+        {
+            Console.WriteLine(message);
+            // string gameKey = GenerateGameKey(game.CurrentPlayer.Username, game.Winner.Username);
+            // _activeGames.Remove(gameKey);
         }
     }
 }

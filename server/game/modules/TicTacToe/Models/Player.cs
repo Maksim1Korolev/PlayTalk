@@ -1,16 +1,18 @@
-﻿namespace TicTacToe.Models
+﻿using TicTacToe.Enums;
+
+namespace TicTacToe.Models
 {
     public class Player
     {
         public string Username { get; }
 
-        private char _sign;
-        public char Sign
+        private PlayerSign _sign;
+        public PlayerSign Sign
         {
             get => _sign;
             set
             {
-                if (value != 'X' && value != 'O')
+                if (!Enum.IsDefined(typeof(PlayerSign), value))
                 {
                     throw new ArgumentException("Sign must be either 'X' or 'O'.");
                 }
@@ -32,9 +34,10 @@
             }
         }
 
-        public Player(string username)
+        public Player(string username, PlayerSign sign)
         {
             Username = username ?? throw new ArgumentNullException(nameof(username));
+            Sign = sign;
             Wins = 0;
         }
     }
