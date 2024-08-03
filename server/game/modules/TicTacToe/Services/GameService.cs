@@ -13,20 +13,20 @@ namespace TicTacToe.Services
             return string.Join("_", sortedUsernames);
         }
 
-        private Game? GetGame(string username1, string username2)
+        private Game GetGame(string username1, string username2)
         {
             string gameKey = GenerateGameKey(username1, username2);
-            _activeGames.TryGetValue(gameKey, out var game);
+
+            if (!_activeGames.TryGetValue(gameKey, out var game))
+            {
+                throw new ArgumentException("No game exists between these players.");
+            }
+
             return game;
         }
 
         public Player StartGame(Player player1, Player player2)
         {
-            if (player1 == null || player2 == null)
-            {
-                throw new ArgumentNullException("Player1 and Player2 cannot be null.");
-            }
-
             string gameKey = GenerateGameKey(player1.Username, player2.Username);
 
             if (_activeGames.ContainsKey(gameKey))
@@ -36,35 +36,18 @@ namespace TicTacToe.Services
 
             var newGame = new Game(player1, player2);
             _activeGames[gameKey] = newGame;
-            return GetCurrentPlayer(player1, player2);
+            return newGame.CurrentPlayer;
         }
 
         public Player GetCurrentPlayer(Player player1, Player player2)
         {
-            if (player1 == null || player2 == null)
-            {
-                throw new ArgumentNullException("Player1 and Player2 cannot be null.");
-            }
-
             var game = GetGame(player1.Username, player2.Username);
-
-            if (game == null)
-            {
-                throw new ArgumentException("No game exists between these players.");
-            }
-
             return game.CurrentPlayer;
         }
 
         public MoveResult MakeMove(Player player1, Player player2, Player interactingPlayer, byte interactingIndex)
         {
             var game = GetGame(player1.Username, player2.Username);
-
-            if (game == null)
-            {
-                throw new ArgumentException("No game exists between these players.");
-            }
-
             var moveResult = game.MakeMove(interactingPlayer, interactingIndex);
 
             if (game.HasEnded)
@@ -78,12 +61,6 @@ namespace TicTacToe.Services
         public void Surrender(Player player1, Player player2, string surrenderedPlayerUsername)
         {
             var game = GetGame(player1.Username, player2.Username);
-
-            if (game == null)
-            {
-                throw new ArgumentException("No game exists between these players.");
-            }
-
             game.Finish(surrenderedPlayerUsername);
             RemoveGame(game);
         }
