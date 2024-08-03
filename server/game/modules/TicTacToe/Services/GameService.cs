@@ -67,30 +67,31 @@ namespace TicTacToe.Services
 
             var moveResult = game.MakeMove(interactingPlayer, interactingIndex);
 
-            switch (moveResult)
+            if (game.HasEnded)
             {
-                case MoveResult.InvalidMove:
-                    throw new ArgumentException("Impossible to make that move.");
-
-                case MoveResult.Win:
-                    EndGame(game, $"Player {game.Winner.Username} wins!");
-
-                    break;
-
-                case MoveResult.Draw:
-                    EndGame(game, "The game is a draw!");
-
-                    break;
+                RemoveGame(game);
             }
 
             return moveResult;
         }
 
-        private void EndGame(Game game, string message)
+        public void Surrender(Player player1, Player player2, string surrenderedPlayerUsername)
         {
-            Console.WriteLine(message);
+            var game = GetGame(player1.Username, player2.Username);
+
+            if (game == null)
+            {
+                throw new ArgumentException("No game exists between these players.");
+            }
+
+            game.Finish(surrenderedPlayerUsername);
+            RemoveGame(game);
+        }
+
+        private void RemoveGame(Game game)
+        {
             string gameKey = GenerateGameKey(game.Player1.Username, game.Player2.Username);
-            // _activeGames.Remove(gameKey);
+            _activeGames.Remove(gameKey);
         }
     }
 }

@@ -37,13 +37,13 @@ namespace TicTacToe.Models
 
             if (Turn >= 5 && CheckWinner(interactingPlayer))
             {
-                EndGame();
+                Finish();
                 return MoveResult.Win;
             }
 
             if (Turn == 9)
             {
-                EndGame();
+                Finish();
                 return MoveResult.Draw;
             }
 
@@ -51,7 +51,7 @@ namespace TicTacToe.Models
             return MoveResult.Success;
         }
 
-        public void EndGame(string surrenderedPlayerUsername = "")
+        public void Finish(string surrenderedPlayerUsername = "")
         {
             HasEnded = true;
 
