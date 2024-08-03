@@ -9,6 +9,7 @@ Getting error in communication service when requesting unread messages with coun
 Empty data doesn't count as redis cache
 Caching usernames problem with unique key
 
+
 To add (In the end):
 Auth on all servers, updated auth for some data
 Add environment (development/production)

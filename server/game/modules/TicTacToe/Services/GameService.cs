@@ -73,12 +73,12 @@ namespace TicTacToe.Services
                     throw new ArgumentException("Impossible to make that move.");
 
                 case MoveResult.Win:
-                    HandleGameEnd(game, $"Player {game.Winner.Username} wins!");
+                    EndGame(game, $"Player {game.Winner.Username} wins!");
 
                     break;
 
                 case MoveResult.Draw:
-                    HandleGameEnd(game, "The game is a draw!");
+                    EndGame(game, "The game is a draw!");
 
                     break;
             }
@@ -86,7 +86,7 @@ namespace TicTacToe.Services
             return moveResult;
         }
 
-        private void HandleGameEnd(Game game, string message)
+        private void EndGame(Game game, string message)
         {
             Console.WriteLine(message);
             // string gameKey = GenerateGameKey(game.CurrentPlayer.Username, game.Winner.Username);

@@ -4,24 +4,22 @@ namespace TicTacToe.Models
 {
     public class Game
     {
-        private Player _player1;
-        private Player _player2;
-        private PlayerSign[] _board = new PlayerSign[9];
-        private byte _turn = 0;
+        private char[] _board = new char[9];
 
+        public Player Player1 { get; private set; }
+        public Player Player2 { get; private set; }
         public Player CurrentPlayer { get; private set; }
+
+        public byte Turn { get; private set; } = 0;
         public bool HasEnded { get; private set; } = false;
         public Player? Winner { get; private set; } = null;
 
         public Game(Player player1, Player player2)
         {
-            _player1 = player1 ?? throw new ArgumentNullException(nameof(player1));
-            _player2 = player2 ?? throw new ArgumentNullException(nameof(player2));
+            Player1 = player1 ?? throw new ArgumentNullException(nameof(player1));
+            Player2 = player2 ?? throw new ArgumentNullException(nameof(player2));
 
-            for (int i = 0; i < _board.Length; i++)
-            {
-                _board[i] = (PlayerSign)'-'; // Use '-' to represent an empty position
-            }
+            Array.Fill(_board, '-');
 
             CurrentPlayer = GetFirstPlayer();
             SetSigns();
@@ -29,15 +27,15 @@ namespace TicTacToe.Models
 
         public MoveResult MakeMove(Player interactingPlayer, byte interactedIndex)
         {
-            if (HasEnded || interactingPlayer != CurrentPlayer || interactedIndex < 0 || interactedIndex >= _board.Length || _board[interactedIndex] != (PlayerSign)'-')
+            if (HasEnded || interactingPlayer != CurrentPlayer || interactedIndex < 0 || interactedIndex >= _board.Length || _board[interactedIndex] != '-')
             {
                 return MoveResult.InvalidMove;
             }
 
-            _board[interactedIndex] = interactingPlayer.Sign;
-            _turn++;
+            _board[interactedIndex] = interactingPlayer.Sign.ToChar();
+            Turn++;
 
-            if (_turn >= 5 && CheckWinner(interactingPlayer))
+            if (Turn >= 5 && CheckWinner(interactingPlayer))
             {
                 HasEnded = true;
                 interactingPlayer.Wins++;
@@ -45,7 +43,7 @@ namespace TicTacToe.Models
                 return MoveResult.Win;
             }
 
-            if (_turn == 9)
+            if (Turn == 9)
             {
                 HasEnded = true;
                 return MoveResult.Draw;
@@ -57,7 +55,7 @@ namespace TicTacToe.Models
 
         private bool CheckWinner(Player player)
         {
-            PlayerSign sign = player.Sign;
+            char sign = player.Sign.ToChar();
             byte[,] winningCombinations = new byte[,]
             {
                 { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 },
@@ -80,26 +78,26 @@ namespace TicTacToe.Models
         private Player GetFirstPlayer()
         {
             Random random = new Random();
-            return random.Next(2) == 0 ? _player1 : _player2;
+            return random.Next(2) == 0 ? Player1 : Player2;
         }
 
         private void SetSigns()
         {
-            if (CurrentPlayer == _player1)
+            if (CurrentPlayer == Player1)
             {
-                _player1.Sign = PlayerSign.X;
-                _player2.Sign = PlayerSign.O;
+                Player1.Sign = PlayerSign.X;
+                Player2.Sign = PlayerSign.O;
             }
             else
             {
-                _player1.Sign = PlayerSign.O;
-                _player2.Sign = PlayerSign.X;
+                Player1.Sign = PlayerSign.O;
+                Player2.Sign = PlayerSign.X;
             }
         }
 
         private void SwitchPlayer()
         {
-            CurrentPlayer = CurrentPlayer == _player1 ? _player2 : _player1;
+            CurrentPlayer = CurrentPlayer == Player1 ? Player2 : Player1;
         }
     }
 }
