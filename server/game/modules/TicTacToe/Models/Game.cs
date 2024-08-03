@@ -37,15 +37,13 @@ namespace TicTacToe.Models
 
             if (Turn >= 5 && CheckWinner(interactingPlayer))
             {
-                HasEnded = true;
-                interactingPlayer.Wins++;
-                Winner = interactingPlayer;
+                EndGame();
                 return MoveResult.Win;
             }
 
             if (Turn == 9)
             {
-                HasEnded = true;
+                EndGame();
                 return MoveResult.Draw;
             }
 
@@ -53,6 +51,30 @@ namespace TicTacToe.Models
             return MoveResult.Success;
         }
 
+        public void EndGame(string surrenderedPlayerUsername = "")
+        {
+            HasEnded = true;
+
+            if (surrenderedPlayerUsername != "")
+            {
+                if (surrenderedPlayerUsername == Player1.Username)
+                {
+                    Player2.Wins++;
+                    return;
+                }
+
+                Player1.Wins++;
+                return;
+            }
+
+            if (Winner == null)
+            {
+                return;
+            }
+
+            Winner = CurrentPlayer;
+            CurrentPlayer.Wins++;
+        }
         private bool CheckWinner(Player player)
         {
             char sign = player.Sign.ToChar();

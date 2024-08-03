@@ -89,7 +89,7 @@ namespace TicTacToe.Services
         private void EndGame(Game game, string message)
         {
             Console.WriteLine(message);
-            // string gameKey = GenerateGameKey(game.CurrentPlayer.Username, game.Winner.Username);
+            string gameKey = GenerateGameKey(game.Player1.Username, game.Player2.Username);
             // _activeGames.Remove(gameKey);
         }
     }
