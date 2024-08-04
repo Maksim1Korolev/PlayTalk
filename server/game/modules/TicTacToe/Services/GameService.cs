@@ -3,7 +3,7 @@ using TicTacToe.Models;
 
 namespace TicTacToe.Services
 {
-    public class GameService
+    public class GameService : IGameService
     {
         private Dictionary<string, Game> _activeGames = new Dictionary<string, Game>();
 
@@ -13,7 +13,7 @@ namespace TicTacToe.Services
             return string.Join("_", sortedUsernames);
         }
 
-        private Game GetGame(string username1, string username2)
+        public Game GetGame(string username1, string username2)
         {
             string gameKey = GenerateGameKey(username1, username2);
 
@@ -37,12 +37,6 @@ namespace TicTacToe.Services
             var newGame = new Game(player1, player2);
             _activeGames[gameKey] = newGame;
             return newGame.CurrentPlayer;
-        }
-
-        public Player GetCurrentPlayer(Player player1, Player player2)
-        {
-            var game = GetGame(player1.Username, player2.Username);
-            return game.CurrentPlayer;
         }
 
         public MoveResult MakeMove(Player player1, Player player2, Player interactingPlayer, byte interactingIndex)
