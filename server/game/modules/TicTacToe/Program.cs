@@ -1,4 +1,6 @@
 
+using TicTacToe.Services;
+
 namespace TicTacToe
 {
     public class Program
@@ -9,6 +11,7 @@ namespace TicTacToe
 
             builder.Services.AddControllers();
             builder.Services.AddCors();
+            builder.Services.AddSingleton<IGameService, GameService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
