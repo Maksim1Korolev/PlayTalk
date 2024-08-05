@@ -19,11 +19,12 @@ export const ChatCircle = memo(
     unreadMessagesCount?: number;
     onClick: () => void;
   }) => {
+    //TODO: onClick open modal
     const avatarSrc = `${
       import.meta.env.VITE_AUTH_SERVICE_STATIC_URL
     }/avatars/${avatarFileName}`;
     return (
-      <div onClick={onClick} className={cx(cls.ChatCircle, {}, [className])}>
+      <div className={cx(cls.ChatCircle, {}, [className])}>
         <div className={cls.chatOverlay}>
           <AvatarWithProps
             clickable

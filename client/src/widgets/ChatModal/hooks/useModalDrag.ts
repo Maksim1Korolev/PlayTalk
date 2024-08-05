@@ -12,7 +12,9 @@ export const useModalDrag = (initialPosition: Position = { x: 0, y: 0 }) => {
 
   const handleDragStart = useCallback(
     (event: DraggableEvent, data: DraggableData) => {
-      setStartPos({ x: data.x, y: data.y });
+      console.log("handleDragStart");
+
+      setStartPos({ x: data.lastX, y: data.lastY });
       setIsDragged(false);
     },
     []
@@ -21,8 +23,10 @@ export const useModalDrag = (initialPosition: Position = { x: 0, y: 0 }) => {
   const handleDragStop = useCallback(
     (event: DraggableEvent, data: DraggableData) => {
       const distance = Math.sqrt(
-        Math.pow(data.x - startPos.x, 2) + Math.pow(data.y - startPos.y, 2)
+        Math.pow(data.lastX - startPos.x, 2) +
+          Math.pow(data.lastY - startPos.y, 2)
       );
+      console.log("distance > 20" + distance);
       if (distance > 10) {
         setIsDragged(true);
       }
