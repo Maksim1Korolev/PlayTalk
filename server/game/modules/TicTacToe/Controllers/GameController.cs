@@ -38,7 +38,7 @@ namespace TicTacToe.Controllers
                 var players = _playerService.GetPlayers(player1Username, player2Username);
                 var currentPlayer = _gameService.StartGame(players[0], players[1]);
 
-                return Ok(new { CurrentPlayer = currentPlayer });
+                return Ok(new { CurrentPlayer = currentPlayer.Username });
             }
             catch (Exception ex)
             {
@@ -52,7 +52,7 @@ namespace TicTacToe.Controllers
             try
             {
                 var moveResult = _gameService.MakeMove(player1Username, player2Username, interactingPlayerUsername, interactingIndex);
-                return Ok(new { MoveResult = moveResult });
+                return Ok(new { MoveResult = moveResult.ToString() });
             }
             catch (ArgumentException ex)
             {
