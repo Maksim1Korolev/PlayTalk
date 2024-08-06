@@ -34,10 +34,9 @@ namespace TicTacToe.Models
             }
         }
 
-        public Player(string username, PlayerSign sign)
+        public Player(string username)
         {
             Username = username ?? throw new ArgumentNullException(nameof(username));
-            Sign = sign;
             Wins = 0;
         }
     }

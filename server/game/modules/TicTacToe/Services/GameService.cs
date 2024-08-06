@@ -39,10 +39,10 @@ namespace TicTacToe.Services
             return newGame.CurrentPlayer;
         }
 
-        public MoveResult MakeMove(Player player1, Player player2, Player interactingPlayer, byte interactingIndex)
+        public MoveResult MakeMove(string player1Username, string player2Username, string interactingPlayerUsername, byte interactingIndex)
         {
-            var game = GetGame(player1.Username, player2.Username);
-            var moveResult = game.MakeMove(interactingPlayer, interactingIndex);
+            var game = GetGame(player1Username, player2Username);
+            var moveResult = game.MakeMove(interactingPlayerUsername, interactingIndex);
 
             if (game.HasEnded)
             {

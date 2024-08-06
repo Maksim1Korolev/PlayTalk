@@ -9,10 +9,12 @@ namespace TicTacToe.Controllers
     public class GameController : ControllerBase
     {
         private readonly IGameService _gameService;
+        private readonly IPlayerService _playerService;
 
-        public GameController(IGameService gameService)
+        public GameController(IGameService gameService, IPlayerService playerService)
         {
             _gameService = gameService;
+            _playerService = playerService;
         }
 
         [HttpGet("game")]
@@ -30,11 +32,13 @@ namespace TicTacToe.Controllers
         }
 
         [HttpPost("start")]
-        public IActionResult StartGame(Player player1, Player player2)
+        public IActionResult StartGame(string player1Username, string player2Username)
         {
             try
             {
-                var currentPlayer = _gameService.StartGame(player1, player2);
+                var players = _playerService.GetPlayers(player1Username, player2Username);
+                var currentPlayer = _gameService.StartGame(players[0], players[1]);
+
                 return Ok(new { CurrentPlayer = currentPlayer });
             }
             catch (Exception ex)
@@ -44,11 +48,11 @@ namespace TicTacToe.Controllers
         }
 
         [HttpPost("move")]
-        public IActionResult MakeMove(Player player1, Player player2, Player interactingPlayer, byte interactingIndex)
+        public IActionResult MakeMove(string player1Username, string player2Username, string interactingPlayerUsername, byte interactingIndex)
         {
             try
             {
-                var moveResult = _gameService.MakeMove(player1, player2, interactingPlayer, interactingIndex);
+                var moveResult = _gameService.MakeMove(player1Username, player2Username, interactingPlayerUsername, interactingIndex);
                 return Ok(new { MoveResult = moveResult });
             }
             catch (ArgumentException ex)
