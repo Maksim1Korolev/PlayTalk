@@ -52,9 +52,9 @@ namespace TicTacToe.Services
             return moveResult;
         }
 
-        public void Surrender(Player player1, Player player2, string surrenderedPlayerUsername)
+        public void Surrender(string player1Username, string player2Username, string surrenderedPlayerUsername)
         {
-            var game = GetGame(player1.Username, player2.Username);
+            var game = GetGame(player1Username, player2Username);
             game.Finish(surrenderedPlayerUsername);
             RemoveGame(game);
         }

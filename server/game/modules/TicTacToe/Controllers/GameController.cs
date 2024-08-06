@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TicTacToe.Models;
 using TicTacToe.Services;
 
 namespace TicTacToe.Controllers
@@ -62,11 +61,11 @@ namespace TicTacToe.Controllers
         }
 
         [HttpPost("surrender")]
-        public IActionResult Surrender(Player player1, Player player2, string surrenderedPlayerUsername)
+        public IActionResult Surrender(string player1Username, string player2Username, string surrenderedPlayerUsername)
         {
             try
             {
-                _gameService.Surrender(player1, player2, surrenderedPlayerUsername);
+                _gameService.Surrender(player1Username, player2Username, surrenderedPlayerUsername);
                 return Ok("Game ended by surrender.");
             }
             catch (ArgumentException ex)
