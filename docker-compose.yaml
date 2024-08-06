@@ -106,7 +106,7 @@ services:
 
   # Tic Tac Toe
   tic_tac_toe:
-    build: ./server/game/modules/TicTacToe
+    build: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
     ports:
       - "8080:8080"
       - "8081:8081"
@@ -116,7 +116,7 @@ services:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./server/game/modules/TicTacToe
+        - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
           target: /usr/src/app
           action: sync
 
