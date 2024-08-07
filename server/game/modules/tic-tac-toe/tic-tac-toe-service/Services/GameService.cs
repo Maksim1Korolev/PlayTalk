@@ -1,4 +1,6 @@
 ﻿using StackExchange.Redis;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using TicTacToe.Enums;
 using TicTacToe.Models;
@@ -8,6 +10,7 @@ namespace TicTacToe.Services
     public class GameService : IGameService
     {
         private readonly IDatabase _redisDb;
+        private const string RedisGameHashKey = "ticTacToeUsernamesGame";
 
         public GameService(IConnectionMultiplexer redis)
         {
@@ -17,13 +20,24 @@ namespace TicTacToe.Services
         private string GenerateGameKey(string username1, string username2)
         {
             var sortedUsernames = new[] { username1, username2 }.OrderBy(u => u).ToArray();
-            return string.Join("_", sortedUsernames);
+            string combinedUsernames = string.Join("_", sortedUsernames);
+
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(combinedUsernames));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
+            }
         }
 
         public Game GetGame(string username1, string username2)
         {
             string gameKey = GenerateGameKey(username1, username2);
-            var gameData = _redisDb.StringGet(gameKey);
+            var gameData = _redisDb.HashGet(RedisGameHashKey, gameKey);
 
             if (gameData.IsNullOrEmpty)
             {
@@ -42,13 +56,13 @@ namespace TicTacToe.Services
 
             string gameKey = GenerateGameKey(player1.Username, player2.Username);
 
-            if (_redisDb.KeyExists(gameKey))
+            if (_redisDb.HashExists(RedisGameHashKey, gameKey))
             {
                 throw new ArgumentException("A game between these players already exists.");
             }
 
             var newGame = new Game(player1, player2);
-            _redisDb.StringSet(gameKey, SerializeGame(newGame));
+            _redisDb.HashSet(RedisGameHashKey, gameKey, SerializeGame(newGame));
             return newGame.CurrentPlayer;
         }
 
@@ -64,7 +78,7 @@ namespace TicTacToe.Services
             else
             {
                 string gameKey = GenerateGameKey(player1Username, player2Username);
-                _redisDb.StringSet(gameKey, SerializeGame(game));
+                _redisDb.HashSet(RedisGameHashKey, gameKey, SerializeGame(game));
             }
 
             return moveResult;
@@ -80,7 +94,7 @@ namespace TicTacToe.Services
         private void RemoveGame(Game game)
         {
             string gameKey = GenerateGameKey(game.Player1.Username, game.Player2.Username);
-            _redisDb.KeyDelete(gameKey);
+            _redisDb.HashDelete(RedisGameHashKey, gameKey);
         }
 
         private string SerializeGame(Game game)

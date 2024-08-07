@@ -12,12 +12,14 @@ namespace TicTacToe
             builder.Services.AddControllers();
             builder.Services.AddCors();
 
-            builder.Services.AddSingleton<IGameService, GameService>();
-            builder.Services.AddSingleton<IPlayerService, PlayerService>();
-
             var redisConnectionString = builder.Configuration.GetConnectionString("Redis") ?? "redis:6379";
             var redis = ConnectionMultiplexer.Connect(redisConnectionString);
             builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+
+            ClearGameCache(redis);
+
+            builder.Services.AddSingleton<IGameService, GameService>();
+            builder.Services.AddSingleton<IPlayerService, PlayerService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -45,6 +47,23 @@ namespace TicTacToe
             app.MapControllers();
 
             app.Run();
+        }
+
+        private static void ClearGameCache(IConnectionMultiplexer redis)
+        {
+            try
+            {
+                var db = redis.GetDatabase();
+                string gameHashKey = "ticTacToeUsernamesGame";
+
+                db.KeyDelete(gameHashKey);
+
+                Console.WriteLine("Cleared game cache in Redis");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error clearing game cache in Redis: {ex.Message}");
+            }
         }
     }
 }
