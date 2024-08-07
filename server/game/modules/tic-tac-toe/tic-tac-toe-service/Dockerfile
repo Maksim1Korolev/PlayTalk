@@ -23,9 +23,3 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "TicTacToe.dll"]
-
-## Development stage for dotnet watch
-#FROM base AS dev
-#WORKDIR /app
-#COPY --from=build /src .
-#ENTRYPOINT ["dotnet", "watch", "run"]

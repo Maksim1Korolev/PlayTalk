@@ -1,11 +1,18 @@
-﻿using TicTacToe.Enums;
+﻿using StackExchange.Redis;
+using System.Text.Json;
+using TicTacToe.Enums;
 using TicTacToe.Models;
 
 namespace TicTacToe.Services
 {
     public class GameService : IGameService
     {
-        private Dictionary<string, Game> _activeGames = new Dictionary<string, Game>();
+        private readonly IDatabase _redisDb;
+
+        public GameService(IConnectionMultiplexer redis)
+        {
+            _redisDb = redis.GetDatabase();
+        }
 
         private string GenerateGameKey(string username1, string username2)
         {
@@ -16,26 +23,32 @@ namespace TicTacToe.Services
         public Game GetGame(string username1, string username2)
         {
             string gameKey = GenerateGameKey(username1, username2);
+            var gameData = _redisDb.StringGet(gameKey);
 
-            if (!_activeGames.TryGetValue(gameKey, out var game))
+            if (gameData.IsNullOrEmpty)
             {
                 throw new ArgumentException("No game exists between these players.");
             }
 
-            return game;
+            return DeserializeGame(gameData);
         }
 
         public Player StartGame(Player player1, Player player2)
         {
+            if (player1 == null || player2 == null)
+            {
+                throw new ArgumentNullException("Player1 and Player2 cannot be null.");
+            }
+
             string gameKey = GenerateGameKey(player1.Username, player2.Username);
 
-            if (_activeGames.ContainsKey(gameKey))
+            if (_redisDb.KeyExists(gameKey))
             {
                 throw new ArgumentException("A game between these players already exists.");
             }
 
             var newGame = new Game(player1, player2);
-            _activeGames[gameKey] = newGame;
+            _redisDb.StringSet(gameKey, SerializeGame(newGame));
             return newGame.CurrentPlayer;
         }
 
@@ -47,6 +60,11 @@ namespace TicTacToe.Services
             if (game.HasEnded)
             {
                 RemoveGame(game);
+            }
+            else
+            {
+                string gameKey = GenerateGameKey(player1Username, player2Username);
+                _redisDb.StringSet(gameKey, SerializeGame(game));
             }
 
             return moveResult;
@@ -62,7 +80,24 @@ namespace TicTacToe.Services
         private void RemoveGame(Game game)
         {
             string gameKey = GenerateGameKey(game.Player1.Username, game.Player2.Username);
-            _activeGames.Remove(gameKey);
+            _redisDb.KeyDelete(gameKey);
+        }
+
+        private string SerializeGame(Game game)
+        {
+            return JsonSerializer.Serialize(game);
+        }
+
+        private Game DeserializeGame(string gameData)
+        {
+            var deserializedData = JsonSerializer.Deserialize<Game>(gameData);
+
+            if (deserializedData == null)
+            {
+                throw new ArgumentNullException(nameof(deserializedData), "Data cannot be null.");
+            }
+
+            return deserializedData;
         }
     }
 }

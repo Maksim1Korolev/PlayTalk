@@ -17,11 +17,11 @@ namespace TicTacToe.Controllers
         }
 
         [HttpGet("game")]
-        public IActionResult GetGame(string username1, string username2)
+        public IActionResult GetGame(string player1Username, string player2Username)
         {
             try
             {
-                var game = _gameService.GetGame(username1, username2);
+                var game = _gameService.GetGame(player1Username, player2Username);
                 return Ok(game);
             }
             catch (ArgumentException ex)

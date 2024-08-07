@@ -1,4 +1,4 @@
-
+using StackExchange.Redis;
 using TicTacToe.Services;
 
 namespace TicTacToe
@@ -11,8 +11,13 @@ namespace TicTacToe
 
             builder.Services.AddControllers();
             builder.Services.AddCors();
+
             builder.Services.AddSingleton<IGameService, GameService>();
             builder.Services.AddSingleton<IPlayerService, PlayerService>();
+
+            var redisConnectionString = builder.Configuration.GetConnectionString("Redis") ?? "redis:6379";
+            var redis = ConnectionMultiplexer.Connect(redisConnectionString);
+            builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
