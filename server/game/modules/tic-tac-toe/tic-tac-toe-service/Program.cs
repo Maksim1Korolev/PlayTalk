@@ -16,7 +16,8 @@ namespace TicTacToe
             var redis = ConnectionMultiplexer.Connect(redisConnectionString);
             builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 
-            ClearGameCache(redis);
+            var activeGamesHashKey = builder.Configuration["Redis:ActiveGamesHashKey"] ?? "ticTacToeUsernamesGame";
+            ClearActiveGames(redis, activeGamesHashKey);
 
             builder.Services.AddSingleton<IGameService, GameService>();
             builder.Services.AddSingleton<IPlayerService, PlayerService>();
@@ -49,14 +50,13 @@ namespace TicTacToe
             app.Run();
         }
 
-        private static void ClearGameCache(IConnectionMultiplexer redis)
+        private static void ClearActiveGames(IConnectionMultiplexer redis, string activeGamesHashKey)
         {
             try
             {
                 var db = redis.GetDatabase();
-                string gameHashKey = "ticTacToeUsernamesGame";
 
-                db.KeyDelete(gameHashKey);
+                db.KeyDelete(activeGamesHashKey);
 
                 Console.WriteLine("Cleared game cache in Redis");
             }
