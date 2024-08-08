@@ -1,5 +1,6 @@
 using StackExchange.Redis;
 using TicTacToe.Services;
+using TicTacToe.Utils;
 
 namespace TicTacToe
 {
@@ -12,12 +13,11 @@ namespace TicTacToe
             builder.Services.AddControllers();
             builder.Services.AddCors();
 
-            var redisConnectionString = builder.Configuration.GetConnectionString("Redis") ?? "redis:6379";
-            var redis = ConnectionMultiplexer.Connect(redisConnectionString);
-            builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
-
+            //Redis connection
+            RedisUtils.Initialize(builder.Configuration);
+            builder.Services.AddSingleton<IConnectionMultiplexer>(provider => RedisUtils.GetDatabase().Multiplexer);
             var activeGamesHashKey = builder.Configuration["Redis:ActiveGamesHashKey"] ?? "ticTacToeUsernamesGame";
-            ClearActiveGames(redis, activeGamesHashKey);
+            RedisUtils.ClearHash(activeGamesHashKey);
 
             builder.Services.AddSingleton<IGameService, GameService>();
             builder.Services.AddSingleton<IPlayerService, PlayerService>();
@@ -48,22 +48,6 @@ namespace TicTacToe
             app.MapControllers();
 
             app.Run();
-        }
-
-        private static void ClearActiveGames(IConnectionMultiplexer redis, string activeGamesHashKey)
-        {
-            try
-            {
-                var db = redis.GetDatabase();
-
-                db.KeyDelete(activeGamesHashKey);
-
-                Console.WriteLine("Cleared game cache in Redis");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error clearing game cache in Redis: {ex.Message}");
-            }
         }
     }
 }
