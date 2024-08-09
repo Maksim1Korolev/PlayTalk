@@ -1,4 +1,4 @@
-import Player from "../models/Player.js";
+import Player from "../../models/Player.js";
 
 class PlayerService {
   async addPlayer(player) {

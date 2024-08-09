@@ -1,11 +1,14 @@
-import mongoose from "mongoose";
+import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import http from "http";
+import mongoose from "mongoose";
 import { Server } from "socket.io";
-import { connectToGameLobby } from "./connection/connection.controller.js";
-import cors from "cors";
+
+import redisClient from "./utils/redisClient.js";
+
 import connectionRouter from "./connection/connection.routes.js";
+import { connectToGameLobby } from "./connection/connection.controller.js";
 
 dotenv.config();
 
@@ -25,6 +28,9 @@ async function main() {
 
   const PORT = process.env.PORT || 3030;
 
+  await redisClient.connect();
+  await clearSocketCache();
+
   connectToGameLobby();
 
   const mongoURL = process.env.DATABASE_URL;
@@ -41,8 +47,18 @@ async function main() {
 
 main()
   .then(async () => {})
-  .catch(async e => {
-    console.error(e);
+  .catch(async err => {
+    redisClient.quit();
+    console.error(err);
     await mongoose.disconnect();
     process.exit(1);
   });
+
+async function clearSocketCache() {
+  try {
+    await redisClient.del(process.env.REDIS_USER_SOCKET_HASH_KEY);
+    console.log("Cleared socket ID cache in Redis");
+  } catch (err) {
+    console.error("Error clearing socket ID cache in Redis:", err.message);
+  }
+}
