@@ -1,7 +1,7 @@
 import { io } from "../index.js";
 import redisClient from "../utils/redisClient.js";
 
-class onlineSocketService {
+class SocketService {
   static async setupSocketConnection() {
     io.on("connection", async socket => {
       console.log("Player connected with socket ID:", socket.id);
@@ -17,7 +17,7 @@ class onlineSocketService {
           await this.getAllOnlineUsernames()
         );
         const onlineUsernames = await this.getAllOnlineUsernames();
-        socket.emit("online-users", onlineUsernames);
+        socket.emit("online-players", onlineUsernames);
         socket.broadcast.emit("player-connection", savedUsername, true);
       });
 
@@ -75,3 +75,5 @@ class onlineSocketService {
     return await redisClient.hKeys(process.env.REDIS_USER_SOCKET_HASH_KEY);
   }
 }
+
+export default SocketService;

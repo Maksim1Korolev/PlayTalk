@@ -1,5 +1,5 @@
 import { io } from "../index.js";
-import PlayerService from "../services/playerService.js";
+import PlayerService from "../services/ticTacToe/playerService.js";
 
 const playerSockets = new Map();
 
