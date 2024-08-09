@@ -48,7 +48,6 @@ main().catch(async err => {
   process.exit(1);
 });
 
-//TODO:Do this only in dev mode?
 async function clearSocketCache() {
   try {
     await redisClient.del(process.env.REDIS_USER_SOCKET_HASH_KEY);
