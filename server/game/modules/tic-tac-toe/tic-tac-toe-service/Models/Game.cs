@@ -1,18 +1,35 @@
-﻿using TicTacToe.Enums;
+﻿using Newtonsoft.Json;
+using TicTacToe.Enums;
 
 namespace TicTacToe.Models
 {
     public class Game
     {
+        [JsonProperty]
         private char[] _board = new char[9];
 
+        [JsonProperty]
         public Player Player1 { get; private set; }
+
+        [JsonProperty]
         public Player Player2 { get; private set; }
+
+        [JsonProperty]
         public Player CurrentPlayer { get; private set; }
 
+        [JsonProperty]
         public byte Turn { get; private set; } = 0;
+
+        [JsonProperty]
         public bool HasEnded { get; private set; } = false;
+
+        [JsonProperty]
         public Player? Winner { get; private set; } = null;
+
+        [JsonConstructor]
+        private Game()
+        {
+        }
 
         public Game(Player player1, Player player2)
         {
@@ -75,6 +92,7 @@ namespace TicTacToe.Models
             Winner = CurrentPlayer;
             CurrentPlayer.Wins++;
         }
+
         private bool CheckWinner(Player player)
         {
             char sign = player.Sign.ToChar();

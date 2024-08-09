@@ -1,7 +1,7 @@
-﻿using StackExchange.Redis;
+﻿using Newtonsoft.Json;
+using StackExchange.Redis;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using TicTacToe.Enums;
 using TicTacToe.Models;
 
@@ -99,18 +99,23 @@ namespace TicTacToe.Services
 
         private string SerializeGame(Game game)
         {
-            return JsonSerializer.Serialize(game);
+            string serializedData = JsonConvert.SerializeObject(game);
+            Console.WriteLine($"Serialized game data: {serializedData}");
+            return serializedData;
         }
 
         private Game DeserializeGame(string gameData)
         {
-            var deserializedData = JsonSerializer.Deserialize<Game>(gameData);
+            Console.WriteLine($"Deserializing game data: {gameData}");
+            var deserializedData = JsonConvert.DeserializeObject<Game>(gameData);
 
             if (deserializedData == null)
             {
+                Console.WriteLine("Deserialization failed. Data is null.");
                 throw new ArgumentNullException(nameof(deserializedData), "Data cannot be null.");
             }
 
+            Console.WriteLine("Deserialization successful.");
             return deserializedData;
         }
     }
