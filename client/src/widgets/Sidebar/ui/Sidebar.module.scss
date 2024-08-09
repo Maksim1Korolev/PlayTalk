@@ -1,0 +1,27 @@
+.Sidebar {
+	position: relative;
+	width: 220px;
+	display: flex;
+	max-height: 80svh;
+	overflow-y: auto;
+	overflow-x: hidden;
+	transition: width 0.30s;
+
+	.collapseBtn {
+		position: absolute;
+		right: 0;
+		top: 50%;
+		z-index: 10;
+		transform: rotate(90deg);
+	}
+
+	
+}
+
+.collapsed {
+  width: 100px;
+
+  .collapseBtn {
+    transform: rotate(-90deg);
+  }
+}

@@ -50,7 +50,7 @@ export const useConnectionGameSocket = ({
         });
       }
     },
-    [setUpToDateUsers, setCookie, cookies, user.username]
+    [setUpToDateUsers, user, setCookie, cookies]
   );
 
   const handleSendGameInvite = useCallback(
@@ -58,7 +58,7 @@ export const useConnectionGameSocket = ({
       console.log(`Sending game invite to: ${receiverUsername}`);
       gameSocket.emit("send-game-invite", { receiverUsername });
     },
-    [user.username]
+    []
   );
 
   const handleAcceptGame = useCallback(() => {
@@ -100,6 +100,7 @@ export const useConnectionGameSocket = ({
       gameSocket.off("backgammon-connection", connectToGame);
       gameSocket.close();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

@@ -96,6 +96,7 @@ export const ChatModal = ({
       ) : (
         <ChatCircle
           unreadMessagesCount={receiverUser.unreadMessageCount}
+          isOnline={receiverUser.isOnline}
           avatarFileName={receiverUser.avatarFileName}
           className={cx(cls.ChatModal, {}, [className])}
           onClick={handleOpenChatModal}

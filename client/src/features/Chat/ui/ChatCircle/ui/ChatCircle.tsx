@@ -1,7 +1,7 @@
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
+import { AvatarWithProps } from "@/features/AvatarWithProps";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 import { cx } from "@/shared/lib/cx";
-import { Avatar } from "@/shared/ui/Avatar";
 import { memo } from "react";
 import cls from "./ChatCircle.module.scss";
 
@@ -19,25 +19,25 @@ export const ChatCircle = memo(
     unreadMessagesCount?: number;
     onClick: () => void;
   }) => {
+    //TODO: onClick open modal
     const avatarSrc = `${
       import.meta.env.VITE_AUTH_SERVICE_STATIC_URL
     }/avatars/${avatarFileName}`;
-    //TODO: Add Max Unread Messages Count value and something
     return (
-      <div onClick={onClick} className={cx(cls.ChatCircle, {}, [className])}>
+      <div className={cx(cls.ChatCircle, {}, [className])}>
         <div className={cls.chatOverlay}>
-          <Avatar className={cls.profileImage} src={avatarSrc} />
+          <AvatarWithProps
+            clickable
+            onClick={onClick}
+            avatarSrc={avatarSrc}
+            addonTopRight={<UserOnlineIndicator isOnline={isOnline} />}
+            addonBottomRight={
+              <UnreadMessagesCountIndicator
+                unreadMessagesCount={unreadMessagesCount}
+              />
+            }
+          />
         </div>
-
-        <UserOnlineIndicator
-          className={cls.onlineIndicator}
-          isOnline={isOnline}
-        />
-
-        <UnreadMessagesCountIndicator
-          className={cls.messagesIndicator}
-          unreadMessagesCount={unreadMessagesCount}
-        />
       </div>
     );
   }

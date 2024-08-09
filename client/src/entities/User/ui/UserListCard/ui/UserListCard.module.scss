@@ -1,2 +1,54 @@
+@mixin scale-and-truncate-text($max-width) {
+  display: inline-block;
+  max-width: $max-width;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1rem;
+
+  // Use a loop to scale down the font size if it overflows
+  @for $i from 1 through 5 {
+    &:nth-of-type(#{$i}) {
+      font-size: 1rem - ($i * 0.1rem);
+    }
+  }
+}
+
+
 .UserListCard {
+  align-items: center;
+	display: flex;
+  opacity: 1;
+  padding: 0 16px;
+
+	.username {
+		@include scale-and-truncate-text(40px); 
+		margin-right: 10px;
+	}
+
+	.userInfo {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+
+    span {
+      flex-grow: 1;
+    }
+  }
+
+	.playButton {
+    margin-left: auto; // Pushes the button to the end
+  }
+}
+
+.collapsed {
+  padding: 0 8px;
+
+	.userInfo {
+		opacity: 0;
+    transition: all 0.2s;
+    width: 0;
+		display: none;
+	}	
+	
 }
