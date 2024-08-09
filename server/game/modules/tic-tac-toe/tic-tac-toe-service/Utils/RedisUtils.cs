@@ -4,7 +4,7 @@ namespace TicTacToe.Utils
 {
     public static class RedisUtils
     {
-        private static IConnectionMultiplexer _redis;
+        private static IConnectionMultiplexer? _redis;
 
         public static void Initialize(IConfiguration configuration)
         {
