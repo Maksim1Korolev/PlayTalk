@@ -26,11 +26,6 @@ namespace TicTacToe.Models
         [JsonProperty]
         public Player? Winner { get; private set; } = null;
 
-        [JsonConstructor]
-        private Game()
-        {
-        }
-
         public Game(Player player1, Player player2)
         {
             Player1 = player1 ?? throw new ArgumentNullException(nameof(player1));
