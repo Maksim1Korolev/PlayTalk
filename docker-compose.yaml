@@ -96,6 +96,10 @@ services:
       - "3030:3030"
     networks:
       - talkback-network
+    environment:
+      - TIC_TAC_TOE_REPOSITORY_SERVICE_URL=${TIC_TAC_TOE_REPOSITORY_SERVICE_URL}
+      - TIC_TAC_TOE__SERVICE_URL=${TIC_TAC_TOE__SERVICE_URL}
+      - REDIS_URL=${REDIS_URL}
     develop:
       watch:
         - path: ./app/package.json
@@ -105,7 +109,7 @@ services:
           action: sync
 
   # Tic Tac Toe
-  tic_tac_toe:
+  tic_tac_toe_service:
     build: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
     ports:
       - "8080:8080"
