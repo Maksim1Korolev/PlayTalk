@@ -4,6 +4,43 @@ import MessageHistoryService from "./messageHistoryService.js";
 
 //TODO:Divide chat and online logic to separate files
 class SocketService {
+  static async setupSocketConnection() {
+    io.on("connection", async socket => {
+      console.log("User connected with socket ID:", socket.id);
+      let savedUsername;
+
+      socket.on("online-ping", async username => {
+        savedUsername = username;
+        await this.handleChatSubscriptions(socket, savedUsername);
+
+        await this.connectUser(savedUsername, socket.id);
+
+        console.log(
+          `User ${savedUsername} connected with socket ID ${socket.id}. Current online users:`,
+          await this.getAllOnlineUsernames()
+        );
+        const onlineUsernames = await this.getAllOnlineUsernames();
+        socket.emit("online-users", onlineUsernames);
+        socket.broadcast.emit("user-connection", savedUsername, true);
+      });
+
+      socket.on("disconnect", async () => {
+        if (savedUsername) {
+          await this.disconnectUser(savedUsername, socket.id);
+
+          console.log(
+            `Socket ID ${socket.id} for user ${savedUsername} disconnected.`
+          );
+
+          const remainingSockets = await this.getUserSockets(savedUsername);
+          if (remainingSockets.length === 0) {
+            socket.broadcast.emit("user-connection", savedUsername, false);
+          }
+        }
+      });
+    });
+  }
+
   static async connectUser(username, socketId) {
     const userSockets = await this.getUserSockets(username);
     userSockets.push(socketId);
@@ -107,43 +144,6 @@ class SocketService {
         }
       }
     );
-  }
-
-  static async setupSocketConnection() {
-    io.on("connection", async socket => {
-      console.log("User connected");
-      let savedUsername;
-
-      socket.on("online-ping", async username => {
-        savedUsername = username;
-        await this.handleChatSubscriptions(socket, savedUsername);
-
-        await this.connectUser(savedUsername, socket.id);
-
-        console.log(
-          `User ${savedUsername} connected with socket ID ${socket.id}. Current online users:`,
-          await this.getAllOnlineUsernames()
-        );
-        const onlineUsernames = await this.getAllOnlineUsernames();
-        socket.emit("online-users", onlineUsernames);
-        socket.broadcast.emit("user-connection", savedUsername, true);
-      });
-
-      socket.on("disconnect", async () => {
-        if (savedUsername) {
-          await this.disconnectUser(savedUsername, socket.id);
-
-          console.log(
-            `Socket ID ${socket.id} for user ${savedUsername} disconnected.`
-          );
-
-          const remainingSockets = await this.getUserSockets(savedUsername);
-          if (remainingSockets.length === 0) {
-            socket.broadcast.emit("user-connection", savedUsername, false);
-          }
-        }
-      });
-    });
   }
 }
 
