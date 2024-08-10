@@ -1,5 +1,8 @@
 import SocketService from "../services/socketService.js";
 
+// @desc   Get all online usernames
+// @route  GET /api/online/onlineUsernames
+// @access Public
 export const getOnlineUsernames = async (req, res, next) => {
   try {
     const onlineUsernames = await SocketService.getOnlineUsernames();

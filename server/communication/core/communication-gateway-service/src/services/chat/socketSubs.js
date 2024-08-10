@@ -33,7 +33,7 @@ async function handleChatSubscriptions(socket, username) {
         const otherUserInChat = usernames.find(
           username => username !== requestingUsername
         );
-        //TODO:Check need
+        //TODO:Check need (Have to check if needed)
         socket.emit("unread-count-messages", otherUserInChat, 0);
       }
     } catch (err) {

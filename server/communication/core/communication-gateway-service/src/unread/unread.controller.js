@@ -1,5 +1,8 @@
 import MessageHistoryService from "../services/chat/messageHistoryService.js";
 
+// @desc   Get counts of unread messages from all users
+// @route  GET /api/unread/getAll
+// @access Public
 export const getAllUnreadMessageCounts = async (req, res) => {
   try {
     const { requestingUsername } = req.params;
@@ -14,6 +17,10 @@ export const getAllUnreadMessageCounts = async (req, res) => {
 };
 
 //TODO:This function is called twice, choose socket or http request, preferably socket.
+
+// @desc   Mark all messages as read
+// @route  POST /api/unread/markAsRead
+// @access Public
 export const readAllUnreadMessages = async (req, res) => {
   try {
     const { requestingUsername } = req.params;

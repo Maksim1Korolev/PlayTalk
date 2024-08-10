@@ -8,7 +8,7 @@ import redisClient from "./utils/redisClient.js";
 
 import unreadRouter from "./unread/unread.routes.js";
 import onlineRouter from "./online/online.routes.js";
-import { connectOnline } from "./online/online.controller.js";
+import SocketService from "./services/socketService.js";
 
 dotenv.config();
 
@@ -32,8 +32,7 @@ async function main() {
   await redisClient.connect();
   await clearSocketCache();
 
-  //TODO:Rename and move
-  await connectOnline();
+  await SocketService.setupSocketConnection();
 
   server.listen(PORT, () => {
     console.log(
