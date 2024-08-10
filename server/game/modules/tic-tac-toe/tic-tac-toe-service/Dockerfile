@@ -1,25 +1,22 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
 EXPOSE 8080
-EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["TicTacToe.csproj", "."]
-RUN dotnet restore "./TicTacToe.csproj"
+COPY ["tic-tac-toe-service.csproj", "."]
+RUN dotnet restore "./tic-tac-toe-service.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "./TicTacToe.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./tic-tac-toe-service.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./TicTacToe.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./tic-tac-toe-service.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "TicTacToe.dll"]
+ENTRYPOINT ["dotnet", "tic-tac-toe-service.dll"]

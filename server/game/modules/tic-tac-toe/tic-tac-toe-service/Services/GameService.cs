@@ -100,13 +100,11 @@ namespace TicTacToe.Services
         private string SerializeGame(Game game)
         {
             string serializedData = JsonConvert.SerializeObject(game);
-            Console.WriteLine($"Serialized game data: {serializedData}");
             return serializedData;
         }
 
         private Game DeserializeGame(string gameData)
         {
-            Console.WriteLine($"Deserializing game data: {gameData}");
             var deserializedData = JsonConvert.DeserializeObject<Game>(gameData);
 
             if (deserializedData == null)
@@ -115,7 +113,6 @@ namespace TicTacToe.Services
                 throw new ArgumentNullException(nameof(deserializedData), "Data cannot be null.");
             }
 
-            Console.WriteLine("Deserialization successful.");
             return deserializedData;
         }
     }
