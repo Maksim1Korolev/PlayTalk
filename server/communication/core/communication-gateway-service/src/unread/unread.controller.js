@@ -1,4 +1,4 @@
-import MessageHistoryService from "../services/messageHistoryService.js";
+import MessageHistoryService from "../services/chat/messageHistoryService.js";
 
 export const getAllUnreadMessageCounts = async (req, res) => {
   try {

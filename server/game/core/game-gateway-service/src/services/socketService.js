@@ -14,9 +14,9 @@ class SocketService {
 
         console.log(
           `User ${savedUsername} connected with socket ID ${socket.id}. Current online users:`,
-          await this.getAllOnlineUsernames()
+          await this.getOnlineUsernames()
         );
-        const onlineUsernames = await this.getAllOnlineUsernames();
+        const onlineUsernames = await this.getOnlineUsernames();
         socket.emit("online-players", onlineUsernames);
         socket.broadcast.emit("player-connection", savedUsername, true);
       });
@@ -71,7 +71,7 @@ class SocketService {
     return sockets ? JSON.parse(sockets) : [];
   }
 
-  static async getAllOnlineUsernames() {
+  static async getOnlineUsernames() {
     return await redisClient.hKeys(process.env.REDIS_USER_SOCKET_HASH_KEY);
   }
 }

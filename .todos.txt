@@ -9,6 +9,7 @@ ChatModal opens lower than the screen and scrollbar appears
 Getting error in communication service when requesting unread messages with count of 0
 Empty data doesn't count as redis cache
 List of game invitations
+Multiple chat windows for each user
 
 To add (In the end):
 Auth on all servers, updated auth for some data
