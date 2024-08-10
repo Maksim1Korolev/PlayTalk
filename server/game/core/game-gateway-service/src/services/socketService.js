@@ -17,7 +17,6 @@ class SocketService {
           await this.getOnlineUsernames()
         );
         const onlineUsernames = await this.getOnlineUsernames();
-        socket.emit("online-players", onlineUsernames);
         socket.broadcast.emit("player-connection", savedUsername, true);
       });
 

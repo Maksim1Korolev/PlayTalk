@@ -2,7 +2,6 @@ To add:
 Servers should fetch data straight from db if redis is offline
 Automatic login upon clicking "enter"
 Remove swagger and ssl on tic-tac-toe-service
-Remove online-users ping?
 
 To fix:
 ChatModal opens lower than the screen and scrollbar appears

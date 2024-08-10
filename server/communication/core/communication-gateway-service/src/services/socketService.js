@@ -19,8 +19,6 @@ class SocketService {
           `User ${savedUsername} connected with socket ID ${socket.id}. Current online users:`,
           await this.getOnlineUsernames()
         );
-        const onlineUsernames = await this.getOnlineUsernames();
-        socket.emit("online-users", onlineUsernames);
         socket.broadcast.emit("user-connection", savedUsername, true);
       });
 
