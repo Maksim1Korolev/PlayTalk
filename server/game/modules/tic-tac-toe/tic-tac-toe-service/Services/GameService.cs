@@ -109,7 +109,6 @@ namespace TicTacToe.Services
 
             if (deserializedData == null)
             {
-                Console.WriteLine("Deserialization failed. Data is null.");
                 throw new ArgumentNullException(nameof(deserializedData), "Data cannot be null.");
             }
 
