@@ -5,60 +5,72 @@ class SocketService {
   static async setupSocketConnection() {
     io.on("connection", async socket => {
       console.log("Player connected with socket ID:", socket.id);
-      let savedUsername;
+      let connectedPlayerData = {
+        username: null,
+        game: null,
+        opponentUsername: null,
+      };
 
       socket.on("online-ping", async username => {
-        savedUsername = username;
+        connectedPlayerData.username = username;
 
-        await this.connectUser(savedUsername, socket.id);
+        await this.connectUser(connectedPlayerData, socket.id);
 
         console.log(
-          `User ${savedUsername} connected with socket ID ${socket.id}. Current online users:`,
+          `User ${connectedPlayerData.username} connected with socket ID ${socket.id}. Current online users:`,
           await this.getOnlineUsernames()
         );
-        const onlineUsernames = await this.getOnlineUsernames();
-        socket.broadcast.emit("player-connection", savedUsername, true);
+        socket.broadcast.emit("player-connection", connectedPlayerData, true);
       });
 
       socket.on("disconnect", async () => {
-        if (savedUsername) {
-          await this.disconnectUser(savedUsername, socket.id);
+        if (connectedPlayerData.username) {
+          await this.disconnectUser(connectedPlayerData, socket.id);
 
           console.log(
-            `Socket ID ${socket.id} for user ${savedUsername} disconnected.`
+            `Socket ID ${socket.id} for user ${connectedPlayerData.username} disconnected.`
           );
 
-          const remainingSockets = await this.getUserSockets(savedUsername);
+          const remainingSockets = await this.getUserSockets(
+            connectedPlayerData.username
+          );
           if (remainingSockets.length === 0) {
-            socket.broadcast.emit("player-connection", savedUsername, false);
+            socket.broadcast.emit(
+              "player-connection",
+              connectedPlayerData,
+              false
+            );
           }
         }
       });
     });
   }
 
-  static async connectUser(username, socketId) {
-    const userSockets = await this.getUserSockets(username);
+  static async connectUser(playerData, socketId) {
+    const userSockets = await this.getUserSockets(playerData.username);
     userSockets.push(socketId);
     await redisClient.hSet(
       process.env.REDIS_USER_SOCKET_HASH_KEY,
-      username,
+      playerData.username,
       JSON.stringify(userSockets)
     );
   }
 
-  static async disconnectUser(username, socketId) {
-    const userSockets = await this.getUserSockets(username);
+  static async disconnectUser(playerData, socketId) {
+    const userSockets = await this.getUserSockets(playerData.username);
     const updatedSockets = userSockets.filter(id => id !== socketId);
 
     if (updatedSockets.length > 0) {
       await redisClient.hSet(
         process.env.REDIS_USER_SOCKET_HASH_KEY,
-        username,
+        playerData.username,
         JSON.stringify(updatedSockets)
       );
     } else {
-      await redisClient.hDel(process.env.REDIS_USER_SOCKET_HASH_KEY, username);
+      await redisClient.hDel(
+        process.env.REDIS_USER_SOCKET_HASH_KEY,
+        playerData.username
+      );
     }
   }
 
