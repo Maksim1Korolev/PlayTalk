@@ -22,6 +22,7 @@ namespace TicTacToe.Controllers
             try
             {
                 var game = _gameService.GetGame(player1Username, player2Username);
+
                 return Ok(game);
             }
             catch (ArgumentException ex)
@@ -52,6 +53,13 @@ namespace TicTacToe.Controllers
             try
             {
                 var moveResult = _gameService.MakeMove(player1Username, player2Username, interactingPlayerUsername, interactingIndex);
+
+                if (moveResult.ToString() == "Win" || moveResult.ToString() == "Draw")
+                {
+                    var game = _gameService.GetGame(player1Username, player2Username);
+                    _playerService.UpdatePlayers(game.Player1, game.Player2);
+                }
+
                 return Ok(new { MoveResult = moveResult.ToString() });
             }
             catch (ArgumentException ex)
@@ -66,6 +74,10 @@ namespace TicTacToe.Controllers
             try
             {
                 _gameService.Surrender(player1Username, player2Username, surrenderedPlayerUsername);
+
+                var game = _gameService.GetGame(player1Username, player2Username);
+                _playerService.UpdatePlayers(game.Player1, game.Player2);
+
                 return Ok("Game ended by surrender.");
             }
             catch (ArgumentException ex)

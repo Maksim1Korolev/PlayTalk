@@ -6,13 +6,12 @@ namespace TicTacToe.Services
     {
         public Player[] GetPlayers(string player1Username, string player2Username)
         {
-            var players = new Player[] { new Player(player1Username), new Player(player2Username) };
-            return players;
+            return [new Player(player1Username), new Player(player2Username)];
         }
 
-        public Player UpdatePlayer(Player player)
+        public void UpdatePlayers(Player player1NewData, Player player2NewData)
         {
-            return player;
+            return;
         }
     }
 }
