@@ -14,7 +14,7 @@
 //       `Accepting game invite for ${connectedPlayerData.username} with opponent ${opponentUsername} for game ${game}`
 //     );
 //     connectedPlayerData.game = game;
-//     connectedPlayerData.opponentUsername = opponentUsername; // Set opponent here when accepted
+//     connectedPlayerData.opponentUsername = opponentUsername;
 //     if (opponentUsername) {
 //       await startGameConnection(
 //         connectedPlayerData.username,
@@ -74,14 +74,14 @@
 //   const receiverSockets = await SocketService.getUserSockets(receiverUsername);
 
 //   senderSockets.forEach(socketId => {
-//     io.to(socketId).emit("game-connection", { game });
+//     io.to(socketId).emit("game-connection", { game, receiverUsername });
 //     console.log(
 //       `Notified ${senderUsername} (socket ID: ${socketId}) of connection with ${receiverUsername} for game ${game}`
 //     );
 //   });
 
 //   receiverSockets.forEach(socketId => {
-//     io.to(socketId).emit("game-connection", { game });
+//     io.to(socketId).emit("game-connection", { game, senderUsername });
 //     console.log(
 //       `Notified ${receiverUsername} (socket ID: ${socketId}) of connection with ${senderUsername} for game ${game}`
 //     );
