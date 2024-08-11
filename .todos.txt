@@ -3,6 +3,7 @@ Servers should fetch data straight from db if redis is offline
 Automatic login upon clicking "enter"
 List of game invitations
 Messages sync
+Multiple sources for the main list of users
 
 To fix:
 ChatModal opens lower than the screen and scrollbar appears

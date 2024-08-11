@@ -1,55 +1,63 @@
+import redisClient from "../utils/redisClient.js";
 import Player from "../../models/Player.js";
 
-//TODO:Implement redis logic
 class PlayerService {
-  async addPlayer(player) {
+  static async addPlayer(player) {
     const addedPlayer = await Player.create({ ...player });
+
+    await redisClient.hSet(
+      process.env.REDIS_TIC_TAC_TOE_PLAYER_HASH_KEY,
+      addedPlayer.username,
+      JSON.stringify(addedPlayer)
+    );
+
     return addedPlayer;
   }
 
-  async getPlayers() {
-    const players = await Player.find();
-    return players;
-  }
-
-  async getPlayerByUsername(username) {
+  static async getPlayerByUsername(username) {
     if (!username) {
       throw new Error("Username is not specified");
     }
 
+    const cachedPlayer = await redisClient.hGet(
+      process.env.REDIS_TIC_TAC_TOE_PLAYER_HASH_KEY,
+      username
+    );
+    if (cachedPlayer) {
+      console.log(`Cache hit for player: ${username}`);
+      return JSON.parse(cachedPlayer);
+    } else {
+      console.log(`Cache miss for player: ${username}`);
+    }
+
     const player = await Player.findOne({ username: username });
+
+    if (player) {
+      await redisClient.hSet(
+        process.env.REDIS_TIC_TAC_TOE_PLAYER_HASH_KEY,
+        username,
+        JSON.stringify(player)
+      );
+    }
+
     return player;
   }
 
-  async getPlayerById(playerId) {
-    if (!playerId) {
-      throw new Error("ID is not specified");
-    }
-
-    const player = await Player.findOne({ _id: playerId });
-    return player;
-  }
-
-  async updatePlayer(player) {
-    if (!player._id) {
-      throw new Error("ID is not specified");
-    }
+  static async updatePlayer(player) {
     const updatedPlayer = await Player.findByIdAndUpdate(player._id, player, {
       new: true,
     });
 
-    return updatedPlayer;
-  }
-
-  async deletePlayer(id) {
-    if (!id) {
-      throw new Error("ID is not specified");
+    if (updatedPlayer) {
+      await redisClient.hSet(
+        process.env.REDIS_TIC_TAC_TOE_PLAYER_HASH_KEY,
+        updatedPlayer.username,
+        JSON.stringify(updatedPlayer)
+      );
     }
 
-    const deletedPlayer = await Player.findByIdAndDelete(id);
-
-    return deletedPlayer;
+    return updatedPlayer;
   }
 }
 
-export default new PlayerService();
+export default PlayerService;
