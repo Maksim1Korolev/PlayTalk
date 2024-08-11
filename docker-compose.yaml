@@ -62,8 +62,8 @@ services:
     networks:
       - talkback-network
     environment:
-      - CHAT_REPOSITORY_SERVICE_URL=${CHAT_REPOSITORY_SERVICE_URL}
       - REDIS_URL=${REDIS_URL}
+      - CHAT_REPOSITORY_SERVICE_URL=${CHAT_REPOSITORY_SERVICE_URL}
     develop:
       watch:
         - path: ./app/package.json
@@ -97,9 +97,9 @@ services:
     networks:
       - talkback-network
     environment:
-      - TIC_TAC_TOE_REPOSITORY_SERVICE_URL=${TIC_TAC_TOE_REPOSITORY_SERVICE_URL}
-      - TIC_TAC_TOE__SERVICE_URL=${TIC_TAC_TOE__SERVICE_URL}
       - REDIS_URL=${REDIS_URL}
+      - TIC_TAC_TOE__SERVICE_URL=${TIC_TAC_TOE__SERVICE_URL}
+      - TIC_TAC_TOE_REPOSITORY_SERVICE_URL=${TIC_TAC_TOE_REPOSITORY_SERVICE_URL}
     develop:
       watch:
         - path: ./app/package.json
@@ -116,12 +116,29 @@ services:
     networks:
       - talkback-network
     environment:
-      - REDIS_URL=redis://redis:6379
+      - REDIS_URL=${REDIS_URL}
+      - TIC_TAC_TOE_REPOSITORY_SERVICE_URL=${TIC_TAC_TOE_REPOSITORY_SERVICE_URL}
     develop:
       watch:
         - path: ./app/package.json
           action: rebuild
         - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
+          target: /app
+          action: sync
+
+  tic_tac_toe_repository_service:
+    build: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service
+    ports:
+      - "8082:8082"
+    networks:
+      - talkback-network
+    environment:
+      - REDIS_URL=${REDIS_URL}
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service
           target: /app
           action: sync
 
