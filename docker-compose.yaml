@@ -123,7 +123,7 @@ services:
         - path: ./app/package.json
           action: rebuild
         - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
-          target: /app
+          target: /usr/src/app
           action: sync
 
   tic_tac_toe_repository_service:
@@ -139,7 +139,7 @@ services:
         - path: ./app/package.json
           action: rebuild
         - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service
-          target: /app
+          target: /usr/src/app
           action: sync
 
   # # Kafka
