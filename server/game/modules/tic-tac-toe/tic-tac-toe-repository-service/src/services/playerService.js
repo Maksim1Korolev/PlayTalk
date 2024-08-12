@@ -116,7 +116,9 @@ class PlayerService {
       player2NewData.username,
     ]);
 
-    const updatePromises = players.map(player => {
+    const updatedPlayers = [];
+
+    for (const player of players) {
       const newData =
         player.username === player1NewData.username
           ? player1NewData
@@ -127,11 +129,15 @@ class PlayerService {
           player[property] = (player[property] || 0) + newData[property];
         }
       }
-    });
 
-    const updatedPlayers = await Promise.all(updatePromises);
+      const updatedPlayer = await Player.findOneAndUpdate(
+        { username: player.username },
+        player,
+        { new: true }
+      );
 
-    for (const updatedPlayer of updatedPlayers) {
+      updatedPlayers.push(updatedPlayer);
+
       await redisClient.hSet(
         process.env.REDIS_TIC_TAC_TOE_PLAYER_HASH_KEY,
         updatedPlayer.username,

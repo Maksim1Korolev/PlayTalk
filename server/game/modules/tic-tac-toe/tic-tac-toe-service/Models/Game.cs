@@ -74,16 +74,29 @@ namespace TicTacToe.Models
                 if (surrenderedPlayerUsername == Player1.Username)
                 {
                     Player2.Wins++;
-                    return;
+                    Winner = Player2;
                 }
-
-                Player1.Wins++;
+                else
+                {
+                    Player1.Wins++;
+                    Winner = Player1;
+                }
                 return;
             }
 
             Winner = CurrentPlayer;
-            CurrentPlayer.Wins++;
+
+            //Have to check according to usernames, because redis get returns different entity of CurrentPlayer
+            if (Winner.Username == Player1.Username)
+            {
+                Player1.Wins++;
+            }
+            else
+            {
+                Player2.Wins++;
+            }
         }
+
 
         private bool CheckWinner(Player player)
         {
