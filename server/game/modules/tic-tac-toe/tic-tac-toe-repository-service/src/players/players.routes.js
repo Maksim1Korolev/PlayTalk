@@ -3,6 +3,8 @@ import {} from "./players.controller.js";
 
 const router = express.Router();
 
-//router.route("/").get();
+router.route("/:username").get(getPlayer);
+router.route("/").get(getPlayers);
+router.route("/").put(updatePlayers);
 
 export default router;
