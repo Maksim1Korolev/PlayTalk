@@ -49,7 +49,6 @@ namespace TicTacToe.Models
             _board[interactedIndex] = CurrentPlayer.Sign.ToChar();
             Turn++;
 
-
             if (Turn >= 5 && CheckWinner(CurrentPlayer))
             {
                 Finish();
@@ -79,11 +78,6 @@ namespace TicTacToe.Models
                 }
 
                 Player1.Wins++;
-                return;
-            }
-
-            if (Winner == null)
-            {
                 return;
             }
 

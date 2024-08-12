@@ -123,7 +123,7 @@ services:
         - path: ./app/package.json
           action: rebuild
         - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
-          target: /usr/src/app
+          target: /app
           action: sync
 
   tic_tac_toe_repository_service:
