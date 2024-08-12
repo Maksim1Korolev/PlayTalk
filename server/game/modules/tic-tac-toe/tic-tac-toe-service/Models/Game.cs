@@ -46,9 +46,6 @@ namespace TicTacToe.Models
                 return MoveResult.InvalidMove;
             }
 
-            Finish();
-            return MoveResult.Win;
-
             _board[interactedIndex] = CurrentPlayer.Sign.ToChar();
             Turn++;
 

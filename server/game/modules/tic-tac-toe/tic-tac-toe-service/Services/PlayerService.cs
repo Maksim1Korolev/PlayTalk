@@ -22,14 +22,26 @@ namespace TicTacToe.Services
 
         public async Task UpdatePlayersAsync(Player player1NewData, Player player2NewData)
         {
-            var updateData = new
+            var player1Data = new
             {
-                player1NewData,
-                player2NewData
+                username = player1NewData.Username.ToLower(),
+                wins = player1NewData.Wins
+            };
+
+            var player2Data = new
+            {
+                username = player2NewData.Username.ToLower(),
+                wins = player2NewData.Wins
+            };
+
+            var updatedData = new
+            {
+                player1NewData = player1Data,
+                player2NewData = player2Data
             };
 
             var content = new StringContent(
-                JsonSerializer.Serialize(updateData),
+                JsonSerializer.Serialize(updatedData),
                 Encoding.UTF8,
                 "application/json"
             );

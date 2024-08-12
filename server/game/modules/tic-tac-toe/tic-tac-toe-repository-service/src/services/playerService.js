@@ -127,8 +127,6 @@ class PlayerService {
           player[property] = (player[property] || 0) + newData[property];
         }
       }
-
-      return player.save();
     });
 
     const updatedPlayers = await Promise.all(updatePromises);
