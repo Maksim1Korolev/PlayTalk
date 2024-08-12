@@ -83,7 +83,6 @@ class PlayerService {
         username => !foundUsernames.includes(username)
       );
 
-      // Add new players to database and cache
       for (const newUsername of newUsernames) {
         console.log(`Creating new player: ${newUsername}`);
         const newPlayer = await this.addPlayer({
