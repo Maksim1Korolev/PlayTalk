@@ -18,7 +18,7 @@ namespace TicTacToe.Models
         public Player CurrentPlayer { get; private set; }
 
         [JsonProperty]
-        public byte Turn { get; private set; } = 0;
+        public byte Turn { get; private set; } = 1;
 
         [JsonProperty]
         public bool HasEnded { get; private set; } = false;
@@ -26,6 +26,8 @@ namespace TicTacToe.Models
         [JsonProperty]
         public Player? Winner { get; private set; } = null;
 
+        [JsonConstructor]
+        private Game() { }
         public Game(Player player1, Player player2)
         {
             Player1 = player1 ?? throw new ArgumentNullException(nameof(player1));
@@ -46,6 +48,7 @@ namespace TicTacToe.Models
 
             _board[interactedIndex] = CurrentPlayer.Sign.ToChar();
             Turn++;
+
 
             if (Turn >= 5 && CheckWinner(CurrentPlayer))
             {
@@ -132,7 +135,7 @@ namespace TicTacToe.Models
 
         private void SwitchPlayer()
         {
-            CurrentPlayer = CurrentPlayer == Player1 ? Player2 : Player1;
+            CurrentPlayer = CurrentPlayer.Username == Player1.Username ? Player2 : Player1;
         }
     }
 }

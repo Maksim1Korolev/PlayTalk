@@ -54,9 +54,10 @@ namespace TicTacToe.Controllers
             {
                 var moveResult = _gameService.MakeMove(player1Username, player2Username, interactingPlayerUsername, interactingIndex);
 
-                if (moveResult.ToString() == "Win" || moveResult.ToString() == "Draw")
+                var game = _gameService.GetGame(player1Username, player2Username);
+
+                if (game.HasEnded)
                 {
-                    var game = _gameService.GetGame(player1Username, player2Username);
                     _playerService.UpdatePlayers(game.Player1, game.Player2);
                 }
 

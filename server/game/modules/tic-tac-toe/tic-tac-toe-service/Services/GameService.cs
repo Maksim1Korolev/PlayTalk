@@ -71,15 +71,8 @@ namespace TicTacToe.Services
             var game = GetGame(player1Username, player2Username);
             var moveResult = game.MakeMove(interactingPlayerUsername, interactingIndex);
 
-            if (game.HasEnded)
-            {
-                RemoveGame(game);
-            }
-            else
-            {
-                string gameKey = GenerateGameKey(player1Username, player2Username);
-                _redisDb.HashSet(RedisGameHashKey, gameKey, SerializeGame(game));
-            }
+            string gameKey = GenerateGameKey(player1Username, player2Username);
+            _redisDb.HashSet(RedisGameHashKey, gameKey, SerializeGame(game));
 
             return moveResult;
         }
@@ -91,7 +84,7 @@ namespace TicTacToe.Services
             RemoveGame(game);
         }
 
-        private void RemoveGame(Game game)
+        public void RemoveGame(Game game)
         {
             string gameKey = GenerateGameKey(game.Player1.Username, game.Player2.Username);
             _redisDb.HashDelete(RedisGameHashKey, gameKey);
