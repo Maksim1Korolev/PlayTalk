@@ -1,54 +1,30 @@
-import Player from "../../models/Player.js";
+import axios from "axios";
 
 class PlayerService {
-  async addPlayer(player) {
-    const addedPlayer = await Player.create({ ...player });
-    return addedPlayer;
+  static baseUrl = process.env.TIC_TAC_TOE_REPOSITORY_SERVICE_URL;
+
+  static async getPlayers(usernames) {
+    if (!Array.isArray(usernames) || usernames.length === 0) {
+      throw new Error("Usernames must be a non-empty array.");
+    }
+
+    const query = usernames
+      .map(username => `usernames=${encodeURIComponent(username)}`)
+      .join("&");
+    const url = `${this.baseUrl}/players?${query}`;
+    const response = await axios.get(url);
+    return response.data;
   }
 
-  async getPlayers() {
-    const players = await Player.find();
-    return players;
-  }
-
-  async getPlayerByUsername(username) {
+  static async getPlayer(username) {
     if (!username) {
       throw new Error("Username is not specified");
     }
 
-    const player = await Player.findOne({ username: username });
-    return player;
-  }
-
-  async getPlayerById(playerId) {
-    if (!playerId) {
-      throw new Error("ID is not specified");
-    }
-
-    const player = await Player.findOne({ _id: playerId });
-    return player;
-  }
-
-  async updatePlayer(player) {
-    if (!player._id) {
-      throw new Error("ID is not specified");
-    }
-    const updatedPlayer = await Player.findByIdAndUpdate(player._id, player, {
-      new: true,
-    });
-
-    return updatedPlayer;
-  }
-
-  async deletePlayer(id) {
-    if (!id) {
-      throw new Error("ID is not specified");
-    }
-
-    const deletedPlayer = await Player.findByIdAndDelete(id);
-
-    return deletedPlayer;
+    const url = `${this.baseUrl}/players/${username}`;
+    const response = await axios.get(url);
+    return response.data;
   }
 }
 
-export default new PlayerService();
+export default PlayerService;
