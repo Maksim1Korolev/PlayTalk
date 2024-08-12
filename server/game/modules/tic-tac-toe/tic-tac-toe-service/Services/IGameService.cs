@@ -9,5 +9,6 @@ namespace TicTacToe.Services
         Player StartGame(Player player1, Player player2);
         MoveResult MakeMove(string player1Username, string player2Username, string interactingPlayerUsername, byte interactingIndex);
         void Surrender(string player1Username, string player2Username, string surrenderedPlayerUsername);
+        void RemoveGame(Game game);
     }
 }

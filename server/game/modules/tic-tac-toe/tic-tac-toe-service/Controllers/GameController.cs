@@ -58,7 +58,8 @@ namespace TicTacToe.Controllers
 
                 if (game.HasEnded)
                 {
-                    _playerService.UpdatePlayers(game.Player1, game.Player2);
+                    _playerService.UpdatePlayersAsync(game.Player1, game.Player2);
+                    _gameService.RemoveGame(game);
                 }
 
                 return Ok(new { MoveResult = moveResult.ToString() });
@@ -77,7 +78,9 @@ namespace TicTacToe.Controllers
                 _gameService.Surrender(player1Username, player2Username, surrenderedPlayerUsername);
 
                 var game = _gameService.GetGame(player1Username, player2Username);
-                _playerService.UpdatePlayers(game.Player1, game.Player2);
+
+                _playerService.UpdatePlayersAsync(game.Player1, game.Player2);
+                _gameService.RemoveGame(game);
 
                 return Ok("Game ended by surrender.");
             }

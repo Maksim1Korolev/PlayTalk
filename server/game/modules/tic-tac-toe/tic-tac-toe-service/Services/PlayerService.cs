@@ -20,7 +20,7 @@ namespace TicTacToe.Services
             return [new Player(player1Username), new Player(player2Username)];
         }
 
-        public async void UpdatePlayers(Player player1NewData, Player player2NewData)
+        public async Task UpdatePlayersAsync(Player player1NewData, Player player2NewData)
         {
             var updateData = new
             {
@@ -38,6 +38,8 @@ namespace TicTacToe.Services
 
             if (!response.IsSuccessStatusCode)
             {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Response Code: {response.StatusCode}, Response Content: {responseContent}");
                 throw new Exception("Failed to update players in the repository service.");
             }
         }
