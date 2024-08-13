@@ -4,6 +4,6 @@ import { getPlayer, getPlayers, updatePlayers } from "./players.controller.js";
 const router = express.Router();
 
 router.route("/:username").get(getPlayer);
-router.route("/").get(getPlayers).put(updatePlayers);
+router.route("/").put(updatePlayers);
 
 export default router;

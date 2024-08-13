@@ -50,62 +50,6 @@ class PlayerService {
     return player;
   }
 
-  static async getPlayers(usernames) {
-    if (!Array.isArray(usernames)) {
-      throw new Error("Usernames must be an array");
-    }
-
-    const players = [];
-    const missingUsernames = [];
-
-    for (const username of usernames) {
-      const cachedPlayer = await redisClient.hGet(
-        process.env.REDIS_TIC_TAC_TOE_PLAYER_HASH_KEY,
-        username
-      );
-
-      if (cachedPlayer) {
-        console.log(`Cache hit for player: ${username}`);
-        players.push(JSON.parse(cachedPlayer));
-      } else {
-        console.log(`Cache miss for player: ${username}`);
-        missingUsernames.push(username);
-      }
-    }
-
-    if (missingUsernames.length > 0) {
-      const foundPlayers = await Player.find({
-        username: { $in: missingUsernames },
-      });
-
-      const foundUsernames = foundPlayers.map(player => player.username);
-      const newUsernames = missingUsernames.filter(
-        username => !foundUsernames.includes(username)
-      );
-
-      for (const newUsername of newUsernames) {
-        console.log(`Creating new player: ${newUsername}`);
-        const newPlayer = await this.addPlayer({
-          username: newUsername,
-          wins: 0,
-        });
-        players.push(newPlayer);
-      }
-
-      players.push(...foundPlayers);
-
-      for (const player of foundPlayers) {
-        await redisClient.hSet(
-          process.env.REDIS_TIC_TAC_TOE_PLAYER_HASH_KEY,
-          player.username,
-          JSON.stringify(player)
-        );
-      }
-    }
-
-    return players;
-  }
-
   static async updatePlayers(player1NewData, player2NewData) {
     if (!player1NewData.username || !player2NewData.username) {
       throw new Error("Usernames must be specified for both players");
