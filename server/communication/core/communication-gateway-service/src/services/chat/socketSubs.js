@@ -41,6 +41,7 @@ async function handleChatSubscriptions(socket, username) {
     }
   });
 
+  //TODO:Remove senderUsername?? It's saved
   socket.on(
     "send-message",
     async ({ senderUsername, receiverUsername, message }) => {
