@@ -9,40 +9,8 @@ const MAKE_MOVE_EVENT = `${gameName}-make-move`;
 const MOVE_MADE_EVENT = `${gameName}-move-made`;
 const END_GAME_EVENT = `${gameName}-end-game`;
 const SURRENDER_EVENT = `${gameName}-surrender`;
-//const GET_GAME_EVENT = `${gameName}-get-game`;
 
 async function handleTicTacToeSubscriptions(socket, username, gameData) {
-  //TODO:Make a controller function instead?
-  /*
-  socket.on(GET_GAME_EVENT, async ({ receiverUsername }) => {
-    try {
-      const response = await GameService.getGame(username, receiverUsername);
-
-      if (!response && !response.game) {
-        console.log(
-          `Response is undefined upon trying to get a ${gameName} game with ${receiverUsername}.`
-        );
-        return;
-      }
-
-      const sendersSocketIds = await SocketService.getUserSockets(username);
-      const receiversSocketIds = await SocketService.getUserSockets(
-        receiverUsername
-      );
-
-      io.to(sendersSocketIds).emit(GET_GAME_EVENT, {
-        username,
-        interactingIndex,
-      });
-    } catch (err) {
-      console.error(
-        `Error getting game for ${username} and ${receiverUsername}: `,
-        err.message
-      );
-    }
-  });
-  */
-
   socket.on(MAKE_MOVE_EVENT, async ({ receiverUsername, interactingIndex }) => {
     try {
       const response = await GameService.makeMove(
