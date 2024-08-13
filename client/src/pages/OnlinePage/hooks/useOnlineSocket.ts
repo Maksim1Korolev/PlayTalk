@@ -91,7 +91,6 @@ export const useOnlineSocket = ({
 
     /////////////////////////////////////////////////////
     onlineSocket.on("connect", onConnect);
-    //TODO:Remove???
     onlineSocket.on("user-connection", updateUserOnline);
 
     /////////////////////////////////////////////////////
