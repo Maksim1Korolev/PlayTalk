@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
 using StackExchange.Redis;
-using System.Security.Cryptography;
-using System.Text;
 using TicTacToe.Enums;
 using TicTacToe.Models;
 
@@ -20,18 +18,7 @@ namespace TicTacToe.Services
         private string GenerateGameKey(string username1, string username2)
         {
             var sortedUsernames = new[] { username1, username2 }.OrderBy(u => u).ToArray();
-            string combinedUsernames = string.Join("_", sortedUsernames);
-
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(combinedUsernames));
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in bytes)
-                {
-                    builder.Append(b.ToString("x2"));
-                }
-                return builder.ToString();
-            }
+            return string.Join("_", sortedUsernames);
         }
 
         public Game GetGame(string username1, string username2)

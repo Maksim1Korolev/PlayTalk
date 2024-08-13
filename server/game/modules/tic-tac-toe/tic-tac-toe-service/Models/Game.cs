@@ -6,10 +6,9 @@ namespace TicTacToe.Models
     public class Game
     {
         [JsonProperty]
-        private char[] _board = new char[9];
-        [JsonProperty]
         private byte _turn = 1;
-
+        [JsonProperty]
+        public char[] Board { get; private set; } = new char[9];
         [JsonProperty]
         public Player Player1 { get; private set; }
         [JsonProperty]
@@ -27,7 +26,7 @@ namespace TicTacToe.Models
             Player1 = player1 ?? throw new ArgumentNullException(nameof(player1));
             Player2 = player2 ?? throw new ArgumentNullException(nameof(player2));
 
-            Array.Fill(_board, '-');
+            Array.Fill(Board, '-');
 
             CurrentPlayer = GetFirstPlayer();
             SetSigns();
@@ -35,12 +34,12 @@ namespace TicTacToe.Models
 
         public MoveResult MakeMove(string interactingPlayerUsername, byte interactedIndex)
         {
-            if (HasEnded || interactingPlayerUsername != CurrentPlayer.Username || interactedIndex < 0 || interactedIndex >= _board.Length || _board[interactedIndex] != '-')
+            if (HasEnded || interactingPlayerUsername != CurrentPlayer.Username || interactedIndex < 0 || interactedIndex >= Board.Length || Board[interactedIndex] != '-')
             {
                 return MoveResult.InvalidMove;
             }
 
-            _board[interactedIndex] = CurrentPlayer.Sign.ToChar();
+            Board[interactedIndex] = CurrentPlayer.Sign.ToChar();
             _turn++;
 
             if (_turn >= 5 && CheckWinner(CurrentPlayer))
@@ -101,9 +100,9 @@ namespace TicTacToe.Models
 
             for (int i = 0; i < winningCombinations.GetLength(0); i++)
             {
-                if (_board[winningCombinations[i, 0]] == sign &&
-                    _board[winningCombinations[i, 1]] == sign &&
-                    _board[winningCombinations[i, 2]] == sign)
+                if (Board[winningCombinations[i, 0]] == sign &&
+                    Board[winningCombinations[i, 1]] == sign &&
+                    Board[winningCombinations[i, 2]] == sign)
                 {
                     return true;
                 }
