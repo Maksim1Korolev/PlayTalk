@@ -21,9 +21,9 @@ namespace TicTacToe.Controllers
         {
             try
             {
-                var game = _gameService.GetGame(player1Username, player2Username);
+                var gameInfo = _gameService.GetCurrentGameInfo(player1Username, player2Username);
 
-                return Ok(game);
+                return Ok(gameInfo);
             }
             catch (ArgumentException ex)
             {

@@ -34,6 +34,29 @@ namespace TicTacToe.Services
             return DeserializeGame(gameData);
         }
 
+        public object GetCurrentGameInfo(string username1, string username2)
+        {
+            var game = GetGame(username1, username2);
+
+            var updatedGame = new
+            {
+                player1 = new
+                {
+                    username = game.Player1.Username,
+                    sign = game.Player1.Sign.ToChar()
+                },
+                player2 = new
+                {
+                    username = game.Player2.Username,
+                    sign = game.Player2.Sign.ToChar()
+                },
+                currentPlayer = game.CurrentPlayer.Username,
+                board = game.Board
+            };
+
+            return updatedGame;
+        }
+
         public Player StartGame(Player player1, Player player2)
         {
             if (player1 == null || player2 == null)
