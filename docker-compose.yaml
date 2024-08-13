@@ -98,7 +98,7 @@ services:
       - talkback-network
     environment:
       - REDIS_URL=${REDIS_URL}
-      - TIC_TAC_TOE__SERVICE_URL=${TIC_TAC_TOE__SERVICE_URL}
+      - TIC_TAC_TOE_SERVICE_URL=${TIC_TAC_TOE_SERVICE_URL}
       - TIC_TAC_TOE_REPOSITORY_SERVICE_URL=${TIC_TAC_TOE_REPOSITORY_SERVICE_URL}
     develop:
       watch:

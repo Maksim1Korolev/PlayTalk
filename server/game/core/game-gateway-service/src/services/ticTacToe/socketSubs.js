@@ -19,7 +19,7 @@ async function handleTicTacToeSubscriptions(socket, username) {
         interactingIndex
       );
 
-      if (!response && !response.MoveResult) {
+      if (!response || !response.MoveResult) {
         console.log(
           `Response or response's MoveResult is undefined upon trying to make a move in ${gameName}.`
         );

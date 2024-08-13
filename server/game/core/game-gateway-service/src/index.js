@@ -8,7 +8,7 @@ import { Server } from "socket.io";
 import redisClient from "./utils/redisClient.js";
 
 import connectionRouter from "./connection/connection.routes.js";
-import gameRouter from "./connection/game.routes.js";
+import gameRouter from "./game/game.routes.js";
 import { connectToGameLobby } from "./connection/connection.controller.js";
 
 dotenv.config();
