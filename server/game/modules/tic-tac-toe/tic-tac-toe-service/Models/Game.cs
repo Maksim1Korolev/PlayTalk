@@ -7,27 +7,21 @@ namespace TicTacToe.Models
     {
         [JsonProperty]
         private char[] _board = new char[9];
+        [JsonProperty]
+        private byte _turn = 1;
 
         [JsonProperty]
         public Player Player1 { get; private set; }
-
         [JsonProperty]
         public Player Player2 { get; private set; }
-
         [JsonProperty]
         public Player CurrentPlayer { get; private set; }
-
-        [JsonProperty]
-        public byte Turn { get; private set; } = 1;
-
         [JsonProperty]
         public bool HasEnded { get; private set; } = false;
 
-        [JsonProperty]
-        public Player? Winner { get; private set; } = null;
-
         [JsonConstructor]
         private Game() { }
+
         public Game(Player player1, Player player2)
         {
             Player1 = player1 ?? throw new ArgumentNullException(nameof(player1));
@@ -47,15 +41,15 @@ namespace TicTacToe.Models
             }
 
             _board[interactedIndex] = CurrentPlayer.Sign.ToChar();
-            Turn++;
+            _turn++;
 
-            if (Turn >= 5 && CheckWinner(CurrentPlayer))
+            if (_turn >= 5 && CheckWinner(CurrentPlayer))
             {
                 Finish();
                 return MoveResult.Win;
             }
 
-            if (Turn == 9)
+            if (_turn == 9)
             {
                 Finish();
                 return MoveResult.Draw;
@@ -74,20 +68,17 @@ namespace TicTacToe.Models
                 if (surrenderedPlayerUsername == Player1.Username)
                 {
                     Player2.Wins++;
-                    Winner = Player2;
                 }
                 else
                 {
                     Player1.Wins++;
-                    Winner = Player1;
                 }
                 return;
             }
 
-            Winner = CurrentPlayer;
 
             //Have to check according to usernames, because redis get returns different entity of CurrentPlayer
-            if (Winner.Username == Player1.Username)
+            if (CurrentPlayer.Username == Player1.Username)
             {
                 Player1.Wins++;
             }
