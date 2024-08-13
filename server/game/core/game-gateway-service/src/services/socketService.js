@@ -9,9 +9,9 @@ class SocketService {
 
       socket.on("online-ping", async username => {
         savedUsername = username;
-        const gameData = [];
+        const activeGames = [];
 
-        //await this.storeGameData(savedUsername, gameData);
+        //await this.storeGameData(savedUsername, activeGames);
         await this.connectUser(savedUsername, socket.id);
 
         console.log(
@@ -46,7 +46,7 @@ class SocketService {
     });
   }
 
-  static async storeGameData(username, gameData) {
+  static async storeActiveGames(username, gameData) {
     await redisClient.hSet(
       process.env.REDIS_USER_GAMES_HASH_KEY,
       username,
@@ -54,7 +54,7 @@ class SocketService {
     );
   }
 
-  static async getGameData(username) {
+  static async getActiveGames(username) {
     const data = await redisClient.hGet(
       process.env.REDIS_USER_GAMES_HASH_KEY,
       username

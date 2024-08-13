@@ -8,6 +8,7 @@ import { Server } from "socket.io";
 import redisClient from "./utils/redisClient.js";
 
 import connectionRouter from "./connection/connection.routes.js";
+import gameRouter from "./connection/game.routes.js";
 import { connectToGameLobby } from "./connection/connection.controller.js";
 
 dotenv.config();
@@ -25,6 +26,7 @@ async function main() {
   app.use(express.json());
 
   app.use("/api/connection", connectionRouter);
+  app.use("/api/game", gameRouter);
 
   const PORT = process.env.PORT || 3030;
 

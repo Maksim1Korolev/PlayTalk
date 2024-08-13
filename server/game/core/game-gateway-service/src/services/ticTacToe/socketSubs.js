@@ -10,7 +10,7 @@ const MOVE_MADE_EVENT = `${gameName}-move-made`;
 const END_GAME_EVENT = `${gameName}-end-game`;
 const SURRENDER_EVENT = `${gameName}-surrender`;
 
-async function handleTicTacToeSubscriptions(socket, username, gameData) {
+async function handleTicTacToeSubscriptions(socket, username) {
   socket.on(MAKE_MOVE_EVENT, async ({ receiverUsername, interactingIndex }) => {
     try {
       const response = await GameService.makeMove(
