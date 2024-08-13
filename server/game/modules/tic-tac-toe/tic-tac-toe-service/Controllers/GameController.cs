@@ -23,13 +23,14 @@ namespace TicTacToe.Controllers
             {
                 var gameInfo = _gameService.GetCurrentGameInfo(player1Username, player2Username);
 
-                return Ok(gameInfo);
+                return Ok(new { game = gameInfo });
             }
             catch (ArgumentException ex)
             {
                 return NotFound(ex.Message);
             }
         }
+
 
         [HttpPost("start")]
         public IActionResult StartGame(string player1Username, string player2Username)
