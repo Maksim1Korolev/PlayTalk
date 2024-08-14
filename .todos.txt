@@ -4,6 +4,7 @@ List of game invitations
 Messages sync
 Multiple sources for the main list of users
 Remove unused api requests from auth
+Get messages from buffer on chat-repository
 
 To fix:
 ChatModal opens lower than the screen and scrollbar appears

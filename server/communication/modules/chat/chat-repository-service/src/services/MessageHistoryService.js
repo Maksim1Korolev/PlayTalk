@@ -15,10 +15,7 @@ class MessageHistoryService {
 
     await MessageBufferSync.addToBuffer(sortedUsernames, message);
 
-    await redisClient.hDel(
-      process.env.REDIS_MESSAGE_HISTORY_KEY,
-      cacheKey
-    );
+    await redisClient.hDel(process.env.REDIS_MESSAGE_HISTORY_KEY, cacheKey);
     console.log(`Cache key invalidated: ${cacheKey}`);
   }
 
@@ -126,10 +123,7 @@ class MessageHistoryService {
 
       if (updated) {
         await messageHistory.save();
-        await redisClient.hDel(
-          process.env.REDIS_MESSAGE_HISTORY_KEY,
-          cacheKey
-        );
+        await redisClient.hDel(process.env.REDIS_MESSAGE_HISTORY_KEY, cacheKey);
         console.log(
           `Messages marked as read. Cache key invalidated: ${cacheKey}`
         );
