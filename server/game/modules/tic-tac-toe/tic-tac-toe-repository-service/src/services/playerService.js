@@ -6,7 +6,7 @@ class PlayerService {
     const addedPlayer = await Player.create({ ...player });
 
     await redisClient.hSet(
-      process.env.REDIS_TIC_TAC_TOE_PLAYER_HASH_KEY,
+      process.env.REDIS_TIC_TAC_TOE_PLAYER_KEY,
       addedPlayer.username,
       JSON.stringify(addedPlayer)
     );
@@ -20,7 +20,7 @@ class PlayerService {
     }
 
     const cachedPlayer = await redisClient.hGet(
-      process.env.REDIS_TIC_TAC_TOE_PLAYER_HASH_KEY,
+      process.env.REDIS_TIC_TAC_TOE_PLAYER_KEY,
       username
     );
     if (cachedPlayer) {
@@ -41,7 +41,7 @@ class PlayerService {
 
     if (player) {
       await redisClient.hSet(
-        process.env.REDIS_TIC_TAC_TOE_PLAYER_HASH_KEY,
+        process.env.REDIS_TIC_TAC_TOE_PLAYER_KEY,
         username,
         JSON.stringify(player)
       );
@@ -83,7 +83,7 @@ class PlayerService {
       updatedPlayers.push(updatedPlayer);
 
       await redisClient.hSet(
-        process.env.REDIS_TIC_TAC_TOE_PLAYER_HASH_KEY,
+        process.env.REDIS_TIC_TAC_TOE_PLAYER_KEY,
         updatedPlayer.username,
         JSON.stringify(updatedPlayer)
       );

@@ -43,7 +43,7 @@ class SocketService {
     const userSockets = await this.getUserSockets(username);
     userSockets.push(socketId);
     await redisClient.hSet(
-      process.env.REDIS_USER_SOCKET_HASH_KEY,
+      process.env.REDIS_USER_SOCKET_KEY,
       username,
       JSON.stringify(userSockets)
     );
@@ -55,25 +55,25 @@ class SocketService {
 
     if (updatedSockets.length > 0) {
       await redisClient.hSet(
-        process.env.REDIS_USER_SOCKET_HASH_KEY,
+        process.env.REDIS_USER_SOCKET_KEY,
         username,
         JSON.stringify(updatedSockets)
       );
     } else {
-      await redisClient.hDel(process.env.REDIS_USER_SOCKET_HASH_KEY, username);
+      await redisClient.hDel(process.env.REDIS_USER_SOCKET_KEY, username);
     }
   }
 
   static async getUserSockets(username) {
     const sockets = await redisClient.hGet(
-      process.env.REDIS_USER_SOCKET_HASH_KEY,
+      process.env.REDIS_USER_SOCKET_KEY,
       username
     );
     return sockets ? JSON.parse(sockets) : [];
   }
 
   static async getOnlineUsernames() {
-    return await redisClient.hKeys(process.env.REDIS_USER_SOCKET_HASH_KEY);
+    return await redisClient.hKeys(process.env.REDIS_USER_SOCKET_KEY);
   }
 }
 

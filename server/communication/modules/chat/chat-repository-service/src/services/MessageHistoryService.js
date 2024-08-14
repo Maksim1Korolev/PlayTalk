@@ -16,7 +16,7 @@ class MessageHistoryService {
     await MessageBufferSync.addToBuffer(sortedUsernames, message);
 
     await redisClient.hDel(
-      process.env.REDIS_MESSAGE_HISTORY_HASH_KEY,
+      process.env.REDIS_MESSAGE_HISTORY_KEY,
       cacheKey
     );
     console.log(`Cache key invalidated: ${cacheKey}`);
@@ -28,7 +28,7 @@ class MessageHistoryService {
     console.log(`Fetching message history. Cache key: ${cacheKey}`);
 
     const cachedMessageHistory = await redisClient.hGet(
-      process.env.REDIS_MESSAGE_HISTORY_HASH_KEY,
+      process.env.REDIS_MESSAGE_HISTORY_KEY,
       cacheKey
     );
     if (cachedMessageHistory) {
@@ -43,7 +43,7 @@ class MessageHistoryService {
     });
     if (messageHistory) {
       await redisClient.hSet(
-        process.env.REDIS_MESSAGE_HISTORY_HASH_KEY,
+        process.env.REDIS_MESSAGE_HISTORY_KEY,
         cacheKey,
         JSON.stringify(messageHistory.messages)
       );
@@ -127,7 +127,7 @@ class MessageHistoryService {
       if (updated) {
         await messageHistory.save();
         await redisClient.hDel(
-          process.env.REDIS_MESSAGE_HISTORY_HASH_KEY,
+          process.env.REDIS_MESSAGE_HISTORY_KEY,
           cacheKey
         );
         console.log(

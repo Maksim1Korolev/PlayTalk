@@ -49,7 +49,7 @@ main().catch(async err => {
 
 async function clearSocketCache() {
   try {
-    await redisClient.del(process.env.REDIS_USER_SOCKET_HASH_KEY);
+    await redisClient.del(process.env.REDIS_USER_SOCKET_KEY);
     console.log("Cleared socket ID cache in Redis");
   } catch (err) {
     console.error("Error clearing socket ID cache in Redis:", err.message);
