@@ -10,6 +10,7 @@ import {
 
 import messageHistoriesRoutes from "./messageHistories/messageHistories.routes.js";
 import unreadRoutes from "./unread/unread.routes.js";
+import MessageBufferSync from "./sync/messageBufferSync.js";
 
 dotenv.config();
 
@@ -24,9 +25,10 @@ async function main() {
 
   const PORT = process.env.PORT || 3021;
 
+  await redisClient.connect();
   await connectToMongoDB();
 
-  await redisClient.connect();
+  MessageBufferSync.subscribeToPeriodicFlush();
 
   app.listen(PORT, () => {
     console.log(`chat-repository-service is running on port ${PORT}`);

@@ -6,12 +6,12 @@ class MessageBufferSync {
     const sortedUsernames = usernames.sort();
     const cacheKey = sortedUsernames.join("-");
     const bufferKey = `${process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY}:${cacheKey}`;
+    console.log("bufferKey");
+    console.log(parseInt(process.env.MESSAGE_BUFFER_FLUSH_INTERVAL));
 
     await redisClient.rPush(bufferKey, JSON.stringify(message));
-    console.log(`Message added to buffer. Buffer key: ${bufferKey}`);
 
     const bufferSize = await redisClient.lLen(bufferKey);
-    console.log(`Current buffer size for ${bufferKey}: ${bufferSize}`);
 
     const threshold = parseInt(process.env.MESSAGE_BUFFER_THRESHOLD) || 10;
 
@@ -56,22 +56,24 @@ class MessageBufferSync {
     const keys = await redisClient.keys(
       `${process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY}:*`
     );
-    console.log(`Found ${keys.length} buffers to flush.`);
 
     for (const bufferKey of keys) {
       const usernames = bufferKey
         .replace(`${process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY}:`, "")
         .split("-");
-      console.log(`Flushing buffer for users: ${usernames.join(", ")}`);
       await this.flushBufferToDatabase(usernames, bufferKey);
     }
   }
-}
 
-setInterval(async () => {
-  console.log("Periodic buffer flush started.");
-  await MessageBufferSync.flushAllBuffers();
-  console.log("Periodic buffer flush completed.");
-}, 180000);
+  static async subscribeToPeriodicFlush() {
+    const MESSAGE_BUFFER_FLUSH_INTERVAL =
+      parseInt(process.env.MESSAGE_BUFFER_FLUSH_INTERVAL) || 60000;
+
+    setInterval(async () => {
+      console.log("Periodic buffer flush started.");
+      await MessageBufferSync.flushAllBuffers();
+    }, MESSAGE_BUFFER_FLUSH_INTERVAL);
+  }
+}
 
 export default MessageBufferSync;
