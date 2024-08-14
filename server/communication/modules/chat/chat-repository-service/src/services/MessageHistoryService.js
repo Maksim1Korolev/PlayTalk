@@ -1,4 +1,5 @@
 import redisClient from "../utils/redisClient.js";
+import MessageBufferSync from "../sync/messageBufferSync.js";
 import MessageHistory from "../models/MessageHistory.js";
 
 class MessageHistoryService {
@@ -12,36 +13,13 @@ class MessageHistoryService {
     const cacheKey = sortedUsernames.join("-");
     console.log(`Adding message. Cache key: ${cacheKey}`);
 
-    const messageHistory = await MessageHistory.findOne({
-      usernames: sortedUsernames,
-    });
-    if (messageHistory) {
-      const updatedMessageHistory = await MessageHistory.findOneAndUpdate(
-        { usernames: sortedUsernames },
-        { $push: { messages: message } },
-        { new: true }
-      );
-      await redisClient.hDel(
-        process.env.REDIS_MESSAGE_HISTORY_HASH_KEY,
-        cacheKey
-      );
-      console.log(
-        `Updated message history. Cache key invalidated: ${cacheKey}`
-      );
-      return updatedMessageHistory;
-    }
+    await MessageBufferSync.addToBuffer(sortedUsernames, message);
 
-    const addedMessageHistory = await MessageHistory.create({
-      usernames: sortedUsernames,
-      messages: [message],
-    });
     await redisClient.hDel(
       process.env.REDIS_MESSAGE_HISTORY_HASH_KEY,
       cacheKey
     );
-    console.log(`Added message history. Cache key invalidated: ${cacheKey}`);
-
-    return addedMessageHistory;
+    console.log(`Cache key invalidated: ${cacheKey}`);
   }
 
   static async getMessageHistory(usernames) {
