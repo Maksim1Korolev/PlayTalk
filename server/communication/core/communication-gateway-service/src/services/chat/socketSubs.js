@@ -1,6 +1,6 @@
-import MessageHistoryService from "./messageHistoryService.js";
-import SocketService from "../socketService.js";
 import { io } from "../../index.js";
+import SocketService from "../socketService.js";
+import MessageHistoryService from "./messageHistoryService.js";
 
 async function handleChatSubscriptions(socket, username) {
   socket.on("on-chat-open", async receiverUsername => {
@@ -55,6 +55,19 @@ async function handleChatSubscriptions(socket, username) {
           senderUsername,
           message,
         });
+
+
+        const unreadCount = await MessageHistoryService.getUnreadMessagesCount(
+          receiverUsername,
+          usernames
+        );
+
+        io.to(receiversSocketIds).emit(
+          "unread-count-messages",
+          senderUsername,
+          unreadCount
+        );
+
         console.log(
           `Message from ${senderUsername} to ${receiverUsername}: "${message}" delivered to sockets: ${receiversSocketIds?.join(
             ", "
