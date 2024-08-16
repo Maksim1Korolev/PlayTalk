@@ -53,9 +53,13 @@ const OnlinePage = ({ className }: { className?: string }) => {
         alert(resources.chatModalQuantityError);
         return;
       }
-      if (chatModals?.find(({ user: currentUser }) => currentUser === user))
+      if (
+        chatModals?.find(
+          ({ user: currentUser }) => currentUser.username === user.username
+        )
+      ) {
         return;
-
+      }
       const position = findNewModalPosition(chatModals || []);
 
       const newChatModalProps: ChatModalStateProps = { user, position };

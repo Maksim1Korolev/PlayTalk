@@ -25,9 +25,21 @@ class MessageHistoryService {
     return await axios.get(url);
   }
 
-  static async getUnreadMessagesCount(usernames, requestingUsername) {
-    const url = `${process.env.CHAT_REPOSITORY_SERVICE_URL}/unread/${requestingUsername}`;
-    return await axios.get(url, { params: { usernames } });
+  static async getUnreadMessagesCount(requestingUsername, usernames) {
+    console.log("requestingUsername", requestingUsername);
+
+    const url = `${
+      process.env.CHAT_REPOSITORY_SERVICE_URL
+    }/unread/${requestingUsername}?usernames=${usernames.join(",")}`;
+
+    try {
+      const response = await axios.get(url);
+      console.log("response.data", response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching unread messages count: ${error.message}`);
+    }
   }
 
   static async readAllUnreadMessages(requestingUsername, usernames) {

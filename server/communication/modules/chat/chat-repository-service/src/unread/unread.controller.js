@@ -8,25 +8,29 @@ import MessageHistoryService from "../services/messageHistoryService.js";
 export const getUnreadMessageCount = asyncHandler(async (req, res) => {
   try {
     const { requestingUsername } = req.params;
-    const { usernames } = req.body;
+    const { usernames } = req.query;
 
     if (!requestingUsername) {
       return res.status(400).json({ message: "Username is required." });
     }
     if (!usernames) {
       return res
-        .status(401)
+        .status(400)
         .json({ message: "Usernames of MessageHistory are required." });
     }
 
+    const usernamesArray = Array.isArray(usernames)
+      ? usernames
+      : usernames.split(",");
+
     const count = await MessageHistoryService.getUnreadMessagesCount(
-      usernames,
+      usernamesArray,
       requestingUsername
     );
 
     return res.json(count);
   } catch (err) {
-    res.status(500).json(err.toString());
+    res.status(500).json({ error: err.toString() });
   }
 });
 
