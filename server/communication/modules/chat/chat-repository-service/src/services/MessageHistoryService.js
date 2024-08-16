@@ -53,6 +53,7 @@ class MessageHistoryService {
     return messageHistory ? messageHistory.messages : [];
   }
 
+  //TODO:Add redis to unread functions
   ///////////////unread
   static async getUnreadMessagesCount(usernames, requestingUsername) {
     const sortedUsernames = this.getSortedUsernames(usernames);
