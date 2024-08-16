@@ -21,6 +21,7 @@ class MessageHistoryService {
 
   static async getMessageHistory(usernames) {
     const sortedUsernames = this.getSortedUsernames(usernames);
+
     const cacheKey = sortedUsernames.join("-");
     console.log(`Fetching message history. Cache key: ${cacheKey}`);
 
@@ -34,6 +35,8 @@ class MessageHistoryService {
     } else {
       console.log("Cache miss. No cached message history found.");
     }
+
+    await MessageBufferSync.flushAllBuffers();
 
     const messageHistory = await MessageHistory.findOne({
       usernames: sortedUsernames,
@@ -53,6 +56,9 @@ class MessageHistoryService {
   ///////////////unread
   static async getUnreadMessagesCount(usernames, requestingUsername) {
     const sortedUsernames = this.getSortedUsernames(usernames);
+
+    await MessageBufferSync.flushAllBuffers();
+
     const result = await MessageHistory.aggregate([
       { $unwind: "$messages" },
       {
@@ -69,6 +75,8 @@ class MessageHistoryService {
   }
 
   static async getAllUnreadMessagesCount(requestingUsername) {
+    await MessageBufferSync.flushAllBuffers();
+
     const result = await MessageHistory.aggregate([
       { $match: { usernames: requestingUsername } },
       { $unwind: "$messages" },
@@ -98,6 +106,8 @@ class MessageHistoryService {
     const sortedUsernames = this.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
     console.log(`Marking messages as read. Cache key: ${cacheKey}`);
+
+    await MessageBufferSync.flushAllBuffers();
 
     const messageHistory = await MessageHistory.findOne({
       usernames: { $all: sortedUsernames },

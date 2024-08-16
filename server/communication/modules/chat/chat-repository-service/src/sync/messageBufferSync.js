@@ -71,7 +71,7 @@ class MessageBufferSync {
 
     setInterval(async () => {
       console.log("Periodic buffer flush started.");
-      await MessageBufferSync.flushAllBuffers();
+      await this.flushAllBuffers();
     }, MESSAGE_BUFFER_FLUSH_INTERVAL);
   }
 }
