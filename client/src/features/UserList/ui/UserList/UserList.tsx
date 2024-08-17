@@ -12,10 +12,10 @@ export interface UserListProps {
   busy?: boolean;
   collapsed?: boolean;
   handleUserChatButton: (user: User) => void;
-  handleUserInviteButton: ({
-    receiverUsername,
+  handleUserPlayButton: ({
+    opponentUsername,
   }: {
-    receiverUsername: string;
+    opponentUsername: string;
   }) => void;
 }
 
@@ -38,7 +38,7 @@ export const UserList = memo(
     busy,
     collapsed,
     handleUserChatButton,
-    handleUserInviteButton,
+    handleUserPlayButton,
   }: UserListProps) => {
     const userRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
@@ -59,14 +59,14 @@ export const UserList = memo(
             user={user}
             busy={busy}
             collapsed={collapsed}
-            handleInviteButton={handleUserInviteButton}
+            handlePlayButton={handleUserPlayButton}
             handleChatButton={handleUserChatButton}
             userRef={el => (userRefs.current[index] = el)}
           />
           {index < sortedUsers.length - 1 && <hr />}
         </div>
       ));
-    }, [busy, collapsed, handleUserChatButton, handleUserInviteButton, users]);
+    }, [busy, collapsed, handleUserChatButton, handleUserPlayButton, users]);
 
     if (!users || users.length === 0) {
       return <p>No users available.</p>;

@@ -69,6 +69,11 @@ const OnlinePage = ({ className }: { className?: string }) => {
     [chatModals]
   );
 
+  const handleOpenGameSelector = useCallback(
+    ({ opponentUsername }: { opponentUsername: string }) => {},
+    []
+  );
+
   const {
     upToDateUsers,
     isInvitedToGame,
@@ -117,7 +122,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
             busy={currentUser.inGame || currentUser.inInvite}
             users={upToDateUsers}
             handleUserChatButton={handleOpenChatModal}
-            handleUserInviteButton={handleSendGameInvite}
+            handleUserPlayButton={handleOpenGameSelector}
           />
 
           <ChatModals

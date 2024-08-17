@@ -12,7 +12,7 @@ export const UserListCard = ({
   user,
   busy,
   collapsed,
-  handleInviteButton,
+  handlePlayButton,
   handleChatButton,
   userRef,
 }: {
@@ -20,10 +20,10 @@ export const UserListCard = ({
   user: User;
   busy?: boolean;
   collapsed?: boolean;
-  handleInviteButton: ({
-    receiverUsername,
+  handlePlayButton: ({
+    opponentUsername,
   }: {
-    receiverUsername: string;
+    opponentUsername: string;
   }) => void;
   handleChatButton: (user: User) => void;
   userRef: (el: HTMLSpanElement | null) => void;
@@ -33,7 +33,7 @@ export const UserListCard = ({
   };
 
   const onPlayButton = () => {
-    handleInviteButton({ receiverUsername: user.username });
+    handlePlayButton({ opponentUsername: user.username });
   };
 
   return (

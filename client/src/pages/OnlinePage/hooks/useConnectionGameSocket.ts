@@ -54,9 +54,15 @@ export const useConnectionGameSocket = ({
   );
 
   const handleSendGameInvite = useCallback(
-    ({ receiverUsername }: { receiverUsername: string }) => {
-      console.log(`Sending game invite to: ${receiverUsername}`);
-      gameSocket.emit("send-game-invite", { receiverUsername });
+    ({
+      receiverUsername,
+      game,
+    }: {
+      receiverUsername: string;
+      game: string;
+    }) => {
+      console.log(`Sending ${game} game invite to: ${receiverUsername}`);
+      gameSocket.emit("send-game-invite", { receiverUsername, game });
     },
     []
   );
