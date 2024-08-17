@@ -5,6 +5,7 @@ Messages sync
 Multiple sources for the main list of users
 Remove unused api requests from auth
 Get messages from buffer on chat-repository
+Update resource files in assets folder
 
 To fix:
 ChatModal opens lower than the screen and scrollbar appears
