@@ -11,29 +11,24 @@ export interface ChatModalStateProps {
   };
 }
 
-export const useChatModals = (currentUser: User) => {
+export const useChatModals = () => {
   const handleUserMessage = useCallback(
     (receiverUsername: string, message: Message) => {
       console.log(receiverUsername);
 
       onlineSocket.emit("send-message", {
-        senderUsername: currentUser.username,
         receiverUsername,
         message,
       });
     },
-    [currentUser.username]
+    []
   );
 
-  const readAllUnreadMessages = useCallback(
-    (usernames: string[]) => {
-      onlineSocket.emit("on-read-messages", {
-        requestingUsername: currentUser.username,
-        usernames,
-      });
-    },
-    [currentUser.username]
-  );
+  const readAllUnreadMessages = useCallback((usernames: string[]) => {
+    onlineSocket.emit("on-read-messages", {
+      usernames,
+    });
+  }, []);
 
   return {
     handleUserMessage,

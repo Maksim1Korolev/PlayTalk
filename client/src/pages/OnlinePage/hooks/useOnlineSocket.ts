@@ -53,7 +53,6 @@ export const useOnlineSocket = ({
     /////////////////////////////////////////////////////
     onlineSocket.on("connect", onConnect);
     onlineSocket.on("user-connection", updateUserOnline);
-
     /////////////////////////////////////////////////////
     onlineSocket.on("unread-count-messages", unreadMessageCountChanged);
 
