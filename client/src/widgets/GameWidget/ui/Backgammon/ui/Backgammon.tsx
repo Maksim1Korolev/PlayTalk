@@ -1,7 +1,7 @@
-import { Board } from "@/features/Backgammon";
+import { Board } from "@/features/game/Backgammon";
 import cls from "./Backgammon.module.scss";
 import { cx } from "@/shared/lib/cx";
-import { BoardBorder } from "@/features/Backgammon/ui/BoardBorder";
+import { BoardBorder } from "@/features/game/Backgammon/ui/BoardBorder";
 import { Card, UiButton } from "@/shared/ui";
 
 export const Backgammon = ({

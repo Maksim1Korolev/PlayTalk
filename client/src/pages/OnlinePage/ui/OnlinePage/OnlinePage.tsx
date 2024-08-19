@@ -1,5 +1,5 @@
 import { User } from "@/entities/User";
-import { GameRequest } from "@/features/GameRequest";
+import { GameRequest } from "@/features/game/GameRequest";
 import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
 import { cx } from "@/shared/lib/cx";
 import { HStack, Loader, UiText, VStack } from "@/shared/ui";

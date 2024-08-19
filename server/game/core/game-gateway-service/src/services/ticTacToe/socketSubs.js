@@ -4,7 +4,6 @@ import GameService from "./gameService.js";
 
 const gameName = "tic-tac-toe";
 
-//TODO:Maybe place someplace else?
 const MAKE_MOVE_EVENT = `${gameName}-make-move`;
 const MOVE_MADE_EVENT = `${gameName}-move-made`;
 const END_GAME_EVENT = `${gameName}-end-game`;
