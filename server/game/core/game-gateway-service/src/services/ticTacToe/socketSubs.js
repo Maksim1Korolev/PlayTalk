@@ -1,6 +1,7 @@
 import SocketService from "../socketService.js";
 import { io } from "../../index.js";
 import GameService from "./gameService.js";
+import ActiveGamesService from "../activeGamesService.js";
 
 const gameName = "tic-tac-toe";
 
@@ -51,6 +52,12 @@ async function handleTicTacToeSubscriptions(socket, username) {
             username,
             winner: username,
           });
+
+          await ActiveGamesService.removeActiveGame(
+            username,
+            receiverUsername,
+            gameName
+          );
           break;
 
         case "Draw":
@@ -60,6 +67,12 @@ async function handleTicTacToeSubscriptions(socket, username) {
           io.to(receiversSocketIds).emit(END_GAME_EVENT, {
             username,
           });
+
+          await ActiveGamesService.removeActiveGame(
+            username,
+            receiverUsername,
+            gameName
+          );
           break;
 
         case "InvalidMove":
@@ -102,6 +115,12 @@ async function handleTicTacToeSubscriptions(socket, username) {
         username,
         winner: receiverUsername,
       });
+
+      await ActiveGamesService.removeActiveGame(
+        username,
+        receiverUsername,
+        gameName
+      );
     } catch (err) {
       console.error(
         `Error trying to surrender in ${gameName}. Game of ${username} and ${receiverUsername}: `,
