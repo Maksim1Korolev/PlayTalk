@@ -1,13 +1,12 @@
 import SocketService from "../socketService.js";
 import { io } from "../../index.js";
 import GameService from "./gameService.js";
-import ActiveGamesService from "../activeGamesService.js";
+import { endGame } from "../gameSessionService.js";
 
 const gameName = "tic-tac-toe";
 
 const MAKE_MOVE_EVENT = `${gameName}-make-move`;
 const MOVE_MADE_EVENT = `${gameName}-move-made`;
-const END_GAME_EVENT = `${gameName}-end-game`;
 const SURRENDER_EVENT = `${gameName}-surrender`;
 
 async function handleTicTacToeSubscriptions(socket, username) {
@@ -44,35 +43,11 @@ async function handleTicTacToeSubscriptions(socket, username) {
           break;
 
         case "Win":
-          io.to(sendersSocketIds).emit(END_GAME_EVENT, {
-            username,
-            winner: username,
-          });
-          io.to(receiversSocketIds).emit(END_GAME_EVENT, {
-            username,
-            winner: username,
-          });
-
-          await ActiveGamesService.removeActiveGame(
-            username,
-            receiverUsername,
-            gameName
-          );
+          await endGame(username, receiverUsername, gameName, username);
           break;
 
         case "Draw":
-          io.to(sendersSocketIds).emit(END_GAME_EVENT, {
-            username,
-          });
-          io.to(receiversSocketIds).emit(END_GAME_EVENT, {
-            username,
-          });
-
-          await ActiveGamesService.removeActiveGame(
-            username,
-            receiverUsername,
-            gameName
-          );
+          await endGame(username, receiverUsername, gameName, null);
           break;
 
         case "InvalidMove":
@@ -102,25 +77,7 @@ async function handleTicTacToeSubscriptions(socket, username) {
         return;
       }
 
-      const sendersSocketIds = await SocketService.getUserSockets(username);
-      const receiversSocketIds = await SocketService.getUserSockets(
-        receiverUsername
-      );
-
-      io.to(sendersSocketIds).emit(END_GAME_EVENT, {
-        username,
-        winner: receiverUsername,
-      });
-      io.to(receiversSocketIds).emit(END_GAME_EVENT, {
-        username,
-        winner: receiverUsername,
-      });
-
-      await ActiveGamesService.removeActiveGame(
-        username,
-        receiverUsername,
-        gameName
-      );
+      await endGame(username, receiverUsername, gameName, receiverUsername);
     } catch (err) {
       console.error(
         `Error trying to surrender in ${gameName}. Game of ${username} and ${receiverUsername}: `,

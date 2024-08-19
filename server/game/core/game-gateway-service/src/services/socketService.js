@@ -1,5 +1,6 @@
 import { io } from "../index.js";
 import redisClient from "../utils/redisClient.js";
+import { handleInviteSubscriptions } from "./socketGameSessionHandler.js";
 
 class SocketService {
   static async setupSocketConnection() {
@@ -11,6 +12,8 @@ class SocketService {
         savedUsername = username;
 
         await this.connectUser(savedUsername, socket.id);
+
+        await handleInviteSubscriptions(socket, username);
 
         console.log(
           `User ${savedUsername} connected with socket ID ${socket.id}. Current online users:`,
