@@ -26,7 +26,6 @@ export const useOnlinePageSockets = () => {
       user => user.username === currentUser.username
     );
     if (userWithGameStatuses) {
-      console.log("684684646846846846846846846846468468464684684684684684");
       console.log(userWithGameStatuses?.inGame);
 
       updateUsersGameStatus(

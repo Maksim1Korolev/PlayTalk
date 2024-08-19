@@ -1,5 +1,5 @@
 import { User } from "@/entities/User";
-import { onlineSocket } from "@/shared/api/sockets";
+import { gameSocket, onlineSocket } from "@/shared/api/sockets";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 
@@ -17,6 +17,7 @@ export const useOnlineSocket = ({
   useEffect(() => {
     const onConnect = () => {
       onlineSocket.emit("online-ping", user.username);
+      gameSocket.emit("online-ping", user.username);
     };
 
     const updateUserOnline = (username: string, isOnline: boolean) => {
@@ -52,13 +53,19 @@ export const useOnlineSocket = ({
 
     /////////////////////////////////////////////////////
     onlineSocket.on("connect", onConnect);
+    gameSocket.on("connect", onConnect);
+
     onlineSocket.on("user-connection", updateUserOnline);
+    gameSocket.on("player-connection", updateUserOnline);
+
     /////////////////////////////////////////////////////
     onlineSocket.on("unread-count-messages", unreadMessageCountChanged);
 
     return () => {
       onlineSocket.off("connect", onConnect);
+      gameSocket.off("connect", onConnect);
       onlineSocket.off("user-connection", updateUserOnline);
+      gameSocket.off("player-connection", updateUserOnline);
       onlineSocket.off("unread-count-messages", unreadMessageCountChanged);
       onlineSocket.close();
     };
