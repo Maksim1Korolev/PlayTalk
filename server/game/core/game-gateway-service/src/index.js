@@ -7,9 +7,8 @@ import { Server } from "socket.io";
 
 import redisClient from "./utils/redisClient.js";
 
-import connectionRouter from "./connection/connection.routes.js";
 import gameRouter from "./game/game.routes.js";
-import { connectToGameLobby } from "./connection/connection.controller.js";
+import SocketService from "./services/socketService.js";
 
 dotenv.config();
 
@@ -25,7 +24,6 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
-  app.use("/api/connection", connectionRouter);
   app.use("/api/game", gameRouter);
 
   const PORT = process.env.PORT || 3030;
@@ -33,7 +31,7 @@ async function main() {
   await redisClient.connect();
   await clearSocketCache();
 
-  connectToGameLobby();
+  await SocketService.setupSocketConnection();
 
   const mongoURL = process.env.DATABASE_URL;
 
