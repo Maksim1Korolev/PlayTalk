@@ -61,7 +61,11 @@ export const UserListCard = ({
         <span className={cls.username} ref={userRef}>
           {user.username}
         </span>
-        <PlayButton className={cls.playButton} onClick={onPlayButton}>
+        <PlayButton
+          className={cls.playButton}
+          onClick={onPlayButton}
+          disabled={!user.isOnline}
+        >
           Play
         </PlayButton>
       </HStack>
