@@ -1,7 +1,17 @@
 import { gameSocket } from "@/shared/api/sockets";
 import { useCallback, useEffect } from "react";
 
-export const useGameSessionSocket = () => {
+export const useGameSessionSocket = ({
+  onReceiveInvite,
+}: {
+  onReceiveInvite: ({
+    senderUsername,
+    game,
+  }: {
+    senderUsername: string;
+    game: string;
+  }) => void;
+}) => {
   //    ( {
   //         onGameStart,
   //         onGameEnd,
@@ -55,6 +65,19 @@ export const useGameSessionSocket = () => {
   );
 
   useEffect(() => {
+    const handleReceiveInvite = ({
+      senderUsername,
+      game,
+    }: {
+      senderUsername: string;
+      game: string;
+    }) => {
+      console.log(
+        `Game request received from ${senderUsername} for game ${game}`
+      );
+      onReceiveInvite({ senderUsername, game });
+    };
+
     const handleStartGame = ({
       opponentUsername,
       game,
@@ -83,6 +106,7 @@ export const useGameSessionSocket = () => {
       //   onGameEnd({ opponentUsername, game, winner });
     };
 
+    gameSocket.on("receive-game-invite", handleReceiveInvite);
     gameSocket.on("start-game", handleStartGame);
     gameSocket.on("end-game", handleEndGame);
 
@@ -90,7 +114,7 @@ export const useGameSessionSocket = () => {
       gameSocket.off("start-game", handleStartGame);
       gameSocket.off("end-game", handleEndGame);
     };
-  }, []); //[onGameStart, onGameEnd]
+  }, [onReceiveInvite]); //[onGameStart, onGameEnd]
 
   return {
     handleSendGameInvite,

@@ -85,7 +85,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
 
   const {
     upToDateUsers,
-    isInvitedToGame,
+    inviteData,
     updateUsers,
     handleSendGameInvite,
     handleAcceptGame,
@@ -137,11 +137,11 @@ const OnlinePage = ({ className }: { className?: string }) => {
             chatModals={chatModals}
             setChatModals={setChatModals}
           />
-          {isInvitedToGame && (
+          {inviteData && (
             <GameRequest
               handleYesButton={handleAcceptGame}
               handleNoButton={() => void 0}
-              senderUsername={"gameInviteSenderUsername"}
+              inviteData={inviteData}
             />
           )}
           {isGameSelectorOpen && (
