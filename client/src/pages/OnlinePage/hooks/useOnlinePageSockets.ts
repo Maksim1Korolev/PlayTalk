@@ -6,6 +6,7 @@ import {
 } from "./useConnectionGameSocket";
 import { useOnlineSocket } from "./useOnlineSocket";
 import { useCookies } from "react-cookie";
+import { useGameSessionSocket } from "./useGameSessionSocket";
 
 //TODO: Separate users update, so that if game Server crashes, online will work
 export const useOnlinePageSockets = () => {
@@ -28,11 +29,11 @@ export const useOnlinePageSockets = () => {
     if (userWithGameStatuses) {
       console.log(userWithGameStatuses?.inGame);
 
-      updateUsersGameStatus(
-        [userWithGameStatuses.username],
-        userWithGameStatuses?.inInvite,
-        userWithGameStatuses?.inGame
-      );
+      // updateUsersGameStatus(
+      //   [userWithGameStatuses.username],
+      //   userWithGameStatuses?.inInvite,
+      //   userWithGameStatuses?.inGame
+      // );
     }
   }, []);
 
@@ -41,32 +42,33 @@ export const useOnlinePageSockets = () => {
     setUpToDateUsers,
   });
 
-  const {
-    handleSendGameInvite,
-    handleAcceptGame,
-    handleEndGame,
-    updateUsersGameStatus,
-  } = useConnectionGameSocket({
-    setUpToDateUsers,
-  });
+  // const {
+  //   handleSendGameInvite,
+  //   handleAcceptGame,
+  //   handleEndGame,
+  //   updateUsersGameStatus,
+  // } = useConnectionGameSocket({
+  //   setUpToDateUsers,
+  // });
 
-  const receiveInviteSubscribe = useCallback(
-    ({ senderUsername }: { senderUsername: string }) => {
-      setGameInviteSenderUsername(senderUsername);
-      setIsInvitedToGame(true);
-    },
-    []
-  );
+  // const receiveInviteSubscribe = useCallback(
+  //   ({ senderUsername }: { senderUsername: string }) => {
+  //     setGameInviteSenderUsername(senderUsername);
+  //     setIsInvitedToGame(true);
+  //   },
+  //   []
+  // );
 
-  useReceiveInvite(receiveInviteSubscribe);
+  //useReceiveInvite(receiveInviteSubscribe);
 
+  //////
+
+  const { handleSendGameInvite, handleAcceptGame } = useGameSessionSocket();
   return {
     upToDateUsers,
     isInvitedToGame,
-    gameInviteSenderUsername,
     updateUsers,
     handleSendGameInvite,
     handleAcceptGame,
-    handleEndGame,
   };
 };

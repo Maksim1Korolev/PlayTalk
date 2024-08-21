@@ -13,6 +13,8 @@ import { ChatModalStateProps } from "../../hooks/useChatModals";
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
 import cls from "./OnlinePage.module.scss";
+import { GameSelector } from "@/features/game/GameSelector";
+import { Games } from "@mui/icons-material";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const [cookies] = useCookies(["jwt-cookie"]);
@@ -24,7 +26,11 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const token = cookies["jwt-cookie"]?.token;
   const currentUser: User = cookies["jwt-cookie"]?.user;
 
+  const [isGameSelectorOpen, setIsGameSelectorOpen] = useState<boolean>(false);
+  const [lastClickedPlayUser, setLastClickedPlayUser] = useState<string>("");
+
   const [chatModals, setChatModals] = useState<ChatModalStateProps[]>();
+
   const findNewModalPosition = (modals: ChatModalStateProps[]) => {
     let x = window.innerWidth - 400;
     let y = window.innerHeight - 300;
@@ -70,18 +76,19 @@ const OnlinePage = ({ className }: { className?: string }) => {
   );
 
   const handleOpenGameSelector = useCallback(
-    ({ opponentUsername }: { opponentUsername: string }) => {},
+    ({ opponentUsername }: { opponentUsername: string }) => {
+      setLastClickedPlayUser(opponentUsername);
+      setIsGameSelectorOpen(true);
+    },
     []
   );
 
   const {
     upToDateUsers,
     isInvitedToGame,
-    gameInviteSenderUsername,
     updateUsers,
     handleSendGameInvite,
     handleAcceptGame,
-    handleEndGame,
   } = useOnlinePageSockets();
 
   useEffect(() => {
@@ -133,12 +140,18 @@ const OnlinePage = ({ className }: { className?: string }) => {
           {isInvitedToGame && (
             <GameRequest
               handleYesButton={handleAcceptGame}
-              handleNoButton={handleEndGame}
-              senderUsername={gameInviteSenderUsername}
+              handleNoButton={() => void 0}
+              senderUsername={"gameInviteSenderUsername"}
+            />
+          )}
+          {isGameSelectorOpen && (
+            <GameSelector
+              opponentUsername={lastClickedPlayUser}
+              onGameSelect={handleSendGameInvite}
             />
           )}
         </VStack>
-        <GameWidget handleConcede={handleEndGame} inGame={currentUser.inGame} />
+        {/* <GameWidget handleConcede={handleEndGame} inGame={currentUser.inGame} /> */}
       </HStack>
     </div>
   );

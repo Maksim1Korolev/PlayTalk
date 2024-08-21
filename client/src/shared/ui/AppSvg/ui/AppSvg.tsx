@@ -37,7 +37,6 @@ export const AppSvg = memo((props: SVGProps) => {
   const colorClass = `${fill ? "fill" : "stroke"}${
     backgroundColor.charAt(0).toUpperCase() + backgroundColor.slice(1)
   }`;
-
   const icon = (
     <Svg
       className={cx(cls.icon, { [cls.fill]: fill }, [colorClass])}

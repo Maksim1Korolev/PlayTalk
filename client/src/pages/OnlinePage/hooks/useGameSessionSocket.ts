@@ -1,27 +1,29 @@
 import { gameSocket } from "@/shared/api/sockets";
 import { useCallback, useEffect } from "react";
 
-export const useGameSessionSocket = ({
-  onGameStart,
-  onGameEnd,
-}: {
-  onGameStart: ({
-    opponentUsername,
-    game,
-  }: {
-    opponentUsername: string;
-    game: string;
-  }) => void;
-  onGameEnd: ({
-    opponentUsername,
-    game,
-    winner,
-  }: {
-    opponentUsername: string;
-    game: string;
-    winner: string;
-  }) => void;
-}) => {
+export const useGameSessionSocket = () => {
+  //    ( {
+  //         onGameStart,
+  //         onGameEnd,
+  //       }: {
+  //         onGameStart: ({
+  //           opponentUsername,
+  //           game,
+  //         }: {
+  //           opponentUsername: string;
+  //           game: string;
+  //         }) => void;
+  //         onGameEnd: ({
+  //           opponentUsername,
+  //           game,
+  //           winner,
+  //         }: {
+  //           opponentUsername: string;
+  //           game: string;
+  //           winner: string;
+  //         }) => void;
+  //       })
+
   const handleSendGameInvite = useCallback(
     ({
       receiverUsername,
@@ -63,7 +65,7 @@ export const useGameSessionSocket = ({
       console.log(
         `Game started with opponent ${opponentUsername} for game ${game}`
       );
-      onGameStart({ opponentUsername, game });
+      //  onGameStart({ opponentUsername, game });
     };
 
     const handleEndGame = ({
@@ -78,7 +80,7 @@ export const useGameSessionSocket = ({
       console.log(
         `Game ended with opponent ${opponentUsername} for game ${game}. Winner: ${winner}`
       );
-      onGameEnd({ opponentUsername, game, winner });
+      //   onGameEnd({ opponentUsername, game, winner });
     };
 
     gameSocket.on("start-game", handleStartGame);
@@ -88,7 +90,7 @@ export const useGameSessionSocket = ({
       gameSocket.off("start-game", handleStartGame);
       gameSocket.off("end-game", handleEndGame);
     };
-  }, [onGameStart, onGameEnd]);
+  }, []); //[onGameStart, onGameEnd]
 
   return {
     handleSendGameInvite,

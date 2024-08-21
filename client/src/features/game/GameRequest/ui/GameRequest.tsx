@@ -9,15 +9,21 @@ export const GameRequest = ({
 }: {
   className?: string;
   senderUsername: string;
-  handleYesButton: () => void;
+  handleYesButton: ({
+    opponentUsername,
+    game,
+  }: {
+    opponentUsername: string;
+    game: string;
+  }) => void;
   handleNoButton: () => void;
 }) => {
   const handleStartGame = () => {
-    handleYesButton();
+ //   handleYesButton();
   };
 
   const handleRejectGame = () => {
-    handleNoButton();
+//    handleNoButton();
   };
 
   return (
