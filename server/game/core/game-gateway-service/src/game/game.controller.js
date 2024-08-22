@@ -45,7 +45,7 @@ export const getGame = async (req, res) => {
 
         return res.status(200).json({ game: gameData });
 
-      // Add cases for other games here if needed
+      // Other case example
       // case "other-game":
       //   const otherGameData = await OtherGameService.getGame(player1Username, player2Username);
       //   return res.status(200).json({ game: otherGameData });
