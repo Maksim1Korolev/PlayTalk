@@ -13,6 +13,7 @@ Getting error in communication service when requesting unread messages with coun
 Empty data doesn't count as redis cache
 Update player creation logic
 Sending full user to open chat-modal?
+Check online and api client logic, rename OnlinePage
 
 To add (In the end):
 Auth on all servers, updated auth for some data

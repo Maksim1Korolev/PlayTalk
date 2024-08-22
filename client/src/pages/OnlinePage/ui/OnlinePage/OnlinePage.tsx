@@ -14,7 +14,6 @@ import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
 import cls from "./OnlinePage.module.scss";
 import { GameSelector } from "@/features/game/GameSelector";
-import { Games } from "@mui/icons-material";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const [cookies] = useCookies(["jwt-cookie"]);
