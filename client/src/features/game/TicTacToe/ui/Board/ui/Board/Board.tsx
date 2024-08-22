@@ -2,6 +2,7 @@ import { memo } from "react";
 import cls from "./Board.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { Card } from "@/shared/ui";
+import { Box } from "../Box";
 
 export const Board = ({
   className,
@@ -12,7 +13,9 @@ export const Board = ({
 }) => {
   return (
     <Card className={cx(cls.TicTacToeBoard, {}, [className])}>
-      <div></div>
+      {board.map(sign => (
+        <Box sign={sign} />
+      ))}
     </Card>
   );
 };

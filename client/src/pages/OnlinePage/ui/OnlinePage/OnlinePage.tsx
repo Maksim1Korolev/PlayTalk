@@ -16,11 +16,11 @@ import cls from "./OnlinePage.module.scss";
 import { GameSelector } from "@/features/game/GameSelector";
 
 const OnlinePage = ({ className }: { className?: string }) => {
-  const [cookies] = useCookies(["jwt-cookie"]);
-  console.log(cookies);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>();
+
+  const [cookies] = useCookies(["jwt-cookie"]);
 
   const token = cookies["jwt-cookie"]?.token;
   const currentUser: User = cookies["jwt-cookie"]?.user;
