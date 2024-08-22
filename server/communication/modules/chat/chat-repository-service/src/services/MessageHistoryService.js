@@ -103,6 +103,7 @@ class MessageHistoryService {
     return unreadMessageMap;
   }
 
+  //This function is called twice??
   static async markAsRead(usernames, requestingUsername) {
     const sortedUsernames = this.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
