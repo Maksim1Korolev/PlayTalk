@@ -4,18 +4,28 @@ import { cx } from "@/shared/lib/cx";
 import { Card } from "@/shared/ui";
 import { Box } from "../Box";
 
-export const Board = ({
-  className,
-  board,
-}: {
+interface BoardProps {
   className?: string;
   board: Array<"-" | "O" | "X">;
-}) => {
-  return (
-    <Card className={cx(cls.TicTacToeBoard, {}, [className])}>
-      {board.map(sign => (
-        <Box sign={sign} />
-      ))}
-    </Card>
-  );
-};
+  isActiveTurn: boolean;
+  playerSign: "O" | "X";
+  onMakeMove: () => void;
+}
+
+export const Board = memo(
+  ({ className, board, isActiveTurn, playerSign, onMakeMove }: BoardProps) => {
+    return (
+      <Card className={cx(cls.TicTacToeBoard, {}, [className])}>
+        {board.map((sign, index) => (
+          <Box
+            key={index}
+            sign={sign}
+            playerSign={playerSign}
+            isActiveTurn={isActiveTurn}
+            onMakeMove={onMakeMove}
+          />
+        ))}
+      </Card>
+    );
+  }
+);

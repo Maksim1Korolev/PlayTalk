@@ -1,18 +1,34 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import cls from "./Box.module.scss";
 import { cx } from "@/shared/lib/cx";
-import { Card } from "@/shared/ui";
+import { UiButton } from "@/shared/ui";
 
-export const Box = ({
-  className,
-  sign,
-}: {
+interface BoxProps {
   className?: string;
-  sign: string;
-}) => {
-  return (
-    <Card className={cx(cls.TicTacToeBox, {}, [className])}>
-      <div>{sign}</div>
-    </Card>
-  );
-};
+  sign: "-" | "O" | "X";
+  playerSign: "O" | "X";
+  isActiveTurn: boolean;
+  onMakeMove: () => void;
+}
+
+export const Box = memo(
+  ({ className, sign, playerSign, onMakeMove, isActiveTurn }: BoxProps) => {
+    const [currentSign, setCurrentSign] = useState(sign);
+
+    const handleBoxClicked = () => {
+      if (isActiveTurn && currentSign === "-") {
+        setCurrentSign(playerSign);
+        onMakeMove();
+      }
+    };
+
+    return (
+      <UiButton
+        className={cx(cls.TicTacToeBox, {}, [className])}
+        onClick={handleBoxClicked}
+      >
+        <div>{currentSign}</div>
+      </UiButton>
+    );
+  }
+);
