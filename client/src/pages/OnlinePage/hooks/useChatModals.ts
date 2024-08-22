@@ -1,6 +1,6 @@
 import { User } from "@/entities/User";
 import { Message } from "@/features/Chat/ui/ChatMessage/ui/ChatMessage";
-import { onlineSocket } from "@/shared/api/sockets";
+import { communicationSocket } from "@/shared/api/sockets";
 import { useCallback, useEffect } from "react";
 
 export interface ChatModalStateProps {
@@ -16,7 +16,7 @@ export const useChatModals = () => {
     (receiverUsername: string, message: Message) => {
       console.log(receiverUsername);
 
-      onlineSocket.emit("send-message", {
+      communicationSocket.emit("send-message", {
         receiverUsername,
         message,
       });
@@ -25,7 +25,7 @@ export const useChatModals = () => {
   );
 
   const readAllUnreadMessages = useCallback((usernames: string[]) => {
-    onlineSocket.emit("on-read-messages", {
+    communicationSocket.emit("on-read-messages", {
       usernames,
     });
   }, []);
@@ -64,14 +64,14 @@ export const useReceiveMessage = (
       }
     };
 
-    onlineSocket.emit("on-chat-open", currentReceiverUsername);
+    communicationSocket.emit("on-chat-open", currentReceiverUsername);
 
-    onlineSocket.on("update-chat", updateChatHistory);
-    onlineSocket.on("receive-message", receiveMessageSubscribe);
+    communicationSocket.on("update-chat", updateChatHistory);
+    communicationSocket.on("receive-message", receiveMessageSubscribe);
 
     return () => {
-      onlineSocket.off("update-chat", updateChatHistory);
-      onlineSocket.off("receive-message", receiveMessageSubscribe);
+      communicationSocket.off("update-chat", updateChatHistory);
+      communicationSocket.off("receive-message", receiveMessageSubscribe);
     };
   }, [addMessagesToHistory, currentReceiverUsername]);
 };

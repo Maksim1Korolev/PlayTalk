@@ -1,5 +1,8 @@
 import { User } from "@/entities/User";
-import { gameSocket, onlineSocket } from "@/shared/api/sockets";
+import {
+  gameSocket,
+  communicationSocket as communicationSocket,
+} from "@/shared/api/sockets";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 
@@ -15,8 +18,10 @@ export const useOnlineSocket = ({
   const { user }: { user: User } = cookies["jwt-cookie"];
 
   useEffect(() => {
-    const onConnect = () => {
-      onlineSocket.emit("online-ping", user.username);
+    const onCommunicationConnect = () => {
+      communicationSocket.emit("online-ping", user.username);
+    };
+    const onGameConnect = () => {
       gameSocket.emit("online-ping", user.username);
     };
 
@@ -52,22 +57,25 @@ export const useOnlineSocket = ({
     };
 
     /////////////////////////////////////////////////////
-    onlineSocket.on("connect", onConnect);
-    gameSocket.on("connect", onConnect);
+    communicationSocket.on("connect", onCommunicationConnect);
+    gameSocket.on("connect", onGameConnect);
 
-    onlineSocket.on("user-connection", updateUserOnline);
+    communicationSocket.on("user-connection", updateUserOnline);
     gameSocket.on("player-connection", updateUserOnline);
 
     /////////////////////////////////////////////////////
-    onlineSocket.on("unread-count-messages", unreadMessageCountChanged);
+    communicationSocket.on("unread-count-messages", unreadMessageCountChanged);
 
     return () => {
-      onlineSocket.off("connect", onConnect);
-      gameSocket.off("connect", onConnect);
-      onlineSocket.off("user-connection", updateUserOnline);
+      communicationSocket.off("connect", onCommunicationConnect);
+      gameSocket.off("connect", onGameConnect);
+      communicationSocket.off("user-connection", updateUserOnline);
       gameSocket.off("player-connection", updateUserOnline);
-      onlineSocket.off("unread-count-messages", unreadMessageCountChanged);
-      onlineSocket.close();
+      communicationSocket.off(
+        "unread-count-messages",
+        unreadMessageCountChanged
+      );
+      communicationSocket.close();
     };
   }, []);
 };

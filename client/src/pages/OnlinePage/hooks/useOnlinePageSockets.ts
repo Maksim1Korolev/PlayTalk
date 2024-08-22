@@ -26,12 +26,6 @@ export const useOnlinePageSockets = () => {
       );
       if (userWithGameStatuses) {
         console.log(userWithGameStatuses?.inGame);
-
-        // updateUsersGameStatus(
-        //   [userWithGameStatuses.username],
-        //   userWithGameStatuses?.inInvite,
-        //   userWithGameStatuses?.inGame
-        // );
       }
     },
     [currentUser]
@@ -41,15 +35,6 @@ export const useOnlinePageSockets = () => {
     upToDateUsers,
     setUpToDateUsers,
   });
-
-  // const {
-  //   handleSendGameInvite,
-  //   handleAcceptGame,
-  //   handleEndGame,
-  //   updateUsersGameStatus,
-  // } = useConnectionGameSocket({
-  //   setUpToDateUsers,
-  // });
 
   const onReceiveInvite = ({
     senderUsername,
