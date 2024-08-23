@@ -33,11 +33,11 @@ async function handleTicTacToeSubscriptions(socket, username) {
       switch (response.MoveResult) {
         case "Success":
           io.to(sendersSocketIds).emit(MOVE_MADE_EVENT, {
-            username,
+            interactingUsername: username,
             interactingIndex,
           });
           io.to(receiversSocketIds).emit(MOVE_MADE_EVENT, {
-            username,
+            interactingUsername: username,
             interactingIndex,
           });
           break;
