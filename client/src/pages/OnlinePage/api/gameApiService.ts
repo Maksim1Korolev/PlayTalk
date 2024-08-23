@@ -12,11 +12,15 @@ export const gameApiService = {
     return response.data.activeGames;
   },
 
-  getGame: async (
-    gameName: string,
-    player1Username: string,
-    player2Username: string
-  ) => {
+  getGame: async ({
+    gameName,
+    player1Username,
+    player2Username,
+  }: {
+    gameName: string;
+    player1Username: string;
+    player2Username: string;
+  }) => {
     const response = await $gameApi.get(`/api/${gameName}`, {
       params: { player1Username, player2Username },
     });

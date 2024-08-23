@@ -13,17 +13,18 @@ export const GameSelector = ({
   opponentUsername: string;
   onGameSelect: ({
     receiverUsername,
-    game,
+    gameName,
   }: {
     receiverUsername: string;
-    game: string;
+    gameName: string;
   }) => void;
 }) => {
+  
   //TODO: Make into enum and move
   const gameNames = ["tic-tac-toe"];
 
-  const handleIconClick = (game: string) => {
-    onGameSelect({ receiverUsername: opponentUsername, game });
+  const handleIconClick = (gameName: string) => {
+    onGameSelect({ receiverUsername: opponentUsername, gameName });
   };
   return (
     <Card className={`${cls.GameSelector} ${className}`}>

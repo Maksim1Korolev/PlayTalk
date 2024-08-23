@@ -2,8 +2,6 @@ import asyncHandler from "express-async-handler";
 
 import MessageHistoryService from "../services/messageHistoryService.js";
 
-//Two same functions?
-
 // @desc   Get unread Messages count for specific chats
 // @route  GET /unread/:requestingUsername
 // @access Public

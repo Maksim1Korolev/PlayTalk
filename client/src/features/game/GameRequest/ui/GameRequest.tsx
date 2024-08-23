@@ -10,14 +10,14 @@ export const GameRequest = ({
   className?: string;
   inviteData: {
     senderUsername: string;
-    game: string;
+    gameName: string;
   };
   handleYesButton: ({
     opponentUsername,
-    game,
+    gameName,
   }: {
     opponentUsername: string;
-    game: string;
+    gameName: string;
   }) => void;
   handleNoButton: () => void;
 }) => {
@@ -27,7 +27,7 @@ export const GameRequest = ({
 
     handleYesButton({
       opponentUsername: inviteData.senderUsername,
-      game: inviteData.game,
+      gameName: inviteData.gameName,
     });
   };
 
@@ -39,7 +39,7 @@ export const GameRequest = ({
     <Card className={`${cls.GameRequest} ${className}`}>
       <VStack>
         <div>
-          {inviteData.senderUsername} wants to play {inviteData.game} with you.
+          {inviteData.senderUsername} wants to play {inviteData.gameName} with you.
           Do you accept?
         </div>
         <HStack>

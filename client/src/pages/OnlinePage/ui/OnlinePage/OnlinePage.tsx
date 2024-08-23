@@ -6,7 +6,6 @@ import { HStack, Loader, UiText, VStack } from "@/shared/ui";
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-import { GameWidget } from "@/widgets/GameWidget";
 import { Sidebar } from "@/widgets/Sidebar";
 import { fetchUsersStatus } from "../../api/updateUsersStatusApiService";
 import { ChatModalStateProps } from "../../hooks/useChatModals";
@@ -150,7 +149,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
             />
           )}
         </VStack>
-        {/* <GameWidget handleConcede={handleEndGame} inGame={currentUser.inGame} /> */}
       </HStack>
     </div>
   );

@@ -3,46 +3,50 @@ import ActiveGamesService from "./activeGamesService.js";
 import SocketService from "./socketService.js";
 
 async function handleInviteSubscriptions(socket, username) {
-  socket.on("send-game-invite", async ({ receiverUsername, game }) => {
+  socket.on("send-game-invite", async ({ receiverUsername, gameName }) => {
     console.log(
-      `Sending game invite from ${username} to ${receiverUsername} for game ${game}`
+      `Sending game invite from ${username} to ${receiverUsername} for game ${gameName}`
     );
-    await sendGameInvite(username, receiverUsername, game);
+    await sendGameInvite(username, receiverUsername, gameName);
   });
 
-  socket.on("accept-game", async ({ opponentUsername, game }) => {
+  socket.on("accept-game", async ({ opponentUsername, gameName }) => {
     console.log(
-      `Accepting game invite for ${username} with opponent ${opponentUsername} for game ${game}`
+      `Accepting game invite for ${username} with opponent ${opponentUsername} for game ${gameName}`
     );
 
-    await ActiveGamesService.addActiveGame(username, opponentUsername, game);
+    await ActiveGamesService.addActiveGame(
+      username,
+      opponentUsername,
+      gameName
+    );
 
-    await startGameConnection(username, opponentUsername, game);
+    await startGameConnection(username, opponentUsername, gameName);
   });
 }
 
-async function sendGameInvite(senderUsername, receiverUsername, game) {
+async function sendGameInvite(senderUsername, receiverUsername, gameName) {
   console.log(
-    `Attempting to send game invite from ${senderUsername} to ${receiverUsername} for game ${game}`
+    `Attempting to send game invite from ${senderUsername} to ${receiverUsername} for game ${gameName}`
   );
 
   const receiverSockets = await SocketService.getUserSockets(receiverUsername);
   if (receiverSockets.length > 0) {
     io.to(receiverSockets).emit("receive-game-invite", {
       senderUsername,
-      game,
+      gameName,
     });
     console.log(
-      `Game invite sent to ${receiverUsername} from ${senderUsername} for game ${game}`
+      `Game invite sent to ${receiverUsername} from ${senderUsername} for game ${gameName}`
     );
   } else {
     console.log("Receiver not found in connected players.");
   }
 }
 
-async function startGameConnection(senderUsername, receiverUsername, game) {
+async function startGameConnection(senderUsername, receiverUsername, gameName) {
   console.log(
-    `Starting game connection between ${senderUsername} and ${receiverUsername} for game ${game}`
+    `Starting game connection between ${senderUsername} and ${receiverUsername} for game ${gameName}`
   );
 
   const senderSockets = await SocketService.getUserSockets(senderUsername);
@@ -50,18 +54,18 @@ async function startGameConnection(senderUsername, receiverUsername, game) {
 
   io.to(senderSockets).emit("start-game", {
     opponentUsername: receiverUsername,
-    game,
+    gameName,
   });
   console.log(
-    `Notified ${senderUsername} of connection with ${receiverUsername} for game ${game}`
+    `Notified ${senderUsername} of connection with ${receiverUsername} for game ${gameName}`
   );
 
   io.to(receiverSockets).emit("start-game", {
     opponentUsername: senderUsername,
-    game,
+    gameName,
   });
   console.log(
-    `Notified ${receiverUsername} of connection with ${senderUsername} for game ${game}`
+    `Notified ${receiverUsername} of connection with ${senderUsername} for game ${gameName}`
   );
 }
 
@@ -75,7 +79,7 @@ async function endGame(username1, username2, gameName, winnerUsername) {
 
   io.to(user1Sockets).emit("end-game", {
     opponentUsername: username2,
-    game: gameName,
+    gameName,
     winner: winnerUsername,
   });
   console.log(
@@ -84,7 +88,7 @@ async function endGame(username1, username2, gameName, winnerUsername) {
 
   io.to(user2Sockets).emit("end-game", {
     opponentUsername: username1,
-    game: gameName,
+    gameName,
     winner: winnerUsername,
   });
   console.log(

@@ -11,7 +11,7 @@ export const useOnlinePageSockets = () => {
   const [upToDateUsers, setUpToDateUsers] = useState<User[]>();
   const [inviteData, setInviteData] = useState<{
     senderUsername: string;
-    game: string;
+    gameName: string;
   } | null>(null);
 
   const updateUsers = useCallback(
@@ -38,12 +38,12 @@ export const useOnlinePageSockets = () => {
 
   const onReceiveInvite = ({
     senderUsername,
-    game,
+    gameName,
   }: {
     senderUsername: string;
-    game: string;
+    gameName: string;
   }) => {
-    setInviteData({ senderUsername, game });
+    setInviteData({ senderUsername, gameName });
   };
 
   const { handleSendGameInvite, handleAcceptGame } = useGameSessionSocket({

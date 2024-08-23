@@ -6,10 +6,10 @@ export const useGameSessionSocket = ({
 }: {
   onReceiveInvite: ({
     senderUsername,
-    game,
+    gameName,
   }: {
     senderUsername: string;
-    game: string;
+    gameName: string;
   }) => void;
 }) => {
   //    ( {
@@ -18,18 +18,18 @@ export const useGameSessionSocket = ({
   //       }: {
   //         onGameStart: ({
   //           opponentUsername,
-  //           game,
+  //           gameName,
   //         }: {
   //           opponentUsername: string;
-  //           game: string;
+  //           gameName: string;
   //         }) => void;
   //         onGameEnd: ({
   //           opponentUsername,
-  //           game,
+  //           gameName,
   //           winner,
   //         }: {
   //           opponentUsername: string;
-  //           game: string;
+  //           gameName: string;
   //           winner: string;
   //         }) => void;
   //       })
@@ -37,13 +37,13 @@ export const useGameSessionSocket = ({
   const handleSendGameInvite = useCallback(
     ({
       receiverUsername,
-      game,
+      gameName,
     }: {
       receiverUsername: string;
-      game: string;
+      gameName: string;
     }) => {
-      console.log(`Sending ${game} game invite to: ${receiverUsername}`);
-      gameSocket.emit("send-game-invite", { receiverUsername, game });
+      console.log(`Sending ${gameName} game invite to: ${receiverUsername}`);
+      gameSocket.emit("send-game-invite", { receiverUsername, gameName });
     },
     []
   );
@@ -51,15 +51,15 @@ export const useGameSessionSocket = ({
   const handleAcceptGame = useCallback(
     ({
       opponentUsername,
-      game,
+      gameName: gameName,
     }: {
       opponentUsername: string;
-      game: string;
+      gameName: string;
     }) => {
       console.log(
-        `Accepting game invite with opponent ${opponentUsername} for game ${game}`
+        `Accepting game invite with opponent ${opponentUsername} for game ${gameName}`
       );
-      gameSocket.emit("accept-game", { opponentUsername, game });
+      gameSocket.emit("accept-game", { opponentUsername, gameName });
     },
     []
   );
@@ -67,43 +67,43 @@ export const useGameSessionSocket = ({
   useEffect(() => {
     const handleReceiveInvite = ({
       senderUsername,
-      game,
+      gameName,
     }: {
       senderUsername: string;
-      game: string;
+      gameName: string;
     }) => {
       console.log(
-        `Game request received from ${senderUsername} for game ${game}`
+        `Game request received from ${senderUsername} for game ${gameName}`
       );
-      onReceiveInvite({ senderUsername, game });
+      onReceiveInvite({ senderUsername, gameName });
     };
 
     const handleStartGame = ({
       opponentUsername,
-      game,
+      gameName,
     }: {
       opponentUsername: string;
-      game: string;
+      gameName: string;
     }) => {
       console.log(
-        `Game started with opponent ${opponentUsername} for game ${game}`
+        `Game started with opponent ${opponentUsername} for game ${gameName}`
       );
-      //  onGameStart({ opponentUsername, game });
+      //  onGameStart({ opponentUsername, gameName });
     };
 
     const handleEndGame = ({
       opponentUsername,
-      game,
+      gameName,
       winner,
     }: {
       opponentUsername: string;
-      game: string;
+      gameName: string;
       winner: string;
     }) => {
       console.log(
-        `Game ended with opponent ${opponentUsername} for game ${game}. Winner: ${winner}`
+        `Game ended with opponent ${opponentUsername} for game ${gameName}. Winner: ${winner}`
       );
-      //   onGameEnd({ opponentUsername, game, winner });
+      //   onGameEnd({ opponentUsername, gameName, winner });
     };
 
     gameSocket.on("receive-game-invite", handleReceiveInvite);
