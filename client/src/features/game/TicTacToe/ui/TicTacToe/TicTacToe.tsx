@@ -5,18 +5,6 @@ import { Board } from "../Board";
 import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 
-interface Player {
-  username: string;
-  sign: "O" | "X";
-}
-
-interface Game {
-  player1: Player;
-  player2: Player;
-  currentPlayer: string;
-  board: Array<"-" | "O" | "X">;
-}
-
 interface TicTacToeProps {
   className?: string;
   game: Game;

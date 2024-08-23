@@ -111,6 +111,7 @@ export const useGameSessionSocket = ({
     gameSocket.on("end-game", handleEndGame);
 
     return () => {
+      gameSocket.off("receive-game-invite", handleReceiveInvite);
       gameSocket.off("start-game", handleStartGame);
       gameSocket.off("end-game", handleEndGame);
     };
@@ -120,15 +121,4 @@ export const useGameSessionSocket = ({
     handleSendGameInvite,
     handleAcceptGame,
   };
-};
-
-export const useReceiveInvite = (
-  receiveInvite: ({ senderUsername }: { senderUsername: string }) => void
-) => {
-  useEffect(() => {
-    gameSocket.on("receive-game-invite", receiveInvite);
-    return () => {
-      gameSocket.off("receive-game-invite", receiveInvite);
-    };
-  }, [receiveInvite]);
 };
