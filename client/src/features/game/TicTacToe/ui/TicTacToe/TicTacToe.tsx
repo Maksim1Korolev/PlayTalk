@@ -5,6 +5,7 @@ import { Board } from "../Board";
 import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
+import { UiButton } from "@/shared/ui";
 
 interface TicTacToeProps {
   className?: string;
@@ -72,9 +73,9 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
     <div className={cx(cls.TicTacToe, {}, [className])}>
       <div>Current player is: {currentPlayer}</div>
       <Board board={board} onMakeMove={onMakeMove} />
-      <button onClick={() => handleSurrender({ opponentUsername })}>
+      <UiButton onClick={() => handleSurrender({ opponentUsername })}>
         Surrender
-      </button>
+      </UiButton>
     </div>
   );
 });
