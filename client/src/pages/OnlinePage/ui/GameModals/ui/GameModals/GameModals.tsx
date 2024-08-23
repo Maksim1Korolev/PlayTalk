@@ -31,12 +31,15 @@ export const GameModals = memo(
       const fetchGames = async () => {
         const fetchedGames = await Promise.all(
           gameModals.map(async modal => {
-            const game = await gameApiService.getGame({
+            const data = await gameApiService.getGame({
               gameName: modal.gameName,
               player1Username: currentUser.username,
               player2Username: modal.opponentUsername,
             });
-            return { id: `${modal.opponentUsername}-${modal.gameName}`, game };
+            return {
+              id: `${modal.opponentUsername}-${modal.gameName}`,
+              game: data.game,
+            };
           })
         );
 
@@ -55,7 +58,6 @@ export const GameModals = memo(
       const game = games[gameId];
 
       if (!game) return null;
-      console.log("YA TUTTTTTT");
 
       switch (gameName) {
         case "tic-tac-toe":

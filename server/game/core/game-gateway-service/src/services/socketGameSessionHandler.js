@@ -1,6 +1,7 @@
 import { io } from "../index.js";
 import ActiveGamesService from "./activeGamesService.js";
 import SocketService from "./socketService.js";
+import TicTacToeGameService from "./ticTacToe/gameService.js";
 
 async function handleInviteSubscriptions(socket, username) {
   socket.on("send-game-invite", async ({ receiverUsername, gameName }) => {
@@ -49,6 +50,16 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
     `Starting game connection between ${senderUsername} and ${receiverUsername} for game ${gameName}`
   );
 
+  try {
+    await TicTacToeGameService.startGame(senderUsername, receiverUsername);
+  } catch (err) {
+    if (err.response && err.response.data) {
+      console.log("Error starting game: ", err.response.data);
+    } else {
+      console.log("Error starting game: ", err.message);
+    }
+  }
+
   const senderSockets = await SocketService.getUserSockets(senderUsername);
   const receiverSockets = await SocketService.getUserSockets(receiverUsername);
 
@@ -56,6 +67,7 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
     opponentUsername: receiverUsername,
     gameName,
   });
+
   console.log(
     `Notified ${senderUsername} of connection with ${receiverUsername} for game ${gameName}`
   );

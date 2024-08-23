@@ -57,7 +57,11 @@ export const getGame = async (req, res) => {
           .json({ message: `Game type ${gameName} is not supported.` });
     }
   } catch (err) {
-    console.error("Error retrieving game data:", err.message);
+    if (err.response && err.response.data) {
+      console.error("Error retrieving game data:", err.response.data);
+    } else {
+      console.error("Error retrieving game data:", err.message);
+    }
     res
       .status(500)
       .json({ message: "Internal server error", error: err.message });
