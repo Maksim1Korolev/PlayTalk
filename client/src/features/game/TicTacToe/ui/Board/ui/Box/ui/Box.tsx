@@ -5,20 +5,28 @@ import { UiButton } from "@/shared/ui";
 
 interface BoxProps {
   className?: string;
+  index: number;
   sign: "-" | "O" | "X";
   playerSign: "O" | "X";
   isActiveTurn: boolean;
-  onMakeMove: () => void;
+  onMakeMove: ({ interactingIndex }: { interactingIndex: number }) => void;
 }
 
 export const Box = memo(
-  ({ className, sign, playerSign, onMakeMove, isActiveTurn }: BoxProps) => {
+  ({
+    className,
+    index,
+    sign,
+    playerSign,
+    onMakeMove,
+    isActiveTurn,
+  }: BoxProps) => {
     const [currentSign, setCurrentSign] = useState(sign);
 
     const handleBoxClicked = () => {
       if (isActiveTurn && currentSign === "-") {
         setCurrentSign(playerSign);
-        onMakeMove();
+        onMakeMove({ interactingIndex: index });
       }
     };
 

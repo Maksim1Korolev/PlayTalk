@@ -8,7 +8,13 @@ import { User } from "@/entities/User";
 interface TicTacToeProps {
   className?: string;
   game: Game;
-  onMakeMove: () => void;
+  onMakeMove: ({
+    opponentUsername,
+    interactingIndex,
+  }: {
+    opponentUsername: string;
+    interactingIndex: number;
+  }) => void;
 }
 
 export const TicTacToe = memo(
@@ -21,12 +27,21 @@ export const TicTacToe = memo(
       currentPlayer === currentUser.username
     );
 
+    const opponentUsername =
+      currentUser.username === game.player1.username
+        ? game.player2.username
+        : game.player1.username;
+
     useEffect(() => {
       setIsActiveTurn(currentPlayer === currentUser.username);
-    }, [currentPlayer]);
+    }, [currentPlayer, currentUser.username]);
 
-    const handleMakeMove = () => {
-      onMakeMove();
+    const handleMakeMove = ({
+      interactingIndex,
+    }: {
+      interactingIndex: number;
+    }) => {
+      onMakeMove({ opponentUsername, interactingIndex });
       changePlayers();
     };
 

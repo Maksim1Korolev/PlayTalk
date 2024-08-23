@@ -32,14 +32,14 @@ namespace TicTacToe.Models
             SetSigns();
         }
 
-        public MoveResult MakeMove(string interactingPlayerUsername, byte interactedIndex)
+        public MoveResult MakeMove(string interactingPlayerUsername, byte interactingIndex)
         {
-            if (HasEnded || interactingPlayerUsername != CurrentPlayer.Username || interactedIndex < 0 || interactedIndex >= Board.Length || Board[interactedIndex] != '-')
+            if (HasEnded || interactingPlayerUsername != CurrentPlayer.Username || interactingIndex < 0 || interactingIndex >= Board.Length || Board[interactingIndex] != '-')
             {
                 return MoveResult.InvalidMove;
             }
 
-            Board[interactedIndex] = CurrentPlayer.Sign.ToChar();
+            Board[interactingIndex] = CurrentPlayer.Sign.ToChar();
             _turn++;
 
             if (_turn >= 5 && CheckWinner(CurrentPlayer))

@@ -9,7 +9,7 @@ interface BoardProps {
   board: Array<"-" | "O" | "X">;
   isActiveTurn: boolean;
   playerSign: "O" | "X";
-  onMakeMove: () => void;
+  onMakeMove: ({ interactingIndex }: { interactingIndex: number }) => void;
 }
 
 export const Board = memo(
@@ -19,6 +19,7 @@ export const Board = memo(
         {board.map((sign, index) => (
           <Box
             key={index}
+            index={index}
             sign={sign}
             playerSign={playerSign}
             isActiveTurn={isActiveTurn}
