@@ -1,74 +1,80 @@
-import { memo, useState, useEffect } from "react";
+import { memo, useState } from "react";
 import cls from "./TicTacToe.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { Board } from "../Board";
 import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
+import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
 
 interface TicTacToeProps {
   className?: string;
   game: Game;
-  onMakeMove: ({
-    opponentUsername,
-    interactingIndex,
-  }: {
-    opponentUsername: string;
-    interactingIndex: number;
-  }) => void;
 }
 
-export const TicTacToe = memo(
-  ({ className, game, onMakeMove }: TicTacToeProps) => {
-    const [cookies] = useCookies(["jwt-cookie"]);
-    const currentUser: User = cookies["jwt-cookie"]?.user;
+export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
+  const [cookies] = useCookies(["jwt-cookie"]);
+  const currentUser: User = cookies["jwt-cookie"]?.user;
 
-    const [currentPlayer, setCurrentPlayer] = useState(game.currentPlayer);
-    const [isActiveTurn, setIsActiveTurn] = useState(
-      currentPlayer === currentUser.username
-    );
+  const [currentPlayer, setCurrentPlayer] = useState(game.currentPlayer);
 
-    const opponentUsername =
-      currentUser.username === game.player1.username
+  const [board, setBoard] = useState<("-" | "O" | "X")[]>(game.board);
+
+  const opponentUsername =
+    currentUser.username === game.player1.username
+      ? game.player2.username
+      : game.player1.username;
+
+  const changePlayers = () => {
+    setCurrentPlayer(prevPlayer =>
+      prevPlayer === game.player1.username
         ? game.player2.username
-        : game.player1.username;
-
-    useEffect(() => {
-      setIsActiveTurn(currentPlayer === currentUser.username);
-    }, [currentPlayer, currentUser.username]);
-
-    const handleMakeMove = ({
-      interactingIndex,
-    }: {
-      interactingIndex: number;
-    }) => {
-      onMakeMove({ opponentUsername, interactingIndex });
-      changePlayers();
-    };
-
-    const changePlayers = () => {
-      setCurrentPlayer(prevPlayer =>
-        prevPlayer === game.player1.username
-          ? game.player2.username
-          : game.player1.username
-      );
-    };
-
-    const getSign = () => {
-      return game.player1.username === currentUser.username
-        ? game.player1.sign
-        : game.player2.sign;
-    };
-
-    return (
-      <div className={cx(cls.TicTacToe, {}, [className])}>
-        <div>Current player is: {currentPlayer}</div>
-        <Board
-          board={game.board}
-          playerSign={getSign()}
-          isActiveTurn={isActiveTurn}
-          onMakeMove={handleMakeMove}
-        />
-      </div>
+        : game.player1.username
     );
-  }
-);
+  };
+
+  const getPlayerSign = (username: string) => {
+    return username === game.player1.username
+      ? game.player1.sign
+      : game.player2.sign;
+  };
+
+  const onMakeMove = ({ interactingIndex }: { interactingIndex: number }) => {
+    if (currentPlayer === currentUser.username) {
+      handleMakeMove({ opponentUsername, interactingIndex });
+    } else {
+      console.log("Invalid move!");
+    }
+  };
+
+  const onMoveMade = ({
+    interactingUsername,
+    interactingIndex,
+  }: {
+    interactingUsername: string;
+    interactingIndex: number;
+  }) => {
+    const playerSign = getPlayerSign(interactingUsername);
+
+    setBoard(prevBoard =>
+      prevBoard.map((sign, index) =>
+        index === interactingIndex ? playerSign : sign
+      )
+    );
+
+    changePlayers();
+  };
+
+  const { handleMakeMove, handleSurrender } = useTicTacToeSocket({
+    onMoveMade,
+  });
+
+  return (
+    <div className={cx(cls.TicTacToe, {}, [className])}>
+      <div>Current player is: {currentPlayer}</div>
+      <Board board={board} onMakeMove={onMakeMove} />
+      <button onClick={() => handleSurrender({ opponentUsername })}>
+        Surrender
+      </button>
+    </div>
+  );
+});

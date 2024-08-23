@@ -7,7 +7,7 @@ const MAKE_MOVE_EVENT = `${gameName}-make-move`;
 const MOVE_MADE_EVENT = `${gameName}-move-made`;
 const SURRENDER_EVENT = `${gameName}-surrender`;
 
-export const useGameSessionSocket = ({
+export const useTicTacToeSocket = ({
   onMoveMade,
 }: {
   onMoveMade: ({
