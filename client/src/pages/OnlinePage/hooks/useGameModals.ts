@@ -9,16 +9,16 @@ export const useGameModals = () => {
     ({
       opponentUsername,
       gameName,
-      position,
-    }: {
+    }: // position,
+    {
       opponentUsername: string;
       gameName: string;
-      position?: { x: number; y: number };
+      //  position?: { x: number; y: number };
     }) => {
       const newGameModalProps: GameModalStateProps = {
         opponentUsername,
         gameName,
-        position,
+        //    position,
       };
 
       setGameModals(prev => [...prev, newGameModalProps]);
@@ -30,9 +30,11 @@ export const useGameModals = () => {
     ({
       opponentUsername,
       gameName,
+      winner,
     }: {
       opponentUsername: string;
       gameName: string;
+      winner: string;
     }) => {
       setGameModals(prev =>
         prev.filter(

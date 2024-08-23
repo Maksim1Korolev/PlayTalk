@@ -13,6 +13,7 @@ import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
 import cls from "./OnlinePage.module.scss";
 import { GameSelector } from "@/features/game/GameSelector";
+import { GameModals } from "../GameModals";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -84,6 +85,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const {
     upToDateUsers,
     inviteData,
+    gameModals,
     updateUsers,
     handleSendGameInvite,
     handleAcceptGame,
@@ -149,6 +151,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
             />
           )}
         </VStack>
+        <GameModals gameModals={gameModals} />
       </HStack>
     </div>
   );

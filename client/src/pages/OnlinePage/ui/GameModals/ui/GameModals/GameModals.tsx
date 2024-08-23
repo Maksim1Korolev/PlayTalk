@@ -55,6 +55,7 @@ export const GameModals = memo(
       const game = games[gameId];
 
       if (!game) return null;
+      console.log("YA TUTTTTTT");
 
       switch (gameName) {
         case "tic-tac-toe":

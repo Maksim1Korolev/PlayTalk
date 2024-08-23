@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { useOnlineSocket } from "./useOnlineSocket";
 import { useCookies } from "react-cookie";
 import { useGameSessionSocket } from "./useGameSessionSocket";
+import { useGameModals } from "./useGameModals";
 
 //TODO: Separate users update, so that if game Server crashes, online will work
 export const useOnlinePageSockets = () => {
@@ -36,6 +37,9 @@ export const useOnlinePageSockets = () => {
     setUpToDateUsers,
   });
 
+  const { gameModals, handleOpenGameModal, handleCloseGameModal } =
+    useGameModals();
+
   const onReceiveInvite = ({
     senderUsername,
     gameName,
@@ -48,11 +52,14 @@ export const useOnlinePageSockets = () => {
 
   const { handleSendGameInvite, handleAcceptGame } = useGameSessionSocket({
     onReceiveInvite,
+    onGameStart: handleOpenGameModal,
+    onGameEnd: handleCloseGameModal,
   });
 
   return {
     upToDateUsers,
     inviteData,
+    gameModals,
     updateUsers,
     handleSendGameInvite,
     handleAcceptGame,

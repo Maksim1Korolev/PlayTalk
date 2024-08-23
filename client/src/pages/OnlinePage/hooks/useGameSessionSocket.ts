@@ -3,6 +3,8 @@ import { useCallback, useEffect } from "react";
 
 export const useGameSessionSocket = ({
   onReceiveInvite,
+  onGameStart,
+  onGameEnd,
 }: {
   onReceiveInvite: ({
     senderUsername,
@@ -11,29 +13,23 @@ export const useGameSessionSocket = ({
     senderUsername: string;
     gameName: string;
   }) => void;
+  onGameStart: ({
+    opponentUsername,
+    gameName,
+  }: {
+    opponentUsername: string;
+    gameName: string;
+  }) => void;
+  onGameEnd: ({
+    opponentUsername,
+    gameName,
+    winner,
+  }: {
+    opponentUsername: string;
+    gameName: string;
+    winner: string;
+  }) => void;
 }) => {
-  //    ( {
-  //         onGameStart,
-  //         onGameEnd,
-  //       }: {
-  //         onGameStart: ({
-  //           opponentUsername,
-  //           gameName,
-  //         }: {
-  //           opponentUsername: string;
-  //           gameName: string;
-  //         }) => void;
-  //         onGameEnd: ({
-  //           opponentUsername,
-  //           gameName,
-  //           winner,
-  //         }: {
-  //           opponentUsername: string;
-  //           gameName: string;
-  //           winner: string;
-  //         }) => void;
-  //       })
-
   const handleSendGameInvite = useCallback(
     ({
       receiverUsername,
@@ -88,7 +84,8 @@ export const useGameSessionSocket = ({
       console.log(
         `Game started with opponent ${opponentUsername} for game ${gameName}`
       );
-      //  onGameStart({ opponentUsername, gameName });
+
+      onGameStart({ opponentUsername, gameName });
     };
 
     const handleEndGame = ({
@@ -103,7 +100,7 @@ export const useGameSessionSocket = ({
       console.log(
         `Game ended with opponent ${opponentUsername} for game ${gameName}. Winner: ${winner}`
       );
-      //   onGameEnd({ opponentUsername, gameName, winner });
+      onGameEnd({ opponentUsername, gameName, winner });
     };
 
     gameSocket.on("receive-game-invite", handleReceiveInvite);
@@ -115,7 +112,7 @@ export const useGameSessionSocket = ({
       gameSocket.off("start-game", handleStartGame);
       gameSocket.off("end-game", handleEndGame);
     };
-  }, [onReceiveInvite]); //[onGameStart, onGameEnd]
+  }, [onReceiveInvite, onGameStart, onGameEnd]);
 
   return {
     handleSendGameInvite,

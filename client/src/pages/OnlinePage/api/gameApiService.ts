@@ -21,7 +21,7 @@ export const gameApiService = {
     player1Username: string;
     player2Username: string;
   }) => {
-    const response = await $gameApi.get(`/api/${gameName}`, {
+    const response = await $gameApi.get(`/api/game/${gameName}`, {
       params: { player1Username, player2Username },
     });
     return response.data.game;
