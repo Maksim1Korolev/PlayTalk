@@ -78,7 +78,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
     gameModals,
     updateUsers,
     handleOpenGameSelector,
-    handleSendGameInvite,
+    handleGameClicked,
     handleAcceptGame,
   } = useOnlinePageSockets();
 
@@ -140,7 +140,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
           {lastClickedPlayData && (
             <GameSelector
               opponentUsername={lastClickedPlayData.opponentUsername}
-              onGameSelect={handleSendGameInvite}
+              onGameSelect={handleGameClicked}
               activeGames={lastClickedPlayData.activeGames}
             />
           )}

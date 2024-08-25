@@ -67,6 +67,20 @@ export const useOnlinePageSockets = () => {
     onGameEnd: handleCloseGameModal,
   });
 
+  const handleGameClicked = ({
+    opponentUsername,
+    gameName,
+    isActive,
+  }: {
+    opponentUsername: string;
+    gameName: string;
+    isActive: boolean;
+  }) => {
+    isActive
+      ? handleOpenGameModal({ opponentUsername, gameName })
+      : handleSendGameInvite({ receiverUsername: opponentUsername, gameName });
+  };
+
   return {
     upToDateUsers,
     inviteData,
@@ -74,7 +88,7 @@ export const useOnlinePageSockets = () => {
     gameModals,
     updateUsers,
     handleOpenGameSelector,
-    handleSendGameInvite,
+    handleGameClicked,
     handleAcceptGame,
   };
 };

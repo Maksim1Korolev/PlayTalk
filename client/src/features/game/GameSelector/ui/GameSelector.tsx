@@ -3,26 +3,28 @@ import cls from "./GameSelector.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { Card, HStack } from "@/shared/ui";
 import { GameIcon } from "@/features/game/GameIcon";
-import GameNames from "@/entities/Game/model/enums/gameNames"; // Corrected import usage
+import GameNames from "@/entities/Game/model/enums/gameNames";
 
 interface GameSelectorProps {
   className?: string;
   opponentUsername: string;
   activeGames: string[];
   onGameSelect: ({
-    receiverUsername,
+    opponentUsername,
     gameName,
+    isActive,
   }: {
-    receiverUsername: string;
+    opponentUsername: string;
     gameName: string;
+    isActive: boolean;
   }) => void;
 }
 
 export const GameSelector = memo(
   ({
-    className,
+    className = "",
     opponentUsername,
-    activeGames,
+    activeGames = [],
     onGameSelect,
   }: GameSelectorProps) => {
     const gameNames = Object.values(GameNames);
@@ -32,7 +34,12 @@ export const GameSelector = memo(
     };
 
     const handleIconClick = (gameName: string) => {
-      onGameSelect({ receiverUsername: opponentUsername, gameName });
+      const isActive = isGameActive(gameName);
+      onGameSelect({
+        opponentUsername,
+        gameName,
+        isActive,
+      });
     };
 
     return (
