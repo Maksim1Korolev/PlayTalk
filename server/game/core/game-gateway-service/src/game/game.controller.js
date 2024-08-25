@@ -3,16 +3,17 @@ import ActiveGamesService from "../services/activeGamesService.js";
 import TicTacToeGameService from "../services/ticTacToe/gameService.js";
 
 // @desc   Get data of active games
-// @route  GET /api/game/games
+// @route  GET /api/game/games/:username
 // @access Public
 export const getActiveGames = asyncHandler(async (req, res) => {
-  const { username } = req.body;
+  const { username } = req.params;
+
   try {
     const activeGames = await ActiveGamesService.getActiveGames(username);
     return res.status(200).json({ activeGames });
   } catch (error) {
-    console.error("Error adding message to history:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    console.error("Error getting active games:", error);
+    return res.status(500).json({ message: `Internal server error: ${error}` });
   }
 });
 

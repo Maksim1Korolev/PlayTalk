@@ -40,7 +40,7 @@ export const fetchUsersStatus = async ({
       ...user,
       isOnline: onlineSet.has(user.username),
       unreadMessageCount: unreadMessageCounts[user.username] || 0,
-      activeGames: activeGames[user.username],
+      activeGames: activeGames[user.username] || [],
     }));
 
     updateUsers(updatedUsers);

@@ -6,9 +6,10 @@ export const $gameApi = axios.create({
 
 export const gameApiService = {
   getActiveGames: async (username: string) => {
-    const response = await $gameApi.get(`/api/game/games`, {
+    const response = await $gameApi.get(`/api/game/games/${username}`, {
       params: { username },
     });
+
     return response.data.activeGames;
   },
 
