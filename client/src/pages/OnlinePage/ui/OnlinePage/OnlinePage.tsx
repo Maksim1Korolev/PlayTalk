@@ -25,9 +25,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const token = cookies["jwt-cookie"]?.token;
   const currentUser: User = cookies["jwt-cookie"]?.user;
 
-  const [isGameSelectorOpen, setIsGameSelectorOpen] = useState<boolean>(false);
-  const [lastClickedPlayUser, setLastClickedPlayUser] = useState<string>("");
-
   const [chatModals, setChatModals] = useState<ChatModalStateProps[]>();
 
   const findNewModalPosition = (modals: ChatModalStateProps[]) => {
@@ -74,19 +71,14 @@ const OnlinePage = ({ className }: { className?: string }) => {
     [chatModals]
   );
 
-  const handleOpenGameSelector = useCallback(
-    ({ opponentUsername }: { opponentUsername: string }) => {
-      setLastClickedPlayUser(opponentUsername);
-      setIsGameSelectorOpen(true);
-    },
-    []
-  );
-
   const {
     upToDateUsers,
     inviteData,
+    isGameSelectorOpen,
+    lastClickedPlayUser,
     gameModals,
     updateUsers,
+    handleOpenGameSelector,
     handleSendGameInvite,
     handleAcceptGame,
   } = useOnlinePageSockets();
@@ -144,6 +136,9 @@ const OnlinePage = ({ className }: { className?: string }) => {
               inviteData={inviteData}
             />
           )}
+          {
+            //TODO:Maybe move GameSelector to UserCard
+          }
           {isGameSelectorOpen && (
             <GameSelector
               opponentUsername={lastClickedPlayUser}

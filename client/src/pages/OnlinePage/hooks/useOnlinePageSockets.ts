@@ -10,10 +10,13 @@ export const useOnlinePageSockets = () => {
   const [cookies] = useCookies();
   const { user: currentUser } = cookies["jwt-cookie"];
   const [upToDateUsers, setUpToDateUsers] = useState<User[]>();
+
   const [inviteData, setInviteData] = useState<{
     senderUsername: string;
     gameName: string;
   } | null>(null);
+  const [isGameSelectorOpen, setIsGameSelectorOpen] = useState<boolean>(false);
+  const [lastClickedPlayUser, setLastClickedPlayUser] = useState<string>("");
 
   const updateUsers = useCallback(
     (users: User[]) => {
@@ -37,8 +40,13 @@ export const useOnlinePageSockets = () => {
     setUpToDateUsers,
   });
 
-  const { gameModals, handleOpenGameModal, handleCloseGameModal } =
-    useGameModals();
+  const handleOpenGameSelector = useCallback(
+    ({ opponentUsername }: { opponentUsername: string }) => {
+      setLastClickedPlayUser(opponentUsername);
+      setIsGameSelectorOpen(true);
+    },
+    []
+  );
 
   const onReceiveInvite = ({
     senderUsername,
@@ -50,6 +58,9 @@ export const useOnlinePageSockets = () => {
     setInviteData({ senderUsername, gameName });
   };
 
+  const { gameModals, handleOpenGameModal, handleCloseGameModal } =
+    useGameModals();
+
   const { handleSendGameInvite, handleAcceptGame } = useGameSessionSocket({
     onReceiveInvite,
     onGameStart: handleOpenGameModal,
@@ -59,8 +70,11 @@ export const useOnlinePageSockets = () => {
   return {
     upToDateUsers,
     inviteData,
+    isGameSelectorOpen,
+    lastClickedPlayUser,
     gameModals,
     updateUsers,
+    handleOpenGameSelector,
     handleSendGameInvite,
     handleAcceptGame,
   };
