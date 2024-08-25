@@ -9,13 +9,14 @@ import cls from "./UserList.module.scss";
 export interface UserListProps {
   className?: string;
   users?: User[]; // Change 'users?: User[]' to 'users: User[]'
-  busy?: boolean;
   collapsed?: boolean;
   handleUserChatButton: (user: User) => void;
   handleUserPlayButton: ({
     opponentUsername,
+    activeGames,
   }: {
     opponentUsername: string;
+    activeGames: string[];
   }) => void;
 }
 
@@ -35,7 +36,6 @@ export const UserList = memo(
   ({
     className,
     users,
-    busy,
     collapsed,
     handleUserChatButton,
     handleUserPlayButton,
@@ -57,7 +57,6 @@ export const UserList = memo(
           <UserListCard
             className={cls.userCard}
             user={user}
-            busy={busy}
             collapsed={collapsed}
             handlePlayButton={handleUserPlayButton}
             handleChatButton={handleUserChatButton}
@@ -66,7 +65,7 @@ export const UserList = memo(
           {index < sortedUsers.length - 1 && <hr />}
         </div>
       ));
-    }, [busy, collapsed, handleUserChatButton, handleUserPlayButton, users]);
+    }, [collapsed, handleUserChatButton, handleUserPlayButton, users]);
 
     if (!users || users.length === 0) {
       return <p>No users available.</p>;

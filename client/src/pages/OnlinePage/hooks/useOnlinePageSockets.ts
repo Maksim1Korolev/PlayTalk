@@ -15,8 +15,10 @@ export const useOnlinePageSockets = () => {
     senderUsername: string;
     gameName: string;
   } | null>(null);
-  const [isGameSelectorOpen, setIsGameSelectorOpen] = useState<boolean>(false);
-  const [lastClickedPlayUser, setLastClickedPlayUser] = useState<string>("");
+  const [lastClickedPlayData, setLastClickedPlayData] = useState<{
+    opponentUsername: string;
+    activeGames: string[];
+  } | null>(null);
 
   const updateUsers = useCallback(
     (users: User[]) => {
@@ -24,13 +26,6 @@ export const useOnlinePageSockets = () => {
         (user: User) => user._id !== currentUser._id
       );
       setUpToDateUsers(otherUsers);
-
-      const userWithGameStatuses = users.find(
-        user => user.username === currentUser.username
-      );
-      if (userWithGameStatuses) {
-        console.log(userWithGameStatuses?.inGame);
-      }
     },
     [currentUser]
   );
@@ -41,9 +36,14 @@ export const useOnlinePageSockets = () => {
   });
 
   const handleOpenGameSelector = useCallback(
-    ({ opponentUsername }: { opponentUsername: string }) => {
-      setLastClickedPlayUser(opponentUsername);
-      setIsGameSelectorOpen(true);
+    ({
+      opponentUsername,
+      activeGames,
+    }: {
+      opponentUsername: string;
+      activeGames: string[];
+    }) => {
+      setLastClickedPlayData({ opponentUsername, activeGames });
     },
     []
   );
@@ -70,8 +70,7 @@ export const useOnlinePageSockets = () => {
   return {
     upToDateUsers,
     inviteData,
-    isGameSelectorOpen,
-    lastClickedPlayUser,
+    lastClickedPlayData,
     gameModals,
     updateUsers,
     handleOpenGameSelector,

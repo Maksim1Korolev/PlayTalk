@@ -1,6 +1,7 @@
 import { User } from "@/entities/User";
 import { onlineApiService } from "./onlineApiService";
 import { usersApiService } from "./usersApiService";
+import { gameApiService } from "./gameApiService";
 
 export const fetchUsersStatus = async ({
   setError,
@@ -24,19 +25,22 @@ export const fetchUsersStatus = async ({
     const results = await Promise.allSettled([
       onlineApiService.getOnlineUsernames(token),
       onlineApiService.getUnreadMessageCount(currentUser.username, token),
+      gameApiService.getActiveGames(currentUser.username),
     ]);
 
     const onlineUsernames =
       results[0].status === "fulfilled" ? results[0].value : [];
     const unreadMessageCounts =
       results[1].status === "fulfilled" ? results[1].value : {};
-
+    const activeGames =
+      results[2].status === "fulfilled" ? results[2].value : {};
     const onlineSet = new Set(onlineUsernames);
 
     const updatedUsers = users.map((user: User) => ({
       ...user,
       isOnline: onlineSet.has(user.username),
       unreadMessageCount: unreadMessageCounts[user.username] || 0,
+      activeGames: activeGames[user.username],
     }));
 
     updateUsers(updatedUsers);

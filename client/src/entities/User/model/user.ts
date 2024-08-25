@@ -1,11 +1,11 @@
+//TODO:Make into type?
 export interface User {
   _id: string;
   username: string;
   password: string;
   avatarFileName: string;
   isOnline: boolean;
-  inInvite: boolean;
-  inGame: boolean;
+  activeGames: string[];
   unreadMessageCount?: number;
-	isChatOpen?: boolean;
+  isChatOpen?: boolean;
 }

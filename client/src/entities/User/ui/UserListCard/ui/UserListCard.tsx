@@ -10,7 +10,6 @@ import cls from "./UserListCard.module.scss";
 export const UserListCard = ({
   className,
   user,
-  busy,
   collapsed,
   handlePlayButton,
   handleChatButton,
@@ -18,12 +17,13 @@ export const UserListCard = ({
 }: {
   className?: string;
   user: User;
-  busy?: boolean;
   collapsed?: boolean;
   handlePlayButton: ({
     opponentUsername,
+    activeGames,
   }: {
     opponentUsername: string;
+    activeGames: string[];
   }) => void;
   handleChatButton: (user: User) => void;
   userRef: (el: HTMLSpanElement | null) => void;
@@ -33,7 +33,10 @@ export const UserListCard = ({
   };
 
   const onPlayButton = () => {
-    handlePlayButton({ opponentUsername: user.username });
+    handlePlayButton({
+      opponentUsername: user.username,
+      activeGames: user.activeGames,
+    });
   };
 
   return (
@@ -68,9 +71,8 @@ export const UserListCard = ({
         >
           Play
         </PlayButton>
+        {user.activeGames && "Active"}
       </HStack>
-      {/*<div> Is invited: {user.inInvite ? "da" : "net"}</div>
-      <div> Is in game: {user.inGame ? "da" : "net"}</div>*/}
     </HStack>
     //</Card>
   );

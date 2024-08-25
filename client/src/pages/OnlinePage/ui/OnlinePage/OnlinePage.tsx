@@ -74,8 +74,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const {
     upToDateUsers,
     inviteData,
-    isGameSelectorOpen,
-    lastClickedPlayUser,
+    lastClickedPlayData,
     gameModals,
     updateUsers,
     handleOpenGameSelector,
@@ -118,7 +117,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
         <VStack>
           <UiText size="xl">{resources.onlineUsersHeading}</UiText>
           <Sidebar
-            busy={currentUser.inGame || currentUser.inInvite}
             users={upToDateUsers}
             handleUserChatButton={handleOpenChatModal}
             handleUserPlayButton={handleOpenGameSelector}
@@ -139,9 +137,9 @@ const OnlinePage = ({ className }: { className?: string }) => {
           {
             //TODO:Maybe move GameSelector to UserCard
           }
-          {isGameSelectorOpen && (
+          {lastClickedPlayData && (
             <GameSelector
-              opponentUsername={lastClickedPlayUser}
+              opponentUsername={lastClickedPlayData.opponentUsername}
               onGameSelect={handleSendGameInvite}
               activeGames={[]}
             />
