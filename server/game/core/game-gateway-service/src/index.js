@@ -47,8 +47,12 @@ main()
 async function clearSocketCache() {
   try {
     await redisClient.del(process.env.REDIS_USER_SOCKET_KEY);
-    console.log("Cleared socket ID cache in Redis");
+    await redisClient.del(process.env.REDIS_USER_GAMES_KEY);
+    console.log("Cleared socket ID and active games cache in Redis");
   } catch (err) {
-    console.error("Error clearing socket ID cache in Redis:", err.message);
+    console.error(
+      "Error clearing socket ID and active games cache in Redis:",
+      err.message
+    );
   }
 }
