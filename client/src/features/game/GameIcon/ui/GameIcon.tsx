@@ -7,10 +7,11 @@ interface GameIconProps {
   className?: string;
   gameName: string;
   onClick: () => void;
+  isActive: boolean;
 }
 
 export const GameIcon = memo(
-  ({ className, gameName, onClick }: GameIconProps) => {
+  ({ className, gameName, onClick, isActive }: GameIconProps) => {
     const [IconSvg, setIconSvg] = useState<React.FunctionComponent<
       React.SVGProps<SVGSVGElement>
     > | null>(null);
@@ -35,14 +36,17 @@ export const GameIcon = memo(
     }
 
     return (
-      <AppSvg
-        className={cx(cls.GameIcon, {}, [className])}
-        clickable
-        onClick={onClick}
-        // width={1}
-        // height={1}
-        Svg={IconSvg}
-      />
+      <>
+        <AppSvg
+          className={cx(cls.GameIcon, {}, [className])}
+          clickable
+          onClick={onClick}
+          width={60}
+          height={60}
+          Svg={IconSvg}
+        />
+        {isActive && "Active"}
+      </>
     );
   }
 );

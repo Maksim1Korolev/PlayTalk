@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import SocketService from "../services/socketService.js";
+import ActiveGamesService from "../services/activeGamesService.js";
 import TicTacToeGameService from "../services/ticTacToe/gameService.js";
 
 // @desc   Get data of active games
@@ -8,7 +8,7 @@ import TicTacToeGameService from "../services/ticTacToe/gameService.js";
 export const getActiveGames = asyncHandler(async (req, res) => {
   const { username } = req.body;
   try {
-    const activeGames = await SocketService.getActiveGames(username);
+    const activeGames = await ActiveGamesService.getActiveGames(username);
     return res.status(200).json({ activeGames });
   } catch (error) {
     console.error("Error adding message to history:", error);

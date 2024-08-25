@@ -2,7 +2,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import http from "http";
-import mongoose from "mongoose";
 import { Server } from "socket.io";
 
 import redisClient from "./utils/redisClient.js";
@@ -32,14 +31,6 @@ async function main() {
   await clearSocketCache();
 
   await SocketService.setupSocketConnection();
-
-  const mongoURL = process.env.DATABASE_URL;
-
-  mongoose
-    .connect(mongoURL)
-    .then(() => console.log("Successfully connected to MongoDB"))
-    .catch(err => console.error("Connection error", err.message));
-
   server.listen(PORT, () => {
     console.log(`game-gateway-service is running on port ${PORT}`);
   });
@@ -50,7 +41,6 @@ main()
   .catch(async err => {
     redisClient.quit();
     console.error(err);
-    await mongoose.disconnect();
     process.exit(1);
   });
 
