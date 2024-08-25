@@ -141,7 +141,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
             <GameSelector
               opponentUsername={lastClickedPlayData.opponentUsername}
               onGameSelect={handleSendGameInvite}
-              activeGames={[]}
+              activeGames={lastClickedPlayData.activeGames}
             />
           )}
         </VStack>

@@ -20,7 +20,7 @@ interface GameSelectorProps {
 
 export const GameSelector = memo(
   ({
-    className = "",
+    className,
     opponentUsername,
     activeGames,
     onGameSelect,
