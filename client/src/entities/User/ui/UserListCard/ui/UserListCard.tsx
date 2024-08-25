@@ -7,14 +7,7 @@ import { HStack } from "@/shared/ui";
 import { UserOnlineIndicator } from "../../UserOnlineIndicator";
 import cls from "./UserListCard.module.scss";
 
-export const UserListCard = ({
-  className,
-  user,
-  collapsed,
-  handlePlayButton,
-  handleChatButton,
-  userRef,
-}: {
+interface UserListCardProps {
   className?: string;
   user: User;
   collapsed?: boolean;
@@ -27,7 +20,16 @@ export const UserListCard = ({
   }) => void;
   handleChatButton: (user: User) => void;
   userRef: (el: HTMLSpanElement | null) => void;
-}) => {
+}
+
+export const UserListCard = ({
+  className = "",
+  user,
+  collapsed = false,
+  handlePlayButton,
+  handleChatButton,
+  userRef,
+}: UserListCardProps) => {
   const onChatOpen = () => {
     handleChatButton(user);
   };
@@ -40,7 +42,6 @@ export const UserListCard = ({
   };
 
   return (
-    //<Card variant="light" className={`${cls.UserListCard} ${className}`}>
     <HStack
       className={cx(cls.UserListCard, { [cls.collapsed]: collapsed }, [
         className,
@@ -71,9 +72,8 @@ export const UserListCard = ({
         >
           Play
         </PlayButton>
-        {user.activeGames && "Active"}
+        {user.activeGames.length > 0 && "Active"}
       </HStack>
     </HStack>
-    //</Card>
   );
 };
