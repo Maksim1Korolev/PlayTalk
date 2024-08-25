@@ -1,6 +1,7 @@
 import { io } from "../index.js";
 import redisClient from "../utils/redisClient.js";
 import { handleInviteSubscriptions } from "./socketGameSessionHandler.js";
+import handleTicTacToeSubscriptions from "./ticTacToe/socketSubs.js";
 
 class SocketService {
   static async setupSocketConnection() {
@@ -14,6 +15,7 @@ class SocketService {
         await this.connectUser(savedUsername, socket.id);
 
         await handleInviteSubscriptions(socket, username);
+        await handleTicTacToeSubscriptions(socket, username);
 
         console.log(
           `User ${savedUsername} connected with socket ID ${socket.id}. Current online users:`,
