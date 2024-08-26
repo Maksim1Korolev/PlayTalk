@@ -42,12 +42,12 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
 
   const onMakeMove = ({ interactingIndex }: { interactingIndex: number }) => {
     if (currentPlayer !== currentUser.username) {
-      setStatusMessage(`It's ${currentPlayer}'s turn!`);
+      setStatusMessage(`Really? Just look above!`);
       return;
     }
 
     if (board[interactingIndex] !== "-") {
-      setStatusMessage("Invalid move! The square is already occupied.");
+      setStatusMessage("The square is already occupied.");
       return;
     }
 
