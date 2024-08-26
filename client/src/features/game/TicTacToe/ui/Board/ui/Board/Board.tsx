@@ -2,7 +2,7 @@ import { memo } from "react";
 import cls from "./Board.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { Card } from "@/shared/ui";
-import { Box } from "../Box";
+import { Square } from "../Square/ui/Square";
 
 interface BoardProps {
   className?: string;
@@ -12,9 +12,19 @@ interface BoardProps {
 
 export const Board = memo(({ className, board, onMakeMove }: BoardProps) => {
   return (
-    <Card className={cx(cls.TicTacToeBoard, {}, [className])}>
-      {board.map((sign, index) => (
-        <Box key={index} index={index} sign={sign} onMakeMove={onMakeMove} />
+    <Card className={cx(cls.Board, {}, [className])}>
+      {/* Create rows by grouping squares in threes */}
+      {[0, 1, 2].map(row => (
+        <div key={row} className={cls.row}>
+          {board.slice(row * 3, row * 3 + 3).map((sign, index) => (
+            <Square
+              key={index + row * 3} // Unique key for each square
+              index={index + row * 3}
+              sign={sign}
+              onMakeMove={onMakeMove}
+            />
+          ))}
+        </div>
       ))}
     </Card>
   );

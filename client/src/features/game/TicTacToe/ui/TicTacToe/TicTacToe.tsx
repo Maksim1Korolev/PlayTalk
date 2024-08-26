@@ -5,7 +5,7 @@ import { Board } from "../Board";
 import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
-import { UiButton } from "@/shared/ui";
+import { UiButton, UiText } from "@/shared/ui";
 
 interface TicTacToeProps {
   className?: string;
@@ -17,6 +17,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
   const currentUser: User = cookies["jwt-cookie"]?.user;
 
   const [currentPlayer, setCurrentPlayer] = useState(game.currentPlayer);
+  const [statusMessage, setStatusMessage] = useState("");
 
   const [board, setBoard] = useState<("-" | "O" | "X")[]>(game.board);
 
@@ -40,11 +41,17 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
   };
 
   const onMakeMove = ({ interactingIndex }: { interactingIndex: number }) => {
-    if (currentPlayer === currentUser.username) {
-      handleMakeMove({ opponentUsername, interactingIndex });
-    } else {
-      console.log("Invalid move!");
+    if (currentPlayer !== currentUser.username) {
+      setStatusMessage(`It's ${currentPlayer}'s turn!`);
+      return;
     }
+
+    if (board[interactingIndex] !== "-") {
+      setStatusMessage("Invalid move! The square is already occupied.");
+      return;
+    }
+
+    handleMakeMove({ opponentUsername, interactingIndex });
   };
 
   const onMoveMade = ({
@@ -61,7 +68,9 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
         index === interactingIndex ? playerSign : sign
       )
     );
+
     changePlayers();
+    setStatusMessage("");
   };
 
   const { handleMakeMove, handleSurrender } = useTicTacToeSocket({
@@ -70,9 +79,19 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
 
   return (
     <div className={cx(cls.TicTacToe, {}, [className])}>
-      <div>Current player is: {currentPlayer}</div>
-      <Board board={board} onMakeMove={onMakeMove} />
-      <UiButton onClick={() => handleSurrender({ opponentUsername })}>
+      <UiText className={cls.statusMessage}>
+        It's {currentPlayer}'s turn!
+      </UiText>
+      {statusMessage && (
+        <UiText className={cls.statusMessage}>{statusMessage}</UiText>
+      )}
+      <div className={cls.boardContainer}>
+        <Board board={board} onMakeMove={onMakeMove} />
+      </div>
+      <UiButton
+        className={cls.surrenderButton}
+        onClick={() => handleSurrender({ opponentUsername })}
+      >
         Surrender
       </UiButton>
     </div>

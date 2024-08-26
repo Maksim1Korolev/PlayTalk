@@ -1,0 +1,17 @@
+.Square {
+  width: 80px; /* Set consistent width */
+  height: 80px; /* Set consistent height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #070707;
+  border: 1px solid #ddd;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
