@@ -18,7 +18,7 @@ export const useOnlinePageSockets = () => {
     null
   );
 
-  const updateUsers = useCallback(
+  const updateUsersForList = useCallback(
     (users: User[]) => {
       if (!currentUser) return;
       const otherUsers = users.filter(
@@ -29,9 +29,27 @@ export const useOnlinePageSockets = () => {
     [currentUser]
   );
 
+  const updateUserList = (username: string, updatedProps: Partial<User>) => {
+    setUpToDateUsers(prevUsers => {
+      if (!prevUsers) return [];
+
+      return prevUsers.map(user => {
+        if (user.username === username) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { _id, username, avatarFileName, ...allowedProps } =
+            updatedProps;
+          console.log(allowedProps);
+
+          return { ...user, ...allowedProps };
+        }
+
+        return user;
+      });
+    });
+  };
+
   useOnlineSocket({
-    upToDateUsers,
-    setUpToDateUsers,
+    updateUserList,
   });
 
   const handleOpenGameSelector = useCallback((user: User) => {
@@ -59,31 +77,17 @@ export const useOnlinePageSockets = () => {
     opponentUsername: string;
     gameName: string;
   }) => {
-    const user = getUser(opponentUsername);
-    console.log("USER onGameStart:", user);
-  
-    if (user) {
-      user.activeGames = [...user.activeGames, gameName]; // Add gameName to the user's activeGames
-    }
-  
-    setUpToDateUsers((prevUsers) => {
-      if (!prevUsers) return [];
-      if (user) {
-        const userIndex = prevUsers.findIndex((u) => u.username === user.username);
-        if (userIndex !== -1) {
-          const updatedUsers = [...prevUsers];
-          updatedUsers[userIndex] = user;
-          return updatedUsers;
-        } else {
-          return [...prevUsers, user];
-        }
-      }
-      return prevUsers;
+    console.log("USER onGameStart:", getUser(opponentUsername));
+
+    updateUserList(opponentUsername, {
+      activeGames: [
+        ...(getUser(opponentUsername)?.activeGames || []),
+        gameName,
+      ],
     });
-  
+
     handleOpenGameModal({ opponentUsername, gameName });
   };
-  
 
   const onGameEnd = ({
     opponentUsername,
@@ -94,13 +98,14 @@ export const useOnlinePageSockets = () => {
     gameName: string;
     winner: string;
   }) => {
-    const user = getUser(opponentUsername);
-    console.log("USER onGameEnd:");
-    console.log(user);
+    console.log("USER onGameEnd:", getUser(opponentUsername));
 
-    if (user) {
-      user.activeGames = user.activeGames.filter(game => game !== gameName);
-    }
+    updateUserList(opponentUsername, {
+      activeGames: (getUser(opponentUsername)?.activeGames || []).filter(
+        game => game !== gameName
+      ),
+    });
+
     handleCloseGameModal({ opponentUsername, gameName });
   };
 
@@ -132,7 +137,7 @@ export const useOnlinePageSockets = () => {
     inviteData,
     lastClickedPlayUser,
     gameModals,
-    updateUsers,
+    updateUsers: updateUsersForList,
     handleOpenGameSelector,
     handleGameClicked,
     handleAcceptGame,

@@ -7,12 +7,10 @@ import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 
 export const useOnlineSocket = ({
-  setUpToDateUsers,
+  updateUserList,
 }: {
-  upToDateUsers?: User[];
-  setUpToDateUsers: React.Dispatch<React.SetStateAction<User[] | undefined>>;
+  updateUserList: (username: string, updatedProps: Partial<User>) => void;
 }) => {
-  //  const [onlineUsernames, setOnlineUsernames] = useState<string[]>([]);
 
   const [cookies] = useCookies();
   const { user }: { user: User } = cookies["jwt-cookie"];
@@ -27,25 +25,6 @@ export const useOnlineSocket = ({
 
     const updateUserOnline = (username: string, isOnline: boolean) => {
       updateUserList(username, { isOnline });
-    };
-
-    const updateUserList = (username: string, updatedProps: Partial<User>) => {
-      setUpToDateUsers(prevUsers => {
-        if (!prevUsers) return [];
-
-        return prevUsers.map(user => {
-          if (user.username == username) {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { _id, username, avatarFileName, ...allowedProps } =
-              updatedProps;
-            console.log(allowedProps);
-
-            return { ...user, ...allowedProps };
-          }
-
-          return user;
-        });
-      });
     };
 
     //Chat Logic
