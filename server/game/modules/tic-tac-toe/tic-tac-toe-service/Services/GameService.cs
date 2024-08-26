@@ -91,7 +91,6 @@ namespace TicTacToe.Services
         {
             var game = GetGame(player1Username, player2Username);
             game.Finish(surrenderedPlayerUsername);
-            RemoveGame(game);
         }
 
         public void RemoveGame(Game game)

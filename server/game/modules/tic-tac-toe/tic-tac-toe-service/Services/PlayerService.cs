@@ -47,7 +47,6 @@ namespace TicTacToe.Services
             );
 
             var response = await _httpClient.PutAsync($"{_repositoryServiceUrl}/players", content);
-
             if (!response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();

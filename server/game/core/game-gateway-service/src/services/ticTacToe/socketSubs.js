@@ -68,21 +68,21 @@ async function handleTicTacToeSubscriptions(socket, username) {
     }
   });
 
-  socket.on(SURRENDER_EVENT, async ({ receiverUsername }) => {
+  socket.on(SURRENDER_EVENT, async ({ opponentUsername }) => {
     try {
-      const response = await GameService.surrender(username, receiverUsername);
+      const response = await GameService.surrender(username, opponentUsername);
 
       if (!response) {
         console.error(
-          `Response is undefined upon trying to surrender in ${gameName} game with ${receiverUsername}.`
+          `Response is undefined upon trying to surrender in ${gameName} game with ${opponentUsername}.`
         );
         return;
       }
 
-      await endGame(username, receiverUsername, gameName, receiverUsername);
+      await endGame(username, opponentUsername, gameName, opponentUsername);
     } catch (err) {
       console.error(
-        `Error trying to surrender in ${gameName}. Game of ${username} and ${receiverUsername}: `,
+        `Error trying to surrender in ${gameName}. Game of ${username} and ${opponentUsername}: `,
         err.message
       );
     }

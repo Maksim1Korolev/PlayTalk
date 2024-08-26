@@ -11,7 +11,6 @@ export const useOnlineSocket = ({
 }: {
   updateUserList: (username: string, updatedProps: Partial<User>) => void;
 }) => {
-
   const [cookies] = useCookies();
   const { user }: { user: User } = cookies["jwt-cookie"];
 
@@ -55,6 +54,7 @@ export const useOnlineSocket = ({
         unreadMessageCountChanged
       );
       communicationSocket.close();
+      gameSocket.close();
     };
   }, []);
 };
