@@ -5,7 +5,6 @@ import { useCookies } from "react-cookie";
 import { useGameSessionSocket } from "./useGameSessionSocket";
 import { useGameModals } from "./useGameModals";
 
-//TODO: Separate users update, so that if game Server crashes, online will work
 export const useOnlinePageSockets = () => {
   const [cookies] = useCookies();
   const { user: currentUser } = cookies["jwt-cookie"];
@@ -21,6 +20,7 @@ export const useOnlinePageSockets = () => {
 
   const updateUsers = useCallback(
     (users: User[]) => {
+      if (!currentUser) return;
       const otherUsers = users.filter(
         (user: User) => user._id !== currentUser._id
       );
@@ -48,6 +48,10 @@ export const useOnlinePageSockets = () => {
     setInviteData({ senderUsername, gameName });
   };
 
+  const getUser = (username: string): User | undefined => {
+    return upToDateUsers?.find(user => user.username === username);
+  };
+
   const onGameStart = ({
     opponentUsername,
     gameName,
@@ -55,8 +59,31 @@ export const useOnlinePageSockets = () => {
     opponentUsername: string;
     gameName: string;
   }) => {
+    const user = getUser(opponentUsername);
+    console.log("USER onGameStart:", user);
+  
+    if (user) {
+      user.activeGames = [...user.activeGames, gameName]; // Add gameName to the user's activeGames
+    }
+  
+    setUpToDateUsers((prevUsers) => {
+      if (!prevUsers) return [];
+      if (user) {
+        const userIndex = prevUsers.findIndex((u) => u.username === user.username);
+        if (userIndex !== -1) {
+          const updatedUsers = [...prevUsers];
+          updatedUsers[userIndex] = user;
+          return updatedUsers;
+        } else {
+          return [...prevUsers, user];
+        }
+      }
+      return prevUsers;
+    });
+  
     handleOpenGameModal({ opponentUsername, gameName });
   };
+  
 
   const onGameEnd = ({
     opponentUsername,
@@ -67,9 +94,13 @@ export const useOnlinePageSockets = () => {
     gameName: string;
     winner: string;
   }) => {
-    // if (user.activeGames) {
-    //   user.activeGames = user.activeGames.filter(game => game !== gameName);
-    // }
+    const user = getUser(opponentUsername);
+    console.log("USER onGameEnd:");
+    console.log(user);
+
+    if (user) {
+      user.activeGames = user.activeGames.filter(game => game !== gameName);
+    }
     handleCloseGameModal({ opponentUsername, gameName });
   };
 
@@ -92,7 +123,7 @@ export const useOnlinePageSockets = () => {
     isActive: boolean;
   }) => {
     isActive
-      ? onGameStart({ opponentUsername, gameName })
+      ? handleOpenGameModal({ opponentUsername, gameName })
       : handleSendGameInvite({ receiverUsername: opponentUsername, gameName });
   };
 
@@ -105,7 +136,5 @@ export const useOnlinePageSockets = () => {
     handleOpenGameSelector,
     handleGameClicked,
     handleAcceptGame,
-    onGameEnd,
-    onGameStart, // Export onGameStart if you need to use it outside this hook
   };
 };

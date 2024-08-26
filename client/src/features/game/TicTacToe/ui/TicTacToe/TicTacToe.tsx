@@ -61,13 +61,6 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
         index === interactingIndex ? playerSign : sign
       )
     );
-    console.log("interactingUsername:");
-    console.log(interactingUsername);
-    console.log("interactingIndex:");
-    console.log(interactingIndex);
-    console.log("board:");
-    console.log(board);
-
     changePlayers();
   };
 
