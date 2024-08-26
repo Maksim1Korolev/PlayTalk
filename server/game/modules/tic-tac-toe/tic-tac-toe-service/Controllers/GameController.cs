@@ -76,9 +76,9 @@ namespace TicTacToe.Controllers
         {
             try
             {
-                _gameService.Surrender(player1Username, player2Username, surrenderedPlayerUsername);
-
                 var game = _gameService.GetGame(player1Username, player2Username);
+
+                game.Finish(surrenderedPlayerUsername);
 
                 _playerService.UpdatePlayersAsync(game.Player1, game.Player2);
                 _gameService.RemoveGame(game);
