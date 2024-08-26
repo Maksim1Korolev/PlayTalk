@@ -74,7 +74,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const {
     upToDateUsers,
     inviteData,
-    lastClickedPlayData,
+    lastClickedPlayUser,
     gameModals,
     updateUsers,
     handleOpenGameSelector,
@@ -137,11 +137,10 @@ const OnlinePage = ({ className }: { className?: string }) => {
           {
             //TODO:Maybe move GameSelector to UserCard
           }
-          {lastClickedPlayData && (
+          {lastClickedPlayUser && (
             <GameSelector
-              opponentUsername={lastClickedPlayData.opponentUsername}
+              user={lastClickedPlayUser}
               onGameSelect={handleGameClicked}
-              activeGames={lastClickedPlayData.activeGames}
             />
           )}
         </VStack>

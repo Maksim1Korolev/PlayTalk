@@ -11,13 +11,7 @@ interface UserListCardProps {
   className?: string;
   user: User;
   collapsed?: boolean;
-  handlePlayButton: ({
-    opponentUsername,
-    activeGames,
-  }: {
-    opponentUsername: string;
-    activeGames: string[];
-  }) => void;
+  handlePlayButton: (user: User) => void;
   handleChatButton: (user: User) => void;
   userRef: (el: HTMLSpanElement | null) => void;
 }
@@ -35,10 +29,7 @@ export const UserListCard = ({
   };
 
   const onPlayButton = () => {
-    handlePlayButton({
-      opponentUsername: user.username,
-      activeGames: user.activeGames,
-    });
+    handlePlayButton(user);
   };
 
   return (

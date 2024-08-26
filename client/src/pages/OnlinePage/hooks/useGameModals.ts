@@ -30,11 +30,9 @@ export const useGameModals = () => {
     ({
       opponentUsername,
       gameName,
-      winner,
     }: {
       opponentUsername: string;
       gameName: string;
-      winner: string;
     }) => {
       setGameModals(prev =>
         prev.filter(

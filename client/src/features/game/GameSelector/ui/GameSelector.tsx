@@ -4,11 +4,11 @@ import { cx } from "@/shared/lib/cx";
 import { Card, HStack } from "@/shared/ui";
 import { GameIcon } from "@/features/game/GameIcon";
 import GameNames from "@/entities/Game/model/enums/gameNames";
+import { User } from "@/entities/User";
 
 interface GameSelectorProps {
   className?: string;
-  opponentUsername: string;
-  activeGames: string[];
+  user: User;
   onGameSelect: ({
     opponentUsername,
     gameName,
@@ -21,22 +21,17 @@ interface GameSelectorProps {
 }
 
 export const GameSelector = memo(
-  ({
-    className = "",
-    opponentUsername,
-    activeGames = [],
-    onGameSelect,
-  }: GameSelectorProps) => {
+  ({ className = "", user, onGameSelect }: GameSelectorProps) => {
     const gameNames = Object.values(GameNames);
 
     const isGameActive = (gameName: string): boolean => {
-      return activeGames.includes(gameName);
+      return user.activeGames.includes(gameName);
     };
 
     const handleIconClick = (gameName: string) => {
       const isActive = isGameActive(gameName);
       onGameSelect({
-        opponentUsername,
+        opponentUsername: user.username,
         gameName,
         isActive,
       });

@@ -15,10 +15,9 @@ export const useOnlinePageSockets = () => {
     senderUsername: string;
     gameName: string;
   } | null>(null);
-  const [lastClickedPlayData, setLastClickedPlayData] = useState<{
-    opponentUsername: string;
-    activeGames: string[];
-  } | null>(null);
+  const [lastClickedPlayUser, setLastClickedPlayUser] = useState<User | null>(
+    null
+  );
 
   const updateUsers = useCallback(
     (users: User[]) => {
@@ -35,18 +34,9 @@ export const useOnlinePageSockets = () => {
     setUpToDateUsers,
   });
 
-  const handleOpenGameSelector = useCallback(
-    ({
-      opponentUsername,
-      activeGames,
-    }: {
-      opponentUsername: string;
-      activeGames: string[];
-    }) => {
-      setLastClickedPlayData({ opponentUsername, activeGames });
-    },
-    []
-  );
+  const handleOpenGameSelector = useCallback((user: User) => {
+    setLastClickedPlayUser(user);
+  }, []);
 
   const onReceiveInvite = ({
     senderUsername,
@@ -58,13 +48,38 @@ export const useOnlinePageSockets = () => {
     setInviteData({ senderUsername, gameName });
   };
 
+  const onGameStart = ({
+    opponentUsername,
+    gameName,
+  }: {
+    opponentUsername: string;
+    gameName: string;
+  }) => {
+    handleOpenGameModal({ opponentUsername, gameName });
+  };
+
+  const onGameEnd = ({
+    opponentUsername,
+    gameName,
+    winner,
+  }: {
+    opponentUsername: string;
+    gameName: string;
+    winner: string;
+  }) => {
+    // if (user.activeGames) {
+    //   user.activeGames = user.activeGames.filter(game => game !== gameName);
+    // }
+    handleCloseGameModal({ opponentUsername, gameName });
+  };
+
   const { gameModals, handleOpenGameModal, handleCloseGameModal } =
     useGameModals();
 
   const { handleSendGameInvite, handleAcceptGame } = useGameSessionSocket({
     onReceiveInvite,
-    onGameStart: handleOpenGameModal,
-    onGameEnd: handleCloseGameModal,
+    onGameStart,
+    onGameEnd,
   });
 
   const handleGameClicked = ({
@@ -77,18 +92,20 @@ export const useOnlinePageSockets = () => {
     isActive: boolean;
   }) => {
     isActive
-      ? handleOpenGameModal({ opponentUsername, gameName })
+      ? onGameStart({ opponentUsername, gameName })
       : handleSendGameInvite({ receiverUsername: opponentUsername, gameName });
   };
 
   return {
     upToDateUsers,
     inviteData,
-    lastClickedPlayData,
+    lastClickedPlayUser,
     gameModals,
     updateUsers,
     handleOpenGameSelector,
     handleGameClicked,
     handleAcceptGame,
+    onGameEnd,
+    onGameStart, // Export onGameStart if you need to use it outside this hook
   };
 };

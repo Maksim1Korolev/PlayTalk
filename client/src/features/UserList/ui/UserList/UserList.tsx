@@ -11,13 +11,7 @@ export interface UserListProps {
   users?: User[]; // Change 'users?: User[]' to 'users: User[]'
   collapsed?: boolean;
   handleUserChatButton: (user: User) => void;
-  handleUserPlayButton: ({
-    opponentUsername,
-    activeGames,
-  }: {
-    opponentUsername: string;
-    activeGames: string[];
-  }) => void;
+  handleUserPlayButton: (user: User) => void;
 }
 
 const adjustFontSize = (
