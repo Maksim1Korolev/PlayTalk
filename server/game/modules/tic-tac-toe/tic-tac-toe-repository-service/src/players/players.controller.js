@@ -12,7 +12,7 @@ export const getPlayer = asyncHandler(async (req, res) => {
   }
 
   try {
-    const player = await PlayerService.getPlayer(username);
+    const player = await PlayerService.getPlayers([username]);
 
     if (!player) {
       return res.status(404).json({ message: "Player not found." });
