@@ -38,7 +38,8 @@ export const useChatModals = () => {
 
 export const useReceiveMessage = (
   currentReceiverUsername: string,
-  addMessagesToHistory: (messages: Message[]) => void
+  addMessagesToHistory: (messages: Message[]) => void,
+	setIsTyping: (isTyping: boolean) => void
 ) => {
   useEffect(() => {
     const updateChatHistory = (
@@ -64,14 +65,16 @@ export const useReceiveMessage = (
       }
     };
 
-    communicationSocket.emit("on-chat-open", currentReceiverUsername);
+    communicationSocket.emit("on-chat-open", {receiverUsername: currentReceiverUsername});
 
     communicationSocket.on("update-chat", updateChatHistory);
     communicationSocket.on("receive-message", receiveMessageSubscribe);
+		communicationSocket.on("typing", () => setIsTyping(true));
+    communicationSocket.on("stop typing", () => setIsTyping(false));
 
     return () => {
       communicationSocket.off("update-chat", updateChatHistory);
       communicationSocket.off("receive-message", receiveMessageSubscribe);
     };
-  }, [addMessagesToHistory, currentReceiverUsername]);
+  }, [addMessagesToHistory, currentReceiverUsername, setIsTyping]);
 };

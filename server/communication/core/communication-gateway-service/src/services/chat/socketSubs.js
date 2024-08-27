@@ -23,6 +23,20 @@ async function handleChatSubscriptions(socket, currentUsername) {
     }
   });
 
+  socket.on("typing", async receiverUsername => {
+    const receiversSocketIds = await SocketService.getUserSockets(
+      receiverUsername
+    );
+    io.to(receiversSocketIds).emit("typing");
+  });
+
+  socket.on("stop typing", async receiverUsername => {
+    const receiversSocketIds = await SocketService.getUserSockets(
+      receiverUsername
+    );
+    io.to(receiversSocketIds).emit("stop typing");
+  });
+
   socket.on("on-read-messages", async ({ usernames }) => {
     try {
       const { data } = await MessageHistoryService.readAllUnreadMessages(

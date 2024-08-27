@@ -33,6 +33,8 @@ export const ChatModal = ({
 
   const { isDragged, handleDragStart, handleDragStop } = useModalDrag();
 
+	const [isTyping, setIsTyping] = useState(false);
+
   const handleOpenChatModal = () => {
     if (!isDragged) {
       setIsOpen(true);
@@ -66,7 +68,7 @@ export const ChatModal = ({
     }
   );
 
-  useReceiveMessage(receiverUser.username, addMessagesToHistory);
+  useReceiveMessage(receiverUser.username, addMessagesToHistory, setIsTyping);
 
   return (
     <Rnd
@@ -87,6 +89,7 @@ export const ChatModal = ({
         <Chat
           className={cx(cls.ChatModal, {}, [className])}
           isOpen={isOpen}
+					isTyping={isTyping}
           handleSendMessage={onUserSend}
           receiverUser={receiverUser}
           messageHistory={messageHistory}

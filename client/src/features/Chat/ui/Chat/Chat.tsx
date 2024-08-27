@@ -16,6 +16,7 @@ export const Chat = memo(
   ({
     className,
     isOpen,
+    isTyping,
     messageHistory,
     receiverUser,
     handleSendMessage,
@@ -25,6 +26,7 @@ export const Chat = memo(
   }: {
     className?: string;
     isOpen: boolean;
+    isTyping: boolean;
     messageHistory?: Message[];
     receiverUser: User;
     handleSendMessage: (message: string) => void;
@@ -97,16 +99,16 @@ export const Chat = memo(
           isRight={currentUser.username == message.username}
           avatarSrc={
             currentUser.username == message.username
-              ? currentUser.avatarPath
-              : receiverUser.avatarPath
+              ? currentUser.avatarFileName
+              : receiverUser.avatarFileName
           }
         />
       ));
     }, [
       messageHistory,
       currentUser.username,
-      currentUser.avatarPath,
-      receiverUser.avatarPath,
+      currentUser.avatarFileName,
+      receiverUser.avatarFileName,
     ]);
 
     return (
@@ -142,6 +144,7 @@ export const Chat = memo(
             {renderMessageHistory()}
             <div ref={dummy} />
           </div>
+          {isTyping && <UiText className="">Typing...</UiText>}
         </Card>
         <div className={cls.chatInput} onKeyDown={handleKeyDown}>
           <ChatInput
