@@ -27,17 +27,12 @@ async function handleTicTacToeSubscriptions(socket, username) {
         return;
       }
 
-      const sendersSocketIds = await SocketService.getUserSockets(username);
       const receiversSocketIds = await SocketService.getUserSockets(
         opponentUsername
       );
 
       switch (response.moveResult) {
         case "Success":
-          io.to(sendersSocketIds).emit(MOVE_MADE_EVENT, {
-            interactingUsername: username,
-            interactingIndex,
-          });
           io.to(receiversSocketIds).emit(MOVE_MADE_EVENT, {
             interactingUsername: username,
             interactingIndex,

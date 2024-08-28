@@ -42,7 +42,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
 
   const onMakeMove = ({ interactingIndex }: { interactingIndex: number }) => {
     if (currentPlayer !== currentUser.username) {
-      setStatusMessage(`Really? Just look above!`);
+      setStatusMessage(`It's not your turn!`);
       return;
     }
 
@@ -52,6 +52,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
     }
 
     handleMakeMove({ opponentUsername, interactingIndex });
+    onMoveMade({ interactingUsername: currentUser.username, interactingIndex });
   };
 
   const onMoveMade = ({
@@ -61,6 +62,10 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
     interactingUsername: string;
     interactingIndex: number;
   }) => {
+    if (interactingUsername !== currentPlayer) {
+      return;
+    }
+
     const playerSign = getPlayerSign(interactingUsername);
 
     setBoard(prevBoard =>
