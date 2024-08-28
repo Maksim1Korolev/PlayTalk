@@ -13,7 +13,7 @@ import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
 import cls from "./OnlinePage.module.scss";
 import { GameSelector } from "@/features/game/GameSelector";
-import { GameModals } from "../GameModals";
+import { GameModals } from "@/features/game/GameModals";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
-//TODO:Relocate
-import { GameModalStateProps } from "../ui/GameModals/ui/GameModals/GameModals";
+import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
 
 export const useGameModals = () => {
   const [gameModals, setGameModals] = useState<GameModalStateProps[]>([]);

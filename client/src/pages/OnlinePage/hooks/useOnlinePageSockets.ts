@@ -3,8 +3,9 @@ import { useCallback, useState } from "react";
 import { useOnlineSocket } from "./useOnlineSocket";
 import { useCookies } from "react-cookie";
 import { useGameSessionSocket } from "./useGameSessionSocket";
-import { useGameModals } from "./useGameModals";
+import { useGameModals } from "@/pages/OnlinePage/hooks/useGameModals";
 
+//Rename to useHomePageHooks?
 export const useOnlinePageSockets = () => {
   const [cookies] = useCookies();
   const { user: currentUser } = cookies["jwt-cookie"];
@@ -77,8 +78,6 @@ export const useOnlinePageSockets = () => {
     opponentUsername: string;
     gameName: string;
   }) => {
-    console.log("USER onGameStart:", getUser(opponentUsername));
-
     updateUserList(opponentUsername, {
       activeGames: [
         ...(getUser(opponentUsername)?.activeGames || []),
@@ -98,8 +97,6 @@ export const useOnlinePageSockets = () => {
     gameName: string;
     winner: string;
   }) => {
-    console.log("USER onGameEnd:", getUser(opponentUsername));
-
     updateUserList(opponentUsername, {
       activeGames: (getUser(opponentUsername)?.activeGames || []).filter(
         game => game !== gameName

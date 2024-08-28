@@ -5,15 +5,9 @@ import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
 import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe/";
-
-export interface GameModalStateProps {
-  opponentUsername: string;
-  gameName: string;
-  position?: {
-    x: number;
-    y: number;
-  };
-}
+import { Card } from "@/shared/ui";
+import { useGameModals } from "@/pages/OnlinePage/hooks/useGameModals";
+import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
 
 export const GameModals = memo(
   ({
@@ -69,9 +63,11 @@ export const GameModals = memo(
 
     return (
       <div className={cx(cls.GameModals, {}, [className])}>
-        {gameModals.map(modal =>
-          getGameComponent(modal.opponentUsername, modal.gameName)
-        )}
+        {gameModals.map(modal => (
+          <Card>
+            {getGameComponent(modal.opponentUsername, modal.gameName)}
+          </Card>
+        ))}
       </div>
     );
   }
