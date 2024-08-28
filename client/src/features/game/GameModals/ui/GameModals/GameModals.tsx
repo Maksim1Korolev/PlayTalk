@@ -7,6 +7,7 @@ import { User } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe/";
 import { Card, UiButton } from "@/shared/ui";
 import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
+import { CircleModal } from "@/shared/ui/CircleModal";
 
 export const GameModals = memo(
   ({
@@ -73,10 +74,12 @@ export const GameModals = memo(
         {gameModals.map(modal => (
           <Card>
             <UiButton
-              onClick={ () =>onClose({
-                opponentUsername: modal.opponentUsername,
-                gameName: modal.gameName,
-              })}
+              onClick={() =>
+                onClose({
+                  opponentUsername: modal.opponentUsername,
+                  gameName: modal.gameName,
+                })
+              }
             >
               X
             </UiButton>

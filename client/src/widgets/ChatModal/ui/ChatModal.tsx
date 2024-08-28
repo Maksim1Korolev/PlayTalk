@@ -38,6 +38,7 @@ export const ChatModal = ({
       setIsOpen(true);
     }
   };
+
   useEffect(() => {
     if (isOpen) {
       handleReadAllUnreadMessages([
