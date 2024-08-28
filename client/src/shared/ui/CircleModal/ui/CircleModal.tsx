@@ -12,7 +12,7 @@ interface CircleModalProps {
   children?: ReactNode;
   position?: { x: number; y: number };
   headerString?: string;
-  onClose: (modalId: string) => void;
+  onClose: () => void;
 }
 
 export const CircleModal = ({
@@ -27,24 +27,15 @@ export const CircleModal = ({
 
   const handleOpenCircleModal = () => {
     if (!isDragged) {
-      setIsCollapsed(true);
+      setIsCollapsed(false);
     }
   };
 
   const handleCollapseCircleModal = () => {
     if (!isDragged) {
-      setIsCollapsed(false);
+      setIsCollapsed(true);
     }
   };
-
-  const handleCloseCircleModal = (modalId: string) => {
-    onClose(modalId);
-  };
-
-  useEffect(() => {
-    if (isCollapsed) {
-    }
-  }, []);
 
   return (
     <Rnd
@@ -80,7 +71,7 @@ export const CircleModal = ({
               </UiButton>
               <UiButton
                 variant="clear"
-                onClick={() => handleCloseCircleModal}
+                onClick={onClose}
                 className={cls.chatBoxToggle}
               >
                 <CancelIcon />

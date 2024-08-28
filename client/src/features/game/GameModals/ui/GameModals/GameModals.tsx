@@ -5,26 +5,32 @@ import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
 import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe/";
-import { Card, UiButton } from "@/shared/ui";
+import { UiButton } from "@/shared/ui";
 import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
 import { CircleModal } from "@/shared/ui/CircleModal";
 
-export const GameModals = memo(
-  ({
-    className,
-    gameModals,
-    onClose,
+// Utility function to generate a modal ID
+const generateModalId = (
+  opponentUsername: string,
+  gameName: string
+): string => {
+  return `${opponentUsername}_${gameName}`;
+};
+
+interface GameModalsProps {
+  className?: string;
+  gameModals: GameModalStateProps[];
+  onClose: ({
+    opponentUsername,
+    gameName,
   }: {
-    className?: string;
-    gameModals: GameModalStateProps[];
-    onClose: ({
-      opponentUsername,
-      gameName,
-    }: {
-      opponentUsername: string;
-      gameName: string;
-    }) => void;
-  }) => {
+    opponentUsername: string;
+    gameName: string;
+  }) => void;
+}
+
+export const GameModals = memo(
+  ({ className, gameModals, onClose }: GameModalsProps) => {
     const [cookies] = useCookies(["jwt-cookie"]);
     const currentUser: User = cookies["jwt-cookie"]?.user;
     const [games, setGames] = useState<{ [key: string]: any }>({});
@@ -39,7 +45,7 @@ export const GameModals = memo(
               player2Username: modal.opponentUsername,
             });
             return {
-              id: `${modal.opponentUsername}-${modal.gameName}`,
+              id: generateModalId(modal.opponentUsername, modal.gameName),
               game: data.game,
             };
           })
@@ -55,8 +61,14 @@ export const GameModals = memo(
       fetchGames();
     }, [gameModals, currentUser.username]);
 
+    const handleCloseGameModal = (modalId: string) => {
+      const [opponentUsername, gameName] = modalId.split("_");
+
+      onClose({ opponentUsername, gameName });
+    };
+
     const getGameComponent = (opponentUsername: string, gameName: string) => {
-      const gameId = `${opponentUsername}-${gameName}`;
+      const gameId = generateModalId(opponentUsername, gameName);
       const game = games[gameId];
 
       if (!game) return null;
@@ -71,21 +83,21 @@ export const GameModals = memo(
 
     return (
       <div className={cx(cls.GameModals, {}, [className])}>
-        {gameModals.map(modal => (
-          <Card>
-            <UiButton
-              onClick={() =>
-                onClose({
-                  opponentUsername: modal.opponentUsername,
-                  gameName: modal.gameName,
-                })
-              }
+        {gameModals.map(modal => {
+          const modalId = generateModalId(
+            modal.opponentUsername,
+            modal.gameName
+          );
+          return (
+            <CircleModal
+              key={modalId}
+              onClose={() => handleCloseGameModal(modalId)}
+              headerString={modal.opponentUsername}
             >
-              X
-            </UiButton>
-            {getGameComponent(modal.opponentUsername, modal.gameName)}
-          </Card>
-        ))}
+              {getGameComponent(modal.opponentUsername, modal.gameName)}
+            </CircleModal>
+          );
+        })}
       </div>
     );
   }
