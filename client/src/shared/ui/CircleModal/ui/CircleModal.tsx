@@ -48,31 +48,28 @@ export const CircleModal = ({
         height: 80,
       }}
       minWidth={isCollapsed ? 80 : 365}
-      minHeight={isCollapsed ? 80 : 280}
+      minHeight={isCollapsed ? 80 : 400}
       bounds="window"
-      enableResizing={isCollapsed}
+      enableResizing={!isCollapsed}
     >
       {isCollapsed ? (
         <UiButton onClick={handleOpenCircleModal}>Circle</UiButton>
       ) : (
         <VStack className={cx(cls.CircleModal, {}, [className])}>
-          <HStack
-            className={cx(cls.CircleModalHeader, {}, ["drag-handle"])}
-            max
-          >
+          <HStack className={cx(cls.header, {}, ["drag-handle"])} max>
             <UiText max>{headerString}</UiText>
             <HStack className={cls.controlButtons}>
               <UiButton
                 variant="clear"
                 onClick={handleCollapseCircleModal}
-                className={cls.chatBoxToggle}
+                className={cls.collapseButton}
               >
                 <DoDisturbOnIcon />
               </UiButton>
               <UiButton
                 variant="clear"
                 onClick={onClose}
-                className={cls.chatBoxToggle}
+                className={cls.closeButton}
               >
                 <CancelIcon />
               </UiButton>

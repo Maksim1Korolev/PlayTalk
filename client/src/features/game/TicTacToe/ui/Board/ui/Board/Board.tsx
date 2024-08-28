@@ -13,12 +13,11 @@ interface BoardProps {
 export const Board = memo(({ className, board, onMakeMove }: BoardProps) => {
   return (
     <Card className={cx(cls.Board, {}, [className])}>
-      {/* Create rows by grouping squares in threes */}
       {[0, 1, 2].map(row => (
         <div key={row} className={cls.row}>
           {board.slice(row * 3, row * 3 + 3).map((sign, index) => (
             <Square
-              key={index + row * 3} // Unique key for each square
+              key={index + row * 3}
               index={index + row * 3}
               sign={sign}
               onMakeMove={onMakeMove}

@@ -5,11 +5,9 @@ import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
 import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe/";
-import { UiButton } from "@/shared/ui";
 import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
 import { CircleModal } from "@/shared/ui/CircleModal";
 
-// Utility function to generate a modal ID
 const generateModalId = (
   opponentUsername: string,
   gameName: string

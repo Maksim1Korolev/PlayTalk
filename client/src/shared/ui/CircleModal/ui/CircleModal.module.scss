@@ -1,2 +1,74 @@
 .CircleModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.controlButtons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.collapseButton,
+.closeButton {
+  width: 36px;
+  height: 36px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+.collapseButton {
+  background-color: #ffeb3b;
+}
+
+.closeButton {
+  background-color: #f44336;
+  color: #ffffff;
+}
+
+.drag-handle {
+  cursor: grab;
+}
+
+@media (max-width: 768px) {
+  .CircleModal {
+    min-width: 90vw;
+    min-height: 90vh;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .CircleModal {
+    min-width: 100vw;
+    min-height: 100vh;
+    padding: 4px;
+  }
 }
