@@ -5,17 +5,24 @@ import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
 import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe/";
-import { Card } from "@/shared/ui";
-import { useGameModals } from "@/pages/OnlinePage/hooks/useGameModals";
+import { Card, UiButton } from "@/shared/ui";
 import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
 
 export const GameModals = memo(
   ({
     className,
     gameModals,
+    onClose,
   }: {
     className?: string;
     gameModals: GameModalStateProps[];
+    onClose: ({
+      opponentUsername,
+      gameName,
+    }: {
+      opponentUsername: string;
+      gameName: string;
+    }) => void;
   }) => {
     const [cookies] = useCookies(["jwt-cookie"]);
     const currentUser: User = cookies["jwt-cookie"]?.user;
@@ -65,6 +72,14 @@ export const GameModals = memo(
       <div className={cx(cls.GameModals, {}, [className])}>
         {gameModals.map(modal => (
           <Card>
+            <UiButton
+              onClick={ () =>onClose({
+                opponentUsername: modal.opponentUsername,
+                gameName: modal.gameName,
+              })}
+            >
+              X
+            </UiButton>
             {getGameComponent(modal.opponentUsername, modal.gameName)}
           </Card>
         ))}

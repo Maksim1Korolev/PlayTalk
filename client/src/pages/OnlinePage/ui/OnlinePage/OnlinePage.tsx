@@ -76,6 +76,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
     inviteData,
     lastClickedPlayUser,
     gameModals,
+    onGameModalClose,
     updateUsers,
     handleOpenGameSelector,
     handleGameClicked,
@@ -144,7 +145,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
             />
           )}
         </VStack>
-        <GameModals gameModals={gameModals} />
+        <GameModals gameModals={gameModals} onClose={onGameModalClose} />
       </HStack>
     </div>
   );

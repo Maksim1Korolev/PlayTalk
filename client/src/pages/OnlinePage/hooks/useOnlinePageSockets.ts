@@ -134,6 +134,7 @@ export const useOnlinePageSockets = () => {
     inviteData,
     lastClickedPlayUser,
     gameModals,
+    onGameModalClose: handleCloseGameModal,
     updateUsers: updateUsersForList,
     handleOpenGameSelector,
     handleGameClicked,
