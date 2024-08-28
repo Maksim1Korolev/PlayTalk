@@ -85,7 +85,9 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
   return (
     <div className={cx(cls.TicTacToe, {}, [className])}>
       <UiText className={cls.statusMessage}>
-        It's {currentPlayer}'s turn!
+        {currentPlayer === currentUser.username
+          ? "It's your turn!"
+          : `It's ${currentPlayer}'s turn!`}
       </UiText>
       {statusMessage && (
         <UiText className={cls.statusMessage}>{statusMessage}</UiText>
