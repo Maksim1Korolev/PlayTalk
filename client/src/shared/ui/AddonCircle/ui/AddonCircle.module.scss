@@ -1,0 +1,46 @@
+.AddonCircle {
+  position: relative;
+  display: inline-block;
+}
+
+.mainImage {
+  border-radius: 50%;
+}
+.addonTopRight {
+  display: flex;
+  position: absolute;
+  top: 0.1rem;
+  inset-inline-end: 0.1rem;
+}
+
+.addonBottomRight {
+  display: flex;
+  position: absolute;
+  bottom: 0rem;
+  inset-inline-end: -1rem;
+}
+
+.addonTopLeft {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.addonBottomLeft {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+}
+
+.button:hover .icon {
+  color: var(--accent-redesigned);
+}

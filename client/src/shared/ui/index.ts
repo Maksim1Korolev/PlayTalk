@@ -8,3 +8,5 @@ export { UiButton } from "./UiButton";
 export type { ButtonProps } from "./UiButton";
 export { UiInput } from "./UiInput";
 export { UiText } from "./UiText";
+export { CircleModal } from "./CircleModal";
+export { AddonCircle } from "./AddonCircle";

@@ -97,16 +97,16 @@ export const Chat = memo(
           isRight={currentUser.username == message.username}
           avatarSrc={
             currentUser.username == message.username
-              ? currentUser.avatarPath
-              : receiverUser.avatarPath
+              ? currentUser.avatarFileName
+              : receiverUser.avatarFileName
           }
         />
       ));
     }, [
       messageHistory,
       currentUser.username,
-      currentUser.avatarPath,
-      receiverUser.avatarPath,
+      currentUser.avatarFileName,
+      receiverUser.avatarFileName,
     ]);
 
     return (

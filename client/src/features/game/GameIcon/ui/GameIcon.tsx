@@ -1,17 +1,18 @@
 import { memo, useEffect, useState } from "react";
 import cls from "./GameIcon.module.scss";
 import { cx } from "@/shared/lib/cx";
-import { AppSvg } from "@/shared/ui";
+import { AppSvg, Loader } from "@/shared/ui";
 
 interface GameIconProps {
   className?: string;
   gameName: string;
+  isActive?: boolean;
+  size?: number;
   onClick: () => void;
-  isActive: boolean;
 }
 
 export const GameIcon = memo(
-  ({ className, gameName, onClick, isActive }: GameIconProps) => {
+  ({ className, gameName, isActive, size = 60, onClick }: GameIconProps) => {
     const [IconSvg, setIconSvg] = useState<React.FunctionComponent<
       React.SVGProps<SVGSVGElement>
     > | null>(null);
@@ -32,21 +33,18 @@ export const GameIcon = memo(
     }, [gameName]);
 
     if (!IconSvg) {
-      return null; //TODO: Add loader
+      return <Loader />;
     }
 
     return (
-      <>
-        <AppSvg
-          className={cx(cls.GameIcon, {}, [className])}
-          clickable
-          onClick={onClick}
-          width={60}
-          height={60}
-          Svg={IconSvg}
-        />
-        {isActive && "Active"}
-      </>
+      <AppSvg
+        className={cx(cls.GameIcon, { [cls.isActive]: isActive }, [className])}
+        clickable
+        onClick={onClick}
+        width={size}
+        height={size}
+        Svg={IconSvg}
+      />
     );
   }
 );

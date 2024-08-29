@@ -6,7 +6,8 @@ import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe/";
 import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
-import { CircleModal } from "@/shared/ui/CircleModal";
+import { CircleModal } from "@/shared/ui";
+import { AddonCircleProps } from "@/shared/ui/AddonCircle";
 
 const generateModalId = (
   opponentUsername: string,
@@ -79,6 +80,10 @@ export const GameModals = memo(
       }
     };
 
+    //   const getAddonCircleProps  = ({}) =>{
+    //     imgSrc =
+    // }
+
     return (
       <div className={cx(cls.GameModals, {}, [className])}>
         {gameModals.map(modal => {
@@ -91,6 +96,7 @@ export const GameModals = memo(
               key={modalId}
               onClose={() => handleCloseGameModal(modalId)}
               headerString={modal.opponentUsername}
+              // addonCircleProps={addonCircleProps}
             >
               {getGameComponent(modal.opponentUsername, modal.gameName)}
             </CircleModal>

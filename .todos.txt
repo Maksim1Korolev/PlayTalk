@@ -24,4 +24,4 @@ Azure CI/CD
 Possible expansions:
 Group chats
 Friends
-Turns history on tic tac toe server
+Turns history and more stats on tic tac toe server
