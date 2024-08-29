@@ -77,6 +77,12 @@ const AuthPage = ({ className }: AuthPageProps) => {
     setError("");
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      handleAuthAction();
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/");
@@ -137,6 +143,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
                   type="password"
                   value={password}
                   onChange={handlePasswordChange}
+                  onKeyDown={handleKeyDown}
                   max
                 />
               </VStack>
