@@ -19,7 +19,7 @@ To add (In the end):
 Auth on all servers, updated auth for some data
 Add environment (development/production)
 Kubernetes
-Azure CI/CD
+Storybook
 
 Possible expansions:
 Group chats

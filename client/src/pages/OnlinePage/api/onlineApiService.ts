@@ -20,6 +20,7 @@ export const onlineApiService = {
     );
     return response.data;
   },
+  //TODO: Delete after transferring socket logic from chatModal
   postAllReadMessages: async (
     currentUsername: string,
     receiverUsername: string,

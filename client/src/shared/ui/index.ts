@@ -1,5 +1,6 @@
 export { AppImage } from "./AppImage";
 export { AppSvg } from "./AppSvg";
+export type { SVGProps } from "./AppSvg";
 export { Card } from "./Card";
 export { List } from "./List";
 export { Loader } from "./Loader";
@@ -9,4 +10,4 @@ export type { ButtonProps } from "./UiButton";
 export { UiInput } from "./UiInput";
 export { UiText } from "./UiText";
 export { CircleModal } from "./CircleModal";
-export { AddonCircle } from "./AddonCircle";
+export { AddonCircle, AddonCircleProps } from "./AddonCircle";

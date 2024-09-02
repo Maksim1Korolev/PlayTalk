@@ -1,12 +1,18 @@
-import { memo, ReactNode, useEffect, useState } from "react";
+import { memo, ReactNode, useState } from "react";
 import cls from "./CircleModal.module.scss";
 import { cx } from "@/shared/lib/cx";
 import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useModalDrag } from "../hooks/useModalDrag";
 import { Rnd } from "react-rnd";
-import { HStack, VStack, UiButton, UiText, AddonCircle } from "@/shared/ui";
-import { AddonCircleProps } from "../../AddonCircle";
+import {
+  HStack,
+  VStack,
+  UiButton,
+  UiText,
+  AddonCircle,
+  AddonCircleProps,
+} from "@/shared/ui";
 
 interface CircleModalProps {
   className?: string;
@@ -41,12 +47,11 @@ export const CircleModal = memo(
       }
     };
 
-    // const getAddonCircle = () => {
-
-    //   return (
-    //     <AddonCircle {...addonCircleProps} onClick={handleOpenCircleModal} />
-    //   );
-    // };
+    const getAddonCircle = () => {
+      return (
+        <AddonCircle {...addonCircleProps} onClick={handleOpenCircleModal} />
+      );
+    };
 
     return (
       <Rnd
@@ -58,6 +63,7 @@ export const CircleModal = memo(
           width: 80,
           height: 80,
         }}
+        //TODO:Move to constants
         minWidth={isCollapsed ? 80 : 365}
         minHeight={isCollapsed ? 80 : 400}
         bounds="window"

@@ -6,8 +6,8 @@ import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe/";
 import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
-import { CircleModal } from "@/shared/ui";
-import { AddonCircleProps } from "@/shared/ui/AddonCircle";
+import { CircleModal, SVGProps } from "@/shared/ui";
+import useImagePath from "@/shared/hooks/useImagePath";
 
 const generateModalId = (
   opponentUsername: string,
@@ -80,9 +80,35 @@ export const GameModals = memo(
       }
     };
 
-    //   const getAddonCircleProps  = ({}) =>{
-    //     imgSrc =
-    // }
+    const getAddonCircleProps = (currentGameName: string) => {
+      return getGameIconProps(currentGameName);
+    };
+
+    const getGameIconProps = (currentGameName: string) => {
+      const gameName = currentGameName;
+      const size = 80;
+      const highlighted = true;
+      const backgroundColor = "primary";
+
+      const iconPath = useImagePath(gameName);
+      let iconSvg;
+      try {
+        iconSvg = require(`${iconPath}`).ReactComponent;
+      } catch (error) {
+        console.error(`Failed to load SVG: ${error}`);
+        iconSvg = require("images/default-avatar.svg").ReactComponent;
+      }
+
+      const svgProps: SVGProps = {
+        Svg: iconSvg,
+        width: size,
+        height: size,
+        highlighted: highlighted,
+        backgroundColor: backgroundColor,
+      };
+
+      return svgProps;
+    };
 
     return (
       <div className={cx(cls.GameModals, {}, [className])}>
@@ -96,7 +122,7 @@ export const GameModals = memo(
               key={modalId}
               onClose={() => handleCloseGameModal(modalId)}
               headerString={modal.opponentUsername}
-              // addonCircleProps={addonCircleProps}
+              addonCircleProps={getAddonCircleProps(modal.gameName)} // Pass the correct props
             >
               {getGameComponent(modal.opponentUsername, modal.gameName)}
             </CircleModal>

@@ -9,6 +9,7 @@ interface SVGBaseProps extends SvgProps {
   Svg: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   backgroundColor?: BackgroundColor;
   fill?: boolean;
+  highlighted?: boolean;
 }
 
 interface ImageSVGProps extends SVGBaseProps {
@@ -19,7 +20,7 @@ interface ClickableSVGProps extends SVGBaseProps {
   onClick: () => void;
 }
 
-type SVGProps = ImageSVGProps | ClickableSVGProps;
+export type SVGProps = ImageSVGProps | ClickableSVGProps;
 
 type BackgroundColor = "white" | "black" | "primary";
 
@@ -32,14 +33,21 @@ export const AppSvg = memo((props: SVGProps) => {
     height = 32,
     clickable,
     fill,
+    highlighted,
     ...otherProps
   } = props;
+
   const colorClass = `${fill ? "fill" : "stroke"}${
     backgroundColor.charAt(0).toUpperCase() + backgroundColor.slice(1)
   }`;
+
   const icon = (
     <Svg
-      className={cx(cls.icon, { [cls.fill]: fill }, [colorClass])}
+      className={cx(
+        cls.icon,
+        { [cls.fill]: fill, [cls.highlighted]: highlighted },
+        [colorClass]
+      )}
       width={width}
       height={height}
       {...otherProps}
