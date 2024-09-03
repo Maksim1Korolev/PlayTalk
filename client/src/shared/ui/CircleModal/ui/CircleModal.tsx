@@ -18,8 +18,8 @@ interface CircleModalProps {
   className?: string;
   children?: ReactNode;
   position?: { x: number; y: number };
+  addonCircleProps: AddonCircleProps;
   headerString?: string;
-  addonCircleProps?: AddonCircleProps;
   onClose: () => void;
 }
 
