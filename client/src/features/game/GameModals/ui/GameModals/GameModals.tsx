@@ -91,14 +91,14 @@ export const GameModals = memo(
       return addonCircleProps;
     };
 
-    const getGameIconProps = (currentGameName: string) => {
+    const getGameIconProps = (currentGameName: string): SVGProps => {
       const gameName = currentGameName;
       const size = 80;
       const highlighted = true;
       const backgroundColor = "primary";
 
       const iconPath = useImagePath(gameName);
-      let iconSvg;
+      let iconSvg: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
       try {
         iconSvg = require(`${iconPath}`).ReactComponent;
       } catch (error) {
