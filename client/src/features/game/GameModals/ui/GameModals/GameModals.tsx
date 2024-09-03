@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe/";
 import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
-import { CircleModal, SVGProps } from "@/shared/ui";
+import { AddonCircleProps, CircleModal, SVGProps } from "@/shared/ui";
 import useImagePath from "@/shared/hooks/useImagePath";
 
 const generateModalId = (
@@ -81,7 +81,14 @@ export const GameModals = memo(
     };
 
     const getAddonCircleProps = (currentGameName: string) => {
-      return getGameIconProps(currentGameName);
+      const gameIconProps = getGameIconProps(currentGameName);
+
+      const addonCircleProps: AddonCircleProps = {
+        iconProps: gameIconProps,
+        addonTopRight: <div>tr</div>,
+      };
+
+      return addonCircleProps;
     };
 
     const getGameIconProps = (currentGameName: string) => {
@@ -122,7 +129,7 @@ export const GameModals = memo(
               key={modalId}
               onClose={() => handleCloseGameModal(modalId)}
               headerString={modal.opponentUsername}
-              addonCircleProps={getAddonCircleProps(modal.gameName)} // Pass the correct props
+              addonCircleProps={getAddonCircleProps(modal.gameName)}
             >
               {getGameComponent(modal.opponentUsername, modal.gameName)}
             </CircleModal>

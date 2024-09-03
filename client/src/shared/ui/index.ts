@@ -10,4 +10,5 @@ export type { ButtonProps } from "./UiButton";
 export { UiInput } from "./UiInput";
 export { UiText } from "./UiText";
 export { CircleModal } from "./CircleModal";
-export { AddonCircle, AddonCircleProps } from "./AddonCircle";
+export { AddonCircle } from "./AddonCircle";
+export type { AddonCircleProps } from "./AddonCircle";

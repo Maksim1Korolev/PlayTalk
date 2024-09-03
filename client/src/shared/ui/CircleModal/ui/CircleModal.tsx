@@ -46,13 +46,6 @@ export const CircleModal = memo(
         setIsCollapsed(true);
       }
     };
-
-    const getAddonCircle = () => {
-      return (
-        <AddonCircle {...addonCircleProps} onClick={handleOpenCircleModal} />
-      );
-    };
-
     return (
       <Rnd
         onDragStart={handleDragStart}
@@ -70,7 +63,7 @@ export const CircleModal = memo(
         enableResizing={!isCollapsed}
       >
         {isCollapsed ? (
-          <UiButton onClick={handleOpenCircleModal}></UiButton>
+          <AddonCircle {...addonCircleProps} onClick={handleOpenCircleModal} />
         ) : (
           <VStack className={cx(cls.CircleModal, {}, [className])}>
             <HStack className={cx(cls.header, {}, ["drag-handle"])} max>

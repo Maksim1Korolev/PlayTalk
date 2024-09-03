@@ -1,9 +1,9 @@
-import { memo } from "react";
+import { memo, RefObject } from "react";
 import cls from "./AddonCircle.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { SVGProps, AppSvg } from "@/shared/ui";
 
-interface AddonCircleProps {
+export type AddonCircleProps = {
   className?: string;
   iconProps: SVGProps;
   addonTopRight?: React.ReactNode;
@@ -11,7 +11,7 @@ interface AddonCircleProps {
   addonTopLeft?: React.ReactNode;
   addonBottomLeft?: React.ReactNode;
   onClick: () => void;
-}
+};
 
 export const AddonCircle = memo(
   ({
@@ -23,9 +23,7 @@ export const AddonCircle = memo(
     addonBottomLeft,
     onClick,
   }: AddonCircleProps) => {
-    const appIcon = (
-      <AppSvg {...iconProps} clickable={true} onClick={onClick} />
-    );
+    const appIcon = <AppSvg {...iconProps} clickable onClick={onClick} />;
 
     return (
       <div className={cx(cls.AddonCircle, {}, [className])}>

@@ -14,6 +14,7 @@ interface SVGBaseProps extends SvgProps {
 
 interface ImageSVGProps extends SVGBaseProps {
   clickable?: false;
+  onClick?: never;
 }
 interface ClickableSVGProps extends SVGBaseProps {
   clickable: true;
@@ -34,6 +35,7 @@ export const AppSvg = memo((props: SVGProps) => {
     clickable,
     fill,
     highlighted,
+    onClick,
     ...otherProps
   } = props;
 
@@ -61,7 +63,7 @@ export const AppSvg = memo((props: SVGProps) => {
         style={{ width, height }}
         type="button"
         className={cx(cls.button, {}, [className])}
-        onClick={props.onClick}
+        onClick={onClick}
       >
         {icon}
       </button>
