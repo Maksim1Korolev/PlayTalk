@@ -7,7 +7,7 @@ import { User } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe/";
 import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
 import { AddonCircleProps, CircleModal, SVGProps } from "@/shared/ui";
-import useImagePath from "@/shared/hooks/useImagePath";
+import getImagePath from "@/shared/utils/getImagePath";
 
 const generateModalId = (
   opponentUsername: string,
@@ -33,6 +33,9 @@ export const GameModals = memo(
     const [cookies] = useCookies(["jwt-cookie"]);
     const currentUser: User = cookies["jwt-cookie"]?.user;
     const [games, setGames] = useState<{ [key: string]: any }>({});
+    const [iconSvgMap, setIconSvgMap] = useState<{
+      [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    }>({});
 
     useEffect(() => {
       const fetchGames = async () => {
@@ -60,6 +63,30 @@ export const GameModals = memo(
       fetchGames();
     }, [gameModals, currentUser.username]);
 
+    useEffect(() => {
+      const loadIcons = async () => {
+        const iconMap: {
+          [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+        } = {};
+
+        for (const modal of gameModals) {
+          const { gameName } = modal;
+          const iconPath = getImagePath({ gameName });
+
+          try {
+            const importedIcon = await import(iconPath);
+            iconMap[gameName] = importedIcon.ReactComponent;
+          } catch (error) {
+            console.error(`Failed to load icon for game: ${gameName}`, error);
+          }
+        }
+
+        setIconSvgMap(iconMap);
+      };
+
+      loadIcons();
+    }, [gameModals]);
+
     const handleCloseGameModal = (modalId: string) => {
       const [opponentUsername, gameName] = modalId.split("_");
 
@@ -80,7 +107,7 @@ export const GameModals = memo(
       }
     };
 
-    const getAddonCircleProps = (currentGameName: string) => {
+    const getAddonCircleProps = (currentGameName: string): AddonCircleProps => {
       const gameIconProps = getGameIconProps(currentGameName);
 
       const addonCircleProps: AddonCircleProps = {
@@ -92,26 +119,17 @@ export const GameModals = memo(
     };
 
     const getGameIconProps = (currentGameName: string): SVGProps => {
-      const gameName = currentGameName;
       const size = 80;
       const highlighted = true;
       const backgroundColor = "primary";
-
-      const iconPath = useImagePath(gameName);
-      let iconSvg: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-      try {
-        iconSvg = require(`${iconPath}`).ReactComponent;
-      } catch (error) {
-        console.error(`Failed to load SVG: ${error}`);
-        iconSvg = require("images/default-avatar.svg").ReactComponent;
-      }
+      const SvgComponent = iconSvgMap[currentGameName];
 
       const svgProps: SVGProps = {
-        Svg: iconSvg,
+        Svg: SvgComponent,
         width: size,
         height: size,
-        highlighted: highlighted,
-        backgroundColor: backgroundColor,
+        highlighted,
+        backgroundColor,
       };
 
       return svgProps;

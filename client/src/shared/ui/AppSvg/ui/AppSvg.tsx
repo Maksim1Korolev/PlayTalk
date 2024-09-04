@@ -1,5 +1,5 @@
 import { cx } from "@/shared/lib/cx";
-import { forwardRef, HTMLAttributes, memo } from "react";
+import { forwardRef, memo } from "react";
 import cls from "./AppSvg.module.scss";
 
 type SvgProps = Omit<React.SVGProps<SVGSVGElement>, "onClick" | "fill">;
@@ -25,10 +25,9 @@ export type SVGProps = ImageSVGProps | ClickableSVGProps;
 
 type BackgroundColor = "white" | "black" | "primary";
 
-export const AppSvg = forwardRef<SVGSVGElement, SVGProps>((props: SVGProps) => {
+export const AppSvg = memo((props: SVGProps) => {
   const {
     className,
-    ref,
     Svg,
     backgroundColor = "primary",
     width = 32,
@@ -45,14 +44,12 @@ export const AppSvg = forwardRef<SVGSVGElement, SVGProps>((props: SVGProps) => {
   }`;
 
   const icon = (
-    //Try to pass component the same way
     <Svg
       className={cx(
         cls.icon,
         { [cls.fill]: fill, [cls.highlighted]: highlighted },
         [colorClass]
       )}
-      ref={ref}
       width={width}
       height={height}
       {...otherProps}
