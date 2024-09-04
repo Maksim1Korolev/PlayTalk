@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
-//TODO:Relocate
-import { GameModalStateProps } from "../ui/GameModals/ui/GameModals/GameModals";
+import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
 
 export const useGameModals = () => {
   const [gameModals, setGameModals] = useState<GameModalStateProps[]>([]);
@@ -9,21 +8,31 @@ export const useGameModals = () => {
     ({
       opponentUsername,
       gameName,
-    }: // position,
-    {
+      position,
+    }: {
       opponentUsername: string;
       gameName: string;
-      //  position?: { x: number; y: number };
+      position?: { x: number; y: number };
     }) => {
-      const newGameModalProps: GameModalStateProps = {
-        opponentUsername,
-        gameName,
-        //    position,
-      };
+      const isAlreadyOpen = gameModals.some(
+        modal =>
+          modal.opponentUsername === opponentUsername &&
+          modal.gameName === gameName
+      );
 
-      setGameModals(prev => [...prev, newGameModalProps]);
+      const isMaxModalsOpen = gameModals.length >= 5;
+
+      if (!isAlreadyOpen && !isMaxModalsOpen) {
+        const newGameModalProps: GameModalStateProps = {
+          opponentUsername,
+          gameName,
+          position,
+        };
+
+        setGameModals(prev => [...prev, newGameModalProps]);
+      }
     },
-    []
+    [gameModals]
   );
 
   const handleCloseGameModal = useCallback(

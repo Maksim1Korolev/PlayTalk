@@ -1,11 +1,11 @@
-import { memo, useState } from "react";
+import { memo, useState, useEffect } from "react";
 import cls from "./TicTacToe.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { Board } from "../Board";
 import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
-import { UiButton, UiText } from "@/shared/ui";
+import { UiButton, UiText, VStack } from "@/shared/ui";
 
 interface TicTacToeProps {
   className?: string;
@@ -42,7 +42,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
 
   const onMakeMove = ({ interactingIndex }: { interactingIndex: number }) => {
     if (currentPlayer !== currentUser.username) {
-      setStatusMessage(`Really? Just look above!`);
+      setStatusMessage(`It's not your turn!`);
       return;
     }
 
@@ -52,6 +52,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
     }
 
     handleMakeMove({ opponentUsername, interactingIndex });
+    onMoveMade({ interactingUsername: currentUser.username, interactingIndex });
   };
 
   const onMoveMade = ({
@@ -61,6 +62,10 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
     interactingUsername: string;
     interactingIndex: number;
   }) => {
+    if (interactingUsername !== currentPlayer) {
+      return;
+    }
+
     const playerSign = getPlayerSign(interactingUsername);
 
     setBoard(prevBoard =>
@@ -73,27 +78,42 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
     setStatusMessage("");
   };
 
+  useEffect(() => {
+    if (statusMessage !== "") {
+      const timer = setTimeout(() => {
+        setStatusMessage("");
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [statusMessage]);
+
   const { handleMakeMove, handleSurrender } = useTicTacToeSocket({
     onMoveMade,
   });
 
   return (
-    <div className={cx(cls.TicTacToe, {}, [className])}>
-      <UiText className={cls.statusMessage}>
-        It's {currentPlayer}'s turn!
+    <VStack max className={cx(cls.TicTacToe, {}, [className])}>
+      <UiText max className={cls.statusMessage}>
+        {currentPlayer === currentUser.username
+          ? "It's your turn!"
+          : `It's ${currentPlayer}'s turn!`}
       </UiText>
       {statusMessage && (
-        <UiText className={cls.statusMessage}>{statusMessage}</UiText>
+        <UiText max className={cls.statusMessage}>
+          {statusMessage}
+        </UiText>
       )}
       <div className={cls.boardContainer}>
         <Board board={board} onMakeMove={onMakeMove} />
       </div>
       <UiButton
+        max
         className={cls.surrenderButton}
         onClick={() => handleSurrender({ opponentUsername })}
       >
         Surrender
       </UiButton>
-    </div>
+    </VStack>
   );
 });

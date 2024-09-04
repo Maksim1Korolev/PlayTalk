@@ -59,6 +59,7 @@ async function handleChatSubscriptions(socket, currentUsername) {
 
   socket.on("send-message", async ({ receiverUsername, message }) => {
     const usernames = [currentUsername, receiverUsername].sort();
+
     try {
       await MessageHistoryService.addMessageToHistory(usernames, message);
       const receiversSocketIds = await SocketService.getUserSockets(

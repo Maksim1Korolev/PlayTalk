@@ -1,32 +1,27 @@
 To add:
-Automatic login upon clicking "enter"
 List of game invitations
-Messages sync
 Multiple sources for the main list of users
 Remove unused api requests from auth
 Update resource files in assets folder
 Add multiple game requests logic
 Sort features folder
 Move ChatModal component into ChatModals folder?
-Active game with someone that is offline
-update TicTacToe styles
 
 To fix:
 ChatModal opens lower than the screen and scrollbar appears
 Getting error in communication service when requesting unread messages with count of 0
 Empty data doesn't count as redis cache
-Update player creation logic
-Sending full user to open chat-modal?
 Check online and api client logic, rename OnlinePage
-GameIcons background
+Memo template
+Update receiving socket logic to send to sender's client
 
 To add (In the end):
 Auth on all servers, updated auth for some data
 Add environment (development/production)
 Kubernetes
-Azure CI/CD
+Storybook
 
 Possible expansions:
 Group chats
 Friends
-Turns history on tic tac toe server
+Turns history and more stats on tic tac toe server

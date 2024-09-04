@@ -2,12 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px; /* Add spacing between rows */
+  gap: 8px;
 }
 
 .row {
   display: flex;
-  width: 100%;
   justify-content: center;
-  gap: 10px; /* Add spacing between squares in a row */
+  gap: 8px;
 }

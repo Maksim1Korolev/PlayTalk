@@ -6,10 +6,11 @@ import { useGameModals } from "./useGameModals";
 import { useGameSessionSocket } from "./useGameSessionSocket";
 import { useOnlineSocket } from "./useOnlineSocket";
 
+//Rename to useHomePageHooks?
 export const useOnlinePageSockets = () => {
   const [cookies] = useCookies();
   const { user: currentUser } = cookies["jwt-cookie"];
-  const { users, setUsers} = useContext(UsersContext);
+  const { users, setUsers } = useContext(UsersContext);
 
   const [inviteData, setInviteData] = useState<{
     senderUsername: string;
@@ -78,8 +79,6 @@ export const useOnlinePageSockets = () => {
     opponentUsername: string;
     gameName: string;
   }) => {
-    console.log("USER onGameStart:", getUser(opponentUsername));
-
     updateUserList(opponentUsername, {
       activeGames: [
         ...(getUser(opponentUsername)?.activeGames || []),
@@ -99,8 +98,6 @@ export const useOnlinePageSockets = () => {
     gameName: string;
     winner: string;
   }) => {
-    console.log("USER onGameEnd:", getUser(opponentUsername));
-
     updateUserList(opponentUsername, {
       activeGames: (getUser(opponentUsername)?.activeGames || []).filter(
         game => game !== gameName
@@ -138,6 +135,7 @@ export const useOnlinePageSockets = () => {
     inviteData,
     lastClickedPlayUser,
     gameModals,
+    onGameModalClose: handleCloseGameModal,
     updateUsers: updateUsersForList,
     handleOpenGameSelector,
     handleGameClicked,

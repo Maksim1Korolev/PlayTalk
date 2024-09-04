@@ -56,11 +56,7 @@ export const UserListCard = ({
         <span className={cls.username} ref={userRef}>
           {user.username}
         </span>
-        <PlayButton
-          className={cls.playButton}
-          onClick={onPlayButton}
-          disabled={!user.isOnline}
-        >
+        <PlayButton className={cls.playButton} onClick={onPlayButton}>
           Play
         </PlayButton>
         {user.activeGames.length > 0 && "Active"}

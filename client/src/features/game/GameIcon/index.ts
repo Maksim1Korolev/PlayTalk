@@ -1,1 +1,0 @@
-export { GameIcon } from './ui/GameIcon'

@@ -12,7 +12,8 @@ import { fetchUsersStatus } from "../../api/updateUsersStatusApiService";
 import { ChatModalStateProps } from "../../hooks/useChatModals";
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
-import { GameModals } from "../GameModals";
+
+import { GameModals } from "@/features/game/GameModals";
 import cls from "./OnlinePage.module.scss";
 
 const OnlinePage = ({ className }: { className?: string }) => {
@@ -76,6 +77,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
     inviteData,
     lastClickedPlayUser,
     gameModals,
+    onGameModalClose,
     updateUsers,
     handleOpenGameSelector,
     handleGameClicked,
@@ -144,7 +146,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
             />
           )}
         </VStack>
-        <GameModals gameModals={gameModals} />
+        <GameModals gameModals={gameModals} onClose={onGameModalClose} />
       </HStack>
     </div>
   );

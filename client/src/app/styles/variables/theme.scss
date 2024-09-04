@@ -2,9 +2,11 @@ body {
   --bg-color: #191919;
   --inverted-bg-color: #e8e8ea;
   --primary-color: #5916f3;
-  --secondary-color: #279349;
+  --modals-bg-color: #a59eff;
+  --secondary-color: #5a5eb9;
   --inverted-primary-color: #257;
   --inverted-secondary-color: #0ebeff;
+  --accent-color: #5916f3;
 
   // redesigned
   --highlight: #bfbaff;
@@ -20,8 +22,6 @@ body {
   --cancel-redesigned: #d95757;
   --save-redesigned: #6cd98b;
 
-  --accent-redesigned: #5916f3;
-
   // skeleton
   --skeleton-color: #1515ad;
   --skeleton-shadow: #2b2be8;
@@ -29,12 +29,6 @@ body {
   // code
   --code-bg: #353642;
 
-  // card#FAFAFA
-  --card-bg: #222;
-
   // listbox
   --listbox-bg: #353642;
-
-	// chatCircle
-	--chat-bg: #a59eff;
 }
