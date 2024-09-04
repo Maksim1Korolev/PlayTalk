@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useState, useEffect } from "react";
 import cls from "./TicTacToe.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { Board } from "../Board";
@@ -77,6 +77,16 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
     changePlayers();
     setStatusMessage("");
   };
+
+  useEffect(() => {
+    if (statusMessage !== "") {
+      const timer = setTimeout(() => {
+        setStatusMessage("");
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [statusMessage]);
 
   const { handleMakeMove, handleSurrender } = useTicTacToeSocket({
     onMoveMade,

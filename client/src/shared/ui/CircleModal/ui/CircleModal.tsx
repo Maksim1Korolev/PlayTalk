@@ -58,7 +58,7 @@ export const CircleModal = memo(
         }}
         //TODO:Move to constants
         minWidth={isCollapsed ? 80 : 365}
-        minHeight={isCollapsed ? 80 : 500}
+        minHeight={isCollapsed ? 80 : 475}
         bounds="window"
         enableResizing={!isCollapsed}
       >
