@@ -1,7 +1,7 @@
 .ChatCircle {
   bottom: 50px;
   right: 50px;
-  background: var(--chat-bg);
+  background: var(--modals-bg-color);
   width: 80px;
   height: 80px;  
   border-radius: 50%;
@@ -12,7 +12,7 @@
 }
 
 .chatOverlay {
-	background: var(--chat-bg);
+	background: var(--modals-bg-color);
 	position: absolute;
   border-radius: 50%;
 	top: 0;

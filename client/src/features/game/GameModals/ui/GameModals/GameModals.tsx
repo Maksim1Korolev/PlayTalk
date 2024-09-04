@@ -32,6 +32,7 @@ export const GameModals = memo(
   ({ className, gameModals, onClose }: GameModalsProps) => {
     const [cookies] = useCookies(["jwt-cookie"]);
     const currentUser: User = cookies["jwt-cookie"]?.user;
+
     const [games, setGames] = useState<{ [key: string]: any }>({});
     const [iconSvgMap, setIconSvgMap] = useState<{
       [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
@@ -140,11 +141,13 @@ export const GameModals = memo(
             modal.opponentUsername,
             modal.gameName
           );
+          const headerString = `Opponent: ${modal.opponentUsername}`;
+
           return (
             <CircleModal
               key={modalId}
               onClose={() => handleCloseGameModal(modalId)}
-              headerString={modal.opponentUsername}
+              headerString={headerString}
               addonCircleProps={getAddonCircleProps(modal.gameName)}
             >
               {getGameComponent(modal.opponentUsername, modal.gameName)}

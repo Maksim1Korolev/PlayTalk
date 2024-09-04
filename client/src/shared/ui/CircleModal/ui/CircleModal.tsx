@@ -58,7 +58,7 @@ export const CircleModal = memo(
         }}
         //TODO:Move to constants
         minWidth={isCollapsed ? 80 : 365}
-        minHeight={isCollapsed ? 80 : 400}
+        minHeight={isCollapsed ? 80 : 500}
         bounds="window"
         enableResizing={!isCollapsed}
       >
@@ -67,7 +67,9 @@ export const CircleModal = memo(
         ) : (
           <VStack className={cx(cls.CircleModal, {}, [className])}>
             <HStack className={cx(cls.header, {}, ["drag-handle"])} max>
-              <UiText max>{headerString}</UiText>
+              <UiText className={cls.headerString} max>
+                {headerString}
+              </UiText>
               <HStack className={cls.controlButtons}>
                 <UiButton
                   variant="clear"

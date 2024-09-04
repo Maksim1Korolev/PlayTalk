@@ -1,9 +1,8 @@
 .CircleModal {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  background-color: #ffffff;
+  background-color: var(--modals-bg-color);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 8px;
@@ -14,14 +13,14 @@
 }
 
 .header {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  width: 100%;
   padding-bottom: 12px;
-  border-bottom: 1px solid #e0e0e0;
 }
 
+.headerString {
+  display: flex;
+  justify-content: center;
+}
 .controlButtons {
   display: flex;
   align-items: center;
@@ -30,9 +29,9 @@
 
 .collapseButton,
 .closeButton {
-  width: 36px;
-  height: 36px;
-  color: #555;
+  width: 30px;
+  height: 30px;
+  color: var(--text-tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,17 +39,18 @@
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #f0f0f0;
+    background-color: var(--input-bg);
   }
 }
 
 .collapseButton {
-  background-color: #ffeb3b;
+  background-color: var(--secondary-color);
+  color: var(--text-redesigned);
 }
 
 .closeButton {
-  background-color: #f44336;
-  color: #ffffff;
+  background-color: var(--text-redesigned);
+  color: var(--secondary-color);
 }
 
 .drag-handle {

@@ -38,7 +38,7 @@
 }
 
 .button:hover .icon {
-  color: var(--accent-redesigned);
+  color: var(--accent-color);
 }
 
 .icon {
@@ -46,5 +46,5 @@
 }
 
 .highlighted {
-  filter: brightness(1.5) drop-shadow(0 0 10px var(--accent-redesigned));
+  filter: brightness(1.5) drop-shadow(0 0 10px var(--accent-color));
 }

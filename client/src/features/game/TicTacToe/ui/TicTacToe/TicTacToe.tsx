@@ -5,7 +5,7 @@ import { Board } from "../Board";
 import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
-import { UiButton, UiText } from "@/shared/ui";
+import { UiButton, UiText, VStack } from "@/shared/ui";
 
 interface TicTacToeProps {
   className?: string;
@@ -83,24 +83,27 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
   });
 
   return (
-    <div className={cx(cls.TicTacToe, {}, [className])}>
-      <UiText className={cls.statusMessage}>
+    <VStack max className={cx(cls.TicTacToe, {}, [className])}>
+      <UiText max className={cls.statusMessage}>
         {currentPlayer === currentUser.username
           ? "It's your turn!"
           : `It's ${currentPlayer}'s turn!`}
       </UiText>
       {statusMessage && (
-        <UiText className={cls.statusMessage}>{statusMessage}</UiText>
+        <UiText max className={cls.statusMessage}>
+          {statusMessage}
+        </UiText>
       )}
       <div className={cls.boardContainer}>
         <Board board={board} onMakeMove={onMakeMove} />
       </div>
       <UiButton
+        max
         className={cls.surrenderButton}
         onClick={() => handleSurrender({ opponentUsername })}
       >
         Surrender
       </UiButton>
-    </div>
+    </VStack>
   );
 });
