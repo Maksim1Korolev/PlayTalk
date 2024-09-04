@@ -14,8 +14,6 @@ export interface ChatModalStateProps {
 export const useChatModals = () => {
   const handleUserMessage = useCallback(
     (receiverUsername: string, message: Message) => {
-      console.log(receiverUsername);
-
       communicationSocket.emit("send-message", {
         receiverUsername,
         message,
@@ -45,21 +43,19 @@ export const useReceiveMessage = (
       messages: Message[],
       receiverUsername: string
     ) => {
-      console.log(messages);
-
       if (currentReceiverUsername === receiverUsername) {
         addMessagesToHistory(messages);
       }
     };
 
     const receiveMessageSubscribe = ({
-      senderUsername,
+      username,
       message,
     }: {
-      senderUsername: string;
+      username: string;
       message: Message;
     }) => {
-      if (senderUsername === currentReceiverUsername) {
+      if (username === currentReceiverUsername) {
         addMessagesToHistory([message]);
       }
     };
