@@ -85,18 +85,10 @@ class MessageHistoryService {
 
     const unreadCount = combinedMessages.reduce((count, message) => {
       if (message.username !== requestingUsername && !message.readAt) {
-        console.log("count+1");
-        console.log(count + 1);
         return count + 1;
       }
-      console.log("count");
-      console.log(count);
       return count;
     }, 0);
-    console.log("combinedMessages");
-    console.log(combinedMessages);
-    console.log("unreadCount");
-    console.log(unreadCount);
 
     return unreadCount;
   }
@@ -158,6 +150,7 @@ class MessageHistoryService {
         { $set: { messages: combinedMessages } }
       );
 
+      await MessageBufferSync.deleteBuffer(sortedUsernames);
       await redisClient.hDel(process.env.REDIS_MESSAGE_HISTORY_KEY, cacheKey);
       console.log(
         `Messages marked as read. Cache key invalidated: ${cacheKey}`

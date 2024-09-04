@@ -56,8 +56,7 @@ export const Chat = memo(
       (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === "Enter") {
           if (event.shiftKey) return;
-          event.preventDefault(); // Prevent new line in input
-          console.log("Enter key was pressed");
+          event.preventDefault();
           handleSendButton();
         }
       },
