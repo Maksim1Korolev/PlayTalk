@@ -6,14 +6,14 @@ import { HStack, Loader, UiText, VStack } from "@/shared/ui";
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
+import { GameSelector } from "@/features/game/GameSelector";
 import { Sidebar } from "@/widgets/Sidebar";
 import { fetchUsersStatus } from "../../api/updateUsersStatusApiService";
 import { ChatModalStateProps } from "../../hooks/useChatModals";
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
-import cls from "./OnlinePage.module.scss";
-import { GameSelector } from "@/features/game/GameSelector";
 import { GameModals } from "../GameModals";
+import cls from "./OnlinePage.module.scss";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -72,7 +72,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
   );
 
   const {
-    upToDateUsers,
+    users: upToDateUsers,
     inviteData,
     lastClickedPlayUser,
     gameModals,

@@ -1,5 +1,6 @@
 import { User } from "@/entities/User";
 import { onlineApiService } from "@/pages/OnlinePage/api/onlineApiService";
+import { communicationSocket } from "@/shared/api/sockets";
 import { cx } from "@/shared/lib/cx";
 import { Card, HStack, UiButton, UiText, VStack } from "@/shared/ui";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -36,6 +37,8 @@ export const Chat = memo(
     const [inputMessage, setInputMessage] = useState<string>("");
 
     const [cookies, setCookie] = useCookies(["jwt-cookie"]);
+
+    const [typing, setTyping] = useState(false);
 
     const { user: currentUser, token } = cookies["jwt-cookie"];
 
@@ -91,6 +94,7 @@ export const Chat = memo(
         scrollToBottom();
       }
     }, [messageHistory?.length, isOpen]);
+
     const renderMessageHistory = useCallback(() => {
       return messageHistory?.map((message, index) => (
         <ChatMessage
@@ -110,6 +114,27 @@ export const Chat = memo(
       currentUser.avatarFileName,
       receiverUser.avatarFileName,
     ]);
+
+    const handleTyping = useCallback((text: string) => {
+      setInputMessage(text);
+
+      if (!typing) {
+        setTyping(true);
+        //TODO: Transfer it to other file
+        communicationSocket.emit("typing", receiverUser.username);
+      }
+
+      const lastTypingTime = new Date().getTime();
+      const timerLength = 3000;
+      setTimeout(() => {
+        const timeNow = new Date().getTime();
+        const timeDiff = timeNow - lastTypingTime;
+        if (timeDiff >= timerLength && typing) {
+          communicationSocket.emit("stop typing", receiverUser.username);
+          setTyping(false);
+        }
+      }, timerLength);
+    }, []);
 
     return (
       <VStack className={cx(cls.Chat, {}, [className])} justify="start" max>
@@ -144,14 +169,18 @@ export const Chat = memo(
             {renderMessageHistory()}
             <div ref={dummy} />
           </div>
-          {isTyping && <UiText className="">Typing...</UiText>}
+          {isTyping && (
+            <UiText dimmed className="">
+              Typing...
+            </UiText>
+          )}
         </Card>
         <div className={cls.chatInput} onKeyDown={handleKeyDown}>
           <ChatInput
             className={cls.chatInputField}
             text={inputMessage}
             placeholder="Type your message here..."
-            onChange={e => setInputMessage(e)}
+            onChange={handleTyping}
           />
 
           <UiButton

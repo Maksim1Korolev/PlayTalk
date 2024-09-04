@@ -1,6 +1,6 @@
-import redisClient from "../utils/redisClient.js";
-import MessageBufferSync from "../sync/messageBufferSync.js";
 import MessageHistory from "../models/MessageHistory.js";
+import MessageBufferSync from "../sync/messageBufferSync.js";
+import redisClient from "../utils/redisClient.js";
 
 class MessageHistoryService {
   static getSortedUsernames(usernames) {
@@ -113,6 +113,8 @@ class MessageHistoryService {
     const messageHistory = await MessageHistory.findOne({
       usernames: { $all: sortedUsernames },
     });
+    console.log(">>>messageHistory", messageHistory);
+
     if (messageHistory) {
       const messages = messageHistory.messages;
       let updated = false;

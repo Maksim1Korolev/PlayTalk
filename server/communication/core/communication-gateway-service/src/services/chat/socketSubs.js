@@ -27,22 +27,25 @@ async function handleChatSubscriptions(socket, currentUsername) {
     const receiversSocketIds = await SocketService.getUserSockets(
       receiverUsername
     );
-    io.to(receiversSocketIds).emit("typing");
+    io.to(receiversSocketIds).emit("typing", currentUsername);
   });
 
   socket.on("stop typing", async receiverUsername => {
     const receiversSocketIds = await SocketService.getUserSockets(
       receiverUsername
     );
-    io.to(receiversSocketIds).emit("stop typing");
+    io.to(receiversSocketIds).emit("stop typing", currentUsername);
   });
 
   socket.on("on-read-messages", async ({ usernames }) => {
     try {
+      console.log("on-read-messages is start running", usernames);
       const { data } = await MessageHistoryService.readAllUnreadMessages(
         currentUsername,
         usernames
       );
+      console.log("on-read-messages has sent request to chat-server", data);
+
       if (data) {
         const otherUserInChat = usernames.find(
           username => username !== currentUsername

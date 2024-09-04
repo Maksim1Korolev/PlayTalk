@@ -43,6 +43,10 @@ class MessageHistoryService {
   }
 
   static async readAllUnreadMessages(requestingUsername, usernames) {
+    console.log(
+      "sending request to chat-repository-service to mark messages as read"
+    );
+
     const url = `${process.env.CHAT_REPOSITORY_SERVICE_URL}/unread/markAsRead/${requestingUsername}`;
     return await axios.post(url, { usernames });
   }

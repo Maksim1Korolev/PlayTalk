@@ -1,14 +1,15 @@
 import { User } from "@/entities/User";
-import { useCallback, useState } from "react";
-import { useOnlineSocket } from "./useOnlineSocket";
+import { UsersContext } from "@/shared/lib/context/UsersContext";
+import { useCallback, useContext, useState } from "react";
 import { useCookies } from "react-cookie";
-import { useGameSessionSocket } from "./useGameSessionSocket";
 import { useGameModals } from "./useGameModals";
+import { useGameSessionSocket } from "./useGameSessionSocket";
+import { useOnlineSocket } from "./useOnlineSocket";
 
 export const useOnlinePageSockets = () => {
   const [cookies] = useCookies();
   const { user: currentUser } = cookies["jwt-cookie"];
-  const [upToDateUsers, setUpToDateUsers] = useState<User[]>();
+  const { users, setUsers} = useContext(UsersContext);
 
   const [inviteData, setInviteData] = useState<{
     senderUsername: string;
@@ -24,13 +25,13 @@ export const useOnlinePageSockets = () => {
       const otherUsers = users.filter(
         (user: User) => user._id !== currentUser._id
       );
-      setUpToDateUsers(otherUsers);
+      setUsers(otherUsers || []);
     },
-    [currentUser]
+    [currentUser, setUsers]
   );
 
   const updateUserList = (username: string, updatedProps: Partial<User>) => {
-    setUpToDateUsers(prevUsers => {
+    setUsers((prevUsers: User[]) => {
       if (!prevUsers) return [];
 
       return prevUsers.map(user => {
@@ -67,7 +68,7 @@ export const useOnlinePageSockets = () => {
   };
 
   const getUser = (username: string): User | undefined => {
-    return upToDateUsers?.find(user => user.username === username);
+    return users?.find(user => user.username === username);
   };
 
   const onGameStart = ({
@@ -133,7 +134,7 @@ export const useOnlinePageSockets = () => {
   };
 
   return {
-    upToDateUsers,
+    users,
     inviteData,
     lastClickedPlayUser,
     gameModals,
