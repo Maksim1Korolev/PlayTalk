@@ -124,46 +124,55 @@ class MessageHistoryService {
     return unreadMessageMap;
   }
 
-  // static async markAsRead(usernames, requestingUsername) {
-  //   const sortedUsernames = this.getSortedUsernames(usernames);
-  //   const cacheKey = sortedUsernames.join("-");
-  //   console.log(`Marking messages as read. Cache key: ${cacheKey}`);
+  static async markAsRead(usernames, requestingUsername) {
+    const sortedUsernames = this.getSortedUsernames(usernames);
+    const cacheKey = sortedUsernames.join("-");
+    console.log(`Marking messages as read. Cache key: ${cacheKey}`);
 
-  //   const combinedMessages = await this.getMessageHistory(sortedUsernames);
+    await MessageBufferSync.markMessagesAsReadInBuffer(
+      sortedUsernames,
+      requestingUsername
+    );
 
-  //   if (!combinedMessages || combinedMessages.length === 0) {
-  //     console.log("No messages found to mark as read.");
-  //     return;
-  //   }
+    const messageHistory = await MessageHistory.findOne({
+      usernames: { $all: sortedUsernames },
+    });
 
-  //   let updated = false;
+    if (messageHistory) {
+      const messages = messageHistory.messages;
+      let updated = false;
 
-  //   combinedMessages.forEach(message => {
-  //     if (message.username !== requestingUsername && !message.readAt) {
-  //       message.readAt = new Date();
-  //       updated = true;
-  //     }
-  //   });
+      for (let i = 0; i < messages.length; i++) {
+        if (!messages[i].message) {
+          console.warn(
+            `Skipping message ${i} because it has no message field.`
+          );
+          continue;
+        }
+        if (
+          messages[i].username !== requestingUsername &&
+          messages[i].readAt === undefined
+        ) {
+          messages[i].readAt = new Date();
+          updated = true;
+        }
+      }
 
-  //   if (updated) {
-  //     await MessageHistory.updateOne(
-  //       { usernames: { $all: sortedUsernames } },
-  //       { $set: { messages: combinedMessages } }
-  //     );
+      if (updated) {
+        await messageHistory.save();
+        await redisClient.hDel(process.env.REDIS_MESSAGE_HISTORY_KEY, cacheKey);
+        console.log(
+          `Messages marked as read in DB. Cache key invalidated: ${cacheKey}`
+        );
+      } else {
+        console.log(
+          `No messages to mark as read in DB. Cache key not invalidated: ${cacheKey}`
+        );
+      }
 
-  //     await MessageBufferSync.deleteBuffer(sortedUsernames);
-  //     await redisClient.hDel(process.env.REDIS_MESSAGE_HISTORY_KEY, cacheKey);
-  //     console.log(
-  //       `Messages marked as read. Cache key invalidated: ${cacheKey}`
-  //     );
-  //   } else {
-  //     console.log(
-  //       `No messages to mark as read. Cache key not invalidated: ${cacheKey}`
-  //     );
-  //   }
-
-  //   return combinedMessages;
-  // }
+      return messageHistory;
+    }
+  }
 }
 
 export default MessageHistoryService;
