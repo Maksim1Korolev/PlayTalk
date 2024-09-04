@@ -121,7 +121,6 @@ export const GameModals = memo(
     const getGameIconProps = (currentGameName: string): SVGProps => {
       const size = 80;
       const highlighted = true;
-      const backgroundColor = "primary";
       const SvgComponent = iconSvgMap[currentGameName];
 
       const svgProps: SVGProps = {
@@ -129,7 +128,6 @@ export const GameModals = memo(
         width: size,
         height: size,
         highlighted,
-        backgroundColor,
       };
 
       return svgProps;
