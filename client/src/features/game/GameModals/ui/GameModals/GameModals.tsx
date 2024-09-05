@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import cls from "./GameModals.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
@@ -6,8 +6,15 @@ import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe/";
 import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
-import { AddonCircleProps, CircleModal, SVGProps } from "@/shared/ui";
+import {
+  AddonCircle,
+  AddonCircleProps,
+  AppSvg,
+  CircleModal,
+  SVGProps,
+} from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
+import { UsersContext } from "@/shared/lib/context/UsersContext";
 
 const generateModalId = (
   opponentUsername: string,
@@ -32,9 +39,13 @@ export const GameModals = memo(
   ({ className, gameModals, onClose }: GameModalsProps) => {
     const [cookies] = useCookies(["jwt-cookie"]);
     const currentUser: User = cookies["jwt-cookie"]?.user;
+    const { users } = useContext(UsersContext);
 
     const [games, setGames] = useState<{ [key: string]: any }>({});
     const [iconSvgMap, setIconSvgMap] = useState<{
+      [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    }>({});
+    const [avatarIconMap, setAvatarIconMap] = useState<{
       [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
     }>({});
 
@@ -69,20 +80,41 @@ export const GameModals = memo(
         const iconMap: {
           [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
         } = {};
+        const avatarMap: {
+          [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+        } = {};
 
         for (const modal of gameModals) {
-          const { gameName } = modal;
-          const iconPath = getImagePath({ gameName });
+          const { gameName, opponentUsername } = modal;
 
+          const iconPath = getImagePath({ gameName });
           try {
             const importedIcon = await import(iconPath);
             iconMap[gameName] = importedIcon.ReactComponent;
           } catch (error) {
             console.error(`Failed to load icon for game: ${gameName}`, error);
           }
+
+          const opponentUser = users.find(
+            user => user.username === opponentUsername
+          );
+          const avatarPath = getImagePath({
+            avatarFileName: opponentUser?.avatarFileName,
+          });
+
+          try {
+            const importedAvatar = await import(avatarPath);
+            avatarMap[opponentUsername] = importedAvatar.ReactComponent;
+          } catch (error) {
+            console.error(
+              `Failed to load avatar for user: ${opponentUsername}`,
+              error
+            );
+          }
         }
 
         setIconSvgMap(iconMap);
+        setAvatarIconMap(avatarMap);
       };
 
       loadIcons();
@@ -108,12 +140,16 @@ export const GameModals = memo(
       }
     };
 
-    const getAddonCircleProps = (currentGameName: string): AddonCircleProps => {
+    const getAddonCircleProps = (
+      opponentUsername: string,
+      currentGameName: string
+    ): AddonCircleProps => {
       const gameIconProps = getGameIconProps(currentGameName);
+      const addonTopRight = getAvatarIcon(opponentUsername);
 
       const addonCircleProps: AddonCircleProps = {
         iconProps: gameIconProps,
-        addonTopRight: <div>tr</div>,
+        addonTopRight,
       };
 
       return addonCircleProps;
@@ -134,6 +170,19 @@ export const GameModals = memo(
       return svgProps;
     };
 
+    //TODO:Possible to place AddonCircle component here instead of svg
+    const getAvatarIcon = (opponentUsername: string): React.ReactNode => {
+      const SvgComponent = avatarIconMap[opponentUsername];
+
+      if (!SvgComponent) return null;
+
+      const svgProps: SVGProps = {
+        Svg: SvgComponent,
+      };
+
+      return <AppSvg {...svgProps} ref={undefined} />;
+    };
+
     return (
       <div className={cx(cls.GameModals, {}, [className])}>
         {gameModals.map(modal => {
@@ -148,7 +197,10 @@ export const GameModals = memo(
               key={modalId}
               onClose={() => handleCloseGameModal(modalId)}
               headerString={headerString}
-              addonCircleProps={getAddonCircleProps(modal.gameName)}
+              addonCircleProps={getAddonCircleProps(
+                modal.opponentUsername,
+                modal.gameName
+              )}
             >
               {getGameComponent(modal.opponentUsername, modal.gameName)}
             </CircleModal>

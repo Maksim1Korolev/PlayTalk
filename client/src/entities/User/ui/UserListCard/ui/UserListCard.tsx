@@ -56,10 +56,13 @@ export const UserListCard = ({
         <span className={cls.username} ref={userRef}>
           {user.username}
         </span>
-        <PlayButton className={cls.playButton} onClick={onPlayButton}>
+        <PlayButton
+          className={cls.playButton}
+          highlighted={user.activeGames.length > 0}
+          onClick={onPlayButton}
+        >
           Play
         </PlayButton>
-        {user.activeGames.length > 0 && "Active"}
       </HStack>
     </HStack>
   );

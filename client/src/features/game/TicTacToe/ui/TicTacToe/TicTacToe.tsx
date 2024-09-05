@@ -6,6 +6,7 @@ import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
 import { UiButton, UiText, VStack } from "@/shared/ui";
+import resources from "@/shared/assets/locales/en/games/TicTacToeResources.json";
 
 interface TicTacToeProps {
   className?: string;
@@ -42,12 +43,12 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
 
   const onMakeMove = ({ interactingIndex }: { interactingIndex: number }) => {
     if (currentPlayer !== currentUser.username) {
-      setStatusMessage(`It's not your turn!`);
+      setStatusMessage(resources.notYourTurn);
       return;
     }
 
     if (board[interactingIndex] !== "-") {
-      setStatusMessage("The square is already occupied.");
+      setStatusMessage(resources.squareOccupied);
       return;
     }
 
@@ -96,8 +97,8 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
     <VStack max className={cx(cls.TicTacToe, {}, [className])}>
       <UiText max className={cls.statusMessage}>
         {currentPlayer === currentUser.username
-          ? "It's your turn!"
-          : `It's ${currentPlayer}'s turn!`}
+          ? resources.yourTurn
+          : resources.opponentsTurn.replace("{opponent}", currentPlayer)}
       </UiText>
       {statusMessage && (
         <UiText max className={cls.statusMessage}>
@@ -112,7 +113,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
         className={cls.surrenderButton}
         onClick={() => handleSurrender({ opponentUsername })}
       >
-        Surrender
+        {resources.surrenderButton}
       </UiButton>
     </VStack>
   );

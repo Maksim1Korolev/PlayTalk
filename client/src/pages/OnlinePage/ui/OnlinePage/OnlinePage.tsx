@@ -1,20 +1,19 @@
-import { User } from "@/entities/User";
-import { GameRequest } from "@/features/game/GameRequest";
-import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
+import cls from "./OnlinePage.module.scss";
 import { cx } from "@/shared/lib/cx";
-import { HStack, Loader, UiText, VStack } from "@/shared/ui";
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-import { GameSelector } from "@/features/game/GameSelector";
+import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
+import userListResources from "@/shared/assets/locales/en/UserListResources.json";
+
+import { User } from "@/entities/User";
+import { HStack, Loader, UiText, VStack } from "@/shared/ui";
+import { GameSelector, GameRequest, GameModals } from "@/features/game";
 import { Sidebar } from "@/widgets/Sidebar";
 import { fetchUsersStatus } from "../../api/updateUsersStatusApiService";
 import { ChatModalStateProps } from "../../hooks/useChatModals";
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
-
-import { GameModals } from "@/features/game/GameModals";
-import cls from "./OnlinePage.module.scss";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -22,7 +21,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const [error, setError] = useState<Error | null>();
 
   const [cookies] = useCookies(["jwt-cookie"]);
-
   const token = cookies["jwt-cookie"]?.token;
   const currentUser: User = cookies["jwt-cookie"]?.user;
 
@@ -81,7 +79,8 @@ const OnlinePage = ({ className }: { className?: string }) => {
     updateUsers,
     handleOpenGameSelector,
     handleGameClicked,
-    handleAcceptGame,
+    handleGameRequestYesButton,
+    handleGameRequestNoButton,
   } = useOnlinePageSockets();
 
   useEffect(() => {
@@ -117,7 +116,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
     <div className={cx(cls.OnlinePage, {}, [className])}>
       <HStack max>
         <VStack>
-          <UiText size="xl">{resources.onlineUsersHeading}</UiText>
+          <UiText size="xl">{userListResources.userListHeader}</UiText>
           <Sidebar
             users={upToDateUsers}
             handleUserChatButton={handleOpenChatModal}
@@ -131,8 +130,8 @@ const OnlinePage = ({ className }: { className?: string }) => {
           />
           {inviteData && (
             <GameRequest
-              handleYesButton={handleAcceptGame}
-              handleNoButton={() => void 0}
+              handleYesButton={handleGameRequestYesButton}
+              handleNoButton={handleGameRequestNoButton}
               inviteData={inviteData}
             />
           )}

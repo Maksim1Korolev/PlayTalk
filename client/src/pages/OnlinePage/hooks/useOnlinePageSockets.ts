@@ -116,6 +116,18 @@ export const useOnlinePageSockets = () => {
     onGameEnd,
   });
 
+  const handleGameRequestYesButton = (gameRequestProps: {
+    opponentUsername: string;
+    gameName: string;
+  }) => {
+    handleAcceptGame(gameRequestProps);
+
+    setInviteData(null);
+  };
+  const handleGameRequestNoButton = () => {
+    setInviteData(null);
+  };
+
   const handleGameClicked = ({
     opponentUsername,
     gameName,
@@ -128,6 +140,8 @@ export const useOnlinePageSockets = () => {
     isActive
       ? handleOpenGameModal({ opponentUsername, gameName })
       : handleSendGameInvite({ receiverUsername: opponentUsername, gameName });
+
+    setLastClickedPlayUser(null);
   };
 
   return {
@@ -139,6 +153,7 @@ export const useOnlinePageSockets = () => {
     updateUsers: updateUsersForList,
     handleOpenGameSelector,
     handleGameClicked,
-    handleAcceptGame,
+    handleGameRequestYesButton,
+    handleGameRequestNoButton,
   };
 };
