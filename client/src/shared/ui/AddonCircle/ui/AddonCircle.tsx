@@ -30,7 +30,12 @@ export const AddonCircle = memo(
       return;
     };
     const appIcon = (
-      <AppSvg {...iconProps} clickable onClick={handleIconClicked} />
+      <AppSvg
+        {...iconProps}
+        clickable
+        onClick={handleIconClicked}
+        ref={undefined}
+      />
     );
 
     return (

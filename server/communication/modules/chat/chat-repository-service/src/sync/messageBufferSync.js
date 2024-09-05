@@ -7,6 +7,9 @@ class MessageBufferSync {
     const cacheKey = sortedUsernames.join("-");
     const bufferKey = `${process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY}:${cacheKey}`;
 
+    console.log("message");
+    console.log(message);
+
     await redisClient.rPush(bufferKey, JSON.stringify(message));
 
     const bufferSize = await redisClient.lLen(bufferKey);
@@ -42,6 +45,10 @@ class MessageBufferSync {
 
       await redisClient.del(bufferKey);
       console.log(`Buffer cleared. Buffer key: ${bufferKey}`);
+
+      const cacheKey = usernames.join("-");
+      await redisClient.hDel(process.env.REDIS_MESSAGE_HISTORY_KEY, cacheKey);
+      console.log(`Cache key invalidated: ${cacheKey}`);
 
       return messageHistory;
     } else {

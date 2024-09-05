@@ -81,7 +81,7 @@ export const GameSelector = memo(
         onClick: () => handleIconClick(gameName),
       };
 
-      return <AppSvg {...svgProps} />;
+      return <AppSvg {...svgProps} ref={undefined} />;
     };
 
     return (
