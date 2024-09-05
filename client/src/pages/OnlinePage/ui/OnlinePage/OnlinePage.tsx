@@ -21,7 +21,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const [error, setError] = useState<Error | null>();
 
   const [cookies] = useCookies(["jwt-cookie"]);
-
   const token = cookies["jwt-cookie"]?.token;
   const currentUser: User = cookies["jwt-cookie"]?.user;
 
