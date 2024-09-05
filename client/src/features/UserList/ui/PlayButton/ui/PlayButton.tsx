@@ -4,12 +4,22 @@ import cls from "./PlayButton.module.scss";
 
 interface PlayButtonProps extends ButtonProps {
   className?: string;
+  highlighted: boolean;
 }
 
-export const PlayButton = ({ className, ...buttonProps }: PlayButtonProps) => {
+export const PlayButton = ({
+  className,
+  highlighted,
+  ...buttonProps
+}: PlayButtonProps) => {
   //TODO: translate here!!!!!
   return (
-    <UiButton className={cx(cls.PlayButton, {}, [className])} {...buttonProps}>
+    <UiButton
+      className={cx(cls.PlayButton, { [cls.highlighted]: highlighted }, [
+        className,
+      ])}
+      {...buttonProps}
+    >
       Play
     </UiButton>
   );
