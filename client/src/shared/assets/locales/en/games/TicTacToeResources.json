@@ -1,0 +1,7 @@
+{
+  "yourTurn": "It's your turn!",
+  "opponentsTurn": "It's {opponent}'s turn!",
+  "notYourTurn": "It's not your turn!",
+  "squareOccupied": "The square is already occupied.",
+  "surrenderButton": "Surrender"
+}

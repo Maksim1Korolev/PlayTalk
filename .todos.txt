@@ -1,11 +1,10 @@
 To add:
-List of game invitations
 Multiple sources for the main list of users
 Remove unused api requests from auth
 Update resource files in assets folder
-Add multiple game requests logic
 Sort features folder
 Move ChatModal component into ChatModals folder?
+Update game request logic
 
 To fix:
 ChatModal opens lower than the screen and scrollbar appears
@@ -13,7 +12,6 @@ Getting error in communication service when requesting unread messages with coun
 Empty data doesn't count as redis cache
 Check online and api client logic, rename OnlinePage
 Memo template
-Update receiving socket logic to send to sender's client
 
 To add (In the end):
 Auth on all servers, updated auth for some data

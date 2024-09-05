@@ -1,5 +1,6 @@
 import cls from "./GameRequest.module.scss";
 import { Card, HStack, UiButton, VStack } from "@/shared/ui";
+import resources from "@/shared/assets/locales/en/games/GameRequestResources.json";
 
 export const GameRequest = ({
   className,
@@ -22,9 +23,6 @@ export const GameRequest = ({
   handleNoButton: () => void;
 }) => {
   const handleStartGame = () => {
-    console.log(inviteData);
-    console.log(inviteData);
-
     handleYesButton({
       opponentUsername: inviteData.senderUsername,
       gameName: inviteData.gameName,
@@ -32,19 +30,20 @@ export const GameRequest = ({
   };
 
   const handleRejectGame = () => {
-    //    handleNoButton();
+   // handleNoButton();
   };
 
   return (
     <Card className={`${cls.GameRequest} ${className}`}>
       <VStack>
         <div>
-          {inviteData.senderUsername} wants to play {inviteData.gameName} with you.
-          Do you accept?
+          {resources.inviteMessage
+            .replace("{senderUsername}", inviteData.senderUsername)
+            .replace("{gameName}", inviteData.gameName)}
         </div>
         <HStack>
-          <UiButton onClick={handleStartGame}>Yes</UiButton>
-          <UiButton onClick={handleRejectGame}>No</UiButton>
+          <UiButton onClick={handleStartGame}>{resources.yesButton}</UiButton>
+          <UiButton onClick={handleRejectGame}>{resources.noButton}</UiButton>
         </HStack>
       </VStack>
     </Card>
