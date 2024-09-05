@@ -30,7 +30,7 @@ export const GameRequest = ({
   };
 
   const handleRejectGame = () => {
-   // handleNoButton();
+    handleNoButton();
   };
 
   return (

@@ -80,7 +80,8 @@ const OnlinePage = ({ className }: { className?: string }) => {
     updateUsers,
     handleOpenGameSelector,
     handleGameClicked,
-    handleAcceptGame,
+    handleGameRequestYesButton,
+    handleGameRequestNoButton,
   } = useOnlinePageSockets();
 
   useEffect(() => {
@@ -130,8 +131,8 @@ const OnlinePage = ({ className }: { className?: string }) => {
           />
           {inviteData && (
             <GameRequest
-              handleYesButton={handleAcceptGame}
-              handleNoButton={() => void 0}
+              handleYesButton={handleGameRequestYesButton}
+              handleNoButton={handleGameRequestNoButton}
               inviteData={inviteData}
             />
           )}
