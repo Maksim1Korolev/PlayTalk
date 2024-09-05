@@ -6,7 +6,13 @@ import { useCookies } from "react-cookie";
 import { User } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe/";
 import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
-import { AddonCircleProps, AppSvg, CircleModal, SVGProps } from "@/shared/ui";
+import {
+  AddonCircle,
+  AddonCircleProps,
+  AppSvg,
+  CircleModal,
+  SVGProps,
+} from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
 
@@ -164,7 +170,8 @@ export const GameModals = memo(
       return svgProps;
     };
 
-    const getAvatarIcon = (opponentUsername: string) => {
+    //TODO:Possible to place AddonCircle component here instead of svg
+    const getAvatarIcon = (opponentUsername: string): React.ReactNode => {
       const SvgComponent = avatarIconMap[opponentUsername];
 
       if (!SvgComponent) return null;
