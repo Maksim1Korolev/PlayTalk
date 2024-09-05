@@ -7,9 +7,6 @@ class MessageBufferSync {
     const cacheKey = sortedUsernames.join("-");
     const bufferKey = `${process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY}:${cacheKey}`;
 
-    console.log("message");
-    console.log(message);
-
     await redisClient.rPush(bufferKey, JSON.stringify(message));
 
     const bufferSize = await redisClient.lLen(bufferKey);

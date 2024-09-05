@@ -14,10 +14,6 @@ class MessageHistoryService {
     console.log(`Adding message. Cache key: ${cacheKey}`);
 
     await MessageBufferSync.addToBuffer(sortedUsernames, message);
-
-    //TODO:Remove redis del
-    // await redisClient.hDel(process.env.REDIS_MESSAGE_HISTORY_KEY, cacheKey);
-    // console.log(`Cache key invalidated: ${cacheKey}`);
   }
 
   static async getMessageHistory(usernames) {
