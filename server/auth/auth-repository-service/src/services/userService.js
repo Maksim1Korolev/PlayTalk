@@ -1,5 +1,5 @@
 import redisClient from "../utils/redisClient.js";
-import User from "../models/User.js";
+import User from "../schemas/User.js";
 import mongoose from "mongoose";
 
 class UserService {

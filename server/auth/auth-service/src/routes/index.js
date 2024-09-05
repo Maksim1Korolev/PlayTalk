@@ -1,2 +1,2 @@
 export { authRoutes } from "./core/authRoutes.js";
-export { usersRoutes } from "./core/usersRoutes.js";
+export { usersRoutes } from "./core/userRoutes.js";

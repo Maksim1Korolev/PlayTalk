@@ -5,4 +5,4 @@ export {
   getUserByUsername,
   getUserById,
   updateUser,
-} from "./core/usersController.js";
+} from "./core/userController.js";

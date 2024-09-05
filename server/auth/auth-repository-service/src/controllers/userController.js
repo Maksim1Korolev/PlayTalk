@@ -26,19 +26,6 @@ export const addUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc   Delete a user
-// @route  DELETE /api/users/:id
-// @access Public
-export const deleteUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  try {
-    const deletedUser = await UserService.deleteUser(id);
-    res.status(200).json({ user: deletedUser });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // @desc   Get user by username
 // @route  GET /api/users/username/:username
 // @access Public
