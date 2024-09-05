@@ -1,13 +1,11 @@
 import { hash, verify } from "argon2";
 import asyncHandler from "express-async-handler";
 
-import UserService from "../services/userService.js";
-import { generateToken } from "./generate.token.js";
+import { UserService, generateToken } from "../../services/index.js";
 
 // @desc   Auth user
 // @route  POST /api/users/login
 // @access Public
-
 export const authUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
 
@@ -34,7 +32,6 @@ export const authUser = asyncHandler(async (req, res) => {
 // @desc   Register user
 // @route  POST /api/users/register
 // @access Public
-
 export const registerUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
 

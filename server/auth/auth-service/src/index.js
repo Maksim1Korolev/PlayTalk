@@ -2,10 +2,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
-import authRoutes from "./auth/auth.routes.js";
-import usersRoutes from "./users/users.routes.js";
-
-import { errorHandler, notFound } from "./middleware/error.middleware.js";
+import { errorHandler, notFound } from "./middleware/core/errorMiddleware.js";
+import { authRoutes, usersRoutes } from "./routes/index.js";
 
 dotenv.config();
 

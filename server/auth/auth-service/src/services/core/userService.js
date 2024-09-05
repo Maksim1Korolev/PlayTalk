@@ -2,7 +2,7 @@ import axios from "axios";
 
 const repositoryServiceUrl = `${process.env.AUTH_REPOSITORY_SERVICE_URL}/users`;
 
-class UserService {
+export class UserService {
   static getUsers = async () => {
     const url = repositoryServiceUrl;
     const response = await axios.get(url);
@@ -40,5 +40,3 @@ class UserService {
     return response.data.user;
   };
 }
-
-export default UserService;

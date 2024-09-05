@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import UserService from "../services/userService.js";
+import { UserService } from "../../services/index.js";
 
 // @desc   Get users
 // @route  GET /api/users/
@@ -21,21 +21,6 @@ export const addUser = asyncHandler(async (req, res) => {
   try {
     const newUser = await UserService.addUser(user);
     res.status(201).json({ user: newUser, message: "User added successfully" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// @desc   Delete a user
-// @route  DELETE /api/users/:id
-// @access Public
-export const deleteUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  try {
-    const deletedUser = await UserService.deleteUser(id);
-    res
-      .status(200)
-      .json({ user: deletedUser, message: "User deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
