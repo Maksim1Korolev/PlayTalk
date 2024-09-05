@@ -39,7 +39,6 @@ export const getUnreadMessageCount = asyncHandler(async (req, res) => {
 // @access Public
 export const markAsRead = asyncHandler(async (req, res) => {
   try {
-    console.log("markAsRead is running");
     const { requestingUsername } = req.params;
 
     const { usernames } = req.body;
