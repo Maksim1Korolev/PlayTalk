@@ -74,12 +74,19 @@ class SocketService {
     }
   }
 
-  static async getUserSockets(username) {
+  static async getUserSockets(username, excludedSocket) {
     const sockets = await redisClient.hGet(
       process.env.REDIS_USER_SOCKET_KEY,
       username
     );
-    return sockets ? JSON.parse(sockets) : [];
+
+    const socketList = sockets ? JSON.parse(sockets) : [];
+
+    const filteredSockets = excludedSocket
+      ? socketList.filter(socketId => socketId !== excludedSocket)
+      : socketList;
+
+    return filteredSockets;
   }
 
   static async getOnlineUsernames() {
