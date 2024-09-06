@@ -1,5 +1,5 @@
 import { User } from "@/entities/User";
-import { onlineApiService } from "./onlineApiService";
+import { communicationApiService } from "./communicationApiService";
 import { usersApiService } from "./usersApiService";
 import { gameApiService } from "./gameApiService";
 
@@ -23,8 +23,11 @@ export const fetchUsersStatus = async ({
     const users = await usersApiService.getUsers(token);
 
     const results = await Promise.allSettled([
-      onlineApiService.getOnlineUsernames(token),
-      onlineApiService.getUnreadMessageCount(currentUser.username, token),
+      communicationApiService.getOnlineUsernames(token),
+      communicationApiService.getUnreadMessageCount(
+        currentUser.username,
+        token
+      ),
       gameApiService.getActiveGames(currentUser.username),
     ]);
 

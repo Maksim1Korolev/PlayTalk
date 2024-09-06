@@ -1,18 +1,22 @@
 import axios from "axios";
 
-export const $onlineApi = axios.create({
+export const $communicationApi = axios.create({
   baseURL: import.meta.env.VITE_COMMUNICATION_SOCKET_URL,
 });
 
-export const onlineApiService = {
+//TODO:Divide existent logic, add online from game gateway service
+export const communicationApiService = {
   getOnlineUsernames: async (token: string) => {
-    const response = await $onlineApi.get(`/api/online/onlineUsernames`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await $communicationApi.get(
+      `/api/online/onlineUsernames`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response.data.onlineUsernames;
   },
   getUnreadMessageCount: async (currentUsername: string, token: string) => {
-    const response = await $onlineApi.get(
+    const response = await $communicationApi.get(
       `/api/unread/getAll/${currentUsername}`,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -27,7 +31,7 @@ export const onlineApiService = {
     token: string
   ) => {
     const usernames = [currentUsername, receiverUsername];
-    const response = await $onlineApi.post(
+    const response = await $communicationApi.post(
       `/api/unread/markAsRead/${currentUsername}`,
       {
         headers: { Authorization: `Bearer ${token}` },

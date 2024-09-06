@@ -1,5 +1,5 @@
 import { User } from "@/entities/User";
-import { onlineApiService } from "@/pages/OnlinePage/api/onlineApiService";
+import { communicationApiService } from "@/pages/OnlinePage/api/communicationApiService";
 import { communicationSocket } from "@/shared/api/sockets";
 import { cx } from "@/shared/lib/cx";
 import { Card, HStack, UiButton, UiText, VStack } from "@/shared/ui";
@@ -70,7 +70,7 @@ export const Chat = memo(
 
     const setReadAll = useCallback(async () => {
       try {
-        await onlineApiService.postAllReadMessages(
+        await communicationApiService.postAllReadMessages(
           currentUser.username,
           receiverUser.username,
           token
