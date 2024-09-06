@@ -1,10 +1,12 @@
-import { User, UserListCard } from "@/entities/User";
-
-import { cx } from "@/shared/lib/cx";
-import { Card, VStack } from "@/shared/ui";
-import { memo, useEffect, useMemo, useRef } from "react";
-import { sortUsers } from "../../model/userListUtils";
 import cls from "./UserList.module.scss";
+import { cx } from "@/shared/lib/cx";
+import { memo, useEffect, useMemo, useRef } from "react";
+
+import resources from "@/shared/assets/locales/en/UserListResources.json";
+
+import { User, UserListCard } from "@/entities/User";
+import { Card, VStack } from "@/shared/ui";
+import { sortUsers } from "../../model/userListUtils";
 
 export interface UserListProps {
   className?: string;
@@ -62,7 +64,7 @@ export const UserList = memo(
     }, [collapsed, handleUserChatButton, handleUserPlayButton, users]);
 
     if (!users || users.length === 0) {
-      return <p>No users available.</p>;
+      return <p>{resources.noUsers}</p>;
     }
 
     return (
