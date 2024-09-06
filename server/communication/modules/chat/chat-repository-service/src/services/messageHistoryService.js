@@ -1,4 +1,4 @@
-import MessageHistory from "../models/MessageHistory.js";
+import MessageHistory from "../schemas/MessageHistory.js";
 import MessageBufferService from "./messageBufferService.js";
 import redisClient from "../utils/redisClient.js";
 
@@ -120,58 +120,55 @@ class MessageHistoryService {
     return unreadMessageMap;
   }
 
-  //   static async markAsRead(usernames, requestingUsername) {
-  //     const sortedUsernames = this.getSortedUsernames(usernames);
-  //     const cacheKey = sortedUsernames.join("-");
-  //     console.log(`Marking messages as read. Cache key: ${cacheKey}`);
+  // static async markAsRead(usernames, requestingUsername) {
+  //   const sortedUsernames = this.getSortedUsernames(usernames);
+  //   const cacheKey = sortedUsernames.join("-");
+  //   console.log(`Marking messages as read. Cache key: ${cacheKey}`);
 
-  //     await MessageBufferService.markMessagesAsReadInBuffer(
-  //       sortedUsernames,
-  //       requestingUsername
-  //     );
+  //   await MessageBufferService.markMessagesAsReadInBuffer(
+  //     sortedUsernames,
+  //     requestingUsername
+  //   );
 
-  //     const messageHistory = await MessageHistory.findOne({
-  //       usernames: { $all: sortedUsernames },
-  //     });
+  //   const messageHistory = await MessageHistory.findOne({
+  //     usernames: { $all: sortedUsernames },
+  //   });
 
-  //     if (messageHistory) {
-  //       const messages = messageHistory.messages;
-  //       let updated = false;
+  //   if (messageHistory) {
+  //     const messages = messageHistory.messages;
+  //     let updated = false;
 
-  //       for (let i = 0; i < messages.length; i++) {
-  //         if (!messages[i].message) {
-  //           console.warn(
-  //             `Skipping message ${i} because it has no message field.`
-  //           );
-  //           continue;
-  //         }
-  //         if (
-  //           messages[i].username !== requestingUsername &&
-  //           messages[i].readAt === undefined
-  //         ) {
-  //           messages[i].readAt = new Date();
-  //           updated = true;
-  //         }
-  //       }
-
-  //       if (updated) {
-  //         console.log("messageHistory.messages:");
-  //         console.log(messageHistory.messages);
-
-  //         await messageHistory.save();
-  //         await redisClient.hDel(process.env.REDIS_MESSAGE_HISTORY_KEY, cacheKey);
-  //         console.log(
-  //           `Messages marked as read in DB. Cache key invalidated: ${cacheKey}`
+  //     for (let i = 0; i < messages.length; i++) {
+  //       if (!messages[i].message) {
+  //         console.warn(
+  //           `Skipping message ${i} because it has no message field.`
   //         );
-  //       } else {
-  //         console.log(
-  //           `No messages to mark as read in DB. Cache key not invalidated: ${cacheKey}`
-  //         );
+  //         continue;
   //       }
-
-  //       return messageHistory;
+  //       if (
+  //         messages[i].username !== requestingUsername &&
+  //         messages[i].readAt === undefined
+  //       ) {
+  //         messages[i].readAt = new Date();
+  //         updated = true;
+  //       }
   //     }
+
+  //     if (updated) {
+  //       await messageHistory.save();
+  //       await redisClient.hDel(process.env.REDIS_MESSAGE_HISTORY_KEY, cacheKey);
+  //       console.log(
+  //         `Messages marked as read in DB. Cache key invalidated: ${cacheKey}`
+  //       );
+  //     } else {
+  //       console.log(
+  //         `No messages to mark as read in DB. Cache key not invalidated: ${cacheKey}`
+  //       );
+  //     }
+
+  //     return messageHistory;
   //   }
+  // }
 }
 
 export default MessageHistoryService;

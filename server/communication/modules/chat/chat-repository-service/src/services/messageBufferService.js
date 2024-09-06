@@ -1,5 +1,5 @@
 import redisClient from "../utils/redisClient.js";
-import MessageHistory from "../models/MessageHistory.js";
+import MessageHistory from "../schemas/MessageHistory.js";
 
 class MessageBufferService {
   static async addToBuffer(usernames, message) {
