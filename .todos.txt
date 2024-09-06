@@ -6,6 +6,7 @@ Sort features folder
 Move ChatModal component into ChatModals folder?
 Update game request logic
 Upgrade UserList scrollbar
+Token between the servers
 
 To fix:
 ChatModal opens lower than the screen and scrollbar appears
