@@ -4,7 +4,7 @@ import express from "express";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
-import authRoutes from "./routes/authRoutes.js";
+import authRouter from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
-  app.use("/api/auth", authRoutes);
+  app.use("/api/auth", authRouter);
 
   app.use(errorHandler);
   app.use(notFound);
