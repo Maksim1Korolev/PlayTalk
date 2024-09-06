@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export const generateToken = userId =>
+const generateToken = userId =>
   jwt.sign(
     {
       userId,
@@ -10,3 +10,5 @@ export const generateToken = userId =>
       expiresIn: "10d",
     }
   );
+
+export default generateToken;

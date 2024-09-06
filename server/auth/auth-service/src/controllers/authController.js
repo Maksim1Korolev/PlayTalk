@@ -1,7 +1,8 @@
 import { hash, verify } from "argon2";
 import asyncHandler from "express-async-handler";
 
-import { UserService, generateToken } from "../../services/index.js";
+import UserService from "../services/userService.js";
+import generateToken from "../services/generateToken.js";
 
 // @desc   Auth user
 // @route  POST /api/users/login
