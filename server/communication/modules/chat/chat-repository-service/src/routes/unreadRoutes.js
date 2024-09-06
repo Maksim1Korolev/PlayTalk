@@ -3,7 +3,7 @@ import {
   getAllUnreadMessageCount,
   getUnreadMessageCount,
   markAsRead,
-} from "./unread.controller.js";
+} from "../controllers/unreadController.js";
 
 const router = express.Router();
 

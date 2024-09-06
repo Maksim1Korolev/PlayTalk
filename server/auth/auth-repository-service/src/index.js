@@ -28,7 +28,6 @@ async function main() {
   const PORT = process.env.PORT || 3011;
 
   await connectToMongoDB();
-
   await redisClient.connect();
 
   app.listen(PORT, () => {

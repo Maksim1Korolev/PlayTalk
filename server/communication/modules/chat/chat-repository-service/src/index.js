@@ -8,9 +8,11 @@ import {
   disconnectFromMongoDB,
 } from "./utils/mongooseClient.js";
 
-import messageHistoriesRoutes from "./messageHistories/messageHistories.routes.js";
-import unreadRoutes from "./unread/unread.routes.js";
-import MessageBufferSync from "./sync/messageBufferSync.js";
+import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+
+import messageHistoryRouter from "./routes/messageHistoryRoutes.js";
+import unreadRouter from "./routes/unreadRoutes.js";
+import MessageBufferService from "./services/messageBufferService.js";
 
 dotenv.config();
 
@@ -20,18 +22,23 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
-  app.use("/api/messageHistories", messageHistoriesRoutes);
-  app.use("/api/unread", unreadRoutes);
+  app.use("/api/messageHistories", messageHistoryRouter);
+  app.use("/api/unread", unreadRouter);
+
+  app.use(errorHandler);
+  app.use(notFound);
 
   const PORT = process.env.PORT || 3021;
 
-  await redisClient.connect();
   await connectToMongoDB();
+  await redisClient.connect();
 
-  MessageBufferSync.subscribeToPeriodicFlush();
+  MessageBufferService.subscribeToPeriodicFlush();
 
   app.listen(PORT, () => {
-    console.log(`chat-repository-service is running on port ${PORT}`);
+    console.log(
+      `chat-repository-service is running in ${process.env.NODE_ENV} mode on port ${PORT}`
+    );
   });
 }
 

@@ -2,7 +2,7 @@ import express from "express";
 import {
   addMessageToHistory,
   getMessageHistory,
-} from "./messageHistories.controller.js";
+} from "../controllers/messageHistoryController.js";
 
 const router = express.Router();
 

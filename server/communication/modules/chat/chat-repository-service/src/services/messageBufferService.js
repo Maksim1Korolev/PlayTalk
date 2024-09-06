@@ -1,7 +1,7 @@
 import redisClient from "../utils/redisClient.js";
 import MessageHistory from "../models/MessageHistory.js";
 
-class MessageBufferSync {
+class MessageBufferService {
   static async addToBuffer(usernames, message) {
     const sortedUsernames = usernames.sort();
     const cacheKey = sortedUsernames.join("-");
@@ -132,4 +132,4 @@ class MessageBufferSync {
   }
 }
 
-export default MessageBufferSync;
+export default MessageBufferService;

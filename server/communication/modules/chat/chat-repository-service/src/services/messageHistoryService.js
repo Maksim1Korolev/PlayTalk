@@ -1,5 +1,5 @@
 import MessageHistory from "../models/MessageHistory.js";
-import MessageBufferSync from "../sync/messageBufferSync.js";
+import MessageBufferService from "./messageBufferService.js";
 import redisClient from "../utils/redisClient.js";
 
 class MessageHistoryService {
@@ -13,7 +13,7 @@ class MessageHistoryService {
     const cacheKey = sortedUsernames.join("-");
     console.log(`Adding message. Cache key: ${cacheKey}`);
 
-    await MessageBufferSync.addToBuffer(sortedUsernames, message);
+    await MessageBufferService.addToBuffer(sortedUsernames, message);
   }
 
   static async getMessageHistory(usernames) {
@@ -26,7 +26,7 @@ class MessageHistoryService {
       cacheKey
     );
 
-    const messagesFromBuffer = await MessageBufferSync.getMessagesFromBuffer(
+    const messagesFromBuffer = await MessageBufferService.getMessagesFromBuffer(
       sortedUsernames
     );
 
