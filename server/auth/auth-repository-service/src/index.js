@@ -8,6 +8,8 @@ import {
   disconnectFromMongoDB,
 } from "./utils/mongooseClient.js";
 
+import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+
 import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
@@ -20,6 +22,9 @@ async function main() {
 
   app.use("/api/users", userRoutes);
 
+  app.use(errorHandler);
+  app.use(notFound);
+
   const PORT = process.env.PORT || 3011;
 
   await connectToMongoDB();
@@ -27,7 +32,9 @@ async function main() {
   await redisClient.connect();
 
   app.listen(PORT, () => {
-    console.log(`auth-repository-service is running on port ${PORT}`);
+    console.log(
+      `auth-repository-service is running in ${process.env.NODE_ENV} mode on port ${PORT}`
+    );
   });
 }
 
