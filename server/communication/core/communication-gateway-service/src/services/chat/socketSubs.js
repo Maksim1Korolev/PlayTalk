@@ -3,7 +3,7 @@ import SocketService from "../socketService.js";
 import MessageHistoryService from "./messageHistoryService.js";
 
 async function handleChatSubscriptions(socket, currentUsername) {
-  socket.on("on-chat-open", async receiverUsername => {
+  socket.on("on-chat-open", async ({ receiverUsername }) => {
     try {
       const { data } = await MessageHistoryService.getMessageHistory([
         currentUsername,
