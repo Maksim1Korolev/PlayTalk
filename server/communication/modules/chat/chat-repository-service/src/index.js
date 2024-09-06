@@ -33,7 +33,7 @@ async function main() {
   await connectToMongoDB();
   await redisClient.connect();
 
-  MessageBufferService.subscribeToPeriodicFlush();
+  await MessageBufferService.subscribeToPeriodicFlush();
 
   app.listen(PORT, () => {
     console.log(

@@ -119,7 +119,7 @@ export const Chat = memo(
 
       if (!typing) {
         setTyping(true);
-        //TODO: Transfer it to other file
+        //TODO: Transfer it to other file, pass in braces {}
         communicationSocket.emit("typing", receiverUser.username);
       }
 
