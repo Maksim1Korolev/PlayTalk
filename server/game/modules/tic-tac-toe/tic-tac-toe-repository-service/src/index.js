@@ -8,7 +8,9 @@ import {
   disconnectFromMongoDB,
 } from "./utils/mongooseClient.js";
 
-import players from "./players/players.routes.js";
+import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+
+import playerRouter from "./routes/playerRoutes.js";
 
 dotenv.config();
 
@@ -18,7 +20,10 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
-  app.use("/api/players", players);
+  app.use("/api/players", playerRouter);
+
+  app.use(errorHandler);
+  app.use(notFound);
 
   const PORT = process.env.PORT || 8082;
 
@@ -27,7 +32,9 @@ async function main() {
   await redisClient.connect();
 
   app.listen(PORT, () => {
-    console.log(`tic-tac-toe-repository-service is running on port ${PORT}`);
+    console.log(
+      `tic-tac-toe-repository-service is running in ${process.env.NODE_ENV} mode on port ${PORT}`
+    );
   });
 }
 

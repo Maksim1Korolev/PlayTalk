@@ -1,5 +1,5 @@
 import redisClient from "../utils/redisClient.js";
-import Player from "../models/Player.js";
+import Player from "../schemas/Player.js";
 
 class PlayerService {
   static async addPlayer(player) {
