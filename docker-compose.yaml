@@ -102,8 +102,6 @@ services:
       - REDIS_URL=${REDIS_URL}
       - TIC_TAC_TOE_SERVICE_URL=${TIC_TAC_TOE_SERVICE_URL}
       - TIC_TAC_TOE_REPOSITORY_SERVICE_URL=${TIC_TAC_TOE_REPOSITORY_SERVICE_URL}
-      #TODO:Remove
-      - DATABASE_URL=${DATABASE_URL}
     develop:
       watch:
         - path: ./app/package.json
@@ -146,7 +144,7 @@ services:
         - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service
           target: /usr/src/app
           action: sync
-          
+
   # Redis
   redis:
     image: redis:alpine
