@@ -1,14 +1,14 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { User } from "@/entities/User";
 import { Socket } from "socket.io-client";
+import { SocketContext } from "@/shared/lib/context/SocketContext";
 
 export const useOnlineSockets = ({
-  sockets,
   updateUserList,
 }: {
-  sockets: { communicationSocket: Socket | null; gameSocket: Socket | null };
   updateUserList: (username: string, updatedProps: Partial<User>) => void;
 }) => {
+  const { sockets } = useContext(SocketContext);
   const { communicationSocket, gameSocket } = sockets;
 
   useEffect(() => {

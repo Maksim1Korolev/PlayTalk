@@ -1,13 +1,12 @@
+import { SocketContext } from "@/shared/lib/context/SocketContext";
 import { useCallback, useContext, useEffect } from "react";
 import { Socket } from "socket.io-client";
 
 export const useGameSessionSocket = ({
-  gameSocket,
   onReceiveInvite,
   onGameStart,
   onGameEnd,
 }: {
-  gameSocket: Socket | null;
   onReceiveInvite: ({
     senderUsername,
     gameName,
@@ -32,6 +31,9 @@ export const useGameSessionSocket = ({
     winner: string;
   }) => void;
 }) => {
+  const { sockets } = useContext(SocketContext);
+  const { gameSocket } = sockets;
+
   const handleSendGameInvite = useCallback(
     ({
       receiverUsername,

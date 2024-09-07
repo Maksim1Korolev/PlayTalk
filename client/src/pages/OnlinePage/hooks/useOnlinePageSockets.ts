@@ -21,12 +21,7 @@ export const useOnlinePageSockets = () => {
     null
   );
 
-  const { communicationSocket, gameSocket } = useSockets();
-  const { setSockets } = useContext(SocketContext);
-
-  useEffect(() => {
-    setSockets({ communicationSocket, gameSocket });
-  }, [communicationSocket, gameSocket]);
+  useSockets();
 
   const updateUsersForList = useCallback(
     (users: User[]) => {
@@ -56,7 +51,6 @@ export const useOnlinePageSockets = () => {
   };
 
   useOnlineSockets({
-    sockets: { communicationSocket, gameSocket },
     updateUserList,
   });
 
@@ -117,7 +111,6 @@ export const useOnlinePageSockets = () => {
     useGameModals();
 
   const { handleSendGameInvite, handleAcceptGame } = useGameSessionSocket({
-    gameSocket: gameSocket,
     onReceiveInvite,
     onGameStart,
     onGameEnd,

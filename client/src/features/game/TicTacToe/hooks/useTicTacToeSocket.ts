@@ -1,3 +1,4 @@
+import { SocketContext } from "@/shared/lib/context/SocketContext";
 import { useCallback, useContext, useEffect } from "react";
 import { Socket } from "socket.io-client";
 
@@ -8,10 +9,8 @@ const MOVE_MADE_EVENT = `${gameName}-move-made`;
 const SURRENDER_EVENT = `${gameName}-surrender`;
 
 export const useTicTacToeSocket = ({
-  gameSocket,
   onMoveMade,
 }: {
-  gameSocket: Socket | null;
   onMoveMade: ({
     interactingUsername,
     interactingIndex,
@@ -20,6 +19,9 @@ export const useTicTacToeSocket = ({
     interactingIndex: number;
   }) => void;
 }) => {
+  const { sockets } = useContext(SocketContext);
+  const { gameSocket } = sockets;
+
   const handleMakeMove = useCallback(
     ({
       opponentUsername,

@@ -1,22 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useContext } from "react";
 import { useCookies } from "react-cookie";
 import { io, Socket } from "socket.io-client";
+import { SocketContext } from "@/shared/lib/context/SocketContext";
 
-export const useSockets = (): {
-  communicationSocket: Socket | null;
-  gameSocket: Socket | null;
-} => {
+export const useSockets = () => {
   const [cookies] = useCookies(["jwt-cookie"]);
-  const [communicationSocket, setCommunicationSocket] = useState<Socket | null>(
-    null
-  );
-  const [gameSocket, setGameSocket] = useState<Socket | null>(null);
+  const { setSockets } = useContext(SocketContext);
 
   useEffect(() => {
     const token: string = cookies["jwt-cookie"]?.token;
 
     if (token) {
-      const newCommunicationSocket = io(
+      const newCommunicationSocket: Socket = io(
         import.meta.env.VITE_COMMUNICATION_SOCKET_URL,
         {
           extraHeaders: {
@@ -24,21 +19,22 @@ export const useSockets = (): {
           },
         }
       );
-      setCommunicationSocket(newCommunicationSocket);
 
-      const newGameSocket = io(import.meta.env.VITE_GAME_SOCKET_URL, {
+      const newGameSocket: Socket = io(import.meta.env.VITE_GAME_SOCKET_URL, {
         extraHeaders: {
           authorization: `Bearer ${token}`,
         },
       });
-      setGameSocket(newGameSocket);
+
+      setSockets({
+        communicationSocket: newCommunicationSocket,
+        gameSocket: newGameSocket,
+      });
 
       return () => {
         newCommunicationSocket.disconnect();
         newGameSocket.disconnect();
       };
     }
-  }, [cookies]);
-
-  return { communicationSocket, gameSocket };
+  }, [cookies, setSockets]);
 };

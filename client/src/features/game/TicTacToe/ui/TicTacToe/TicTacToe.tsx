@@ -24,10 +24,6 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
 
   const [board, setBoard] = useState<("-" | "O" | "X")[]>(game.board);
 
-  const { sockets } = useContext(SocketContext);
-  const { gameSocket } = sockets;
-  console.log(sockets);
-
   const opponentUsername =
     currentUser.username === game.player1.username
       ? game.player2.username
@@ -96,7 +92,6 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
   }, [statusMessage]);
 
   const { handleMakeMove, handleSurrender } = useTicTacToeSocket({
-    gameSocket,
     onMoveMade,
   });
 
