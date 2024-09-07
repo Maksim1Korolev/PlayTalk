@@ -22,11 +22,16 @@ export const useOnlinePageSockets = () => {
   );
 
   const { communicationSocket, gameSocket } = useSockets();
-  const { setSockets } = useContext(SocketContext);
+  const { sockets, setSockets } = useContext(SocketContext);
 
   useEffect(() => {
     setSockets({ communicationSocket, gameSocket });
   }, [communicationSocket, gameSocket]);
+
+  useEffect(() => {
+    console.log("sockets:");
+    console.log(sockets);
+  }, [sockets]);
 
   const updateUsersForList = useCallback(
     (users: User[]) => {

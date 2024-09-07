@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Socket } from "socket.io-client";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 
@@ -11,13 +11,16 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     gameSocket: null,
   });
 
+  const defaultValue = useMemo(
+    () => ({
+      sockets,
+      setSockets,
+    }),
+    [sockets]
+  );
+
   return (
-    <SocketContext.Provider
-      value={{
-        sockets,
-        setSockets,
-      }}
-    >
+    <SocketContext.Provider value={defaultValue}>
       {children}
     </SocketContext.Provider>
   );

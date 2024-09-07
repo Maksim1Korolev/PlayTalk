@@ -18,7 +18,7 @@ import { ChatInput } from "../ChatInput";
 import { ChatMessage } from "../ChatMessage";
 import { Message } from "../ChatMessage/ui/ChatMessage";
 import cls from "./Chat.module.scss";
-import { SocketsContext } from "@/shared/lib/context/SocketsContext";
+import { SocketContext } from "@/shared/lib/context/SocketContext";
 
 export const Chat = memo(
   ({
@@ -40,7 +40,7 @@ export const Chat = memo(
     onClose: () => void;
     onCollapse: () => void;
   }) => {
-    const { sockets } = useContext(SocketsContext);
+    const { sockets } = useContext(SocketContext);
     const { communicationSocket } = sockets;
 
     const [inputMessage, setInputMessage] = useState<string>("");

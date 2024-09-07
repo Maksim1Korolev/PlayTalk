@@ -1,7 +1,7 @@
 import { User } from "@/entities/User";
 import { Message } from "@/features/Chat/ui/ChatMessage/ui/ChatMessage";
 import { useCallback, useEffect, useContext } from "react";
-import { SocketsContext } from "@/shared/lib/context/SocketsContext";
+import { SocketContext } from "@/shared/lib/context/SocketContext";
 
 export interface ChatModalStateProps {
   user: User;
@@ -12,7 +12,7 @@ export interface ChatModalStateProps {
 }
 
 export const useChatModals = () => {
-  const { sockets } = useContext(SocketsContext);
+  const { sockets } = useContext(SocketContext);
   const { communicationSocket } = sockets;
 
   const handleUserMessage = useCallback(
@@ -49,7 +49,7 @@ export const useReceiveMessage = (
   addMessagesToHistory: (messages: Message[]) => void,
   setIsTyping: (isTyping: boolean) => void
 ) => {
-  const { sockets } = useContext(SocketsContext);
+  const { sockets } = useContext(SocketContext);
   const { communicationSocket } = sockets;
 
   useEffect(() => {

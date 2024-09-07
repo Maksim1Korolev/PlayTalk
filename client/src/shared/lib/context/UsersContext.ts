@@ -11,4 +11,6 @@ const defaultUsersContext: UsersContextType = {
   setUsers: () => {}, // Default to a no-op function
 };
 
-export const UsersContext = createContext<UsersContextType>(defaultUsersContext);
+//TODO:Rename to user singular?
+export const UsersContext =
+  createContext<UsersContextType>(defaultUsersContext);
