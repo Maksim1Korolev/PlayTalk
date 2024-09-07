@@ -7,10 +7,11 @@ import { User } from "@/entities/User";
 import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
 import { UiButton, UiText, VStack } from "@/shared/ui";
 import resources from "@/shared/assets/locales/en/games/TicTacToeResources.json";
+import { TicTacToeGame } from "@/entities/Game/model";
 
 interface TicTacToeProps {
   className?: string;
-  game: Game;
+  game: TicTacToeGame;
 }
 
 export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {

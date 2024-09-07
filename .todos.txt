@@ -17,6 +17,7 @@ Memo template
 
 To add (In the end):
 Auth on all servers, updated auth for some data
+Cors
 Add environment (development/production)
 Kubernetes
 Storybook

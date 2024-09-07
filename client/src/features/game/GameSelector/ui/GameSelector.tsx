@@ -2,7 +2,7 @@ import { memo, useState, useEffect, ReactNode } from "react";
 import cls from "./GameSelector.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { Card, HStack, SVGProps, AppSvg, Loader } from "@/shared/ui";
-import GameNames from "@/entities/Game/model/enums/gameNames";
+import { GameNames } from "@/entities/Game/model";
 import { User } from "@/entities/User";
 import getImagePath from "@/shared/utils/getImagePath";
 
