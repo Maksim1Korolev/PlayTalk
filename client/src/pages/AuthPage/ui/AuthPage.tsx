@@ -86,6 +86,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/");
+      //TODO:Find replacement
       window.location.reload();
     }
   }, [isAuthenticated]);
