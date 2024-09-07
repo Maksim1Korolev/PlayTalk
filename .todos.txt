@@ -1,12 +1,10 @@
 To add:
 Multiple sources for the main list of users
-Remove unused api requests from auth
 Update resource files in assets folder
 Sort features folder
 Move ChatModal component into ChatModals folder?
 Update game request logic
 Upgrade UserList scrollbar
-Token between the servers
 Current user (data from cookie) to context
 
 To fix:
