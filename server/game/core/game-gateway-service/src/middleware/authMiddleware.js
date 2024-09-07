@@ -49,14 +49,33 @@ export const protect = asyncHandler(async (req, res, next) => {
 
     if (userFound) {
       req.user = userFound;
+
+      const { player1Username, player2Username } = req.query;
+
+      if (player1Username || player2Username) {
+        if (
+          userFound.username !== player1Username &&
+          userFound.username !== player2Username
+        ) {
+          return res
+            .status(403)
+            .json({ message: "Unauthorized access to this game data" });
+        }
+      } else if (
+        req.params.username &&
+        req.params.username !== userFound.username
+      ) {
+        return res
+          .status(403)
+          .json({ message: "Unauthorized access to this user's data" });
+      }
+
       next();
     } else {
       res.status(401);
       throw new Error("Not authorized");
     }
-  }
-
-  if (!token) {
+  } else {
     res.status(401);
     throw new Error("Not authorized, You don't have token");
   }
