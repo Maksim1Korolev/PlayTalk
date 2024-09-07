@@ -2,7 +2,7 @@ import { User } from "@/entities/User";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
 import { ReactNode, useMemo, useState } from "react";
 // TODO: maybe fetching list here in useEffect
-const UsersProvider = ({
+export const UsersProvider = ({
   children,
 }: {
   className?: string;
@@ -18,5 +18,3 @@ const UsersProvider = ({
     </UsersContext.Provider>
   );
 };
-
-export default UsersProvider;

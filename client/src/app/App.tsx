@@ -1,7 +1,7 @@
-import { Navbar } from "@/widgets/Navbar";
-import { Suspense } from "react";
-import AppRouter from "./providers/router/ui/AppRouter";
 import "./styles/index.scss";
+import { Suspense } from "react";
+import { AppRouter } from "./providers/";
+import { Navbar } from "@/widgets/Navbar";
 
 function App() {
   return (
