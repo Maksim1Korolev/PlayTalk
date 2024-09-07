@@ -1,7 +1,8 @@
-import { User } from "@/entities/User";
-import { UsersContext } from "@/shared/lib/context/UsersContext";
 import { useCallback, useContext, useState } from "react";
 import { useCookies } from "react-cookie";
+
+import { User } from "@/entities/User";
+import { UsersContext } from "@/shared/lib/context/UsersContext";
 import { useGameModals } from "./useGameModals";
 import { useGameSessionSocket } from "./useGameSessionSocket";
 import { useOnlineSocket } from "./useOnlineSocket";
