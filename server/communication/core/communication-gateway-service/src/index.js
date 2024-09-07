@@ -9,8 +9,8 @@ import redisClient from "./utils/redisClient.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import { socketAuthMiddleware } from "./middleware/authMiddleware.js";
 
-import unreadRouter from "./unread/unread.routes.js";
-import onlineRouter from "./online/online.routes.js";
+import onlineRouter from "./routes/onlineRoutes.js";
+import unreadRouter from "./routes/unreadRoutes.js";
 import SocketService from "./services/socketService.js";
 
 dotenv.config();

@@ -1,8 +1,9 @@
 import express from "express";
+
 import {
   getAllUnreadMessageCounts,
   readAllUnreadMessages,
-} from "./unread.controller.js";
+} from "../controllers/unreadController.js";
 
 const router = express.Router();
 

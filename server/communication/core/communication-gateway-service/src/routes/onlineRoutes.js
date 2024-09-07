@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getOnlineUsernames } from "./online.controller.js";
+import { getOnlineUsernames } from "../controllers/onlineController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();

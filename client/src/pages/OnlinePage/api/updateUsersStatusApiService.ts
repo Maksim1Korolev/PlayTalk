@@ -28,7 +28,7 @@ export const fetchUsersStatus = async ({
         currentUser.username,
         token
       ),
-      gameApiService.getActiveGames(currentUser.username),
+      gameApiService.getActiveGames(token, currentUser.username),
     ]);
 
     const onlineUsernames =

@@ -5,25 +5,30 @@ export const $gameApi = axios.create({
 });
 
 export const gameApiService = {
-  getActiveGames: async (username: string) => {
+  getActiveGames: async (token: string, username: string) => {
     const response = await $gameApi.get(`/api/game/games/${username}`, {
       params: { username },
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     return response.data.activeGames;
   },
 
-  getGame: async ({
-    gameName,
-    player1Username,
-    player2Username,
-  }: {
-    gameName: string;
-    player1Username: string;
-    player2Username: string;
-  }) => {
+  getGame: async (
+    token: string,
+    {
+      gameName,
+      player1Username,
+      player2Username,
+    }: {
+      gameName: string;
+      player1Username: string;
+      player2Username: string;
+    }
+  ) => {
     const response = await $gameApi.get(`/api/game/${gameName}`, {
       params: { player1Username, player2Username },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return response.data.game;
   },

@@ -36,7 +36,8 @@ interface GameModalsProps {
 export const GameModals = memo(
   ({ className, gameModals, onClose }: GameModalsProps) => {
     const [cookies] = useCookies(["jwt-cookie"]);
-    const currentUser: User = cookies["jwt-cookie"]?.user;
+    const { user: currentUser, token } = cookies["jwt-cookie"];
+
     const { users } = useContext(UsersContext);
 
     const [games, setGames] = useState<{ [key: string]: Game }>({});
@@ -53,7 +54,7 @@ export const GameModals = memo(
       const fetchGames = async () => {
         const fetchedGames = await Promise.all(
           gameModals.map(async modal => {
-            const data = await gameApiService.getGame({
+            const data = await gameApiService.getGame(token, {
               gameName: modal.gameName,
               player1Username: currentUser.username,
               player2Username: modal.opponentUsername,
