@@ -46,6 +46,7 @@ services:
       - talkback-network
     environment:
       - AUTH_REPOSITORY_SERVICE_URL=${AUTH_REPOSITORY_SERVICE_URL}
+      - JWT_SECRET=${JWT_SECRET}
     develop:
       watch:
         - path: ./app/package.json

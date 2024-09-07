@@ -12,6 +12,7 @@ export const authUser = asyncHandler(async (req, res) => {
 
   try {
     const user = await UserService.getUserByUsername(username);
+
     if (!user) {
       res.status(401);
       throw new Error("Username or password is incorrect");
@@ -24,6 +25,7 @@ export const authUser = asyncHandler(async (req, res) => {
     }
 
     const token = generateToken(user._id);
+
     res.json({ user, token });
   } catch (error) {
     res.status(401).json({ message: error.message });
