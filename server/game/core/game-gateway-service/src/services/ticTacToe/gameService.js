@@ -7,7 +7,6 @@ class GameService {
     }
 
     const url = `${process.env.TIC_TAC_TOE_SERVICE_URL}/Game/game`;
-    console.log(url);
 
     const response = await axios.get(url, {
       params: {
