@@ -7,6 +7,7 @@ import { Server } from "socket.io";
 import redisClient from "./utils/redisClient.js";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+import { socketAuthMiddleware } from "./middleware/authMiddleware.js";
 
 import gameRouter from "./routes/gameRoutes.js";
 import onlineRouter from "./routes/onlineRoutes.js";
@@ -21,6 +22,8 @@ const server = http.createServer(app);
 export const io = new Server(server, {
   cors: {},
 });
+
+socketAuthMiddleware(io);
 
 async function main() {
   app.use(cors());
