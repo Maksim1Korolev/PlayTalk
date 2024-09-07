@@ -6,6 +6,9 @@ import { Server } from "socket.io";
 
 import redisClient from "./utils/redisClient.js";
 
+import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+import { socketAuthMiddleware } from "./middleware/authMiddleware.js";
+
 import unreadRouter from "./unread/unread.routes.js";
 import onlineRouter from "./online/online.routes.js";
 import SocketService from "./services/socketService.js";
@@ -20,12 +23,17 @@ export const io = new Server(server, {
   cors: {},
 });
 
+socketAuthMiddleware(io);
+
 async function main() {
   app.use(cors());
   app.use(express.json());
 
   app.use("/api/online", onlineRouter);
   app.use("/api/unread", unreadRouter);
+
+  app.use(errorHandler);
+  app.use(notFound);
 
   const PORT = process.env.PORT || 3000;
 

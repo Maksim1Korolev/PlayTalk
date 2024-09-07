@@ -5,18 +5,23 @@ import handleChatSubscriptions from "./chat/socketSubs.js";
 class SocketService {
   static async setupSocketConnection() {
     io.on("connection", async socket => {
-      console.log("User connected with socket ID:", socket.id);
-      let savedUsername;
+      const user = socket.request.user;
 
-      socket.on("online-ping", async username => {
-        savedUsername = username;
+      if (!user) {
+        socket.disconnect(true);
+        return;
+      }
 
+      console.log(`${user.username} connected with socket ID: ${socket.id}`);
+      const savedUsername = user.username;
+
+      socket.on("online-ping", async () => {
         await this.connectUser(savedUsername, socket.id);
 
         await handleChatSubscriptions(socket, savedUsername);
 
         console.log(
-          `User ${savedUsername} connected with socket ID ${socket.id}. Current online users:`,
+          `Online ping from ${savedUsername}. Current online users:`,
           await this.getOnlineUsernames()
         );
         socket.broadcast.emit("user-connection", savedUsername, true);

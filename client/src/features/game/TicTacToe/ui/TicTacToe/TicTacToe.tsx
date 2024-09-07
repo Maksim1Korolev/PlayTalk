@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from "react";
+import { memo, useState, useEffect, useContext } from "react";
 import cls from "./TicTacToe.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { Board } from "../Board";
@@ -8,6 +8,7 @@ import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
 import { UiButton, UiText, VStack } from "@/shared/ui";
 import resources from "@/shared/assets/locales/en/games/TicTacToeResources.json";
 import { TicTacToeGame } from "@/entities/Game/model";
+import { SocketContext } from "@/shared/lib/context/SocketContext";
 
 interface TicTacToeProps {
   className?: string;
@@ -22,6 +23,10 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
   const [statusMessage, setStatusMessage] = useState("");
 
   const [board, setBoard] = useState<("-" | "O" | "X")[]>(game.board);
+
+  const { sockets } = useContext(SocketContext);
+  const { gameSocket } = sockets;
+  console.log(sockets);
 
   const opponentUsername =
     currentUser.username === game.player1.username
@@ -91,6 +96,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
   }, [statusMessage]);
 
   const { handleMakeMove, handleSurrender } = useTicTacToeSocket({
+    gameSocket,
     onMoveMade,
   });
 

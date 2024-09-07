@@ -1,7 +1,7 @@
 import { User } from "@/entities/User";
 import { Message } from "@/features/Chat/ui/ChatMessage/ui/ChatMessage";
-import { communicationSocket } from "@/shared/api/sockets";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useContext } from "react";
+import { SocketsContext } from "@/shared/lib/context/SocketsContext";
 
 export interface ChatModalStateProps {
   user: User;
@@ -12,21 +12,31 @@ export interface ChatModalStateProps {
 }
 
 export const useChatModals = () => {
+  const { sockets } = useContext(SocketsContext);
+  const { communicationSocket } = sockets;
+
   const handleUserMessage = useCallback(
     (receiverUsername: string, message: Message) => {
-      communicationSocket.emit("send-message", {
-        receiverUsername,
-        message,
-      });
+      if (communicationSocket) {
+        communicationSocket.emit("send-message", {
+          receiverUsername,
+          message,
+        });
+      }
     },
-    []
+    [communicationSocket]
   );
 
-  const readAllUnreadMessages = useCallback((usernames: string[]) => {
-    communicationSocket.emit("on-read-messages", {
-      usernames,
-    });
-  }, []);
+  const readAllUnreadMessages = useCallback(
+    (usernames: string[]) => {
+      if (communicationSocket) {
+        communicationSocket.emit("on-read-messages", {
+          usernames,
+        });
+      }
+    },
+    [communicationSocket]
+  );
 
   return {
     handleUserMessage,
@@ -39,44 +49,56 @@ export const useReceiveMessage = (
   addMessagesToHistory: (messages: Message[]) => void,
   setIsTyping: (isTyping: boolean) => void
 ) => {
+  const { sockets } = useContext(SocketsContext);
+  const { communicationSocket } = sockets;
+
   useEffect(() => {
-    const updateChatHistory = (
-      messages: Message[],
-      receiverUsername: string
-    ) => {
-      if (currentReceiverUsername === receiverUsername) {
-        addMessagesToHistory(messages);
-      }
-    };
+    if (communicationSocket) {
+      const updateChatHistory = (
+        messages: Message[],
+        receiverUsername: string
+      ) => {
+        if (currentReceiverUsername === receiverUsername) {
+          addMessagesToHistory(messages);
+        }
+      };
 
-    const receiveMessageSubscribe = ({
-      username,
-      message,
-    }: {
-      username: string;
-      message: Message;
-    }) => {
-      if (username === currentReceiverUsername) {
-        addMessagesToHistory([message]);
-      }
-    };
+      const receiveMessageSubscribe = ({
+        username,
+        message,
+      }: {
+        username: string;
+        message: Message;
+      }) => {
+        if (username === currentReceiverUsername) {
+          addMessagesToHistory([message]);
+        }
+      };
 
-    communicationSocket.emit("on-chat-open", {
-      receiverUsername: currentReceiverUsername,
-    });
+      communicationSocket.emit("on-chat-open", {
+        receiverUsername: currentReceiverUsername,
+      });
 
-    communicationSocket.on("update-chat", updateChatHistory);
-    communicationSocket.on("receive-message", receiveMessageSubscribe);
-    communicationSocket.on("typing", senderUsername => {
-      if (senderUsername === currentReceiverUsername) setIsTyping(true);
-    });
-    communicationSocket.on("stop typing", senderUsername => {
-      if (senderUsername === currentReceiverUsername) setIsTyping(true);
-    });
+      communicationSocket.on("update-chat", updateChatHistory);
+      communicationSocket.on("receive-message", receiveMessageSubscribe);
+      communicationSocket.on("typing", senderUsername => {
+        if (senderUsername === currentReceiverUsername) setIsTyping(true);
+      });
+      communicationSocket.on("stop typing", senderUsername => {
+        if (senderUsername === currentReceiverUsername) setIsTyping(false);
+      });
 
-    return () => {
-      communicationSocket.off("update-chat", updateChatHistory);
-      communicationSocket.off("receive-message", receiveMessageSubscribe);
-    };
-  }, [addMessagesToHistory, currentReceiverUsername, setIsTyping]);
+      return () => {
+        communicationSocket.off("update-chat", updateChatHistory);
+        communicationSocket.off("receive-message", receiveMessageSubscribe);
+        communicationSocket.off("typing");
+        communicationSocket.off("stop typing");
+      };
+    }
+  }, [
+    addMessagesToHistory,
+    currentReceiverUsername,
+    communicationSocket,
+    setIsTyping,
+  ]);
 };

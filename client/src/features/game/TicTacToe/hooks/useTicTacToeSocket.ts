@@ -1,5 +1,5 @@
-import { gameSocket } from "@/shared/api/sockets";
-import { useCallback, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
+import { Socket } from "socket.io-client";
 
 const gameName = "tic-tac-toe";
 
@@ -8,8 +8,10 @@ const MOVE_MADE_EVENT = `${gameName}-move-made`;
 const SURRENDER_EVENT = `${gameName}-surrender`;
 
 export const useTicTacToeSocket = ({
+  gameSocket,
   onMoveMade,
 }: {
+  gameSocket: Socket | null;
   onMoveMade: ({
     interactingUsername,
     interactingIndex,
@@ -26,44 +28,53 @@ export const useTicTacToeSocket = ({
       opponentUsername: string;
       interactingIndex: number;
     }) => {
-      console.log(
-        `Making move in ${gameName} game against ${opponentUsername}`
-      );
-      gameSocket.emit(MAKE_MOVE_EVENT, { opponentUsername, interactingIndex });
+      if (gameSocket) {
+        console.log(
+          `Making move in ${gameName} game against ${opponentUsername}`
+        );
+        gameSocket.emit(MAKE_MOVE_EVENT, {
+          opponentUsername,
+          interactingIndex,
+        });
+      }
     },
-    []
+    [gameSocket]
   );
 
   const handleSurrender = useCallback(
     ({ opponentUsername }: { opponentUsername: string }) => {
-      console.log(
-        `Surrendering in ${gameName} game against ${opponentUsername}`
-      );
-      gameSocket.emit(SURRENDER_EVENT, { opponentUsername });
+      if (gameSocket) {
+        console.log(
+          `Surrendering in ${gameName} game against ${opponentUsername}`
+        );
+        gameSocket.emit(SURRENDER_EVENT, { opponentUsername });
+      }
     },
-    []
+    [gameSocket]
   );
 
   useEffect(() => {
-    const handleMoveMade = ({
-      interactingUsername,
-      interactingIndex,
-    }: {
-      interactingUsername: string;
-      interactingIndex: number;
-    }) => {
-      console.log(
-        `Move made in ${gameName} game by ${interactingUsername} at index ${interactingIndex}`
-      );
-      onMoveMade({ interactingUsername, interactingIndex });
-    };
+    if (gameSocket) {
+      const handleMoveMade = ({
+        interactingUsername,
+        interactingIndex,
+      }: {
+        interactingUsername: string;
+        interactingIndex: number;
+      }) => {
+        console.log(
+          `Move made in ${gameName} game by ${interactingUsername} at index ${interactingIndex}`
+        );
+        onMoveMade({ interactingUsername, interactingIndex });
+      };
 
-    gameSocket.on(MOVE_MADE_EVENT, handleMoveMade);
+      gameSocket.on(MOVE_MADE_EVENT, handleMoveMade);
 
-    return () => {
-      gameSocket.off(MOVE_MADE_EVENT, handleMoveMade);
-    };
-  }, [onMoveMade]);
+      return () => {
+        gameSocket.off(MOVE_MADE_EVENT, handleMoveMade);
+      };
+    }
+  }, [gameSocket, onMoveMade]);
 
   return {
     handleMakeMove,

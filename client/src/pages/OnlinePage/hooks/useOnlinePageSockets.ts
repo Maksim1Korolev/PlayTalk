@@ -1,18 +1,18 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { User } from "@/entities/User";
-import { UsersContext } from "@/shared/lib/context/UsersContext";
+import { useSockets } from "@/shared/hooks/useSockets";
 import { useGameModals } from "./useGameModals";
 import { useGameSessionSocket } from "./useGameSessionSocket";
-import { useOnlineSocket } from "./useOnlineSocket";
+import { useOnlineSockets } from "./useOnlineSockets";
+import { SocketContext } from "@/shared/lib/context/SocketContext";
 
-//Rename to useHomePageHooks?
 export const useOnlinePageSockets = () => {
   const [cookies] = useCookies();
   const { user: currentUser } = cookies["jwt-cookie"];
-  const { users, setUsers } = useContext(UsersContext);
 
+  const [users, setUsers] = useState<User[]>([]);
   const [inviteData, setInviteData] = useState<{
     senderUsername: string;
     gameName: string;
@@ -20,6 +20,13 @@ export const useOnlinePageSockets = () => {
   const [lastClickedPlayUser, setLastClickedPlayUser] = useState<User | null>(
     null
   );
+
+  const { communicationSocket, gameSocket } = useSockets();
+  const { setSockets } = useContext(SocketContext);
+
+  useEffect(() => {
+    setSockets({ communicationSocket, gameSocket });
+  }, [communicationSocket, gameSocket]);
 
   const updateUsersForList = useCallback(
     (users: User[]) => {
@@ -29,7 +36,7 @@ export const useOnlinePageSockets = () => {
       );
       setUsers(otherUsers || []);
     },
-    [currentUser, setUsers]
+    [currentUser]
   );
 
   const updateUserList = (username: string, updatedProps: Partial<User>) => {
@@ -38,11 +45,8 @@ export const useOnlinePageSockets = () => {
 
       return prevUsers.map(user => {
         if (user.username === username) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { _id, username, avatarFileName, ...allowedProps } =
             updatedProps;
-          console.log(allowedProps);
-
           return { ...user, ...allowedProps };
         }
 
@@ -51,7 +55,8 @@ export const useOnlinePageSockets = () => {
     });
   };
 
-  useOnlineSocket({
+  useOnlineSockets({
+    sockets: { communicationSocket, gameSocket },
     updateUserList,
   });
 
@@ -112,6 +117,7 @@ export const useOnlinePageSockets = () => {
     useGameModals();
 
   const { handleSendGameInvite, handleAcceptGame } = useGameSessionSocket({
+    gameSocket: gameSocket,
     onReceiveInvite,
     onGameStart,
     onGameEnd,
@@ -122,9 +128,9 @@ export const useOnlinePageSockets = () => {
     gameName: string;
   }) => {
     handleAcceptGame(gameRequestProps);
-
     setInviteData(null);
   };
+
   const handleGameRequestNoButton = () => {
     setInviteData(null);
   };

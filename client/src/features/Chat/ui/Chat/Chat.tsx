@@ -1,17 +1,24 @@
 import { User } from "@/entities/User";
 import { communicationApiService } from "@/pages/OnlinePage/api/communicationApiService";
-import { communicationSocket } from "@/shared/api/sockets";
 import { cx } from "@/shared/lib/cx";
 import { Card, HStack, UiButton, UiText, VStack } from "@/shared/ui";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
 import SendIcon from "@mui/icons-material/Send";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+} from "react";
 import { useCookies } from "react-cookie";
 import { ChatInput } from "../ChatInput";
 import { ChatMessage } from "../ChatMessage";
 import { Message } from "../ChatMessage/ui/ChatMessage";
 import cls from "./Chat.module.scss";
+import { SocketsContext } from "@/shared/lib/context/SocketsContext";
 
 export const Chat = memo(
   ({
@@ -21,7 +28,6 @@ export const Chat = memo(
     messageHistory,
     receiverUser,
     handleSendMessage,
-
     onClose,
     onCollapse,
   }: {
@@ -34,13 +40,15 @@ export const Chat = memo(
     onClose: () => void;
     onCollapse: () => void;
   }) => {
+    const { sockets } = useContext(SocketsContext);
+    const { communicationSocket } = sockets;
+
     const [inputMessage, setInputMessage] = useState<string>("");
 
     const [cookies, setCookie] = useCookies(["jwt-cookie"]);
+    const { user: currentUser, token } = cookies["jwt-cookie"];
 
     const [typing, setTyping] = useState(false);
-
-    const { user: currentUser, token } = cookies["jwt-cookie"];
 
     const dummy = useRef<HTMLDivElement>(null);
 
@@ -114,26 +122,32 @@ export const Chat = memo(
       receiverUser.avatarFileName,
     ]);
 
-    const handleTyping = useCallback((text: string) => {
-      setInputMessage(text);
+    const handleTyping = useCallback(
+      (text: string) => {
+        setInputMessage(text);
 
-      if (!typing) {
-        setTyping(true);
-        //TODO: Transfer it to other file, pass in braces {}
-        communicationSocket.emit("typing", receiverUser.username);
-      }
-
-      const lastTypingTime = new Date().getTime();
-      const timerLength = 3000;
-      setTimeout(() => {
-        const timeNow = new Date().getTime();
-        const timeDiff = timeNow - lastTypingTime;
-        if (timeDiff >= timerLength && typing) {
-          communicationSocket.emit("stop typing", receiverUser.username);
-          setTyping(false);
+        if (!typing) {
+          setTyping(true);
+          if (communicationSocket) {
+            communicationSocket.emit("typing", receiverUser.username);
+          }
         }
-      }, timerLength);
-    }, []);
+
+        const lastTypingTime = new Date().getTime();
+        const timerLength = 3000;
+        setTimeout(() => {
+          const timeNow = new Date().getTime();
+          const timeDiff = timeNow - lastTypingTime;
+          if (timeDiff >= timerLength && typing) {
+            if (communicationSocket) {
+              communicationSocket.emit("stop typing", receiverUser.username);
+            }
+            setTyping(false);
+          }
+        }, timerLength);
+      },
+      [typing, communicationSocket, receiverUser.username]
+    );
 
     return (
       <VStack className={cx(cls.Chat, {}, [className])} justify="start" max>

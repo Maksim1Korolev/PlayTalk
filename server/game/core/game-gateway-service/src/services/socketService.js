@@ -22,7 +22,7 @@ class SocketService {
         await handleTicTacToeSubscriptions(socket, savedUsername);
 
         console.log(
-          `User ${savedUsername} connected with socket ID ${socket.id}. Current online users:`,
+          `Online ping from ${savedUsername}. Current online users:`,
           await this.getOnlineUsernames()
         );
         socket.broadcast.emit(
