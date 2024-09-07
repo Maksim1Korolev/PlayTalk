@@ -1,5 +1,6 @@
 import express from "express";
 
+import { protect } from "../middleware/authMiddleware.js";
 import {
   getAllUnreadMessageCounts,
   readAllUnreadMessages,
@@ -8,7 +9,11 @@ import {
 const router = express.Router();
 
 //TODO:RealTime unread problems
-router.post("/markAsRead/:requestingUsername", readAllUnreadMessages);
-router.get("/getAll/:requestingUsername", getAllUnreadMessageCounts);
+router
+  .route("/markAsRead/:requestingUsername")
+  .post(protect, readAllUnreadMessages);
+router
+  .route("/getAll/:requestingUsername")
+  .get(protect, getAllUnreadMessageCounts);
 
 export default router;

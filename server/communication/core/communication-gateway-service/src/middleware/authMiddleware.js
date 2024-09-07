@@ -49,15 +49,20 @@ export const protect = asyncHandler(async (req, res, next) => {
 
     if (userFound) {
       req.user = userFound;
+
+      const { requestingUsername } = req.params;
+
+      if (requestingUsername && requestingUsername !== userFound.username) {
+        return res
+          .status(403)
+          .json({ message: "Unauthorized access to this user's data" });
+      }
+
       next();
     } else {
-      res.status(401);
-      throw new Error("Not authorized");
+      res.status(401).json({ message: "User not found" });
     }
-  }
-
-  if (!token) {
-    res.status(401);
-    throw new Error("Not authorized, You don't have token");
+  } else {
+    res.status(401).json({ message: "Not authorized, no token provided" });
   }
 });
