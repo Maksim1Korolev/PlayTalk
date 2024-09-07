@@ -29,6 +29,7 @@ services:
     environment:
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
     develop:
       watch:
         - path: ./app/package.json
@@ -63,6 +64,7 @@ services:
     environment:
       - REDIS_URL=${REDIS_URL}
       - CHAT_REPOSITORY_SERVICE_URL=${CHAT_REPOSITORY_SERVICE_URL}
+      - JWT_SECRET=${JWT_SECRET}
     develop:
       watch:
         - path: ./app/package.json
@@ -100,6 +102,7 @@ services:
       - REDIS_URL=${REDIS_URL}
       - TIC_TAC_TOE_SERVICE_URL=${TIC_TAC_TOE_SERVICE_URL}
       - TIC_TAC_TOE_REPOSITORY_SERVICE_URL=${TIC_TAC_TOE_REPOSITORY_SERVICE_URL}
+      - JWT_SECRET=${JWT_SECRET}
     develop:
       watch:
         - path: ./app/package.json
