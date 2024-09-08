@@ -27,12 +27,16 @@ export const socketAuthMiddleware = io => {
         return next(new Error("Invalid token"));
       }
 
-      const userFound = await UserService.getUserById(decoded.userId);
-      if (userFound) {
-        req.user = userFound;
-        next();
-      } else {
-        return next(new Error("User not found"));
+      try {
+        const userFound = await UserService.getUserById(decoded.userId);
+        if (userFound) {
+          req.user = userFound;
+          next();
+        } else {
+          return next(new Error("User not found"));
+        }
+      } catch (error) {
+        return next(new Error("Error fetching user"));
       }
     });
   });
@@ -44,39 +48,43 @@ export const protect = asyncHandler(async (req, res, next) => {
   if (req.headers.authorization?.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1];
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userFound = await UserService.getUserById(decoded.userId);
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userFound = await UserService.getUserById(decoded.userId);
 
-    if (userFound) {
-      req.user = userFound;
+      if (userFound) {
+        req.user = userFound;
 
-      const { player1Username, player2Username } = req.query;
+        const { player1Username, player2Username } = req.query;
 
-      if (player1Username || player2Username) {
-        if (
-          userFound.username !== player1Username &&
-          userFound.username !== player2Username
+        if (player1Username || player2Username) {
+          if (
+            userFound.username !== player1Username &&
+            userFound.username !== player2Username
+          ) {
+            return res
+              .status(403)
+              .json({ message: "Unauthorized access to this game data" });
+          }
+        } else if (
+          req.params.username &&
+          req.params.username !== userFound.username
         ) {
           return res
             .status(403)
-            .json({ message: "Unauthorized access to this game data" });
+            .json({ message: "Unauthorized access to this user's data" });
         }
-      } else if (
-        req.params.username &&
-        req.params.username !== userFound.username
-      ) {
-        return res
-          .status(403)
-          .json({ message: "Unauthorized access to this user's data" });
-      }
 
-      next();
-    } else {
-      res.status(401);
-      throw new Error("Not authorized");
+        next();
+      } else {
+        res.status(401).json({ message: "User not found" });
+      }
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Error verifying token", error: error.message });
     }
   } else {
-    res.status(401);
-    throw new Error("Not authorized, You don't have token");
+    res.status(401).json({ message: "Not authorized, You don't have token" });
   }
 });

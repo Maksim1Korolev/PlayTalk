@@ -1,5 +1,5 @@
 To add:
-Multiple sources for the main list of users
+Multiple sources for the main list of users and online
 Update resource files in assets folder
 Sort features folder
 Move ChatModal component into ChatModals folder?
@@ -13,6 +13,7 @@ Getting error in communication service when requesting unread messages with coun
 Empty data doesn't count as redis cache
 Check online and api client logic, rename OnlinePage
 Memo template
+Catch authMiddleware errors
 
 To add (In the end):
 Auth on all servers, updated auth for some data

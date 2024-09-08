@@ -10,32 +10,17 @@ import {
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
-import userProtectedRoutes from "./routes/userProtectedRoutes.js";
-import userInternalRoutes from "./routes/userInternalRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
-const corsOptionsForProtectedRoutes = {
-  origin: "*",
-  methods: ["GET", "POST", "PUT"],
-};
-
-const corsOptionsForInternalRoutes = {
-  origin: "*",
-  methods: ["GET", "POST"],
-};
-
 async function main() {
+  app.use(cors());
   app.use(express.json());
 
-  app.use(
-    "/api/users",
-    cors(corsOptionsForProtectedRoutes),
-    userProtectedRoutes
-  );
-  app.use("/api/users", cors(corsOptionsForInternalRoutes), userInternalRoutes);
+  app.use("/api/users", userRouter);
 
   app.use(errorHandler);
   app.use(notFound);

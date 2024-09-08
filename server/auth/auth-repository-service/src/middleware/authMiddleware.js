@@ -9,20 +9,26 @@ export const protect = asyncHandler(async (req, res, next) => {
   if (req.headers.authorization?.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1];
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userFound = await UserService.getUserById(decoded.userId);
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userFound = await UserService.getUserById(decoded.userId);
 
-    if (userFound) {
-      req.user = userFound;
-      next();
-    } else {
-      res.status(401);
-      throw new Error("Not authorized");
+      if (userFound) {
+        req.user = userFound;
+        next();
+      } else {
+        res.status(401).json({ message: "User not found" });
+      }
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Error verifying token", error: error.message });
     }
+  } else {
+    res.status(401).json({ message: "Not authorized, no token provided" });
   }
 
   if (!token) {
-    res.status(401);
-    throw new Error("Not authorized, You don't have token");
+    res.status(401).json({ message: "Not authorized, no token provided" });
   }
 });

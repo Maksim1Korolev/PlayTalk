@@ -27,12 +27,16 @@ export const socketAuthMiddleware = io => {
         return next(new Error("Invalid token"));
       }
 
-      const userFound = await UserService.getUserById(decoded.userId);
-      if (userFound) {
-        req.user = userFound;
-        next();
-      } else {
-        return next(new Error("User not found"));
+      try {
+        const userFound = await UserService.getUserById(decoded.userId);
+        if (userFound) {
+          req.user = userFound;
+          next();
+        } else {
+          return next(new Error("User not found"));
+        }
+      } catch (error) {
+        return next(new Error("Error fetching user"));
       }
     });
   });
@@ -44,23 +48,27 @@ export const protect = asyncHandler(async (req, res, next) => {
   if (req.headers.authorization?.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1];
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userFound = await UserService.getUserById(decoded.userId);
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userFound = await UserService.getUserById(decoded.userId);
 
-    if (userFound) {
-      req.user = userFound;
+      if (userFound) {
+        req.user = userFound;
 
-      const { requestingUsername } = req.params;
+        const { requestingUsername } = req.params;
 
-      if (requestingUsername && requestingUsername !== userFound.username) {
-        return res
-          .status(403)
-          .json({ message: "Unauthorized access to this user's data" });
+        if (requestingUsername && requestingUsername !== userFound.username) {
+          return res
+            .status(403)
+            .json({ message: "Unauthorized access to this user's data" });
+        }
+
+        next();
+      } else {
+        res.status(401).json({ message: "User not found" });
       }
-
-      next();
-    } else {
-      res.status(401).json({ message: "User not found" });
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error: error.message });
     }
   } else {
     res.status(401).json({ message: "Not authorized, no token provided" });
