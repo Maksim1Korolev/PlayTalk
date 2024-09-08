@@ -3,7 +3,7 @@ import UserService from "../services/userService.js";
 
 // @desc   Get users
 // @route  GET /api/users
-// @access Public
+// @access Protected
 export const getUsers = asyncHandler(async (req, res) => {
   try {
     const users = await UserService.getUsers();
@@ -15,7 +15,7 @@ export const getUsers = asyncHandler(async (req, res) => {
 
 // @desc   Add a user
 // @route  POST /api/users
-// @access Public
+// @access Internal
 export const addUser = asyncHandler(async (req, res) => {
   const { user } = req.body;
   try {
@@ -28,7 +28,7 @@ export const addUser = asyncHandler(async (req, res) => {
 
 // @desc   Get user by username
 // @route  GET /api/users/username/:username
-// @access Public
+// @access Protected
 export const getUserByUsername = asyncHandler(async (req, res) => {
   const { username } = req.params;
   try {
@@ -41,7 +41,7 @@ export const getUserByUsername = asyncHandler(async (req, res) => {
 
 // @desc   Get user by ID
 // @route  GET /api/users/id/:id
-// @access Public
+// @access Internal
 export const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
@@ -54,7 +54,7 @@ export const getUserById = asyncHandler(async (req, res) => {
 
 // @desc   Update a user
 // @route  PUT /api/users/:id
-// @access Public
+// @access Internal
 export const updateUser = asyncHandler(async (req, res) => {
   const user = req.body;
   try {
