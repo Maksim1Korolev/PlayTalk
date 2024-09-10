@@ -11,8 +11,8 @@ import {
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import { serviceWhitelistMiddleware } from "./middleware/serviceWhitelistMiddleware.js";
 
-import userPublicRoutes from "./routes/userPublicRoutes.js";
-import userInternalRoutes from "./routes/userInternalRoutes.js";
+import userPublicRouter from "./routes/userPublicRoutes.js";
+import userInternalRouter from "./routes/userInternalRoutes.js";
 
 dotenv.config();
 
@@ -22,12 +22,12 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
-  app.use("/api/users", userPublicRoutes);
+  app.use("/api/users", userPublicRouter);
 
   app.use(
     "/api/users/internal",
     serviceWhitelistMiddleware,
-    userInternalRoutes
+    userInternalRouter
   );
 
   app.use(errorHandler);

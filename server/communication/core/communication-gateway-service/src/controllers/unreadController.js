@@ -2,7 +2,7 @@ import MessageHistoryService from "../services/chat/messageHistoryService.js";
 
 // @desc   Get counts of unread messages from all users
 // @route  GET /api/unread/getAll
-// @access Public
+// @access Protected
 export const getAllUnreadMessageCounts = async (req, res) => {
   try {
     const { requestingUsername } = req.params;
@@ -12,7 +12,9 @@ export const getAllUnreadMessageCounts = async (req, res) => {
     return res.status(200).json(data);
   } catch (err) {
     console.log("Error retrieving UnreadMessageCounts:", err.message);
-    res.status(500).send(err);
+    res.status(500).json({
+      message: `Internal server error retrieving UnreadMessageCounts.`,
+    });
   }
 };
 
@@ -20,7 +22,7 @@ export const getAllUnreadMessageCounts = async (req, res) => {
 
 // @desc   Mark all messages as read
 // @route  POST /api/unread/markAsRead
-// @access Public
+// @access Protected
 export const readAllUnreadMessages = async (req, res) => {
   try {
     const { requestingUsername } = req.params;
@@ -32,6 +34,8 @@ export const readAllUnreadMessages = async (req, res) => {
     return res.status(200).json(data);
   } catch (err) {
     console.log("Error posting previously unread messages: ", err.message);
-    res.status(500).send(err);
+    res.status(500).json({
+      message: `Internal server error posting previously unread messages.`,
+    });
   }
 };

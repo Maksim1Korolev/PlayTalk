@@ -4,7 +4,7 @@ import TicTacToeGameService from "../services/ticTacToe/gameService.js";
 
 // @desc   Get data of active games
 // @route  GET /api/game/games/:username
-// @access Public
+// @access Protected
 export const getActiveGames = asyncHandler(async (req, res) => {
   const { username } = req.params;
 
@@ -13,13 +13,15 @@ export const getActiveGames = asyncHandler(async (req, res) => {
     return res.status(200).json({ activeGames });
   } catch (error) {
     console.error("Error getting active games:", error);
-    return res.status(500).json({ message: `Internal server error: ${error}` });
+    return res
+      .status(500)
+      .json({ message: `Internal server error getting active games.` });
   }
 });
 
 // @desc   Get a specific game
 // @route  GET /api/:gameName?player1Username=:player1&player2Username=:player2
-// @access Public
+// @access Protected
 export const getGame = async (req, res) => {
   try {
     const { gameName } = req.params;
@@ -63,8 +65,6 @@ export const getGame = async (req, res) => {
     } else {
       console.error("Error retrieving game data:", err.message);
     }
-    res
-      .status(500)
-      .json({ message: "Internal server error", error: err.message });
+    res.status(500).json({ message: "Internal server error getting game." });
   }
 };
