@@ -16,7 +16,7 @@ class ActiveGamesService {
       JSON.stringify(currentGames)
     );
 
-    // Also update the opponent's active games
+    // Also updating the opponent's active games
     const opponentGames = await this.getActiveGames(opponentUsername);
 
     if (opponentGames[username]) {
