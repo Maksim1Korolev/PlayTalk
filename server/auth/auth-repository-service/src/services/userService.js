@@ -4,27 +4,21 @@ import mongoose from "mongoose";
 
 class UserService {
   static async getUsers() {
-    const cachedUsers = await redisClient.get(
-      process.env.REDIS_USERS_CACHE_KEY
-    );
+    const cachedUsers = await redisClient.get(process.env.REDIS_USERS_KEY);
     if (cachedUsers) {
       return JSON.parse(cachedUsers);
     }
 
     const users = await User.find();
-    await redisClient.set(
-      process.env.REDIS_USERS_CACHE_KEY,
-      JSON.stringify(users),
-      {
-        EX: 3600,
-      }
-    );
+    await redisClient.set(process.env.REDIS_USERS_KEY, JSON.stringify(users), {
+      EX: 3600,
+    });
     return users;
   }
 
   static async addUser(user) {
     const newUser = await User.create(user);
-    await redisClient.del(process.env.REDIS_USERS_CACHE_KEY);
+    await redisClient.del(process.env.REDIS_USERS_KEY);
     return newUser;
   }
 
@@ -33,7 +27,7 @@ class UserService {
       throw new Error("Invalid user ID");
     }
     const deletedUser = await User.findByIdAndDelete(id);
-    await redisClient.del(process.env.REDIS_USERS_CACHE_KEY);
+    await redisClient.del(process.env.REDIS_USERS_KEY);
     return deletedUser;
   }
 
@@ -80,7 +74,7 @@ class UserService {
     const updatedUser = await User.findByIdAndUpdate(user._id, user, {
       new: true,
     });
-    await redisClient.del(process.env.REDIS_USERS_CACHE_KEY);
+    await redisClient.del(process.env.REDIS_USERS_KEY);
     if (updatedUser) {
       await redisClient.del(`user:id:${updatedUser._id}`);
       await redisClient.del(`user:username:${updatedUser.username}`);
