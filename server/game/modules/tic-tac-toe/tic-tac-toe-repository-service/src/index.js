@@ -9,6 +9,7 @@ import {
 } from "./utils/mongooseClient.js";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+import { serviceWhitelistMiddleware } from "./middleware/serviceWhitelistMiddleware.js";
 
 import playerRouter from "./routes/playerRoutes.js";
 
@@ -20,7 +21,7 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
-  app.use("/api/players", playerRouter);
+  app.use("/api/players", serviceWhitelistMiddleware, playerRouter);
 
   app.use(errorHandler);
   app.use(notFound);
