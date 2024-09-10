@@ -8,11 +8,17 @@ namespace TicTacToe.Services
     {
         private readonly HttpClient _httpClient;
         private readonly string _repositoryServiceUrl;
+        private readonly string _internalServiceHeaderKey;
+        private readonly string _serviceName;
 
         public PlayerService(IConfiguration configuration)
         {
             _httpClient = new HttpClient();
             _repositoryServiceUrl = configuration["TIC_TAC_TOE_REPOSITORY_SERVICE_URL"] ?? "http://tic_tac_toe_repository_service:8082/api";
+            _internalServiceHeaderKey = Environment.GetEnvironmentVariable("INTERNAL_SERVICE_HEADER")
+                ?? configuration["ServiceSettings:InternalServiceHeader"]
+                ?? "internal-service";
+            _serviceName = "tic_tac_toe_service";
         }
 
         public Player[] GetPlayers(string player1Username, string player2Username)
@@ -46,7 +52,15 @@ namespace TicTacToe.Services
                 "application/json"
             );
 
-            var response = await _httpClient.PutAsync($"{_repositoryServiceUrl}/players", content);
+            var request = new HttpRequestMessage(HttpMethod.Put, $"{_repositoryServiceUrl}/players")
+            {
+                Content = content
+            };
+
+            request.Headers.Add(_internalServiceHeaderKey, _serviceName);
+
+            var response = await _httpClient.SendAsync(request);
+
             if (!response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();

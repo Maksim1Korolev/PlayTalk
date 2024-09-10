@@ -36,13 +36,13 @@ class PlayerService {
       }
     }
 
-    // Fetch missing players from the database
+    // Fetching missing players from the database
     if (missingUsernames.length > 0) {
       const fetchedPlayers = await Player.find({
         username: { $in: missingUsernames },
       });
 
-      // Add fetched players to the result and update the cache
+      // Adding fetched players to the result and update the cache
       for (const player of fetchedPlayers) {
         players.push(player);
         await redisClient.hSet(
@@ -52,7 +52,7 @@ class PlayerService {
         );
       }
 
-      // For any usernames still missing, create new player entries
+      // For any usernames still missing, creating new player entries
       const fetchedPlayerUsernames = fetchedPlayers.map(p => p.username);
       const playersToCreate = missingUsernames.filter(
         username => !fetchedPlayerUsernames.includes(username)

@@ -4,8 +4,6 @@ export const serviceWhitelistMiddleware = (req, res, next) => {
   const serviceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
   const serviceHeader = req.headers[serviceHeaderKey];
 
-  console.log("Request from:", serviceHeader || req.ip);
-
   if (WHITELISTED_SERVICES.includes(serviceHeader)) {
     next();
   } else {
