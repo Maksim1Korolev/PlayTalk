@@ -8,16 +8,16 @@
 
 // variants
 .default {
-  background: var(--card-bg);
+  background: var(--card-bg-color);
 }
 
 .light {
-  background: var(--light-bg-redesigned);
+  background: var(--light-bg);
 }
 
 .outlined {
   border: 1px solid var(--accent-color);
-  background: var(--card-bg);
+  background: var(--card-bg-color);
 }
 
 // gap

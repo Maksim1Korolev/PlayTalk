@@ -30,6 +30,7 @@ services:
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
+      - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
         - path: ./app/package.json
@@ -47,6 +48,7 @@ services:
     environment:
       - AUTH_REPOSITORY_SERVICE_URL=${AUTH_REPOSITORY_SERVICE_URL}
       - JWT_SECRET=${JWT_SECRET}
+      - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
         - path: ./app/package.json
@@ -67,6 +69,7 @@ services:
       - CHAT_REPOSITORY_SERVICE_URL=${CHAT_REPOSITORY_SERVICE_URL}
       - AUTH_REPOSITORY_SERVICE_URL=${AUTH_REPOSITORY_SERVICE_URL}
       - JWT_SECRET=${JWT_SECRET}
+      - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
         - path: ./app/package.json
@@ -85,6 +88,7 @@ services:
     environment:
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${DATABASE_URL}
+      - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
         - path: ./app/package.json
@@ -106,6 +110,7 @@ services:
       - TIC_TAC_TOE_REPOSITORY_SERVICE_URL=${TIC_TAC_TOE_REPOSITORY_SERVICE_URL}
       - AUTH_REPOSITORY_SERVICE_URL=${AUTH_REPOSITORY_SERVICE_URL}
       - JWT_SECRET=${JWT_SECRET}
+      - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
         - path: ./app/package.json
@@ -124,6 +129,7 @@ services:
     environment:
       - REDIS_URL=${REDIS_URL}
       - TIC_TAC_TOE_REPOSITORY_SERVICE_URL=${TIC_TAC_TOE_REPOSITORY_SERVICE_URL}
+      - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
         - path: ./app/package.json
@@ -141,6 +147,7 @@ services:
     environment:
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${DATABASE_URL}
+      - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
         - path: ./app/package.json

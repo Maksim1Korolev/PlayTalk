@@ -9,8 +9,10 @@ import {
 } from "./utils/mongooseClient.js";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+import { serviceWhitelistMiddleware } from "./middleware/serviceWhitelistMiddleware.js";
 
-import userRouter from "./routes/userRoutes.js";
+import userPublicRoutes from "./routes/userPublicRoutes.js";
+import userInternalRoutes from "./routes/userInternalRoutes.js";
 
 dotenv.config();
 
@@ -20,7 +22,13 @@ async function main() {
   app.use(cors());
   app.use(express.json());
 
-  app.use("/api/users", userRouter);
+  app.use("/api/users", userPublicRoutes);
+
+  app.use(
+    "/api/users/internal",
+    serviceWhitelistMiddleware,
+    userInternalRoutes
+  );
 
   app.use(errorHandler);
   app.use(notFound);

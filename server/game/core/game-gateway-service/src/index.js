@@ -41,6 +41,7 @@ async function main() {
   await clearSocketCache();
 
   await SocketService.setupSocketConnection();
+
   server.listen(PORT, () => {
     console.log(
       `game-gateway-service is running in ${process.env.NODE_ENV} mode on port ${PORT}`

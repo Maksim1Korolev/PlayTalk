@@ -24,7 +24,7 @@ export const authUser = asyncHandler(async (req, res) => {
       throw new Error("Username or password is incorrect");
     }
 
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, user.username);
 
     res.json({ user, token });
   } catch (error) {
@@ -52,7 +52,7 @@ export const registerUser = asyncHandler(async (req, res) => {
       password: hashedPassword,
     });
 
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, user.username);
     res.json({ user, token });
   } catch (error) {
     res.status(400).json({ message: error.message });

@@ -2,10 +2,12 @@ import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 
 import UserService from "../services/userService.js";
+import SocketService from "../services/socketService.js";
 
 export const socketAuthMiddleware = io => {
   io.engine.use((req, res, next) => {
     const isHandshake = req._query.sid === undefined;
+
     if (!isHandshake) {
       return next();
     }
@@ -50,27 +52,37 @@ export const protect = asyncHandler(async (req, res, next) => {
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const userFound = await UserService.getUserById(decoded.userId);
+
+      const onlineUsernames = await SocketService.getOnlineUsernames();
+      const isUserOnline = onlineUsernames.includes(decoded.username);
+      let userFound = {
+        id: decoded.userId,
+        username: decoded.username,
+      };
+
+      if (!isUserOnline) {
+        console.log(
+          `User ${decoded.username} is not online, checking that user exists in the system`
+        );
+        userFound = await UserService.getUserById(decoded.userId);
+      }
 
       if (userFound) {
         req.user = userFound;
-
-        const { requestingUsername } = req.params;
-
-        if (requestingUsername && requestingUsername !== userFound.username) {
-          return res
-            .status(403)
-            .json({ message: "Unauthorized access to this user's data" });
-        }
-
         next();
       } else {
         res.status(401).json({ message: "User not found" });
       }
     } catch (error) {
-      res.status(500).json({ message: "Server error", error: error.message });
+      res
+        .status(500)
+        .json({ message: "Error verifying token", error: error.message });
     }
   } else {
+    res.status(401).json({ message: "Not authorized, no token provided" });
+  }
+
+  if (!token) {
     res.status(401).json({ message: "Not authorized, no token provided" });
   }
 });

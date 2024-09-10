@@ -34,6 +34,7 @@ class UserService {
   static async getUserByUsername(username) {
     const cacheKey = `user:username:${username}`;
     const cachedUser = await redisClient.get(cacheKey);
+
     if (cachedUser) {
       return JSON.parse(cachedUser);
     }

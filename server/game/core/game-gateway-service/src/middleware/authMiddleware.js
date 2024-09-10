@@ -2,10 +2,12 @@ import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 
 import UserService from "../services/userService.js";
+import SocketService from "../services/socketService.js";
 
 export const socketAuthMiddleware = io => {
   io.engine.use((req, res, next) => {
     const isHandshake = req._query.sid === undefined;
+
     if (!isHandshake) {
       return next();
     }
@@ -50,31 +52,23 @@ export const protect = asyncHandler(async (req, res, next) => {
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const userFound = await UserService.getUserById(decoded.userId);
+
+      const onlineUsernames = await SocketService.getOnlineUsernames();
+      const isUserOnline = onlineUsernames.includes(decoded.username);
+      let userFound = {
+        id: decoded.userId,
+        username: decoded.username,
+      };
+
+      if (!isUserOnline) {
+        console.log(
+          `User ${decoded.username} is not online, checking that user exists in the system`
+        );
+        userFound = await UserService.getUserById(decoded.userId);
+      }
 
       if (userFound) {
         req.user = userFound;
-
-        const { player1Username, player2Username } = req.query;
-
-        if (player1Username || player2Username) {
-          if (
-            userFound.username !== player1Username &&
-            userFound.username !== player2Username
-          ) {
-            return res
-              .status(403)
-              .json({ message: "Unauthorized access to this game data" });
-          }
-        } else if (
-          req.params.username &&
-          req.params.username !== userFound.username
-        ) {
-          return res
-            .status(403)
-            .json({ message: "Unauthorized access to this user's data" });
-        }
-
         next();
       } else {
         res.status(401).json({ message: "User not found" });
@@ -85,6 +79,10 @@ export const protect = asyncHandler(async (req, res, next) => {
         .json({ message: "Error verifying token", error: error.message });
     }
   } else {
-    res.status(401).json({ message: "Not authorized, You don't have token" });
+    res.status(401).json({ message: "Not authorized, no token provided" });
+  }
+
+  if (!token) {
+    res.status(401).json({ message: "Not authorized, no token provided" });
   }
 });
