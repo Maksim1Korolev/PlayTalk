@@ -21,7 +21,6 @@ namespace TicTacToe
 
             builder.Services.AddSingleton<IGameService, GameService>();
             builder.Services.AddSingleton<IPlayerService, PlayerService>();
-
             var app = builder.Build();
 
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
