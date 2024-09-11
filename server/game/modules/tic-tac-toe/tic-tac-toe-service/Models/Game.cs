@@ -10,11 +10,11 @@ namespace TicTacToe.Models
         [JsonProperty]
         public char[] Board { get; private set; } = new char[9];
         [JsonProperty]
-        public Player Player1 { get; private set; }
+        public Player Player1 { get; private set; } = null!;
         [JsonProperty]
-        public Player Player2 { get; private set; }
+        public Player Player2 { get; private set; } = null!;
         [JsonProperty]
-        public Player CurrentPlayer { get; private set; }
+        public Player CurrentPlayer { get; private set; } = null!;
         [JsonProperty]
         public bool HasEnded { get; private set; } = false;
 
@@ -76,7 +76,7 @@ namespace TicTacToe.Models
             }
 
 
-            //Have to check according to usernames, because redis get returns different entity of CurrentPlayer
+            //Have to check according to usernames, because redis get returns different instance of CurrentPlayer
             if (CurrentPlayer.Username == Player1.Username)
             {
                 Player1.Wins++;
