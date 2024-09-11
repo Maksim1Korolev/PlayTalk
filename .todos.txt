@@ -5,6 +5,7 @@ Update game request logic
 Upgrade UserList scrollbar
 Current user (data from cookie) to context
 "Api" to general .env variable keys that pass only api
+Winner and players logic to client
 
 To fix:
 ChatModal opens lower than the screen and scrollbar appears
