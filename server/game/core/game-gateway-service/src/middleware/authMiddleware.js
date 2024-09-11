@@ -23,7 +23,7 @@ export const socketAuthMiddleware = io => {
     }
 
     if (!header.startsWith("Bearer ")) {
-      logger.warn("Invalid token format provided");
+      logger.warn("Invalid token format in socket handshake");
       return next(new Error("Invalid token format"));
     }
 
@@ -31,22 +31,28 @@ export const socketAuthMiddleware = io => {
 
     jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
       if (err) {
-        logger.error(`Invalid token: ${err.message}`);
+        logger.error("Invalid token during socket handshake");
         return next(new Error("Invalid token"));
       }
 
       try {
         const userFound = await UserService.getUserById(decoded.userId);
         if (userFound) {
-          logger.info(`User ${decoded.username} authenticated via socket`);
           req.user = userFound;
+          logger.info(
+            `Socket handshake successful for user: ${userFound.username}`
+          );
           next();
         } else {
-          logger.warn(`User not found for ID: ${decoded.userId}`);
+          logger.warn(
+            `User not found during socket handshake: userId ${decoded.userId}`
+          );
           return next(new Error("User not found"));
         }
       } catch (error) {
-        logger.error(`Error fetching user: ${error.message}`);
+        logger.error(
+          `Error fetching user during socket handshake: ${error.message}`
+        );
         return next(new Error("Error fetching user"));
       }
     });
@@ -54,50 +60,68 @@ export const socketAuthMiddleware = io => {
 };
 
 export const protect = asyncHandler(async (req, res, next) => {
-  let token;
+  const authorizationHeader = req.headers.authorization;
 
-  if (req.headers.authorization?.startsWith("Bearer")) {
-    token = req.headers.authorization.split(" ")[1];
-
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      logger.info(`Token verified for user: ${decoded.username}`);
-
-      const onlineUsernames = await SocketService.getOnlineUsernames();
-      const isUserOnline = onlineUsernames.includes(decoded.username);
-      let userFound = {
-        id: decoded.userId,
-        username: decoded.username,
-      };
-
-      if (!isUserOnline) {
-        logger.info(
-          `User ${decoded.username} is not online, fetching from UserService`
-        );
-        userFound = await UserService.getUserById(decoded.userId);
-      }
-
-      if (userFound) {
-        req.user = userFound;
-        logger.info(`User ${decoded.username} authenticated`);
-        next();
-      } else {
-        logger.warn(`User not found: ${decoded.username}`);
-        res.status(401).json({ message: "User not found" });
-      }
-    } catch (error) {
-      logger.error(`Error verifying token for user: ${error.message}`);
-      res
-        .status(500)
-        .json({ message: "Error verifying token", error: error.message });
-    }
-  } else {
-    logger.warn("No token provided in request");
-    res.status(401).json({ message: "Not authorized, no token provided" });
+  if (!authorizationHeader || !authorizationHeader.startsWith("Bearer")) {
+    logger.warn("Authorization header missing or incorrect format");
+    return res
+      .status(401)
+      .json({ message: "Not authorized, no token provided" });
   }
 
-  if (!token) {
-    logger.warn("Token missing from request headers");
-    res.status(401).json({ message: "Not authorized, no token provided" });
+  const token = authorizationHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    logger.info(`Token verified for user: ${decoded.username}`);
+
+    const onlineUsernames = await SocketService.getOnlineUsernames();
+    const isUserOnline = onlineUsernames.includes(decoded.username);
+
+    let userFound = {
+      id: decoded.userId,
+      username: decoded.username,
+    };
+
+    if (!isUserOnline) {
+      userFound = await UserService.getUserById(decoded.userId);
+      logger.info(`User fetched from UserService: ${userFound.username}`);
+    }
+
+    if (!userFound) {
+      logger.warn(`User not found: userId ${decoded.userId}`);
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    if (req.params.username && req.params.username !== userFound.username) {
+      logger.warn(`Unauthorized access attempt by user: ${userFound.username}`);
+      return res
+        .status(403)
+        .json({ message: "Unauthorized access to this user's data" });
+    }
+
+    const { player1Username, player2Username } = req.query;
+    if (player1Username || player2Username) {
+      if (
+        userFound.username !== player1Username &&
+        userFound.username !== player2Username
+      ) {
+        logger.warn(
+          `Unauthorized access attempt to data by user: ${userFound.username}`
+        );
+        return res
+          .status(403)
+          .json({ message: "Unauthorized access to this data" });
+      }
+    }
+
+    req.user = userFound;
+    logger.info(`Access granted to user: ${userFound.username}`);
+    next();
+  } catch (error) {
+    logger.error(`Error verifying token: ${error.message}`);
+    return res
+      .status(500)
+      .json({ message: "Error verifying token", error: error.message });
   }
 });
