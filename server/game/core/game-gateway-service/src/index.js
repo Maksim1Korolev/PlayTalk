@@ -8,6 +8,8 @@ import redisClient from "./utils/redisClient.js";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import { socketAuthMiddleware } from "./middleware/authMiddleware.js";
+import { getLogger } from "./utils/logger.js";
+const logger = getLogger("Main");
 
 import gameRouter from "./routes/gameRoutes.js";
 import onlineRouter from "./routes/onlineRoutes.js";
@@ -43,17 +45,20 @@ async function main() {
   await SocketService.setupSocketConnection();
 
   server.listen(PORT, () => {
-    console.log(
+    logger.info(
       `game-gateway-service is running in ${process.env.NODE_ENV} mode on port ${PORT}`
     );
   });
 }
 
 main()
-  .then(async () => {})
+  .then(async () => {
+    logger.info("Main function executed successfully.");
+  })
   .catch(async err => {
+    logger.error(`Application startup error: ${err.message}`);
+    await disconnectFromMongoDB();
     redisClient.quit();
-    console.error(err);
     process.exit(1);
   });
 
@@ -61,11 +66,10 @@ async function clearSocketCache() {
   try {
     await redisClient.del(process.env.REDIS_USER_SOCKET_KEY);
     await redisClient.del(process.env.REDIS_USER_GAMES_KEY);
-    console.log("Cleared socket ID and active games cache in Redis");
+    logger.info("Cleared socket ID and active games cache in Redis");
   } catch (err) {
-    console.error(
-      "Error clearing socket ID and active games cache in Redis:",
-      err.message
+    logger.error(
+      `Error clearing socket ID and active games cache in Redis: ${err.message}`
     );
   }
 }

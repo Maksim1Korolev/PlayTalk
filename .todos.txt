@@ -16,6 +16,7 @@ Empty data doesn't count as redis cache
 Check online and api client logic, rename OnlinePage
 Memo template
 Sort out csproj files in ttt
+Issues when redis connects late (-restart?)
 
 To add (In the end):
 Auth on all servers, updated auth for some data
