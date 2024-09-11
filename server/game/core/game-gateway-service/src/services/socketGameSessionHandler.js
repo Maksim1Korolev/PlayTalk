@@ -1,18 +1,22 @@
 import { io } from "../index.js";
+
+import { getLogger } from "../utils/logger.js";
+const logger = getLogger("GameSessionHandler");
+
 import ActiveGamesService from "./activeGamesService.js";
 import SocketService from "./socketService.js";
 import TicTacToeGameService from "./ticTacToe/gameService.js";
 
 async function handleInviteSubscriptions(socket, username) {
   socket.on("send-game-invite", async ({ receiverUsername, gameName }) => {
-    console.log(
+    logger.info(
       `Sending game invite from ${username} to ${receiverUsername} for game ${gameName}`
     );
     await sendGameInvite(username, receiverUsername, gameName);
   });
 
   socket.on("accept-game", async ({ opponentUsername, gameName }) => {
-    console.log(
+    logger.info(
       `Accepting game invite for ${username} with opponent ${opponentUsername} for game ${gameName}`
     );
 
@@ -27,7 +31,7 @@ async function handleInviteSubscriptions(socket, username) {
 }
 
 async function sendGameInvite(senderUsername, receiverUsername, gameName) {
-  console.log(
+  logger.info(
     `Attempting to send game invite from ${senderUsername} to ${receiverUsername} for game ${gameName}`
   );
 
@@ -37,16 +41,16 @@ async function sendGameInvite(senderUsername, receiverUsername, gameName) {
       senderUsername,
       gameName,
     });
-    console.log(
+    logger.info(
       `Game invite sent to ${receiverUsername} from ${senderUsername} for game ${gameName}`
     );
   } else {
-    console.log("Receiver not found in connected players.");
+    logger.warn(`Receiver ${receiverUsername} not found in connected players.`);
   }
 }
 
 async function startGameConnection(senderUsername, receiverUsername, gameName) {
-  console.log(
+  logger.info(
     `Starting game connection between ${senderUsername} and ${receiverUsername} for game ${gameName}`
   );
 
@@ -54,9 +58,9 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
     await TicTacToeGameService.startGame(senderUsername, receiverUsername);
   } catch (err) {
     if (err.response && err.response.data) {
-      console.log("Error starting game: ", err.response.data);
+      logger.error("Error starting game: ", err.response.data);
     } else {
-      console.log("Error starting game: ", err.message);
+      logger.error("Error starting game: ", err.message);
     }
   }
 
@@ -68,7 +72,7 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
     gameName,
   });
 
-  console.log(
+  logger.info(
     `Notified ${senderUsername} of connection with ${receiverUsername} for game ${gameName}`
   );
 
@@ -76,13 +80,13 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
     opponentUsername: senderUsername,
     gameName,
   });
-  console.log(
+  logger.info(
     `Notified ${receiverUsername} of connection with ${senderUsername} for game ${gameName}`
   );
 }
 
 async function endGame(username1, username2, gameName, winnerUsername) {
-  console.log(
+  logger.info(
     `Ending game ${gameName} between ${username1} and ${username2}. Winner: ${winnerUsername}`
   );
 
@@ -94,7 +98,7 @@ async function endGame(username1, username2, gameName, winnerUsername) {
     gameName,
     winner: winnerUsername,
   });
-  console.log(
+  logger.info(
     `Notified ${username1} of game end with ${username2}. Winner: ${winnerUsername}`
   );
 
@@ -103,7 +107,7 @@ async function endGame(username1, username2, gameName, winnerUsername) {
     gameName,
     winner: winnerUsername,
   });
-  console.log(
+  logger.info(
     `Notified ${username2} of game end with ${username1}. Winner: ${winnerUsername}`
   );
 

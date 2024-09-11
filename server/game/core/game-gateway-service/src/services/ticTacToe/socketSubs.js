@@ -1,5 +1,9 @@
-import SocketService from "../socketService.js";
 import { io } from "../../index.js";
+
+import { getLogger } from "../../utils/logger.js";
+const logger = getLogger("TicTacToeSubscriptions");
+
+import SocketService from "../socketService.js";
 import GameService from "./gameService.js";
 import { endGame } from "../socketGameSessionHandler.js";
 
@@ -9,8 +13,8 @@ const MAKE_MOVE_EVENT = `${gameName}-make-move`;
 const MOVE_MADE_EVENT = `${gameName}-move-made`;
 const SURRENDER_EVENT = `${gameName}-surrender`;
 
-async function handleTicTacToeSubscriptions(socket, username) {
-  console.log(`Subscribing socket events for user: ${username}`);
+export async function handleTicTacToeSubscriptions(socket, username) {
+  logger.info(`Subscribing ${gameName} socket events for user: ${username}`);
 
   socket.on(MAKE_MOVE_EVENT, async ({ opponentUsername, interactingIndex }) => {
     try {
@@ -21,7 +25,7 @@ async function handleTicTacToeSubscriptions(socket, username) {
       );
 
       if (!response || !response.moveResult) {
-        console.error(
+        logger.error(
           `Response or response's moveResult is undefined upon trying to make a move in ${gameName}.`
         );
         return;
@@ -56,17 +60,16 @@ async function handleTicTacToeSubscriptions(socket, username) {
           break;
 
         case "InvalidMove":
-          console.warn("Invalid move response from client request.");
+          logger.warn("Invalid move response from client request.");
           break;
 
         default:
-          console.warn("Unexpected moveResult:", response.moveResult);
+          logger.warn("Unexpected moveResult:", response.moveResult);
           break;
       }
     } catch (err) {
-      console.error(
-        `Error processing move for ${username} and ${opponentUsername}: `,
-        err.message
+      logger.error(
+        `Error processing move for ${username} and ${opponentUsername}: ${err.message}`
       );
     }
   });
@@ -76,7 +79,7 @@ async function handleTicTacToeSubscriptions(socket, username) {
       const response = await GameService.surrender(username, opponentUsername);
 
       if (!response) {
-        console.error(
+        logger.error(
           `Response is undefined upon trying to surrender in ${gameName} game with ${opponentUsername}.`
         );
         return;
@@ -84,12 +87,9 @@ async function handleTicTacToeSubscriptions(socket, username) {
 
       await endGame(username, opponentUsername, gameName, opponentUsername);
     } catch (err) {
-      console.error(
-        `Error trying to surrender in ${gameName}. Game of ${username} and ${opponentUsername}: `,
-        err.message
+      logger.error(
+        `Error trying to surrender in ${gameName}. Game of ${username} and ${opponentUsername}: ${err.message}`
       );
     }
   });
 }
-
-export default handleTicTacToeSubscriptions;

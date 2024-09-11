@@ -1,7 +1,12 @@
 import redisClient from "../utils/redisClient.js";
+import { getLogger } from "../utils/logger.js";
+const logger = getLogger("ActiveGamesService");
 
 class ActiveGamesService {
   static async addActiveGame(username, opponentUsername, game) {
+    logger.info(
+      `Adding active game ${game} for users ${username} and ${opponentUsername}`
+    );
     const currentGames = await this.getActiveGames(username);
 
     if (currentGames[opponentUsername]) {
@@ -16,7 +21,6 @@ class ActiveGamesService {
       JSON.stringify(currentGames)
     );
 
-    // Also updating the opponent's active games
     const opponentGames = await this.getActiveGames(opponentUsername);
 
     if (opponentGames[username]) {
@@ -30,9 +34,15 @@ class ActiveGamesService {
       opponentUsername,
       JSON.stringify(opponentGames)
     );
+    logger.info(
+      `Active game ${game} added for ${username} and ${opponentUsername}`
+    );
   }
 
   static async removeActiveGame(username, opponentUsername, game) {
+    logger.info(
+      `Removing active game ${game} between ${username} and ${opponentUsername}`
+    );
     const currentGames = await this.getActiveGames(username);
 
     if (currentGames[opponentUsername]) {
@@ -51,7 +61,6 @@ class ActiveGamesService {
       );
     }
 
-    // Also update the opponent's active games
     const opponentGames = await this.getActiveGames(opponentUsername);
 
     if (opponentGames[username]) {
@@ -67,6 +76,9 @@ class ActiveGamesService {
         JSON.stringify(opponentGames)
       );
     }
+    logger.info(
+      `Active game ${game} removed for ${username} and ${opponentUsername}`
+    );
   }
 
   static async getActiveGames(username) {
