@@ -12,7 +12,7 @@ export const getActiveGames = asyncHandler(async (req, res) => {
     const activeGames = await ActiveGamesService.getActiveGames(username);
     return res.status(200).json({ activeGames });
   } catch (error) {
-    console.error("Error getting active games:", error);
+    console.error("Error getting active games: ", error);
     return res.status(500).json({ message: `Internal server error.` });
   }
 });
@@ -59,9 +59,9 @@ export const getGame = async (req, res) => {
     }
   } catch (err) {
     if (err.response && err.response.data) {
-      console.error("Error retrieving game data:", err.response.data);
+      console.error("Error retrieving game data: ", err.response.data);
     } else {
-      console.error("Error retrieving game data:", err.message);
+      console.error("Error retrieving game data: ", err.message);
     }
     res.status(500).json({ message: "Internal server error." });
   }
