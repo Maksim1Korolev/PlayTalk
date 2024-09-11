@@ -1,11 +1,9 @@
 To add:
 Multiple sources for the main list of users and online
 Update resource files in assets folder
-Move ChatModal component into ChatModals folder?
 Update game request logic
 Upgrade UserList scrollbar
 Current user (data from cookie) to context
-Try and take the user for token from redis before going to auth repo
 "Api" to general .env variable keys that pass only api
 
 To fix:
@@ -15,7 +13,7 @@ Sort features folder
 Empty data doesn't count as redis cache
 Check online and api client logic, rename OnlinePage
 Memo template
-Catch authMiddleware errors
+Sort out csproj files in ttt
 
 To add (In the end):
 Auth on all servers, updated auth for some data
