@@ -5,11 +5,11 @@ import http from "http";
 import { Server } from "socket.io";
 
 import redisClient from "./utils/redisClient.js";
+import { getLogger } from "./utils/logger.js";
+const logger = getLogger("Main");
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import { socketAuthMiddleware } from "./middleware/authMiddleware.js";
-import { getLogger } from "./utils/logger.js";
-const logger = getLogger("Main");
 
 import gameRouter from "./routes/gameRoutes.js";
 import onlineRouter from "./routes/onlineRoutes.js";
@@ -57,7 +57,6 @@ main()
   })
   .catch(async err => {
     logger.error(`Application startup error: ${err.message}`);
-    await disconnectFromMongoDB();
     redisClient.quit();
     process.exit(1);
   });
