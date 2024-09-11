@@ -62,7 +62,7 @@ export const protect = asyncHandler(async (req, res, next) => {
 
       if (!isUserOnline) {
         console.log(
-          `User ${decoded.username} is not online, checking that user exists in the system`
+          `User ${decoded.username} is not online, fetching from UserService`
         );
         userFound = await UserService.getUserById(decoded.userId);
       }
