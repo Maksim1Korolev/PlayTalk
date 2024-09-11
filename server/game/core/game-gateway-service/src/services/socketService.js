@@ -25,7 +25,6 @@ class SocketService {
         await this.connectUser(savedUsername, socket.id);
         await handleInviteSubscriptions(socket, savedUsername);
         await handleTicTacToeSubscriptions(socket, savedUsername);
-        console.log(await this.getOnlineUsernames());
 
         logger.info(
           `Online ping from ${savedUsername}. Current online users: ${await this.getOnlineUsernames()}`

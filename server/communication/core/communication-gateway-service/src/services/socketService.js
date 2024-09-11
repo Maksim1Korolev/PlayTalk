@@ -20,6 +20,10 @@ class SocketService {
 
         await handleChatSubscriptions(socket, savedUsername);
 
+        //CHANGE TO THIS STRUCTURE WHEN ADDING LOGGER:
+        /*   logger.info(
+          `Online ping from ${savedUsername}. Current online users: ${await this.getOnlineUsernames()}`
+        ); */
         console.log(
           `Online ping from ${savedUsername}. Current online users:`,
           await this.getOnlineUsernames()
