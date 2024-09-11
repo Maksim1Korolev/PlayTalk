@@ -31,7 +31,7 @@ namespace TicTacToe.Services
                 throw new ArgumentException("No game exists between these players.");
             }
 
-            return DeserializeGame(gameData);
+            return DeserializeGame(gameData!);
         }
 
         public object GetCurrentGameInfo(string username1, string username2)
