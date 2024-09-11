@@ -7,6 +7,7 @@ Current user (data from cookie) to context
 "Api" to general .env variable keys that pass only api
 Winner and players logic to client
 Redis as one more possible point to get the data in more places
+When both players invite one another, the game starts
 
 To fix:
 ChatModal opens lower than the screen and scrollbar appears
@@ -15,7 +16,6 @@ Sort features folder
 Empty data doesn't count as redis cache
 Check online and api client logic, rename OnlinePage
 Memo template
-Sort out csproj files in ttt
 Issues when redis connects late (-restart?)
 
 To add (In the end):

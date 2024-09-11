@@ -18,11 +18,9 @@ namespace TicTacToe
             builder.Services.AddSingleton<IConnectionMultiplexer>(provider => RedisUtils.GetDatabase().Multiplexer);
             var activeGamesHashKey = builder.Configuration["Redis:ActiveGamesHashKey"] ?? "ticTacToeUsernamesGame";
             RedisUtils.ClearHash(activeGamesHashKey);
-
             builder.Services.AddSingleton<IGameService, GameService>();
             builder.Services.AddSingleton<IPlayerService, PlayerService>();
             var app = builder.Build();
-
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
             app.UseRouting();

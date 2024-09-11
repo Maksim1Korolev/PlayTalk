@@ -134,11 +134,11 @@ services:
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
-        - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
+        - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-service/tic-tac-toe-service.csproj
           action: rebuild
-        # - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
-        #   target: /usr/src/app
-        #   action: sync
+        - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
+          target: /usr/src/app
+          action: sync
 
   tic_tac_toe_repository_service:
     build: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service
