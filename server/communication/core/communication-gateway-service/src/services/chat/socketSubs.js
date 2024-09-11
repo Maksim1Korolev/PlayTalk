@@ -1,8 +1,12 @@
 import { io } from "../../index.js";
+
+import { getLogger } from "../../utils/logger.js";
+const logger = getLogger("ChatSubscriptions");
+
 import SocketService from "../socketService.js";
 import MessageHistoryService from "./messageHistoryService.js";
 
-async function handleChatSubscriptions(socket, currentUsername) {
+export async function handleChatSubscriptions(socket, currentUsername) {
   socket.on("on-chat-open", async ({ receiverUsername }) => {
     try {
       const { data } = await MessageHistoryService.getMessageHistory([
@@ -11,14 +15,13 @@ async function handleChatSubscriptions(socket, currentUsername) {
       ]);
       if (data && data.messageHistory) {
         socket.emit("update-chat", data.messageHistory, receiverUsername);
-        console.log(
+        logger.info(
           `Chat history sent for ${currentUsername} and ${receiverUsername}.`
         );
       }
     } catch (err) {
-      console.error(
-        `Error retrieving chat history for ${currentUsername} and ${receiverUsername}: `,
-        err.message
+      logger.error(
+        `Error retrieving chat history for ${currentUsername} and ${receiverUsername}: ${err.message}`
       );
     }
   });
@@ -28,6 +31,7 @@ async function handleChatSubscriptions(socket, currentUsername) {
       receiverUsername
     );
     io.to(receiversSocketIds).emit("typing", currentUsername);
+    logger.info(`${currentUsername} is typing to ${receiverUsername}`);
   });
 
   socket.on("stop typing", async receiverUsername => {
@@ -35,16 +39,17 @@ async function handleChatSubscriptions(socket, currentUsername) {
       receiverUsername
     );
     io.to(receiversSocketIds).emit("stop typing", currentUsername);
+    logger.info(`${currentUsername} stopped typing to ${receiverUsername}`);
   });
 
   socket.on("on-read-messages", async ({ usernames }) => {
     try {
-      console.log("on-read-messages is start running", usernames);
+      logger.info("on-read-messages started", usernames);
       const { data } = await MessageHistoryService.readAllUnreadMessages(
         currentUsername,
         usernames
       );
-      console.log("on-read-messages has sent request to chat-server", data);
+      logger.info("on-read-messages sent request to chat-server", data);
 
       if (data) {
         const otherUserInChat = usernames.find(
@@ -53,7 +58,7 @@ async function handleChatSubscriptions(socket, currentUsername) {
         socket.emit("unread-count-messages", otherUserInChat, 0);
       }
     } catch (err) {
-      console.error("An error occurred: ", err.message);
+      logger.error(`Error in on-read-messages: ${err.message}`);
     }
   });
 
@@ -82,18 +87,15 @@ async function handleChatSubscriptions(socket, currentUsername) {
         unreadCount
       );
 
-      console.log(
+      logger.info(
         `Message from ${currentUsername} to ${receiverUsername}: "${message}" delivered to sockets: ${receiversSocketIds?.join(
           ", "
         )}`
       );
     } catch (err) {
-      console.error(
-        `Error sending message from ${currentUsername} to ${receiverUsername}: `,
-        err.message
+      logger.error(
+        `Error sending message from ${currentUsername} to ${receiverUsername}: ${err.message}`
       );
     }
   });
 }
-
-export default handleChatSubscriptions;

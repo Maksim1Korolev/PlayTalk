@@ -1,17 +1,20 @@
 import axios from "axios";
 
+import { getLogger } from "../../utils/logger.js";
+const logger = getLogger("MessageHistoryService");
+
 const chatRepositoryServiceUrl = process.env.CHAT_REPOSITORY_SERVICE_URL;
 const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
 const serviceName = "communication_gateway_service";
 
 class MessageHistoryService {
-  ///////////////messageHistories
   static async getMessageHistory(usernames) {
     const query = usernames
       .map(u => `usernames=${encodeURIComponent(u)}`)
       .join("&");
     const url = `${chatRepositoryServiceUrl}/messageHistories/messageHistory?${query}`;
 
+    logger.info(`Fetching message history for: ${usernames.join(", ")}`);
     return await axios.get(url, {
       headers: {
         [internalServiceHeaderKey]: serviceName,
@@ -22,6 +25,11 @@ class MessageHistoryService {
   static async addMessageToHistory(usernames, message) {
     const url = `${chatRepositoryServiceUrl}/messageHistories/messages/message`;
 
+    logger.info(
+      `Adding message to history for: ${usernames.join(
+        ", "
+      )}. Message: ${message}`
+    );
     return await axios.post(
       url,
       {
@@ -36,10 +44,9 @@ class MessageHistoryService {
     );
   }
 
-  ///////////////unread
   static async getAllUnreadMessageCounts(requestingUsername) {
     const url = `${chatRepositoryServiceUrl}/unread/getAll/${requestingUsername}`;
-
+    logger.info(`Fetching all unread message counts for ${requestingUsername}`);
     return await axios.get(url, {
       headers: {
         [internalServiceHeaderKey]: serviceName,
@@ -48,11 +55,15 @@ class MessageHistoryService {
   }
 
   static async getUnreadMessagesCount(requestingUsername, usernames) {
-    console.log("requestingUsername", requestingUsername);
-
     const url = `${chatRepositoryServiceUrl}/unread/${requestingUsername}?usernames=${usernames.join(
       ","
     )}`;
+
+    logger.info(
+      `Fetching unread message count for ${requestingUsername} and ${usernames.join(
+        ", "
+      )}`
+    );
 
     try {
       const response = await axios.get(url, {
@@ -60,20 +71,21 @@ class MessageHistoryService {
           [internalServiceHeaderKey]: serviceName,
         },
       });
-      console.log("response.data", response.data);
-
+      logger.info("Unread message count response received.");
       return response.data;
     } catch (error) {
-      console.error(`Error fetching unread messages count: ${error.message}`);
+      logger.error(`Error fetching unread messages count: ${error.message}`);
     }
   }
 
   static async readAllUnreadMessages(requestingUsername, usernames) {
-    console.log(
-      "sending request to chat-repository-service to mark messages as read"
-    );
-
     const url = `${chatRepositoryServiceUrl}/unread/markAsRead/${requestingUsername}`;
+
+    logger.info(
+      `Marking messages as read for ${requestingUsername} and ${usernames.join(
+        ", "
+      )}`
+    );
 
     return await axios.post(
       url,
