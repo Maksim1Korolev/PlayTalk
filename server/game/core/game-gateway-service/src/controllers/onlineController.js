@@ -9,8 +9,6 @@ export const getOnlineUsernames = async (req, res, next) => {
     return res.status(200).json({ onlineUsernames });
   } catch (err) {
     console.log(err.message);
-    res
-      .status(500)
-      .json({ message: `Internal server error getting online usernames.` });
+    res.status(500).json({ message: `Internal server error.` });
   }
 };

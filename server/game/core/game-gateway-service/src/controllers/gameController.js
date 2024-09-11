@@ -13,9 +13,7 @@ export const getActiveGames = asyncHandler(async (req, res) => {
     return res.status(200).json({ activeGames });
   } catch (error) {
     console.error("Error getting active games:", error);
-    return res
-      .status(500)
-      .json({ message: `Internal server error getting active games.` });
+    return res.status(500).json({ message: `Internal server error.` });
   }
 });
 
@@ -65,6 +63,6 @@ export const getGame = async (req, res) => {
     } else {
       console.error("Error retrieving game data:", err.message);
     }
-    res.status(500).json({ message: "Internal server error getting game." });
+    res.status(500).json({ message: "Internal server error." });
   }
 };

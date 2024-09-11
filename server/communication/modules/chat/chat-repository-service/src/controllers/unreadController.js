@@ -3,8 +3,8 @@ import asyncHandler from "express-async-handler";
 import MessageHistoryService from "../services/messageHistoryService.js";
 
 // @desc   Get unread Messages count for specific chats
-// @route  GET /unread/:requestingUsername
-// @access Public
+// @route  GET api/unread/:requestingUsername
+// @access Internal
 export const getUnreadMessageCount = asyncHandler(async (req, res) => {
   try {
     const { requestingUsername } = req.params;
@@ -30,13 +30,14 @@ export const getUnreadMessageCount = asyncHandler(async (req, res) => {
 
     return res.json(count);
   } catch (err) {
-    res.status(500).json({ error: err.toString() });
+    console.error("Error getting unread message count: ", err);
+    res.status(500).json({ message: "Internal server error." });
   }
 });
 
 // @desc   Get unread Messages count for specific chats
-// @route  GET /markAsRead/:requestingUsername
-// @access Public
+// @route  GET api/unread/markAsRead/:requestingUsername
+// @access Internal
 export const markAsRead = asyncHandler(async (req, res) => {
   try {
     const { requestingUsername } = req.params;
@@ -62,13 +63,14 @@ export const markAsRead = asyncHandler(async (req, res) => {
       res.status(404).json({ message: "Messages not found." });
     }
   } catch (err) {
-    res.status(500).json(err.toString());
+    console.error("Error marking messages as read: ", err);
+    res.status(500).json({ message: "Internal server error." });
   }
 });
 
 // @desc   Get unread Messages count for specific chats
-// @route  GET /unread/:requestingUsername
-// @access Public
+// @route  GET api/unread/:requestingUsername
+// @access Internal
 export const getAllUnreadMessageCount = asyncHandler(async (req, res) => {
   try {
     const { requestingUsername } = req.params;
@@ -83,6 +85,7 @@ export const getAllUnreadMessageCount = asyncHandler(async (req, res) => {
 
     return res.json(count);
   } catch (err) {
-    res.status(500).json(err.toString());
+    console.error("Error getting all unread message count: ", err);
+    res.status(500).json({ message: "Internal server error." });
   }
 });

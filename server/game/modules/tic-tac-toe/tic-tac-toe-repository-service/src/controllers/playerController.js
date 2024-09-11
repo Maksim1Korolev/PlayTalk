@@ -2,8 +2,8 @@ import asyncHandler from "express-async-handler";
 import PlayerService from "../services/playerService.js";
 
 // @desc   Get player by username
-// @route  GET /players/:username
-// @access Public
+// @route  GET api/players/:username
+// @access Internal
 export const getPlayer = asyncHandler(async (req, res) => {
   const { username } = req.params;
 
@@ -20,14 +20,14 @@ export const getPlayer = asyncHandler(async (req, res) => {
 
     return res.json({ player });
   } catch (error) {
-    console.error("Error fetching player:", error);
+    console.error("Error fetching player: ", error);
     return res.status(500).json({ message: "Internal server error." });
   }
 });
 
 // @desc   Update players' properties
-// @route  PUT /players
-// @access Public
+// @route  PUT api/players
+// @access Internal
 export const updatePlayers = asyncHandler(async (req, res) => {
   const { player1NewData, player2NewData } = req.body;
 
@@ -48,7 +48,7 @@ export const updatePlayers = asyncHandler(async (req, res) => {
       updatedPlayers,
     });
   } catch (error) {
-    console.error("Error updating players:", error);
+    console.error("Error updating players: ", error);
     return res.status(500).json({ message: "Internal server error." });
   }
 });
