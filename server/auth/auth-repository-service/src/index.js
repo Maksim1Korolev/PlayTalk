@@ -47,9 +47,13 @@ async function main() {
   });
 }
 
-main().catch(async err => {
-  logger.error(`Application startup error: ${err.message}`);
-  await disconnectFromMongoDB();
-  redisClient.quit();
-  process.exit(1);
-});
+main()
+  .then(async () => {
+    logger.info("Main function executed successfully.");
+  })
+  .catch(async err => {
+    logger.error(`Application startup error: ${err.message}`);
+    await disconnectFromMongoDB();
+    redisClient.quit();
+    process.exit(1);
+  });
