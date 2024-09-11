@@ -1,5 +1,8 @@
 import asyncHandler from "express-async-handler";
 
+import { getLogger } from "../utils/logger.js";
+const logger = getLogger("UnreadController");
+
 import MessageHistoryService from "../services/messageHistoryService.js";
 
 // @desc   Get unread Messages count for specific chats
@@ -11,9 +14,13 @@ export const getUnreadMessageCount = asyncHandler(async (req, res) => {
     const { usernames } = req.query;
 
     if (!requestingUsername) {
+      logger.warn(
+        "Requesting username missing in unread message count request"
+      );
       return res.status(400).json({ message: "Username is required." });
     }
     if (!usernames) {
+      logger.warn("Usernames missing in unread message count request");
       return res
         .status(400)
         .json({ message: "Usernames of MessageHistory are required." });
@@ -23,6 +30,12 @@ export const getUnreadMessageCount = asyncHandler(async (req, res) => {
       ? usernames
       : usernames.split(",");
 
+    logger.info(
+      `Fetching unread message count for ${requestingUsername} and ${usernamesArray.join(
+        ", "
+      )}`
+    );
+
     const count = await MessageHistoryService.getUnreadMessagesCount(
       usernamesArray,
       requestingUsername
@@ -30,28 +43,36 @@ export const getUnreadMessageCount = asyncHandler(async (req, res) => {
 
     return res.json(count);
   } catch (err) {
-    console.error("Error getting unread message count: ", err);
+    logger.error(`Error getting unread message count: ${err.message}`);
     res.status(500).json({ message: "Internal server error." });
   }
 });
 
-// @desc   Get unread Messages count for specific chats
-// @route  GET api/unread/markAsRead/:requestingUsername
+// @desc   Mark messages as read
+// @route  POST api/unread/markAsRead/:requestingUsername
 // @access Internal
 export const markAsRead = asyncHandler(async (req, res) => {
   try {
     const { requestingUsername } = req.params;
-
     const { usernames } = req.body;
+
     if (!requestingUsername) {
+      logger.warn("Requesting username missing in markAsRead request");
       return res.status(400).json({ message: "Username is required." });
     }
 
     if (!usernames) {
+      logger.warn("Usernames missing in markAsRead request");
       return res
         .status(401)
         .json({ message: "Usernames of MessageHistory are required." });
     }
+
+    logger.info(
+      `Marking messages as read for ${requestingUsername} and ${usernames.join(
+        ", "
+      )}`
+    );
 
     const result = await MessageHistoryService.markAsRead(
       usernames,
@@ -63,29 +84,33 @@ export const markAsRead = asyncHandler(async (req, res) => {
       res.status(404).json({ message: "Messages not found." });
     }
   } catch (err) {
-    console.error("Error marking messages as read: ", err);
+    logger.error(`Error marking messages as read: ${err.message}`);
     res.status(500).json({ message: "Internal server error." });
   }
 });
 
-// @desc   Get unread Messages count for specific chats
-// @route  GET api/unread/:requestingUsername
+// @desc   Get all unread messages count for a specific user
+// @route  GET api/unread/getAll/:requestingUsername
 // @access Internal
 export const getAllUnreadMessageCount = asyncHandler(async (req, res) => {
   try {
     const { requestingUsername } = req.params;
 
     if (!requestingUsername) {
+      logger.warn(
+        "Requesting username missing in getAllUnreadMessageCount request"
+      );
       return res.status(400).json({ message: "Username is required." });
     }
 
+    logger.info(`Fetching all unread message counts for ${requestingUsername}`);
     const count = await MessageHistoryService.getAllUnreadMessagesCount(
       requestingUsername
     );
 
     return res.json(count);
   } catch (err) {
-    console.error("Error getting all unread message count: ", err);
+    logger.error(`Error getting all unread message count: ${err.message}`);
     res.status(500).json({ message: "Internal server error." });
   }
 });

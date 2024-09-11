@@ -1,6 +1,8 @@
 import MessageHistory from "../schemas/MessageHistory.js";
 import MessageBufferService from "./messageBufferService.js";
 import redisClient from "../utils/redisClient.js";
+import { getLogger } from "../utils/logger.js";
+const logger = getLogger("MessageHistoryService");
 
 class MessageHistoryService {
   static getSortedUsernames(usernames) {
@@ -11,7 +13,7 @@ class MessageHistoryService {
   static async addMessage(usernames, message) {
     const sortedUsernames = this.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
-    console.log(`Adding message. Cache key: ${cacheKey}`);
+    logger.info(`Adding message. Cache key: ${cacheKey}`);
 
     await MessageBufferService.addToBuffer(sortedUsernames, message);
   }
@@ -19,7 +21,7 @@ class MessageHistoryService {
   static async getMessageHistory(usernames) {
     const sortedUsernames = this.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
-    console.log(`Fetching message history. Cache key: ${cacheKey}`);
+    logger.info(`Fetching message history. Cache key: ${cacheKey}`);
 
     const cachedMessageHistory = await redisClient.hGet(
       process.env.REDIS_MESSAGE_HISTORY_KEY,
@@ -33,18 +35,18 @@ class MessageHistoryService {
     let combinedMessages = [];
 
     if (cachedMessageHistory) {
-      console.log("Cache hit. Getting cached message history.");
+      logger.info("Cache hit. Getting cached message history.");
 
       combinedMessages = JSON.parse(cachedMessageHistory);
 
       if (messagesFromBuffer.length > 0) {
-        console.log("Adding messages from buffer to cached message history.");
+        logger.info("Adding messages from buffer to cached message history.");
         combinedMessages = combinedMessages.concat(messagesFromBuffer);
       }
 
       return combinedMessages;
     } else {
-      console.log("Cache miss. No cached message history found.");
+      logger.info("Cache miss. No cached message history found.");
     }
 
     const messageHistory = await MessageHistory.findOne({
@@ -55,7 +57,7 @@ class MessageHistoryService {
       combinedMessages = messageHistory.messages;
 
       if (messagesFromBuffer.length > 0) {
-        console.log("Adding messages from buffer to database message history.");
+        logger.info("Adding messages from buffer to database message history.");
         combinedMessages = combinedMessages.concat(messagesFromBuffer);
       }
 
@@ -64,9 +66,9 @@ class MessageHistoryService {
         cacheKey,
         JSON.stringify(combinedMessages)
       );
-      console.log(`Message history cached. Cache key: ${cacheKey}`);
+      logger.info(`Message history cached. Cache key: ${cacheKey}`);
     } else if (messagesFromBuffer.length > 0) {
-      console.log("Buffer cache hit. Returning messages from buffer.");
+      logger.info("Buffer cache hit. Returning messages from buffer.");
       combinedMessages = messagesFromBuffer;
     }
 
@@ -123,7 +125,7 @@ class MessageHistoryService {
   // static async markAsRead(usernames, requestingUsername) {
   //   const sortedUsernames = this.getSortedUsernames(usernames);
   //   const cacheKey = sortedUsernames.join("-");
-  //   console.log(`Marking messages as read. Cache key: ${cacheKey}`);
+  //   logger.info(`Marking messages as read. Cache key: ${cacheKey}`);
 
   //   await MessageBufferService.markMessagesAsReadInBuffer(
   //     sortedUsernames,
@@ -140,9 +142,7 @@ class MessageHistoryService {
 
   //     for (let i = 0; i < messages.length; i++) {
   //       if (!messages[i].message) {
-  //         console.warn(
-  //           `Skipping message ${i} because it has no message field.`
-  //         );
+  //         logger.warn(`Skipping message ${i} because it has no message field.`);
   //         continue;
   //       }
   //       if (
@@ -157,11 +157,11 @@ class MessageHistoryService {
   //     if (updated) {
   //       await messageHistory.save();
   //       await redisClient.hDel(process.env.REDIS_MESSAGE_HISTORY_KEY, cacheKey);
-  //       console.log(
+  //       logger.info(
   //         `Messages marked as read in DB. Cache key invalidated: ${cacheKey}`
   //       );
   //     } else {
-  //       console.log(
+  //       logger.info(
   //         `No messages to mark as read in DB. Cache key not invalidated: ${cacheKey}`
   //       );
   //     }
