@@ -3,7 +3,7 @@ import cls from "./CircleModal.module.scss";
 import { cx } from "@/shared/lib/cx";
 import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useModalDrag } from "../hooks/useModalDrag";
+import { useModalDrag } from "@/shared/hooks/useModalDrag";
 import { Rnd } from "react-rnd";
 import {
   HStack,
