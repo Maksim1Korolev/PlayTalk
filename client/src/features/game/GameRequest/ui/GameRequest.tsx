@@ -1,15 +1,17 @@
-import { useState, useEffect, useContext, ReactNode } from "react";
 import cls from "./GameRequest.module.scss";
+import { useState, useEffect, useContext, ReactNode } from "react";
+import { Rnd } from "react-rnd";
+
 import { AddonCircle, UiButton, SVGProps } from "@/shared/ui";
-import resources from "@/shared/assets/locales/en/games/GameRequestResources.json";
-import { Invite } from "@/entities/Game/model";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
 import { useModalDrag } from "@/shared/hooks/useModalDrag";
-import { Rnd } from "react-rnd";
 import getImagePath from "@/shared/utils/getImagePath";
+import { Invite } from "@/entities/Game/model";
 import { User } from "@/entities/User";
+
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import SkipNextIcon from "@mui/icons-material/SkipNext";
 
 interface GameRequestProps {
   className?: string;
@@ -26,7 +28,9 @@ export const GameRequest = ({
   handleYesButton,
   handleNoButton,
 }: GameRequestProps) => {
-  const [currentInvite, setCurrentInvite] = useState<Invite | null>(null);
+  const [currentInviteIndex, setCurrentInviteIndex] = useState(0);
+  const currentInvite = invites[currentInviteIndex] || null;
+
   const { isDragged, handleDragStart, handleDragStop } = useModalDrag();
   const { users } = useContext(UsersContext);
 
@@ -65,10 +69,8 @@ export const GameRequest = ({
     };
 
     if (invites.length > 0) {
-      setCurrentInvite(invites[0]);
+      setCurrentInviteIndex(0);
       loadAvatars();
-    } else {
-      setCurrentInvite(null);
     }
   }, [invites, users]);
 
@@ -84,8 +86,16 @@ export const GameRequest = ({
     }
   };
 
-  const getInviteCircle = (invite: Invite): ReactNode => {
-    const AvatarComponent = avatarIconMap[invite.senderUsername];
+  const handleSkipButtonClick = () => {
+    if (currentInviteIndex < invites.length - 1) {
+      setCurrentInviteIndex(currentInviteIndex + 1);
+    } else {
+      setCurrentInviteIndex(0);
+    }
+  };
+
+  const getInviteCircle = (): ReactNode => {
+    const AvatarComponent = avatarIconMap[currentInvite?.senderUsername || ""];
     if (!AvatarComponent) return null;
 
     const svgProps: SVGProps = {
@@ -101,6 +111,7 @@ export const GameRequest = ({
         iconProps={svgProps}
         addonBottomLeft={yesButton}
         addonBottomRight={noButton}
+        addonTopLeft={skipButton}
       />
     );
   };
@@ -125,6 +136,16 @@ export const GameRequest = ({
     </UiButton>
   );
 
+  const skipButton = (
+    <UiButton
+      variant="clear"
+      onClick={handleSkipButtonClick}
+      className={cls.skipButton}
+    >
+      <SkipNextIcon />
+    </UiButton>
+  );
+
   if (!currentInvite) {
     return null;
   }
@@ -144,5 +165,20 @@ export const GameRequest = ({
     enableResizing: false,
   };
 
-  return <Rnd {...rndProps}>{getInviteCircle(currentInvite)}</Rnd>;
+  return (
+    <Rnd {...rndProps}>
+      <AddonCircle
+        className={`${cls.GameRequest} ${className}`}
+        iconProps={{
+          Svg: avatarIconMap[currentInvite?.senderUsername || ""],
+          width: 80,
+          height: 80,
+          highlight: "secondary",
+        }}
+        addonBottomLeft={yesButton}
+        addonBottomRight={noButton}
+        addonTopLeft={skipButton}
+      />
+    </Rnd>
+  );
 };
