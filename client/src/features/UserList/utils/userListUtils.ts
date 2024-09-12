@@ -1,7 +1,15 @@
 import { User } from "@/entities/User";
 
 export const sortUsers = (userA: User, userB: User): number => {
-  // 1. Sort by presence of active games first (users with active games come first)
+  // 1. Sort by 'isInviting' (users who are currently inviting come first)
+  if (userA.isInviting && !userB.isInviting) {
+    return -1;
+  }
+  if (!userA.isInviting && userB.isInviting) {
+    return 1;
+  }
+
+  // 2. Sort by presence of active games (users with active games come first)
   const userAHasActiveGames = userA.activeGames && userA.activeGames.length > 0;
   const userBHasActiveGames = userB.activeGames && userB.activeGames.length > 0;
 
@@ -12,7 +20,7 @@ export const sortUsers = (userA: User, userB: User): number => {
     return 1;
   }
 
-  // 2. If both have the same active game status, sort by online status (online users come first)
+  // 3. Sort by online status (online users come first)
   if (userA.isOnline && !userB.isOnline) {
     return -1;
   }
@@ -20,6 +28,6 @@ export const sortUsers = (userA: User, userB: User): number => {
     return 1;
   }
 
-  // 3. If both have the same online status, sort alphabetically by username
+  // 4. Sort alphabetically by username if everything else is the same
   return userA.username.localeCompare(userB.username);
 };

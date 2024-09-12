@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import cls from "./GameRequest.module.scss";
 import { Card, HStack, UiButton, VStack } from "@/shared/ui";
 import resources from "@/shared/assets/locales/en/games/GameRequestResources.json";
 import { Invite } from "@/entities/Game/model";
+import { UsersContext } from "@/shared/lib/context/UsersContext";
 
 export const GameRequest = ({
   className,
@@ -16,24 +17,36 @@ export const GameRequest = ({
   handleNoButton: (invite: Invite) => void;
 }) => {
   const [currentInvite, setCurrentInvite] = useState<Invite | null>(null);
+  const { setUsers } = useContext(UsersContext);
+
+  const updateInvitingStatus = (senderUsername: string) => {
+    setUsers(prevUsers =>
+      prevUsers.map(user =>
+        user.username === senderUsername ? { ...user, isInviting: false } : user
+      )
+    );
+  };
 
   useEffect(() => {
     if (invites.length > 0) {
-      setCurrentInvite(invites[0]);
+      const newInvite = invites[0];
+      setCurrentInvite(newInvite);
     } else {
       setCurrentInvite(null);
     }
   }, [invites]);
 
-  const handleStartGame = () => {
+  const handleYesButtonClick = () => {
     if (currentInvite) {
       handleYesButton(currentInvite);
+      updateInvitingStatus(currentInvite.senderUsername);
     }
   };
 
-  const handleRejectGame = () => {
+  const handleNoButtonClick = () => {
     if (currentInvite) {
       handleNoButton(currentInvite);
+      updateInvitingStatus(currentInvite.senderUsername);
     }
   };
 
@@ -50,8 +63,12 @@ export const GameRequest = ({
             .replace("{gameName}", currentInvite.gameName)}
         </div>
         <HStack>
-          <UiButton onClick={handleStartGame}>{resources.yesButton}</UiButton>
-          <UiButton onClick={handleRejectGame}>{resources.noButton}</UiButton>
+          <UiButton onClick={handleYesButtonClick}>
+            {resources.yesButton}
+          </UiButton>
+          <UiButton onClick={handleNoButtonClick}>
+            {resources.noButton}
+          </UiButton>
         </HStack>
       </VStack>
     </Card>

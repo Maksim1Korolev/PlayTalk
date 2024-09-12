@@ -7,13 +7,13 @@ import { useGameModals } from "./useGameModals";
 import { useGameSessionSocket } from "./useGameSessionSocket";
 import { useOnlineSockets } from "./useOnlineSockets";
 import { Invite, getInviteKey } from "@/entities/Game/model";
+import { UsersContext } from "@/shared/lib/context/UsersContext";
 
 export const useOnlinePageSockets = () => {
   const [cookies] = useCookies();
   const { user: currentUser } = cookies["jwt-cookie"];
+  const { users, setUsers } = useContext(UsersContext);
 
-  const [users, setUsers] = useState<User[]>([]);
-  //TODO:Move
   const [inviteMap, setInviteMap] = useState<{ [key: string]: Invite }>({});
   const [lastClickedPlayUser, setLastClickedPlayUser] = useState<User | null>(
     null
@@ -22,31 +22,36 @@ export const useOnlinePageSockets = () => {
   useSockets();
 
   const updateUsersForList = useCallback(
-    (users: User[]) => {
+    (userList: User[]) => {
       if (!currentUser) return;
-      const otherUsers = users.filter(
+
+      const otherUsers = userList.filter(
         (user: User) => user._id !== currentUser._id
       );
+
       setUsers(otherUsers || []);
     },
-    [currentUser]
+    [currentUser, setUsers]
   );
 
-  const updateUserList = (username: string, updatedProps: Partial<User>) => {
-    setUsers((prevUsers: User[]) => {
-      if (!prevUsers) return [];
+  const updateUserList = useCallback(
+    (username: string, updatedProps: Partial<User>) => {
+      setUsers((prevUsers: User[]) => {
+        if (!prevUsers) return [];
 
-      return prevUsers.map(user => {
-        if (user.username === username) {
-          const { _id, username, avatarFileName, ...allowedProps } =
-            updatedProps;
-          return { ...user, ...allowedProps };
-        }
+        return prevUsers.map(user => {
+          if (user.username === username) {
+            const { _id, username, avatarFileName, ...allowedProps } =
+              updatedProps;
+            return { ...user, ...allowedProps };
+          }
 
-        return user;
+          return user;
+        });
       });
-    });
-  };
+    },
+    [setUsers]
+  );
 
   useOnlineSockets({
     updateUserList,
@@ -63,6 +68,10 @@ export const useOnlinePageSockets = () => {
       ...prevInvites,
       [inviteKey]: invite,
     }));
+
+    updateUserList(invite.senderUsername, {
+      isInviting: true,
+    });
   };
 
   const getUser = (username: string): User | undefined => {
