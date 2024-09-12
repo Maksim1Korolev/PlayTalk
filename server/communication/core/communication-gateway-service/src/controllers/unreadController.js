@@ -1,3 +1,6 @@
+import { getLogger } from "../utils/logger.js";
+const logger = getLogger("MessageHistoryController");
+
 import MessageHistoryService from "../services/chat/messageHistoryService.js";
 
 // @desc   Get counts of unread messages from all users
@@ -6,19 +9,21 @@ import MessageHistoryService from "../services/chat/messageHistoryService.js";
 export const getAllUnreadMessageCounts = async (req, res) => {
   try {
     const { requestingUsername } = req.params;
+    logger.info(
+      `Fetching unread message counts for user: ${requestingUsername}`
+    );
+
     const { data } = await MessageHistoryService.getAllUnreadMessageCounts(
       requestingUsername
     );
     return res.status(200).json(data);
   } catch (err) {
-    console.log("Error retrieving UnreadMessageCounts:", err.message);
+    logger.error(`Error retrieving unread message counts: ${err.message}`);
     res.status(500).json({
       message: `Internal server error retrieving UnreadMessageCounts.`,
     });
   }
 };
-
-//TODO:This function is called twice, choose socket or http request, preferably socket.
 
 // @desc   Mark all messages as read
 // @route  POST /api/unread/markAsRead
@@ -27,13 +32,20 @@ export const readAllUnreadMessages = async (req, res) => {
   try {
     const { requestingUsername } = req.params;
     const { usernames } = req.body;
+
+    logger.info(
+      `Marking all unread messages as read for ${requestingUsername} with ${usernames}`
+    );
+
     const { data } = await MessageHistoryService.readAllUnreadMessages(
       requestingUsername,
       usernames
     );
+
+    logger.info(`Unread messages marked as read for ${requestingUsername}`);
     return res.status(200).json(data);
   } catch (err) {
-    console.log("Error posting previously unread messages: ", err.message);
+    logger.error(`Error marking unread messages as read: ${err.message}`);
     res.status(500).json({
       message: `Internal server error posting previously unread messages.`,
     });

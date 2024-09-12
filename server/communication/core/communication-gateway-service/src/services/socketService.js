@@ -1,6 +1,10 @@
 import { io } from "../index.js";
+
 import redisClient from "../utils/redisClient.js";
-import handleChatSubscriptions from "./chat/socketSubs.js";
+import { getLogger } from "../utils/logger.js";
+const logger = getLogger("SocketService");
+
+import { handleChatSubscriptions } from "./chat/socketSubs.js";
 
 class SocketService {
   static async setupSocketConnection() {
@@ -12,7 +16,7 @@ class SocketService {
         return;
       }
 
-      console.log(`${user.username} connected with socket ID: ${socket.id}`);
+      logger.info(`${user.username} connected with socket ID: ${socket.id}`);
       const savedUsername = user.username;
 
       socket.on("online-ping", async () => {
@@ -20,9 +24,8 @@ class SocketService {
 
         await handleChatSubscriptions(socket, savedUsername);
 
-        console.log(
-          `Online ping from ${savedUsername}. Current online users:`,
-          await this.getOnlineUsernames()
+        logger.info(
+          `Online ping from ${savedUsername}. Current online users: ${await this.getOnlineUsernames()}`
         );
         socket.broadcast.emit("user-connection", savedUsername, true);
       });
@@ -31,7 +34,7 @@ class SocketService {
         if (savedUsername) {
           await this.disconnectUser(savedUsername, socket.id);
 
-          console.log(
+          logger.info(
             `Socket ID ${socket.id} for user ${savedUsername} disconnected.`
           );
 

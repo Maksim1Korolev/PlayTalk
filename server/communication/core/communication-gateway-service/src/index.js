@@ -5,6 +5,8 @@ import http from "http";
 import { Server } from "socket.io";
 
 import redisClient from "./utils/redisClient.js";
+import { getLogger } from "./utils/logger.js";
+const logger = getLogger("Main");
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import { socketAuthMiddleware } from "./middleware/authMiddleware.js";
@@ -43,23 +45,27 @@ async function main() {
   await SocketService.setupSocketConnection();
 
   server.listen(PORT, () => {
-    console.log(
+    logger.info(
       `communication-gateway-service is running in ${process.env.NODE_ENV} mode on port ${PORT}`
     );
   });
 }
 
-main().catch(async err => {
-  redisClient.quit();
-  console.error(err.message);
-  process.exit(1);
-});
+main()
+  .then(async () => {
+    logger.info("Main function executed successfully.");
+  })
+  .catch(async err => {
+    logger.error(`Application startup error: ${err.message}`);
+    redisClient.quit();
+    process.exit(1);
+  });
 
 async function clearSocketCache() {
   try {
     await redisClient.del(process.env.REDIS_USER_SOCKET_KEY);
-    console.log("Cleared socket ID cache in Redis");
+    logger.info("Cleared socket ID cache in Redis");
   } catch (err) {
-    console.error("Error clearing socket ID cache in Redis:", err.message);
+    logger.error("Error clearing socket ID cache in Redis:", err.message);
   }
 }

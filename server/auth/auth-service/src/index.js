@@ -2,6 +2,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
+import { getLogger } from "./utils/logger.js";
+const logger = getLogger("Main");
+
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
 import authRouter from "./routes/authRoutes.js";
@@ -22,15 +25,17 @@ async function main() {
   const PORT = process.env.PORT || 3010;
 
   app.listen(PORT, () => {
-    console.log(
+    logger.info(
       `auth-service is running in ${process.env.NODE_ENV} mode on port ${PORT}`
     );
   });
 }
 
 main()
-  .then(async () => {})
+  .then(async () => {
+    logger.info("Main function executed successfully.");
+  })
   .catch(async err => {
-    console.error(err.message);
+    logger.error(`Application startup error: ${err.message}`);
     process.exit(1);
   });

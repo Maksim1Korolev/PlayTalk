@@ -1,11 +1,14 @@
 import mongoose from "mongoose";
 
+import { getLogger } from "./logger.js";
+const logger = getLogger("MongoDB");
+
 const connectToMongoDB = async () => {
   try {
     await mongoose.connect(process.env.DATABASE_URL);
-    console.log("Successfully connected to MongoDB Atlas");
+    logger.info("Successfully connected to MongoDB Atlas");
   } catch (err) {
-    console.error("Connection error", err.message);
+    logger.error(`Connection error: ${err.message}`);
     process.exit(1);
   }
 };
@@ -13,9 +16,9 @@ const connectToMongoDB = async () => {
 const disconnectFromMongoDB = async () => {
   try {
     await mongoose.disconnect();
-    console.log("Disconnected from MongoDB Atlas");
+    logger.info("Disconnected from MongoDB Atlas");
   } catch (err) {
-    console.error("Disconnection error", err.message);
+    logger.error(`Disconnection error: ${err.message}`);
   }
 };
 

@@ -1,3 +1,5 @@
+using Serilog;
+using Serilog.Context;
 using StackExchange.Redis;
 using TicTacToe.Services;
 using TicTacToe.Utils;
@@ -8,31 +10,53 @@ namespace TicTacToe
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
-            builder.Services.AddCors();
+            try
+            {
+                LoggerConfig.ConfigureLogger();
 
-            // Redis connection
-            RedisUtils.Initialize(builder.Configuration);
-            builder.Services.AddSingleton<IConnectionMultiplexer>(provider => RedisUtils.GetDatabase().Multiplexer);
-            var activeGamesHashKey = builder.Configuration["Redis:ActiveGamesHashKey"] ?? "ticTacToeUsernamesGame";
-            RedisUtils.ClearHash(activeGamesHashKey);
+                using (LogContext.PushProperty("Context", "Program.Main"))
+                {
+                    var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddSingleton<IGameService, GameService>();
-            builder.Services.AddSingleton<IPlayerService, PlayerService>();
+                    builder.Host.UseSerilog();
 
-            var app = builder.Build();
+                    builder.Services.AddControllers();
+                    builder.Services.AddCors();
 
-            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+                    // Redis connection
+                    RedisUtils.Initialize(builder.Configuration);
+                    builder.Services.AddSingleton<IConnectionMultiplexer>(provider => RedisUtils.GetDatabase().Multiplexer);
+                    var activeGamesHashKey = builder.Configuration["Redis:ActiveGamesHashKey"] ?? "ticTacToeUsernamesGame";
+                    RedisUtils.ClearHash(activeGamesHashKey);
 
-            app.UseRouting();
 
-            app.UseMiddleware<ServiceWhitelistMiddleware>();
+                    builder.Services.AddSingleton<IGameService, GameService>();
+                    builder.Services.AddSingleton<IPlayerService, PlayerService>();
 
-            app.MapControllers();
+                    var app = builder.Build();
 
-            app.Run();
+                    app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+                    app.UseRouting();
+
+                    app.UseMiddleware<ServiceWhitelistMiddleware>();
+
+                    app.MapControllers();
+
+                    app.Run();
+
+                    Log.Information("TicTacToe service started successfully");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "TicTacToe service failed to start");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
     }
 }

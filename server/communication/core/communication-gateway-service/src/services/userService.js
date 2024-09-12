@@ -1,5 +1,8 @@
 import axios from "axios";
+
 import redisClient from "../utils/redisClient.js";
+import { getLogger } from "../utils/logger.js";
+const logger = getLogger("UserService");
 
 const repositoryServiceUrl = `${process.env.AUTH_REPOSITORY_SERVICE_URL}/users/internal`;
 const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
@@ -9,27 +12,37 @@ class UserService {
   static getUserById = async userId => {
     const cacheKey = `user:id:${userId}`;
 
-    const cachedUser = await redisClient.get(cacheKey);
-    if (cachedUser) {
-      return JSON.parse(cachedUser);
-    }
+    try {
+      const cachedUser = await redisClient.get(cacheKey);
+      if (cachedUser) {
+        logger.info(`Cache hit for user ID: ${userId}`);
+        return JSON.parse(cachedUser);
+      }
 
-    const url = `${repositoryServiceUrl}/id/${userId}`;
-    const response = await axios.get(url, {
-      headers: {
-        [internalServiceHeaderKey]: serviceName,
-      },
-    });
-
-    const user = response.data.user;
-
-    if (user) {
-      await redisClient.set(cacheKey, JSON.stringify(user), {
-        EX: 3600,
+      logger.info(
+        `Cache miss for user ID: ${userId}, fetching from repository service`
+      );
+      const url = `${repositoryServiceUrl}/id/${userId}`;
+      const response = await axios.get(url, {
+        headers: {
+          [internalServiceHeaderKey]: serviceName,
+        },
       });
-    }
 
-    return user;
+      const user = response.data.user;
+
+      if (user) {
+        await redisClient.set(cacheKey, JSON.stringify(user), {
+          EX: 3600,
+        });
+        logger.info(`User data cached for ID: ${userId}`);
+      }
+
+      return user;
+    } catch (error) {
+      logger.error(`Error fetching user by ID: ${userId} - ${error.message}`);
+      throw new Error("Failed to fetch user data");
+    }
   };
 }
 

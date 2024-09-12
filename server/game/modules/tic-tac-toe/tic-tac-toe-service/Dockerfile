@@ -1,22 +1,11 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
-WORKDIR /app
-EXPOSE 8080
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["tic-tac-toe-service.csproj", "."]
-RUN dotnet restore "./tic-tac-toe-service.csproj"
+ARG BUILD_CONFIGURATION=Debug
+WORKDIR /usr/src/app
 COPY . .
-WORKDIR "/src/."
+RUN dotnet restore "./tic-tac-toe-service.csproj"
 RUN dotnet build "./tic-tac-toe-service.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./tic-tac-toe-service.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "tic-tac-toe-service.dll"]
+FROM build AS final
+WORKDIR /usr/src/app
+EXPOSE 8080
+CMD ["dotnet", "watch", "run", "--project", "tic-tac-toe-service.csproj", "--urls", "http://tic_tac_toe_service:8080"]

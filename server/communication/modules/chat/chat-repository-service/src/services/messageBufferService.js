@@ -1,4 +1,8 @@
 import redisClient from "../utils/redisClient.js";
+
+import { getLogger } from "../utils/logger.js";
+const logger = getLogger("MessageBufferService");
+
 import MessageHistory from "../schemas/MessageHistory.js";
 
 class MessageBufferService {
@@ -13,8 +17,8 @@ class MessageBufferService {
     const threshold = parseInt(process.env.MESSAGE_BUFFER_THRESHOLD) || 10;
 
     if (bufferSize >= threshold) {
-      console.log(
-        `Buffer size threshold reached. Flushing buffer to database.`
+      logger.info(
+        `Buffer size threshold reached for ${cacheKey}. Flushing buffer to database.`
       );
       await this.flushBufferToDatabase(sortedUsernames, bufferKey);
     }
@@ -23,7 +27,7 @@ class MessageBufferService {
   static async flushBufferToDatabase(usernames, bufferKey) {
     const messages = await redisClient.lRange(bufferKey, 0, -1);
     if (messages.length > 0) {
-      console.log(
+      logger.info(
         `Flushing ${messages.length} messages from buffer: ${bufferKey}`
       );
       const parsedMessages = messages.map(msg => JSON.parse(msg));
@@ -34,22 +38,22 @@ class MessageBufferService {
         { new: true, upsert: true }
       );
 
-      console.log(
+      logger.info(
         `Message history updated in the database for users: ${usernames.join(
           ", "
         )}`
       );
 
       await redisClient.del(bufferKey);
-      console.log(`Buffer cleared. Buffer key: ${bufferKey}`);
+      logger.info(`Buffer cleared. Buffer key: ${bufferKey}`);
 
       const cacheKey = usernames.join("-");
       await redisClient.hDel(process.env.REDIS_MESSAGE_HISTORY_KEY, cacheKey);
-      console.log(`Cache key invalidated: ${cacheKey}`);
+      logger.info(`Cache key invalidated: ${cacheKey}`);
 
       return messageHistory;
     } else {
-      console.log(`No messages found in buffer: ${bufferKey}`);
+      logger.warn(`No messages found in buffer: ${bufferKey}`);
     }
   }
 
@@ -82,7 +86,7 @@ class MessageBufferService {
     setInterval(async () => {
       const flushed = await this.flushAllBuffers();
       if (flushed) {
-        console.log("Periodic buffer flush executed.");
+        logger.info("Periodic buffer flush executed.");
       }
     }, MESSAGE_BUFFER_FLUSH_INTERVAL);
   }
@@ -95,12 +99,12 @@ class MessageBufferService {
     const messages = await redisClient.lRange(bufferKey, 0, -1);
 
     if (messages.length > 0) {
-      console.log(
+      logger.info(
         `Fetched ${messages.length} messages from buffer: ${bufferKey}`
       );
       return messages.map(msg => JSON.parse(msg));
     } else {
-      console.log(`No messages found in buffer: ${bufferKey}`);
+      logger.info(`No messages found in buffer: ${bufferKey}`);
       return [];
     }
   }
@@ -127,7 +131,7 @@ class MessageBufferService {
       await redisClient.del(bufferKey);
       await redisClient.rPush(bufferKey, ...updatedMessages);
 
-      console.log(`Marked messages as read in buffer: ${bufferKey}`);
+      logger.info(`Marked messages as read in buffer: ${bufferKey}`);
     }
   }
 }

@@ -13,7 +13,7 @@ services:
       - GAME_SOCKET_URL=${GAME_SOCKET_URL}
     develop:
       watch:
-        - path: ./app/package.json
+        - path: ./client/package.json
           action: rebuild
         - path: ./client
           target: /usr/src/app
@@ -33,7 +33,7 @@ services:
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
-        - path: ./app/package.json
+        - path: ./server/auth/auth-repository-service/package.json
           action: rebuild
         - path: ./server/auth/auth-repository-service
           target: /usr/src/app
@@ -72,7 +72,7 @@ services:
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
-        - path: ./app/package.json
+        - path: ./server/communication/core/communication-gateway-service/package.json
           action: rebuild
         - path: ./server/communication/core/communication-gateway-service
           target: /usr/src/app
@@ -91,7 +91,7 @@ services:
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
-        - path: ./app/package.json
+        - path: ./server/communication/modules/chat/chat-repository-service/package.json
           action: rebuild
         - path: ./server/communication/modules/chat/chat-repository-service
           target: /usr/src/app
@@ -113,7 +113,7 @@ services:
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
-        - path: ./app/package.json
+        - path: ./server/game/core/game-gateway-service/package.json
           action: rebuild
         - path: ./server/game/core/game-gateway-service
           target: /usr/src/app
@@ -121,7 +121,9 @@ services:
 
   # Tic Tac Toe
   tic_tac_toe_service:
-    build: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
+    build:
+      context: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     networks:
@@ -132,10 +134,10 @@ services:
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
-        - path: ./app/package.json
+        - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-service/tic-tac-toe-service.csproj
           action: rebuild
         - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
-          target: /app
+          target: /usr/src/app
           action: sync
 
   tic_tac_toe_repository_service:
@@ -150,7 +152,7 @@ services:
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
-        - path: ./app/package.json
+        - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service/package.json
           action: rebuild
         - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service
           target: /usr/src/app

@@ -7,6 +7,8 @@ import {
   connectToMongoDB,
   disconnectFromMongoDB,
 } from "./utils/mongooseClient.js";
+import { getLogger } from "./utils/logger.js";
+const logger = getLogger("Main");
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import { serviceWhitelistMiddleware } from "./middleware/serviceWhitelistMiddleware.js";
@@ -39,15 +41,19 @@ async function main() {
   await redisClient.connect();
 
   app.listen(PORT, () => {
-    console.log(
+    logger.info(
       `auth-repository-service is running in ${process.env.NODE_ENV} mode on port ${PORT}`
     );
   });
 }
 
-main().catch(async err => {
-  console.error(err.message);
-  await disconnectFromMongoDB();
-  redisClient.quit();
-  process.exit(1);
-});
+main()
+  .then(async () => {
+    logger.info("Main function executed successfully.");
+  })
+  .catch(async err => {
+    logger.error(`Application startup error: ${err.message}`);
+    await disconnectFromMongoDB();
+    redisClient.quit();
+    process.exit(1);
+  });

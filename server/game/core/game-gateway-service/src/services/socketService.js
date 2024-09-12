@@ -1,7 +1,11 @@
 import { io } from "../index.js";
+
 import redisClient from "../utils/redisClient.js";
+import { getLogger } from "../utils/logger.js";
+const logger = getLogger("SocketService");
+
 import { handleInviteSubscriptions } from "./socketGameSessionHandler.js";
-import handleTicTacToeSubscriptions from "./ticTacToe/socketSubs.js";
+import { handleTicTacToeSubscriptions } from "./ticTacToe/socketSubs.js";
 
 class SocketService {
   static async setupSocketConnection() {
@@ -9,11 +13,12 @@ class SocketService {
       const user = socket.request.user;
 
       if (!user) {
+        logger.warn("Unauthorized socket connection attempt.");
         socket.disconnect(true);
         return;
       }
 
-      console.log(`${user.username} connected with socket ID: ${socket.id}`);
+      logger.info(`${user.username} connected with socket ID: ${socket.id}`);
       const savedUsername = user.username;
 
       socket.on("online-ping", async () => {
@@ -21,9 +26,8 @@ class SocketService {
         await handleInviteSubscriptions(socket, savedUsername);
         await handleTicTacToeSubscriptions(socket, savedUsername);
 
-        console.log(
-          `Online ping from ${savedUsername}. Current online users:`,
-          await this.getOnlineUsernames()
+        logger.info(
+          `Online ping from ${savedUsername}. Current online users: ${await this.getOnlineUsernames()}`
         );
         socket.broadcast.emit(
           "player-connection",
@@ -36,7 +40,7 @@ class SocketService {
         if (savedUsername) {
           await this.disconnectUser(savedUsername, socket.id);
 
-          console.log(
+          logger.info(
             `Socket ID ${socket.id} for user ${savedUsername} disconnected.`
           );
 
@@ -61,6 +65,7 @@ class SocketService {
       username,
       JSON.stringify(userSockets)
     );
+    logger.info(`User ${username} connected with socket ID: ${socketId}`);
   }
 
   static async disconnectUser(username, socketId) {
@@ -73,8 +78,12 @@ class SocketService {
         username,
         JSON.stringify(updatedSockets)
       );
+      logger.info(
+        `Updated sockets for user ${username}. Remaining sockets: ${updatedSockets}`
+      );
     } else {
       await redisClient.hDel(process.env.REDIS_USER_SOCKET_KEY, username);
+      logger.info(`All sockets disconnected for user ${username}`);
     }
   }
 
