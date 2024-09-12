@@ -72,7 +72,7 @@ export const GameRequest = ({
       setCurrentInviteIndex(0);
       loadAvatars();
     }
-  }, [invites, users]);
+  }, [invites]);
 
   const handleYesButtonClick = () => {
     if (currentInvite) {
@@ -95,7 +95,7 @@ export const GameRequest = ({
   };
 
   const getInviteCircle = (): ReactNode => {
-    const AvatarComponent = avatarIconMap[currentInvite?.senderUsername || ""];
+    const AvatarComponent = avatarIconMap[currentInvite.senderUsername];
     if (!AvatarComponent) return null;
 
     const svgProps: SVGProps = {
@@ -165,20 +165,5 @@ export const GameRequest = ({
     enableResizing: false,
   };
 
-  return (
-    <Rnd {...rndProps}>
-      <AddonCircle
-        className={`${cls.GameRequest} ${className}`}
-        iconProps={{
-          Svg: avatarIconMap[currentInvite?.senderUsername || ""],
-          width: 80,
-          height: 80,
-          highlight: "secondary",
-        }}
-        addonBottomLeft={yesButton}
-        addonBottomRight={noButton}
-        addonTopLeft={skipButton}
-      />
-    </Rnd>
-  );
+  return <Rnd {...rndProps}>{getInviteCircle()}</Rnd>;
 };
