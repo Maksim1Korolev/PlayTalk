@@ -28,6 +28,19 @@ export const sortUsers = (userA: User, userB: User): number => {
     return 1;
   }
 
-  // 4. Sort alphabetically by username if everything else is the same
+  // 4. Sort by unread messages (users with unread messages come first)
+  const userAHasUnreadMessages =
+    userA.unreadMessageCount && userA.unreadMessageCount > 0;
+  const userBHasUnreadMessages =
+    userB.unreadMessageCount && userB.unreadMessageCount > 0;
+
+  if (userAHasUnreadMessages && !userBHasUnreadMessages) {
+    return -1;
+  }
+  if (!userAHasUnreadMessages && userBHasUnreadMessages) {
+    return 1;
+  }
+
+  // 5. Sort alphabetically by username if everything else is the same
   return userA.username.localeCompare(userB.username);
 };
