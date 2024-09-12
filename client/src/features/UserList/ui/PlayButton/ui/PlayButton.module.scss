@@ -36,6 +36,10 @@
   transition: all 0.5s;
 }
 
-.highlighted {
-  filter: brightness(1.5) drop-shadow(0 0 10px var(--accent-color));
+.highlightPrimary {
+  filter: brightness(1.5) drop-shadow(0 0 10px var(--primary-color));
+}
+
+.highlightSecondary {
+  filter: brightness(1.5) drop-shadow(0 0 10px var(--secondary-color));
 }

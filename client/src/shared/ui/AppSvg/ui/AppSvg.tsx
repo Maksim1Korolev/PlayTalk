@@ -1,5 +1,5 @@
 import { cx } from "@/shared/lib/cx";
-import { forwardRef, memo } from "react";
+import { memo } from "react";
 import cls from "./AppSvg.module.scss";
 
 type SvgProps = Omit<React.SVGProps<SVGSVGElement>, "onClick" | "fill">;
@@ -9,7 +9,7 @@ interface SVGBaseProps extends SvgProps {
   Svg: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   backgroundColor?: BackgroundColor;
   fill?: boolean;
-  highlighted?: boolean;
+  highlight?: HighlightType;
 }
 
 interface ImageSVGProps extends SVGBaseProps {
@@ -24,6 +24,7 @@ interface ClickableSVGProps extends SVGBaseProps {
 export type SVGProps = ImageSVGProps | ClickableSVGProps;
 
 type BackgroundColor = "white" | "black" | "primary";
+type HighlightType = "none" | "primary" | "secondary";
 
 export const AppSvg = memo((props: SVGProps) => {
   const {
@@ -34,7 +35,7 @@ export const AppSvg = memo((props: SVGProps) => {
     height = 32,
     clickable,
     fill,
-    highlighted,
+    highlight = "none",
     onClick,
     ...otherProps
   } = props;
@@ -47,7 +48,10 @@ export const AppSvg = memo((props: SVGProps) => {
     <Svg
       className={cx(
         cls.icon,
-        { [cls.fill]: fill, [cls.highlighted]: highlighted },
+        {
+          [cls.fill]: fill,
+          [cls[`highlight-${highlight}`]]: highlight !== "none",
+        },
         [colorClass]
       )}
       width={width}

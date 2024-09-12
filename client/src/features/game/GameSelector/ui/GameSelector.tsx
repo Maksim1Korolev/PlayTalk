@@ -65,7 +65,13 @@ export const GameSelector = memo(
 
     const getGameIcon = (gameName: string): ReactNode => {
       const size = 60;
-      const highlighted = isGameActive(gameName);
+      const isActive = isGameActive(gameName);
+      //TODO:Change to useState
+      const highlight = isActive
+        ? "primary"
+        : user.isInviting
+        ? "secondary"
+        : "none";
       const SvgComponent = iconMap[gameName];
 
       if (!SvgComponent) {
@@ -76,7 +82,7 @@ export const GameSelector = memo(
         Svg: SvgComponent,
         width: size,
         height: size,
-        highlighted,
+        highlight,
         clickable: true,
         onClick: () => handleIconClick(gameName),
       };

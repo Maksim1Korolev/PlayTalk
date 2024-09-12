@@ -1,11 +1,12 @@
+import { useState, useEffect } from "react";
 import { User } from "@/entities/User";
 import { AvatarWithProps } from "@/features/AvatarWithProps";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
-import { PlayButton } from "@/features/UserList/ui/PlayButton";
 import { cx } from "@/shared/lib/cx";
 import { HStack } from "@/shared/ui";
 import { UserOnlineIndicator } from "../../UserOnlineIndicator";
 import cls from "./UserListCard.module.scss";
+import { PlayButton, HighlightType } from "@/features/UserList/ui/PlayButton";
 
 interface UserListCardProps {
   className?: string;
@@ -24,6 +25,18 @@ export const UserListCard = ({
   handleChatButton,
   userRef,
 }: UserListCardProps) => {
+  const [highlight, setHighlight] = useState<HighlightType>("none");
+
+  useEffect(() => {
+    if (user.activeGames.length > 0) {
+      setHighlight("primary");
+    } else if (user.isInviting) {
+      setHighlight("secondary");
+    } else {
+      setHighlight("none");
+    }
+  }, [user.activeGames.length, user.isInviting]);
+
   const onChatOpen = () => {
     handleChatButton(user);
   };
@@ -58,7 +71,7 @@ export const UserListCard = ({
         </span>
         <PlayButton
           className={cls.playButton}
-          highlighted={user.activeGames.length > 0}
+          highlight={highlight}
           onClick={onPlayButton}
         >
           Play

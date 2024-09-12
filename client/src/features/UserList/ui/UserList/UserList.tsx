@@ -48,9 +48,6 @@ export const UserList = memo(
 
     const userList = useMemo(() => {
       const sortedUsers = users ? [...users].sort(sortUsers) : [];
-      console.log("YA TUT");
-      console.log("sortedUsers:");
-      console.log(sortedUsers);
       return sortedUsers?.map((user, index) => (
         <div style={{ width: "100%" }} key={user._id}>
           <UserListCard
