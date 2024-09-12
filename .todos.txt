@@ -20,6 +20,7 @@ Empty data doesn't count as redis cache
 Check online and api client logic, rename OnlinePage
 Memo template
 Issues when redis connects late (-restart?)
+Adjust modal drag
 
 To add (In the end):
 Auth on all servers, updated auth for some data

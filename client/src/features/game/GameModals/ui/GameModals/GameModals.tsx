@@ -158,14 +158,14 @@ export const GameModals = memo(
 
     const getGameIconProps = (currentGameName: string): SVGProps => {
       const size = 80;
-      const highlighted = true;
+      const highlight = "primary";
       const SvgComponent = iconSvgMap[currentGameName];
 
       const svgProps: SVGProps = {
         Svg: SvgComponent,
         width: size,
         height: size,
-        highlighted,
+        highlight,
       };
 
       return svgProps;

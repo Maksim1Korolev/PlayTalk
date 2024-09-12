@@ -46,22 +46,24 @@ export const CircleModal = memo(
         setIsCollapsed(true);
       }
     };
+
+    const rndProps = {
+      onDragStart: handleDragStart,
+      onDragStop: handleDragStop,
+      default: {
+        x: position?.x || 0,
+        y: position?.y || 0,
+        width: 80,
+        height: 80,
+      },
+      minWidth: isCollapsed ? 80 : 365,
+      minHeight: isCollapsed ? 80 : 475,
+      bounds: "window",
+      enableResizing: !isCollapsed,
+    };
+
     return (
-      <Rnd
-        onDragStart={handleDragStart}
-        onDragStop={handleDragStop}
-        default={{
-          x: position?.x || 0,
-          y: position?.y || 0,
-          width: 80,
-          height: 80,
-        }}
-        //TODO:Move to constants
-        minWidth={isCollapsed ? 80 : 365}
-        minHeight={isCollapsed ? 80 : 475}
-        bounds="window"
-        enableResizing={!isCollapsed}
-      >
+      <Rnd {...rndProps}>
         {isCollapsed ? (
           <AddonCircle {...addonCircleProps} onClick={handleOpenCircleModal} />
         ) : (
