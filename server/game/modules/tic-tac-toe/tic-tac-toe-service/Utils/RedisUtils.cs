@@ -1,4 +1,6 @@
-﻿using StackExchange.Redis;
+﻿using Serilog;
+using Serilog.Context;
+using StackExchange.Redis;
 
 namespace TicTacToe.Utils
 {
@@ -8,31 +10,41 @@ namespace TicTacToe.Utils
 
         public static void Initialize(IConfiguration configuration)
         {
-            var redisConnectionString = configuration.GetConnectionString("Redis") ?? "redis:6379";
-            _redis = ConnectionMultiplexer.Connect(redisConnectionString);
+            using (LogContext.PushProperty("Context", "RedisUtils.Initialize"))
+            {
+                var redisConnectionString = configuration.GetConnectionString("Redis") ?? "redis:6379";
+                Log.Information("Initializing Redis with connection string: {RedisConnectionString}", redisConnectionString);
+                _redis = ConnectionMultiplexer.Connect(redisConnectionString);
+                Log.Information("Redis initialized successfully.");
+            }
         }
 
         public static IDatabase GetDatabase()
         {
             if (_redis == null)
             {
+                Log.Error("Attempted to get Redis database but the connection was not initialized.");
                 throw new InvalidOperationException("Redis connection has not been initialized.");
             }
 
+            Log.Debug("Fetching Redis database instance.");
             return _redis.GetDatabase();
         }
 
         public static void ClearHash(string hashKey)
         {
-            try
+            using (LogContext.PushProperty("Context", "RedisUtils.ClearHash"))
             {
-                var db = GetDatabase();
-                db.KeyDelete(hashKey);
-                Console.WriteLine("Cleared game cache in Redis");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error clearing game cache in Redis: {ex.Message}");
+                try
+                {
+                    var db = GetDatabase();
+                    db.KeyDelete(hashKey);
+                    Log.Information("Cleared game cache in Redis with hash key: {HashKey}", hashKey);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Error clearing game cache in Redis for hash key: {HashKey}", hashKey);
+                }
             }
         }
     }

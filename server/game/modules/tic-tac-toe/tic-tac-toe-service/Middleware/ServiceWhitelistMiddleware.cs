@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Primitives;
+using Serilog;
+using Serilog.Context;
 
 public class ServiceWhitelistMiddleware
 {
@@ -19,23 +21,31 @@ public class ServiceWhitelistMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        if (!context.Request.Headers.TryGetValue(_serviceHeaderKey, out StringValues serviceHeader))
+        using (LogContext.PushProperty("Context", "ServiceWhitelist.Middleware"))
         {
-            context.Response.StatusCode = 403;
-            await context.Response.WriteAsync("Access forbidden: No service header provided.");
-            return;
-        }
+            if (!context.Request.Headers.TryGetValue(_serviceHeaderKey, out StringValues serviceHeader))
+            {
+                Log.Warning("Access forbidden: No service header provided.");
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync("Access forbidden: No service header provided.");
+                return;
+            }
 
-        var serviceHeaderValue = serviceHeader.ToString();
+            var serviceHeaderValue = serviceHeader.ToString();
 
-        if (_whitelistedServices.Contains(serviceHeaderValue))
-        {
-            await _next(context);
-        }
-        else
-        {
-            context.Response.StatusCode = 403;
-            await context.Response.WriteAsync("Access forbidden: Service not allowed.");
+            Log.Information("Service request from {ServiceHeader}", serviceHeaderValue);
+
+            if (_whitelistedServices.Contains(serviceHeaderValue))
+            {
+                Log.Information("Access granted for service: {ServiceHeader}", serviceHeaderValue);
+                await _next(context);
+            }
+            else
+            {
+                Log.Warning("Access forbidden: Service {ServiceHeader} is not allowed.", serviceHeaderValue);
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync("Access forbidden: Service not allowed.");
+            }
         }
     }
 }
