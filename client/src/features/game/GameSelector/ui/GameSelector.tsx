@@ -13,10 +13,12 @@ interface GameSelectorProps {
     opponentUsername,
     gameName,
     isActive,
+    isInviting,
   }: {
     opponentUsername: string;
     gameName: string;
     isActive: boolean;
+    isInviting: boolean;
   }) => void;
 }
 
@@ -27,6 +29,9 @@ export const GameSelector = memo(
     const [iconMap, setIconMap] = useState<{
       [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
     }>({});
+    const [highlight, setHighlight] = useState<
+      "none" | "primary" | "secondary"
+    >("none");
 
     useEffect(() => {
       const loadIcons = async () => {
@@ -50,6 +55,16 @@ export const GameSelector = memo(
       loadIcons();
     }, [gameNames]);
 
+    useEffect(() => {
+      const newHighlight =
+        user.activeGames.length > 0
+          ? "primary"
+          : user.isInviting
+          ? "secondary"
+          : "none";
+      setHighlight(newHighlight);
+    }, [user.activeGames.length, user.isInviting]);
+
     const isGameActive = (gameName: string): boolean => {
       return user.activeGames.includes(gameName);
     };
@@ -60,18 +75,12 @@ export const GameSelector = memo(
         opponentUsername: user.username,
         gameName,
         isActive,
+        isInviting: user.isInviting,
       });
     };
 
     const getGameIcon = (gameName: string): ReactNode => {
       const size = 60;
-      const isActive = isGameActive(gameName);
-      //TODO:Change to useState
-      const highlight = isActive
-        ? "primary"
-        : user.isInviting
-        ? "secondary"
-        : "none";
       const SvgComponent = iconMap[gameName];
 
       if (!SvgComponent) {
@@ -82,7 +91,8 @@ export const GameSelector = memo(
         Svg: SvgComponent,
         width: size,
         height: size,
-        highlight,
+        //TODO:Fix useState (real-time problems)
+        highlight: highlight,
         clickable: true,
         onClick: () => handleIconClick(gameName),
       };

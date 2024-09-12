@@ -149,14 +149,21 @@ export const useOnlinePageSockets = () => {
     opponentUsername,
     gameName,
     isActive,
+    isInviting,
   }: {
     opponentUsername: string;
     gameName: string;
     isActive: boolean;
+    isInviting: boolean;
   }) => {
-    isActive
-      ? handleOpenGameModal({ opponentUsername, gameName })
-      : handleSendGameInvite({ receiverUsername: opponentUsername, gameName });
+    if (isInviting) {
+      const invite: Invite = { senderUsername: opponentUsername, gameName };
+      handleGameRequestYesButton(invite);
+    } else if (isActive) {
+      handleOpenGameModal({ opponentUsername, gameName });
+    } else {
+      handleSendGameInvite({ receiverUsername: opponentUsername, gameName });
+    }
 
     setLastClickedPlayUser(null);
   };

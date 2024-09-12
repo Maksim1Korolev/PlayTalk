@@ -16,8 +16,6 @@ export const PlayButton = ({
   highlight = "none",
   ...buttonProps
 }: PlayButtonProps) => {
-  console.log(highlight);
-
   return (
     <UiButton
       className={cx(
