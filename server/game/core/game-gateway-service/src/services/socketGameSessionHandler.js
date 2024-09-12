@@ -55,13 +55,27 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
   );
 
   try {
-    await TicTacToeGameService.startGame(senderUsername, receiverUsername);
+    switch (gameName) {
+      case "tic-tac-toe":
+        await TicTacToeGameService.startGame(senderUsername, receiverUsername);
+        break;
+
+      // Other case example
+      // case "chess":
+      //   await ChessGameService.startGame(senderUsername, receiverUsername);
+      //   break;
+
+      default:
+        logger.warn(`Unsupported game type: ${gameName}`);
+        return;
+    }
   } catch (err) {
     if (err.response && err.response.data) {
-      logger.error("Error starting game: ", err.response.data);
+      logger.error(`Error starting game ${gameName}: ${err.response.data}`);
     } else {
-      logger.error("Error starting game: ", err.message);
+      logger.error(`Error starting game ${gameName}: ${err.message}`);
     }
+    return;
   }
 
   const senderSockets = await SocketService.getUserSockets(senderUsername);
@@ -71,7 +85,6 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
     opponentUsername: receiverUsername,
     gameName,
   });
-
   logger.info(
     `Notified ${senderUsername} of connection with ${receiverUsername} for game ${gameName}`
   );
@@ -83,35 +96,6 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
   logger.info(
     `Notified ${receiverUsername} of connection with ${senderUsername} for game ${gameName}`
   );
-}
-
-async function endGame(username1, username2, gameName, winnerUsername) {
-  logger.info(
-    `Ending game ${gameName} between ${username1} and ${username2}. Winner: ${winnerUsername}`
-  );
-
-  const user1Sockets = await SocketService.getUserSockets(username1);
-  const user2Sockets = await SocketService.getUserSockets(username2);
-
-  io.to(user1Sockets).emit("end-game", {
-    opponentUsername: username2,
-    gameName,
-    winner: winnerUsername,
-  });
-  logger.info(
-    `Notified ${username1} of game end with ${username2}. Winner: ${winnerUsername}`
-  );
-
-  io.to(user2Sockets).emit("end-game", {
-    opponentUsername: username1,
-    gameName,
-    winner: winnerUsername,
-  });
-  logger.info(
-    `Notified ${username2} of game end with ${username1}. Winner: ${winnerUsername}`
-  );
-
-  await ActiveGamesService.removeActiveGame(username1, username2, gameName);
 }
 
 export { handleInviteSubscriptions, endGame };
