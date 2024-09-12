@@ -39,33 +39,55 @@ export const authUser = asyncHandler(async (req, res) => {
   }
 });
 
+//TODO:Update error logic
 // @desc   Register user
 // @route  POST /api/users/register
 // @access Public
 export const registerUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
 
-  try {
-    logger.info(`Registration attempt for user: ${username}`);
-    const existingUser = await UserService.getUserByUsername(username);
+  if (!username || !password) {
+    logger.warn("Username or password missing in registration request");
+    return res
+      .status(400)
+      .json({ message: "Username and password are required" });
+  }
 
+  logger.info(`Registration attempt for user: ${username}`);
+
+  try {
+    const existingUser = await UserService.getUserByUsername(username);
     if (existingUser) {
       logger.warn(`Username already taken: ${username}`);
-      res.status(400);
-      throw new Error("Username already taken");
+      return res.status(400).json({ message: "Username already taken" });
+    }
+    //Why is this not happening after 404?
+    // const hashedPassword = await hash(password);
+    // const user = await UserService.addUser({
+    //   username,
+    //   password: hashedPassword,
+    // });
+
+    // const token = generateToken(user._id, user.username);
+    // logger.info(`User registered successfully: ${username}`);
+    // return res.status(201).json({ user, token });
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      logger.info(
+        `No existing user found for username: ${username}. Proceeding with registration.`
+      );
+      const hashedPassword = await hash(password);
+      const user = await UserService.addUser({
+        username,
+        password: hashedPassword,
+      });
+
+      const token = generateToken(user._id, user.username);
+      logger.info(`User registered successfully: ${username}`);
+      return res.status(201).json({ user, token });
     }
 
-    const hashedPassword = await hash(password);
-    const user = await UserService.addUser({
-      username,
-      password: hashedPassword,
-    });
-
-    const token = generateToken(user._id, user.username);
-    logger.info(`User registered successfully: ${username}`);
-    res.json({ user, token });
-  } catch (error) {
-    logger.error(`Error registering user: ${username} - ${error.message}`);
-    res.status(400).json({ message: error.message });
+    logger.error(`Error registering user: ${username}: ${error.message}`);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
