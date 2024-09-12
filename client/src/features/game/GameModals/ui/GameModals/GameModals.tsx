@@ -1,20 +1,14 @@
-import { memo, useContext, useEffect, useState } from "react";
-import cls from "./GameModals.module.scss";
-import { cx } from "@/shared/lib/cx";
-import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
-import { useCookies } from "react-cookie";
+import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
 import { User } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe/";
-import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
-import {
-  AddonCircle,
-  AddonCircleProps,
-  AppSvg,
-  CircleModal,
-  SVGProps,
-} from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
+import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
+import { cx } from "@/shared/lib/cx";
+import { AddonCircleProps, AppSvg, CircleModal, SVGProps } from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
+import { memo, useContext, useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import cls from "./GameModals.module.scss";
 
 const generateModalId = (
   opponentUsername: string,
@@ -40,7 +34,7 @@ export const GameModals = memo(
     const [cookies] = useCookies(["jwt-cookie"]);
     const currentUser: User = cookies["jwt-cookie"]?.user;
     const { users } = useContext(UsersContext);
-
+    //TODO: Add type for games
     const [games, setGames] = useState<{ [key: string]: any }>({});
     const [iconSvgMap, setIconSvgMap] = useState<{
       [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;

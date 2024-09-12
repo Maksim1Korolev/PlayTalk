@@ -1,5 +1,5 @@
 import { cx } from "@/shared/lib/cx";
-import { forwardRef, memo } from "react";
+import { memo } from "react";
 import cls from "./AppSvg.module.scss";
 
 type SvgProps = Omit<React.SVGProps<SVGSVGElement>, "onClick" | "fill">;

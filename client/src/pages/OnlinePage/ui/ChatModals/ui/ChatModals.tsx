@@ -1,58 +1,111 @@
 import { User } from "@/entities/User";
-import {
-  ChatModalStateProps,
-  useChatModals,
-} from "@/pages/OnlinePage/hooks/useChatModals";
-import { cx } from "@/shared/lib/cx";
-import { ChatModal } from "@/widgets/ChatModal";
-import { memo, useCallback } from "react";
-import cls from "./ChatModals.module.scss";
+import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
+import { ChatBox } from "@/features/Chat/ui/Chat/ui/Chat";
+import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
+import { ChatModalState } from "@/pages/OnlinePage/hooks/useChatModals";
+import { AddonCircleProps, CircleModal, SVGProps } from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
+import { memo, useCallback, useEffect, useState } from "react";
 
 export const ChatModals = memo(
   ({
     className,
     currentUser,
     chatModals,
-    setChatModals,
   }: {
     className?: string;
     currentUser: User;
-    chatModals: ChatModalStateProps[] | undefined;
-    setChatModals: React.Dispatch<
-      React.SetStateAction<ChatModalStateProps[] | undefined>
-    >;
+    chatModals: ChatModalState[] | undefined;
   }) => {
-    const { handleUserMessage, readAllUnreadMessages } = useChatModals();
+    const [addonCirclePropsMap, setAddonCirclePropsMap] = useState<{
+      [userId: string]: AddonCircleProps | undefined;
+    }>({});
 
-    const handleCloseChatModal = useCallback(
-      (userId: string) => {
-        setChatModals(prev => prev?.filter(modal => modal.user._id !== userId));
+    const getAddonCircleProps = useCallback(
+      async ({
+        unreadMessagesCount,
+        avatarFileName,
+        isOnline,
+      }: {
+        unreadMessagesCount: number | undefined;
+        avatarFileName: string;
+        isOnline: boolean;
+      }) => {
+        const avatarIconProps: SVGProps | undefined = await getAvatarIconProps(
+          avatarFileName
+        );
+        if (!avatarIconProps) return;
+        const addonCircleProps: AddonCircleProps = {
+          iconProps: avatarIconProps,
+          addonTopRight: (
+            <UnreadMessagesCountIndicator
+              unreadMessagesCount={unreadMessagesCount}
+            />
+          ),
+          addonBottomRight: <UserOnlineIndicator isOnline={isOnline} />,
+        };
+
+        return addonCircleProps;
       },
-      [setChatModals]
+      []
     );
+
+    const getAvatarIconProps = async (avatarFileName: string) => {
+      const size = 80;
+      const iconPath = getImagePath({ avatarFileName });
+      try {
+        const AvatarSvg = await import(iconPath);
+
+        const svgProps: SVGProps = {
+          Svg: AvatarSvg,
+          width: size,
+          height: size,
+        };
+        return svgProps;
+      } catch (error) {
+        console.error(`Failed to load icon for game: ${avatarFileName}`, error);
+      }
+    };
+		const closeChatModal = useCallback(() => { }, []);
+
+    useEffect(() => {
+      const fetchAddonCircleProps = async () => {
+        const newAddonCirclePropsMap: {
+          [userId: string]: AddonCircleProps | undefined;
+        } = {};
+
+        if (chatModals) {
+          for (const { user } of chatModals) {
+            newAddonCirclePropsMap[user._id] = await getAddonCircleProps({
+              avatarFileName: user.avatarFileName,
+              isOnline: user.isOnline,
+              unreadMessagesCount: user.unreadMessageCount,
+            });
+          }
+        }
+
+        setAddonCirclePropsMap(newAddonCirclePropsMap);
+      };
+
+      fetchAddonCircleProps();
+    }, [chatModals, getAddonCircleProps]);
 
     const renderChatModals = useCallback(() => {
       return chatModals?.map(({ user, position }) => (
-        <ChatModal
-          className={cx(cls.ChatModals, {}, [className])}
-          key={`${user._id}`}
-          currentUser={currentUser}
-          receiverUser={user}
-          handleSendMessage={handleUserMessage}
-          handleReadAllUnreadMessages={readAllUnreadMessages}
-          handleCloseModal={handleCloseChatModal}
-          position={position}
-        />
+        <>
+          <CircleModal
+            position={position}
+            key={`${user._id}`}
+            onClose={() => closeChatModal}
+            headerString={`Chat with ${user.username}`}
+            addonCircleProps={addonCirclePropsMap[user._id]}
+          >
+            <ChatBox currentUser={currentUser} receiverUser={user} />
+          </CircleModal>
+        </>
       ));
-    }, [
-      chatModals,
-      className,
-      currentUser,
-      handleCloseChatModal,
-      handleUserMessage,
-      readAllUnreadMessages,
-    ]);
+    }, [addonCirclePropsMap, chatModals, closeChatModal, currentUser]);
 
-    return <>{renderChatModals()}</>;
+    return <div className={className}>{renderChatModals()}</div>;
   }
 );

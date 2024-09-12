@@ -1,12 +1,13 @@
-import { memo, useState, useEffect } from "react";
-import cls from "./TicTacToe.module.scss";
-import { cx } from "@/shared/lib/cx";
-import { Board } from "../Board";
-import { useCookies } from "react-cookie";
+import { Game } from "@/entities/Game/TicTacToe/model/types/game";
 import { User } from "@/entities/User";
-import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
-import { UiButton, UiText, VStack } from "@/shared/ui";
 import resources from "@/shared/assets/locales/en/games/TicTacToeResources.json";
+import { cx } from "@/shared/lib/cx";
+import { UiButton, UiText, VStack } from "@/shared/ui";
+import { memo, useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
+import { Board } from "../Board";
+import cls from "./TicTacToe.module.scss";
 
 interface TicTacToeProps {
   className?: string;

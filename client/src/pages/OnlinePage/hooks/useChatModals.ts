@@ -1,37 +1,27 @@
 import { User } from "@/entities/User";
 import { Message } from "@/features/Chat/ui/ChatMessage/ui/ChatMessage";
 import { communicationSocket } from "@/shared/api/sockets";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-export interface ChatModalStateProps {
+export interface ChatModalState {
   user: User;
-  position?: {
-    x: number;
-    y: number;
-  };
+  position: { x: number; y: number };
 }
-
 export const useChatModals = () => {
-  const handleUserMessage = useCallback(
-    (receiverUsername: string, message: Message) => {
-      communicationSocket.emit("send-message", {
-        receiverUsername,
-        message,
-      });
-    },
-    []
-  );
-
-  const readAllUnreadMessages = useCallback((usernames: string[]) => {
-    communicationSocket.emit("on-read-messages", {
-      usernames,
-    });
+  const [chatModals, setChatModals] = useState<ChatModalState[]>([]);
+  const openChatModal = useCallback((user: User) => {
+    setChatModals(prev => [
+      ...prev,
+      { user, position: { x: 100, y: 100 } }, // default position
+    ]);
   }, []);
 
-  return {
-    handleUserMessage,
-    readAllUnreadMessages,
-  };
+  const closeChatModal = useCallback((userId: string) => {
+    setChatModals(prev => prev.filter(modal => modal.user._id !== userId));
+  }, []);
+ 
+
+  return { chatModals, openChatModal, closeChatModal,  };
 };
 
 export const useReceiveMessage = (
