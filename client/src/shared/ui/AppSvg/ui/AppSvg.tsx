@@ -12,7 +12,7 @@ interface SVGBaseProps extends SvgProps {
   highlight?: HighlightType;
 }
 
-interface ImageSVGProps extends SVGBaseProps {
+export interface ImageSVGProps extends SVGBaseProps {
   clickable?: false;
   onClick?: never;
 }
@@ -24,7 +24,8 @@ interface ClickableSVGProps extends SVGBaseProps {
 export type SVGProps = ImageSVGProps | ClickableSVGProps;
 
 type BackgroundColor = "white" | "black" | "primary";
-type HighlightType = "none" | "primary" | "secondary";
+//TODO:Get rid of two highlight types
+export type HighlightType = "none" | "primary" | "secondary";
 
 export const AppSvg = memo((props: SVGProps) => {
   const {

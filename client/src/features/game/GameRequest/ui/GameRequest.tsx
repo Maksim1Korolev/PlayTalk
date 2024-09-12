@@ -1,13 +1,6 @@
 import { useState, useEffect, useContext, ReactNode } from "react";
 import cls from "./GameRequest.module.scss";
-import {
-  AddonCircle,
-  Card,
-  HStack,
-  UiButton,
-  VStack,
-  SVGProps,
-} from "@/shared/ui";
+import { AddonCircle, UiButton, SVGProps } from "@/shared/ui";
 import resources from "@/shared/assets/locales/en/games/GameRequestResources.json";
 import { Invite } from "@/entities/Game/model";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
@@ -15,6 +8,8 @@ import { useModalDrag } from "@/shared/hooks/useModalDrag";
 import { Rnd } from "react-rnd";
 import getImagePath from "@/shared/utils/getImagePath";
 import { User } from "@/entities/User";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface GameRequestProps {
   className?: string;
@@ -89,8 +84,8 @@ export const GameRequest = ({
     }
   };
 
-  const renderAvatarIcon = (username: string): ReactNode => {
-    const AvatarComponent = avatarIconMap[username];
+  const getInviteCircle = (invite: Invite): ReactNode => {
+    const AvatarComponent = avatarIconMap[invite.senderUsername];
     if (!AvatarComponent) return null;
 
     const svgProps: SVGProps = {
@@ -100,8 +95,35 @@ export const GameRequest = ({
       highlight: "secondary",
     };
 
-    return <AddonCircle iconProps={svgProps} />;
+    return (
+      <AddonCircle
+        className={`${cls.GameRequest} ${className}`}
+        iconProps={svgProps}
+        addonBottomLeft={yesButton}
+        addonBottomRight={noButton}
+      />
+    );
   };
+
+  const yesButton = (
+    <UiButton
+      variant="clear"
+      onClick={handleYesButtonClick}
+      className={cls.yesButton}
+    >
+      <CheckIcon />
+    </UiButton>
+  );
+
+  const noButton = (
+    <UiButton
+      variant="clear"
+      onClick={handleNoButtonClick}
+      className={cls.noButton}
+    >
+      <CloseIcon />
+    </UiButton>
+  );
 
   if (!currentInvite) {
     return null;
@@ -121,26 +143,5 @@ export const GameRequest = ({
     bounds: "window",
   };
 
-  return (
-    <Rnd {...rndProps}>
-      <Card className={`${cls.GameRequest} ${className}`}>
-        <VStack>
-          <div>
-            {resources.inviteMessage
-              .replace("{senderUsername}", currentInvite.senderUsername)
-              .replace("{gameName}", currentInvite.gameName)}
-          </div>
-          {renderAvatarIcon(currentInvite.senderUsername)}
-          <HStack>
-            <UiButton onClick={handleYesButtonClick}>
-              {resources.yesButton}
-            </UiButton>
-            <UiButton onClick={handleNoButtonClick}>
-              {resources.noButton}
-            </UiButton>
-          </HStack>
-        </VStack>
-      </Card>
-    </Rnd>
-  );
+  return <Rnd {...rndProps}>{getInviteCircle(currentInvite)}</Rnd>;
 };

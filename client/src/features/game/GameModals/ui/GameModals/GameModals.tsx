@@ -13,6 +13,7 @@ import {
 import { AddonCircleProps, AppSvg, CircleModal, SVGProps } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
+import { HighlightType } from "@/shared/ui/AppSvg/ui/AppSvg";
 
 const generateModalId = (
   opponentUsername: string,
@@ -158,7 +159,7 @@ export const GameModals = memo(
 
     const getGameIconProps = (currentGameName: string): SVGProps => {
       const size = 80;
-      const highlight = "primary";
+      const highlight: HighlightType = "primary";
       const SvgComponent = iconSvgMap[currentGameName];
 
       const svgProps: SVGProps = {
