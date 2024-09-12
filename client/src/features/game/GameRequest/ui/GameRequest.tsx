@@ -141,6 +141,7 @@ export const GameRequest = ({
     minWidth: 80,
     minHeight: 80,
     bounds: "window",
+    enableResizing: false,
   };
 
   return <Rnd {...rndProps}>{getInviteCircle(currentInvite)}</Rnd>;

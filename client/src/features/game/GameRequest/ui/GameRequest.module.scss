@@ -1,2 +1,12 @@
 .GameRequest {
 }
+
+.yesButton {
+  background-color: var(--accent-color);
+  color: var(--inverted-bg-color);
+}
+
+.noButton {
+  background-color: var(--cancel);
+  color: var(--inverted-bg-color);
+}
