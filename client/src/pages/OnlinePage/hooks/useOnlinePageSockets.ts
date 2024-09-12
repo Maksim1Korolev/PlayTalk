@@ -6,17 +6,15 @@ import { useSockets } from "@/shared/hooks/useSockets";
 import { useGameModals } from "./useGameModals";
 import { useGameSessionSocket } from "./useGameSessionSocket";
 import { useOnlineSockets } from "./useOnlineSockets";
-import { SocketContext } from "@/shared/lib/context/SocketContext";
+import { Invite, getInviteKey } from "@/entities/Game/model";
 
 export const useOnlinePageSockets = () => {
   const [cookies] = useCookies();
   const { user: currentUser } = cookies["jwt-cookie"];
 
   const [users, setUsers] = useState<User[]>([]);
-  const [inviteData, setInviteData] = useState<{
-    senderUsername: string;
-    gameName: string;
-  } | null>(null);
+  //TODO:Move
+  const [inviteMap, setInviteMap] = useState<{ [key: string]: Invite }>({});
   const [lastClickedPlayUser, setLastClickedPlayUser] = useState<User | null>(
     null
   );
@@ -58,14 +56,13 @@ export const useOnlinePageSockets = () => {
     setLastClickedPlayUser(user);
   }, []);
 
-  const onReceiveInvite = ({
-    senderUsername,
-    gameName,
-  }: {
-    senderUsername: string;
-    gameName: string;
-  }) => {
-    setInviteData({ senderUsername, gameName });
+  const onReceiveInvite = (invite: Invite) => {
+    const inviteKey = getInviteKey(invite);
+
+    setInviteMap(prevInvites => ({
+      ...prevInvites,
+      [inviteKey]: invite,
+    }));
   };
 
   const getUser = (username: string): User | undefined => {
@@ -116,16 +113,27 @@ export const useOnlinePageSockets = () => {
     onGameEnd,
   });
 
-  const handleGameRequestYesButton = (gameRequestProps: {
-    opponentUsername: string;
-    gameName: string;
-  }) => {
-    handleAcceptGame(gameRequestProps);
-    setInviteData(null);
+  const handleGameRequestYesButton = (invite: Invite) => {
+    handleAcceptGame({
+      opponentUsername: invite.senderUsername,
+      gameName: invite.gameName,
+    });
+    const inviteKey = getInviteKey(invite);
+    setInviteMap(prevInvites => {
+      const { [inviteKey]: removed, ...remainingInvites } = prevInvites;
+      return remainingInvites;
+    });
   };
 
-  const handleGameRequestNoButton = () => {
-    setInviteData(null);
+  const handleGameRequestNoButton = (invite: Invite) => {
+    const inviteKey = getInviteKey({
+      senderUsername: invite.senderUsername,
+      gameName: invite.gameName,
+    });
+    setInviteMap(prevInvites => {
+      const { [inviteKey]: removed, ...remainingInvites } = prevInvites;
+      return remainingInvites;
+    });
   };
 
   const handleGameClicked = ({
@@ -146,7 +154,7 @@ export const useOnlinePageSockets = () => {
 
   return {
     users,
-    inviteData,
+    invites: Object.values(inviteMap),
     lastClickedPlayUser,
     gameModals,
     onGameModalClose: handleCloseGameModal,

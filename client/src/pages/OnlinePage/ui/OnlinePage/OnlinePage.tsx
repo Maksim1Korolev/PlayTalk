@@ -72,7 +72,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
 
   const {
     users: upToDateUsers,
-    inviteData,
+    invites,
     lastClickedPlayUser,
     gameModals,
     onGameModalClose,
@@ -128,11 +128,11 @@ const OnlinePage = ({ className }: { className?: string }) => {
             chatModals={chatModals}
             setChatModals={setChatModals}
           />
-          {inviteData && (
+          {invites && (
             <GameRequest
               handleYesButton={handleGameRequestYesButton}
               handleNoButton={handleGameRequestNoButton}
-              inviteData={inviteData}
+              invites={invites}
             />
           )}
           {

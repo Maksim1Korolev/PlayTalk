@@ -1,45 +1,53 @@
+import { useState, useEffect } from "react";
 import cls from "./GameRequest.module.scss";
 import { Card, HStack, UiButton, VStack } from "@/shared/ui";
 import resources from "@/shared/assets/locales/en/games/GameRequestResources.json";
+import { Invite } from "@/entities/Game/model";
 
 export const GameRequest = ({
   className,
-  inviteData,
+  invites,
   handleYesButton,
   handleNoButton,
 }: {
   className?: string;
-  inviteData: {
-    senderUsername: string;
-    gameName: string;
-  };
-  handleYesButton: ({
-    opponentUsername,
-    gameName,
-  }: {
-    opponentUsername: string;
-    gameName: string;
-  }) => void;
-  handleNoButton: () => void;
+  invites: Invite[];
+  handleYesButton: (invite: Invite) => void;
+  handleNoButton: (invite: Invite) => void;
 }) => {
+  const [currentInvite, setCurrentInvite] = useState<Invite | null>(null);
+
+  useEffect(() => {
+    if (invites.length > 0) {
+      setCurrentInvite(invites[0]);
+    } else {
+      setCurrentInvite(null);
+    }
+  }, [invites]);
+
   const handleStartGame = () => {
-    handleYesButton({
-      opponentUsername: inviteData.senderUsername,
-      gameName: inviteData.gameName,
-    });
+    if (currentInvite) {
+      handleYesButton(currentInvite);
+    }
   };
 
   const handleRejectGame = () => {
-    handleNoButton();
+    if (currentInvite) {
+      handleNoButton(currentInvite);
+    }
   };
+
+  if (!currentInvite) {
+    return null;
+  }
 
   return (
     <Card className={`${cls.GameRequest} ${className}`}>
       <VStack>
         <div>
           {resources.inviteMessage
-            .replace("{senderUsername}", inviteData.senderUsername)
-            .replace("{gameName}", inviteData.gameName)}
+            .replace("{senderUsername}", currentInvite.senderUsername)
+            .replace("{gameName}", currentInvite.gameName)}
         </div>
         <HStack>
           <UiButton onClick={handleStartGame}>{resources.yesButton}</UiButton>
