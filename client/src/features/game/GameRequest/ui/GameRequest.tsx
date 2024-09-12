@@ -19,14 +19,6 @@ export const GameRequest = ({
   const [currentInvite, setCurrentInvite] = useState<Invite | null>(null);
   const { setUsers } = useContext(UsersContext);
 
-  const updateInvitingStatus = (senderUsername: string) => {
-    setUsers(prevUsers =>
-      prevUsers.map(user =>
-        user.username === senderUsername ? { ...user, isInviting: false } : user
-      )
-    );
-  };
-
   useEffect(() => {
     if (invites.length > 0) {
       const newInvite = invites[0];
@@ -39,14 +31,12 @@ export const GameRequest = ({
   const handleYesButtonClick = () => {
     if (currentInvite) {
       handleYesButton(currentInvite);
-      updateInvitingStatus(currentInvite.senderUsername);
     }
   };
 
   const handleNoButtonClick = () => {
     if (currentInvite) {
       handleNoButton(currentInvite);
-      updateInvitingStatus(currentInvite.senderUsername);
     }
   };
 

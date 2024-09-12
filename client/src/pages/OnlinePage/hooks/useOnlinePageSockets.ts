@@ -122,6 +122,14 @@ export const useOnlinePageSockets = () => {
     onGameEnd,
   });
 
+  const updateInvitingStatus = (senderUsername: string) => {
+    setUsers(prevUsers =>
+      prevUsers.map(user =>
+        user.username === senderUsername ? { ...user, isInviting: false } : user
+      )
+    );
+  };
+
   const handleGameRequestYesButton = (invite: Invite) => {
     handleAcceptGame({
       opponentUsername: invite.senderUsername,
@@ -132,6 +140,7 @@ export const useOnlinePageSockets = () => {
       const { [inviteKey]: removed, ...remainingInvites } = prevInvites;
       return remainingInvites;
     });
+    updateInvitingStatus(invite.senderUsername);
   };
 
   const handleGameRequestNoButton = (invite: Invite) => {
@@ -143,6 +152,7 @@ export const useOnlinePageSockets = () => {
       const { [inviteKey]: removed, ...remainingInvites } = prevInvites;
       return remainingInvites;
     });
+    updateInvitingStatus(invite.senderUsername);
   };
 
   const handleGameClicked = ({
