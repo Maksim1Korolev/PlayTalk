@@ -69,7 +69,6 @@ export const GameRequest = ({
     };
 
     if (invites.length > 0) {
-      setCurrentInviteIndex(0);
       loadAvatars();
     }
   }, [invites]);
