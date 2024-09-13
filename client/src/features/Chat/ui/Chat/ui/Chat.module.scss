@@ -1,7 +1,5 @@
 .Chat {
   background: var(--bg-color);
-  position: fixed;
-  display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
@@ -12,12 +10,13 @@
 
 .body {
   position: relative;
+	display: flex;
+	height: 100%;
   border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
-  min-height: 70%;
-  max-height: 70%;
 }
+
 
 .chatLogs {
   padding: 15px;

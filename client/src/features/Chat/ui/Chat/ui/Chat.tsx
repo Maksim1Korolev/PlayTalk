@@ -94,22 +94,19 @@ export const ChatBox = memo(
 
     return (
       <VStack className={cx(cls.Chat, {}, [className])} justify="start" max>
-        <Card
-          className={cx(cls.chatBoxBody)}
-          border="default"
-          variant="light"
-          max
-        >
-          <div className={cls.chatBoxOverlay}></div>
-          <div className={cls.chatLogs}>
-            {renderMessageHistory()}
-            <div ref={dummy} />
-          </div>
-          {isTyping && (
-            <UiText dimmed className="">
-              Typing...
-            </UiText>
-          )}
+        <Card className={cx(cls.body)} border="default" variant="light" max>
+          <VStack max>
+            <div className={cls.chatBoxOverlay}></div>
+            <div className={cls.chatLogs}>
+              {renderMessageHistory()}
+              <div ref={dummy} />
+            </div>
+            {isTyping && (
+              <UiText dimmed className="">
+                Typing...
+              </UiText>
+            )}
+          </VStack>
         </Card>
         <ChatInput
           inputMessage={inputMessage}

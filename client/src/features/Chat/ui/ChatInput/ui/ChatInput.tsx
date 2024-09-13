@@ -43,7 +43,7 @@ export const ChatInput = ({
   return (
     <div className={cx(cls.ChatInput, {}, [className])}>
       <textarea
-        className={cx(cls.textarea)}
+        className={cx(cls.chatInputField)}
         value={inputMessage} // Controlled input from parent
         onChange={handleChange}
         onKeyPress={handleKeyPress}
