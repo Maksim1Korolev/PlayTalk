@@ -65,17 +65,14 @@ class MessageHistoryService {
       )}`
     );
 
-    try {
-      const response = await axios.get(url, {
-        headers: {
-          [internalServiceHeaderKey]: serviceName,
-        },
-      });
-      logger.info("Unread message count response received.");
-      return response.data;
-    } catch (error) {
-      logger.error(`Error fetching unread messages count: ${error.message}`);
-    }
+    const response = await axios.get(url, {
+      headers: {
+        [internalServiceHeaderKey]: serviceName,
+      },
+    });
+
+    logger.info("Unread message count response received.");
+    return response.data;
   }
 
   static async readAllUnreadMessages(requestingUsername, usernames) {

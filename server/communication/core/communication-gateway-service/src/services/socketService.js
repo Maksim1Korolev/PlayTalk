@@ -1,5 +1,4 @@
 import { io } from "../index.js";
-
 import redisClient from "../utils/redisClient.js";
 import { getLogger } from "../utils/logger.js";
 const logger = getLogger("SocketService");
@@ -21,8 +20,14 @@ class SocketService {
 
       socket.on("online-ping", async () => {
         await this.connectUser(savedUsername, socket.id);
-
-        await handleChatSubscriptions(socket, savedUsername);
+        try {
+          await handleChatSubscriptions(socket, savedUsername);
+        } catch (err) {
+          logger.error(
+            `Error in handleChatSubscriptions for user ${savedUsername}: ${err.message}`
+          );
+          socket.emit("error", { message: "Failed to connect to chat." });
+        }
 
         logger.info(
           `Online ping from ${savedUsername}. Current online users: ${await this.getOnlineUsernames()}`

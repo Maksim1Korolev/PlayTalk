@@ -23,8 +23,25 @@ class SocketService {
 
       socket.on("online-ping", async () => {
         await this.connectUser(savedUsername, socket.id);
-        await handleInviteSubscriptions(socket, savedUsername);
-        await handleTicTacToeSubscriptions(socket, savedUsername);
+
+        try {
+          await handleInviteSubscriptions(socket, savedUsername);
+        } catch (err) {
+          logger.error(
+            `Error in handleInviteSubscriptions for user ${savedUsername}: ${err.message}`
+          );
+        }
+
+        try {
+          await handleTicTacToeSubscriptions(socket, savedUsername);
+        } catch (err) {
+          logger.error(
+            `Error in handleTicTacToeSubscriptions for user ${savedUsername}: ${err.message}`
+          );
+          socket.emit("error", {
+            message: "Failed to connect to Tic-Tac-Toe.",
+          });
+        }
 
         logger.info(
           `Online ping from ${savedUsername}. Current online users: ${await this.getOnlineUsernames()}`

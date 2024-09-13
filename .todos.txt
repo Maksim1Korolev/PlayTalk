@@ -22,7 +22,6 @@ Memo template
 Issues when redis connects late (-restart?)
 Adjust modal drag
 Highlight types
-Avatar in GameRequest is changing when new invite received
 
 To add (In the end):
 Auth on all servers, updated auth for some data
