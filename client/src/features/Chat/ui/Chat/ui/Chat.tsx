@@ -31,46 +31,12 @@ export const ChatBox = memo(
       receiverUsername: receiverUser.username,
     });
 
-    // Scroll to bottom when new messages arrive
     useEffect(() => {
       dummy.current?.scrollIntoView({ behavior: "smooth" });
       readAllUnreadMessages(
         [currentUser.username, receiverUser.username].sort()
       );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [messageHistory]);
-
-    //const setReadAll = useCallback(async () => {
-    //  try {
-    //    await communicationApiService.postAllReadMessages(
-    //      currentUser.username,
-    //      receiverUser.username,
-    //      token
-    //    );
-    //    setCookie("jwt-cookie", {
-    //      ...cookies["jwt-cookie"],
-    //      user: {
-    //        ...currentUser,
-    //        unreadMessages: 0,
-    //      },
-    //    });
-    //  } catch (error) {
-    //    console.error(error);
-    //  }
-    //}, [cookies, currentUser, receiverUser.username, setCookie, token]);
-
-    //useEffect(() => {
-    //  if (isOpen) {
-    //    handleReadAllMessages(
-    //      [currentUser.username, receiverUser.username].sort()
-    //    );
-    //  }
-    //}, [
-    //  currentUser.username,
-    //  handleReadAllMessages,
-    //  isOpen,
-    //  receiverUser.username,
-    //]);
 
     const renderMessageHistory = useCallback(() => {
       return messageHistory?.map((message: Message, index: number) => (
@@ -102,7 +68,7 @@ export const ChatBox = memo(
               <div ref={dummy} />
             </div>
             {isTyping && (
-              <UiText dimmed className="">
+              <UiText dimmed className="typingLabel">
                 Typing...
               </UiText>
             )}

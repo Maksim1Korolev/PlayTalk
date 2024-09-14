@@ -21,6 +21,7 @@
 .chatLogs {
   padding: 15px;
   height: 100%;
+	width: 100%;
   flex-grow: 1;
   overflow-y: scroll;
   scroll-behavior: smooth;
@@ -52,8 +53,13 @@
   height: 75%;
 }
 
+.typingLabel {
+	position: absolute;
+	bottom: 0;
+}
+
 @media only screen and (max-width: 500px) {
-  .chat-logs {
+  .chatLogs {
     height: 40vh;
   }
 }
