@@ -4,6 +4,7 @@ import {
   TicTacToeGame,
 } from "@/entities/Game/model/";
 import { TicTacToe } from "@/features/game/TicTacToe/";
+import { HighlightType } from "@/features/UserList/ui/PlayButton";
 import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
 import { cx } from "@/shared/lib/cx";
