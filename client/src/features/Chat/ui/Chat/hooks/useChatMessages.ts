@@ -1,6 +1,6 @@
 import { Message } from "@/features/Chat/ui/ChatMessage/ui/ChatMessage";
-import { communicationSocket } from "@/shared/api/sockets";
-import { useCallback, useEffect, useState } from "react";
+import { SocketContext } from "@/shared/lib/context/SocketContext";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 export const useChatMessages = ({
   currentUsername,
@@ -9,6 +9,8 @@ export const useChatMessages = ({
   currentUsername: string;
   receiverUsername: string;
 }) => {
+  const { sockets } = useContext(SocketContext);
+  const { communicationSocket } = sockets;
   const [messageHistory, setMessageHistory] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
 
@@ -25,6 +27,7 @@ export const useChatMessages = ({
   );
 
   const readAllUnreadMessages = useCallback((usernames: string[]) => {
+    if (!communicationSocket) return;
     communicationSocket.emit("on-read-messages", {
       usernames,
     });
@@ -37,14 +40,18 @@ export const useChatMessages = ({
         setIsTyping(false);
       }
     };
-
-    communicationSocket.on("receive_message", onReceiveMessage);
+    if (communicationSocket) {
+      communicationSocket.on("receive_message", onReceiveMessage);
+    }
     return () => {
-      communicationSocket.off("receive_message", onReceiveMessage);
+      if (communicationSocket) {
+        communicationSocket.off("receive_message", onReceiveMessage);
+      }
     };
   }, [receiverUsername]);
 
   const notifyTyping = useCallback(() => {
+    if (!communicationSocket) return;
     communicationSocket.emit("typing", receiverUsername);
     setIsTyping(true);
   }, [receiverUsername]);
