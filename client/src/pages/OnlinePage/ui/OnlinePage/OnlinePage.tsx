@@ -1,17 +1,17 @@
-import cls from "./OnlinePage.module.scss";
 import { cx } from "@/shared/lib/cx";
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import cls from "./OnlinePage.module.scss";
 
 import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
 import userListResources from "@/shared/assets/locales/en/UserListResources.json";
 
 import { User } from "@/entities/User";
+import { GameModals, GameRequest, GameSelector } from "@/features/game";
 import { HStack, Loader, UiText, VStack } from "@/shared/ui";
-import { GameSelector, GameRequest, GameModals } from "@/features/game";
 import { Sidebar } from "@/widgets/Sidebar";
 import { fetchUsersStatus } from "../../api/updateUsersStatusApiService";
-import { ChatModalStateProps } from "../../hooks/useChatModals";
+import { ChatModalState } from "../../hooks/useChatModals";
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
 
@@ -24,9 +24,9 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const token = cookies["jwt-cookie"]?.token;
   const currentUser: User = cookies["jwt-cookie"]?.user;
 
-  const [chatModals, setChatModals] = useState<ChatModalStateProps[]>();
+  const [chatModals, setChatModals] = useState<ChatModalState[]>();
 
-  const findNewModalPosition = (modals: ChatModalStateProps[]) => {
+  const findNewModalPosition = (modals: ChatModalState[]) => {
     let x = window.innerWidth - 400;
     let y = window.innerHeight - 300;
     const offset = 30;
@@ -63,7 +63,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
       }
       const position = findNewModalPosition(chatModals || []);
 
-      const newChatModalProps: ChatModalStateProps = { user, position };
+      const newChatModalProps: ChatModalState = { user, position };
 
       setChatModals(prev => [...(prev || []), newChatModalProps]);
     },

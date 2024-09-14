@@ -15,4 +15,4 @@ router.route("/:id").delete(deleteUser).put(updateUser);
 router.route("/username/:username").get(getUserByUsername);
 router.route("/id/:id").get(getUserById);
 
-export default router;
+

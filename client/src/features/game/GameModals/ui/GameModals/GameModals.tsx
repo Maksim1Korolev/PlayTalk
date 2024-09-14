@@ -1,19 +1,17 @@
-import { memo, useContext, useEffect, useState } from "react";
-import cls from "./GameModals.module.scss";
-import { cx } from "@/shared/lib/cx";
-import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
-import { useCookies } from "react-cookie";
-import { User } from "@/entities/User";
-import { TicTacToe } from "@/features/game/TicTacToe/";
 import {
   Game,
   GameModalStateProps,
   TicTacToeGame,
 } from "@/entities/Game/model/";
+import { TicTacToe } from "@/features/game/TicTacToe/";
+import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
+import { UsersContext } from "@/shared/lib/context/UsersContext";
+import { cx } from "@/shared/lib/cx";
 import { AddonCircleProps, AppSvg, CircleModal, SVGProps } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
-import { UsersContext } from "@/shared/lib/context/UsersContext";
-import { HighlightType } from "@/shared/ui/AppSvg/ui/AppSvg";
+import { memo, useContext, useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import cls from "./GameModals.module.scss";
 
 const generateModalId = (
   opponentUsername: string,

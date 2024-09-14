@@ -3,14 +3,10 @@ import { Message } from "@/features/Chat/ui/ChatMessage/ui/ChatMessage";
 import { useCallback, useEffect, useContext } from "react";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 
-export interface ChatModalStateProps {
+export interface ChatModalState {
   user: User;
-  position?: {
-    x: number;
-    y: number;
-  };
+  position: { x: number; y: number };
 }
-
 export const useChatModals = () => {
   const { sockets } = useContext(SocketContext);
   const { communicationSocket } = sockets;
