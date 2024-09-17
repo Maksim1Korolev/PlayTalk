@@ -4,19 +4,20 @@ import dotenv from "dotenv";
 import express from "express";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware";
+import userRouter from "./profile/users.routes";
 import { getLogger } from "./utils/logger";
 import {
   connectToMongoDB,
   disconnectFromMongoDB,
 } from "./utils/mongooseClient";
 import redisClient from "./utils/redisClient";
+
 const logger = getLogger("Main");
 
 const s3 = new AWS.S3();
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 async function main() {
   app.use(cors());
@@ -26,6 +27,7 @@ async function main() {
 
   app.use(errorHandler);
   app.use(notFound);
+  app.use("/api/users", userRouter);
 
   const PORT = process.env.PORT || 3000;
 

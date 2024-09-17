@@ -1,15 +1,18 @@
 import mongoose from "mongoose";
+import type { UserType } from "../schemas/User";
+import User from "../schemas/User";
+import { getLogger } from "../utils/logger";
+import redisClient from "../utils/redisClient";
+import S3 from "../utils/s3Client";
 
-import User from "../schemas/User.js";
-import { getLogger } from "../utils/logger.ts";
-import redisClient from "../utils/redisClient.ts";
-import S3 from "../utils/s3Client.ts";
 const logger = getLogger("UserService");
+const REDIS_USERS_KEY = process.env.REDIS_USERS_KEY || "defaultUsersKey";
+const S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME || "testforavatars";
 
 class UserService {
-  static async getAvatarUrl(avatarFileName) {
+  static async getAvatarUrl(avatarFileName: string) {
     const params = {
-      Bucket: process.env.AWS_S3_BUCKET_NAME || "testforavatars",
+      Bucket: S3_BUCKET_NAME,
       Key: avatarFileName,
       Expires: 3600, // 1 hour expiration for presigned URL
     };
@@ -18,7 +21,7 @@ class UserService {
 
   // Return users with avatar URLs
   static async getUsers() {
-    const cachedUsers = await redisClient.get(process.env.REDIS_USERS_KEY);
+    const cachedUsers = await redisClient.get(REDIS_USERS_KEY);
     if (cachedUsers) {
       logger.info("Fetched users from Redis cache.");
       return JSON.parse(cachedUsers);
@@ -33,8 +36,8 @@ class UserService {
     );
 
     await redisClient.set(
-      process.env.REDIS_USERS_KEY,
-      JSON.stringify(usersWithAvatars),
+      REDIS_USERS_KEY,
+      JSON.stringify(usersWithAvatars || []),
       {
         EX: 3600,
       }
@@ -43,25 +46,25 @@ class UserService {
     return usersWithAvatars;
   }
 
-  static async addUser(user) {
+  static async addUser(user: UserType) {
     const newUser = await User.create(user);
-    await redisClient.del(process.env.REDIS_USERS_KEY);
+    await redisClient.del(REDIS_USERS_KEY);
     logger.info(`Added new user: ${newUser._id}`);
     return newUser;
   }
 
-  static async deleteUser(id) {
+  static async deleteUser(id: string) {
     if (!id) {
       throw new Error("Invalid user ID");
     }
 
     const deletedUser = await User.findByIdAndDelete(id);
-    await redisClient.del(process.env.REDIS_USERS_KEY);
+    await redisClient.del(REDIS_USERS_KEY);
     logger.info(`Deleted user: ${id}`);
     return deletedUser;
   }
 
-  static async getUserByUsername(username) {
+  static async getUserByUsername(username: string) {
     const cacheKey = `user:username:${username}`;
     const cachedUser = await redisClient.get(cacheKey);
     if (cachedUser) {
@@ -81,7 +84,7 @@ class UserService {
     return user;
   }
 
-  static async getUserById(id) {
+  static async getUserById(id: string) {
     const cacheKey = `user:id:${id}`;
     const cachedUser = await redisClient.get(cacheKey);
     if (cachedUser) {
@@ -105,7 +108,7 @@ class UserService {
     return user;
   }
 
-  static async updateUser(user) {
+  static async updateUser(user: UserType) {
     if (!user._id) {
       throw new Error("Invalid user ID");
     }
@@ -113,7 +116,7 @@ class UserService {
     const updatedUser = await User.findByIdAndUpdate(user._id, user, {
       new: true,
     });
-    await redisClient.del(process.env.REDIS_USERS_KEY);
+    await redisClient.del(REDIS_USERS_KEY);
     if (updatedUser) {
       await redisClient.del(`user:id:${updatedUser._id}`);
       await redisClient.del(`user:username:${updatedUser.username}`);

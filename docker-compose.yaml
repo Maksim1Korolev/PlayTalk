@@ -58,7 +58,7 @@ services:
           action: sync
 
   #Profile
-  profile-repository_service:
+  profile_repository_service:
     build: ./server/profile/profile-repository-service
     ports:
       - "3040:3040"
