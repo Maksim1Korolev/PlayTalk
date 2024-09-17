@@ -1,6 +1,6 @@
 import { User } from "@/entities/User";
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
-import { ChatBox } from "@/features/Chat/ui/Chat/ui/Chat";
+import { ChatBox } from "@/features/Chat/ui/Chat/ui/ChatBox";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 import { ChatModalState } from "@/pages/OnlinePage/hooks/useChatModals";
 import { AddonCircleProps, CircleModal, SVGProps } from "@/shared/ui";
@@ -66,7 +66,7 @@ export const ChatModals = memo(
         console.error(`Failed to load icon for game: ${avatarFileName}`, error);
       }
     };
-		const closeChatModal = useCallback(() => { }, []);
+    const closeChatModal = useCallback(() => {}, []);
 
     useEffect(() => {
       const fetchAddonCircleProps = async () => {

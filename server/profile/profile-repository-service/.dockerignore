@@ -1,0 +1,14 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Directory for node_modules
+node_modules
+
+# Ignore Git and temporary files
+.git
+.gitignore
+*.swp
+*.swo
+.DS_Store

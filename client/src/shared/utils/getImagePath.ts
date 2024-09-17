@@ -11,7 +11,7 @@ const getImagePath = ({
 
   if (avatarFileName) {
     // Set the path for the avatar image
-    imagePath = `/public/images/avatars/${avatarFileName}`;
+    imagePath = `https://testforavatars.s3.eu-north-1.amazonaws.com/${avatarFileName}`;
   } else if (gameName) {
     // Set the path for the game icon
     imagePath = `/public/images/gameIcons/${gameName}-icon.svg`;

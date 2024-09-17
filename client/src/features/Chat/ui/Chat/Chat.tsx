@@ -1,4 +1,5 @@
 import { User } from "@/entities/User";
+<<<<<<< Updated upstream:client/src/features/Chat/ui/Chat/Chat.tsx
 import { communicationApiService } from "@/pages/OnlinePage/api/communicationApiService";
 import { cx } from "@/shared/lib/cx";
 import { Card, HStack, UiButton, UiText, VStack } from "@/shared/ui";
@@ -17,93 +18,58 @@ import { useCookies } from "react-cookie";
 import { ChatInput } from "../ChatInput";
 import { ChatMessage } from "../ChatMessage";
 import { Message } from "../ChatMessage/ui/ChatMessage";
+=======
+import { cx } from "@/shared/lib/cx";
+import { Card, UiText, VStack } from "@/shared/ui";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { ChatInput } from "../../ChatInput";
+import { ChatMessage, Message } from "../../ChatMessage";
+import { useChatMessages } from "../hooks/useChatMessages";
+>>>>>>> Stashed changes:client/src/features/Chat/ui/Chat/ui/ChatBox.tsx
 import cls from "./Chat.module.scss";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 
 export const Chat = memo(
   ({
     className,
-    isOpen,
-    isTyping,
-    messageHistory,
+    currentUser,
     receiverUser,
-    handleSendMessage,
-    onClose,
-    onCollapse,
   }: {
     className?: string;
-    isOpen: boolean;
-    isTyping: boolean;
-    messageHistory?: Message[];
+    currentUser: User;
     receiverUser: User;
-    handleSendMessage: (message: string) => void;
-    onClose: () => void;
-    onCollapse: () => void;
   }) => {
-    const { sockets } = useContext(SocketContext);
-    const { communicationSocket } = sockets;
-
-    const [inputMessage, setInputMessage] = useState<string>("");
-
-    const [cookies, setCookie] = useCookies(["jwt-cookie"]);
-    const { user: currentUser, token } = cookies["jwt-cookie"];
-
-    const [typing, setTyping] = useState(false);
-
     const dummy = useRef<HTMLDivElement>(null);
+    const [inputMessage, setInputMessage] = useState("");
 
-    const scrollToBottom = useCallback(() => {
-      dummy.current?.scrollIntoView({
-        behavior: "smooth",
-      });
-    }, []);
-
-    const handleSendButton = useCallback(() => {
-      if (inputMessage.trim() === "") return;
-      handleSendMessage(inputMessage);
-      setInputMessage("");
-      scrollToBottom();
-    }, [handleSendMessage, inputMessage, scrollToBottom]);
-
-    const handleKeyDown = useCallback(
-      (event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === "Enter") {
-          if (event.shiftKey) return;
-          event.preventDefault();
-          handleSendButton();
-        }
-      },
-      [handleSendButton]
-    );
-
-    const setReadAll = useCallback(async () => {
-      try {
-        await communicationApiService.postAllReadMessages(
-          currentUser.username,
-          receiverUser.username,
-          token
-        );
-        setCookie("jwt-cookie", {
-          ...cookies["jwt-cookie"],
-          user: {
-            ...currentUser,
-            unreadMessages: 0,
-          },
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }, [cookies, currentUser, receiverUser.username, setCookie, token]);
+    const {
+      messageHistory,
+      sendMessage,
+      isTyping,
+      notifyTyping,
+      readAllUnreadMessages,
+    } = useChatMessages({
+      currentUsername: currentUser.username,
+      receiverUsername: receiverUser.username,
+    });
 
     useEffect(() => {
+<<<<<<< Updated upstream:client/src/features/Chat/ui/Chat/Chat.tsx
       if (isOpen) {
         setReadAll();
         scrollToBottom();
       }
     }, [messageHistory?.length, isOpen]);
+=======
+      dummy.current?.scrollIntoView({ behavior: "smooth" });
+      readAllUnreadMessages(
+        [currentUser.username, receiverUser.username].sort()
+      );
+    }, [messageHistory]);
+>>>>>>> Stashed changes:client/src/features/Chat/ui/Chat/ui/ChatBox.tsx
 
     const renderMessageHistory = useCallback(() => {
-      return messageHistory?.map((message, index) => (
+      return messageHistory?.map((message: Message, index: number) => (
         <ChatMessage
           message={message}
           key={`${index} ${message.date}`}
@@ -122,35 +88,9 @@ export const Chat = memo(
       receiverUser.avatarFileName,
     ]);
 
-    const handleTyping = useCallback(
-      (text: string) => {
-        setInputMessage(text);
-
-        if (!typing) {
-          setTyping(true);
-          if (communicationSocket) {
-            communicationSocket.emit("typing", receiverUser.username);
-          }
-        }
-
-        const lastTypingTime = new Date().getTime();
-        const timerLength = 3000;
-        setTimeout(() => {
-          const timeNow = new Date().getTime();
-          const timeDiff = timeNow - lastTypingTime;
-          if (timeDiff >= timerLength && typing) {
-            if (communicationSocket) {
-              communicationSocket.emit("stop typing", receiverUser.username);
-            }
-            setTyping(false);
-          }
-        }, timerLength);
-      },
-      [typing, communicationSocket, receiverUser.username]
-    );
-
     return (
       <VStack className={cx(cls.Chat, {}, [className])} justify="start" max>
+<<<<<<< Updated upstream:client/src/features/Chat/ui/Chat/Chat.tsx
         <HStack className={cx(cls.chatBoxHeader, {}, ["drag-handle"])} max>
           <UiText max>{receiverUser.username}</UiText>
           <HStack className={cls.controlButtons}>
@@ -204,6 +144,28 @@ export const Chat = memo(
             <SendIcon />
           </UiButton>
         </div>
+=======
+        <Card className={cx(cls.body)} border="default" variant="light" max>
+          <VStack max>
+            <div className={cls.chatBoxOverlay}></div>
+            <div className={cls.chatLogs}>
+              {renderMessageHistory()}
+              <div ref={dummy} />
+            </div>
+            {isTyping && (
+              <UiText dimmed className="typingLabel">
+                Typing...
+              </UiText>
+            )}
+          </VStack>
+        </Card>
+        <ChatInput
+          inputMessage={inputMessage}
+          setInputMessage={setInputMessage}
+          onSend={sendMessage}
+          onTyping={notifyTyping}
+        />
+>>>>>>> Stashed changes:client/src/features/Chat/ui/Chat/ui/ChatBox.tsx
       </VStack>
     );
   }

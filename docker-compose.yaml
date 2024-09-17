@@ -57,6 +57,26 @@ services:
           target: /usr/src/app
           action: sync
 
+  #Profile
+  profile-repository_service:
+    build: ./server/profile/profile-repository-service
+    ports:
+      - "3040:3040"
+    networks:
+      - talkback-network
+    environment:
+      - REDIS_URL=${REDIS_URL}
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
+    develop:
+      watch:
+        - path: ./server/profile/profile-repository-service/package.json
+          action: rebuild
+        - path: ./server/profile/profile-repository-service
+          target: /usr/src/app
+          action: sync
+
   # Communication
   communication_gateway_service:
     build: ./server/communication/core/communication-gateway-service
