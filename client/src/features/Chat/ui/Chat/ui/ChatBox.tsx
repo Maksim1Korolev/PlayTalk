@@ -1,5 +1,6 @@
 import { User } from "@/entities/User";
 import { communicationApiService } from "@/pages/OnlinePage/api/communicationApiService";
+import { SocketContext } from "@/shared/lib/context/SocketContext";
 import { cx } from "@/shared/lib/cx";
 import { Card, HStack, UiButton, UiText, VStack } from "@/shared/ui";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -8,19 +9,18 @@ import SendIcon from "@mui/icons-material/Send";
 import {
   memo,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
-  useContext,
 } from "react";
 import { useCookies } from "react-cookie";
-import { ChatInput } from "../ChatInput";
-import { ChatMessage } from "../ChatMessage";
-import { Message } from "../ChatMessage/ui/ChatMessage";
+import { ChatInput } from "../../ChatInput";
+import { ChatMessage } from "../../ChatMessage";
+import { Message } from "../../ChatMessage/ui/ChatMessage";
 import cls from "./Chat.module.scss";
-import { SocketContext } from "@/shared/lib/context/SocketContext";
 
-export const Chat = memo(
+export const ChatBox = memo(
   ({
     className,
     isOpen,
@@ -97,8 +97,8 @@ export const Chat = memo(
 
     useEffect(() => {
       if (isOpen) {
-        setReadAll();
         scrollToBottom();
+        setReadAll();
       }
     }, [messageHistory?.length, isOpen]);
 
@@ -178,12 +178,12 @@ export const Chat = memo(
           max
         >
           <div className={cls.chatBoxOverlay}></div>
-          <div className={cls.chatLogs}>
+          <VStack className={cls.chatLogs} max>
             {renderMessageHistory()}
             <div ref={dummy} />
-          </div>
+          </VStack>
           {isTyping && (
-            <UiText dimmed className="">
+            <UiText dimmed className="typingLabel">
               Typing...
             </UiText>
           )}
@@ -191,7 +191,8 @@ export const Chat = memo(
         <div className={cls.chatInput} onKeyDown={handleKeyDown}>
           <ChatInput
             className={cls.chatInputField}
-            text={inputMessage}
+            //why you red
+            text={inputMessage || ""}
             placeholder="Type your message here..."
             onChange={handleTyping}
           />

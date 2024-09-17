@@ -1,11 +1,11 @@
-import { useCallback, useContext, useState, useEffect } from "react";
+import { useCallback, useContext } from "react";
 import { useCookies } from "react-cookie";
 
 import { User } from "@/entities/User";
 import { useSockets } from "@/shared/hooks/useSockets";
-import { useOnlineSockets } from "./useOnlineSockets";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
 import { useGameSessionLogic } from "./useGameSessionLogic";
+import { useOnlineSockets } from "./useOnlineSockets";
 
 export const useOnlinePageSockets = () => {
   const [cookies] = useCookies();
@@ -19,8 +19,12 @@ export const useOnlinePageSockets = () => {
 
         return prevUsers.map(user => {
           if (user.username === username) {
-            const { _id, username, avatarFileName, ...allowedProps } =
-              updatedProps;
+            const {
+              _id,
+              username,
+              avatarFileName,
+              ...allowedProps
+            }: Partial<User> = updatedProps;
             return { ...user, ...allowedProps };
           }
 

@@ -13,6 +13,7 @@ export const useChatMessages = ({
   const { communicationSocket } = sockets;
   const [messageHistory, setMessageHistory] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [typing, setTyping] = useState(false);
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -22,16 +23,46 @@ export const useChatMessages = ({
         username: currentUsername,
       };
       setMessageHistory(prev => [...prev, newMessage]);
+      if (!communicationSocket) return;
+      communicationSocket.emit("send-message", {
+        receiverUsername,
+        message,
+      });
     },
-    [currentUsername]
+    [communicationSocket, currentUsername, receiverUsername]
   );
 
-  const readAllUnreadMessages = useCallback((usernames: string[]) => {
+  const readAllUnreadMessages = useCallback(
+    (usernames: string[]) => {
+      if (!communicationSocket) return;
+      communicationSocket.emit("on-read-messages", {
+        usernames,
+      });
+    },
+    [communicationSocket]
+  );
+
+  useEffect(() => {
     if (!communicationSocket) return;
-    communicationSocket.emit("on-read-messages", {
-      usernames,
+
+    const updateChatHistory = (messages: Message[], senderUsername: string) => {
+      if (receiverUsername === senderUsername) {
+        setMessageHistory(messages);
+      }
+    };
+    communicationSocket.emit("on-chat-open", {
+      receiverUsername,
     });
-  }, []);
+
+    communicationSocket.on("update-chat", updateChatHistory);
+
+    communicationSocket.on("typing", senderUsername => {
+      if (senderUsername === receiverUsername) setIsTyping(true);
+    });
+    communicationSocket.on("stop typing", senderUsername => {
+      if (senderUsername === receiverUsername) setIsTyping(false);
+    });
+  }, [communicationSocket, receiverUsername]);
 
   useEffect(() => {
     const onReceiveMessage = (message: Message) => {
@@ -41,20 +72,38 @@ export const useChatMessages = ({
       }
     };
     if (communicationSocket) {
-      communicationSocket.on("receive_message", onReceiveMessage);
+      communicationSocket.on("receive-message", onReceiveMessage);
     }
     return () => {
       if (communicationSocket) {
-        communicationSocket.off("receive_message", onReceiveMessage);
+        communicationSocket.off("receive-message", onReceiveMessage);
       }
     };
-  }, [receiverUsername]);
+  }, [communicationSocket, receiverUsername]);
 
   const notifyTyping = useCallback(() => {
     if (!communicationSocket) return;
+
+    if (!typing) {
+      setTyping(true);
+      communicationSocket.emit("typing", receiverUsername);
+    }
+
+    const lastTypingTime = new Date().getTime();
+    const timerLength = 3000;
+    setTimeout(() => {
+      const timeNow = new Date().getTime();
+      const timeDiff = timeNow - lastTypingTime;
+      if (timeDiff >= timerLength && typing) {
+        if (communicationSocket) {
+          communicationSocket.emit("stop typing", receiverUsername);
+        }
+        setTyping(false);
+      }
+    }, timerLength);
+
     communicationSocket.emit("typing", receiverUsername);
-    setIsTyping(true);
-  }, [receiverUsername]);
+  }, [communicationSocket, receiverUsername, typing]);
 
   return {
     messageHistory,
