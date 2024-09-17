@@ -12,6 +12,7 @@ import getImagePath from "@/shared/utils/getImagePath";
 import { memo, useContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import cls from "./GameModals.module.scss";
+import { HighlightType } from "@/shared/ui/AppSvg/ui/AppSvg";
 
 const generateModalId = (
   opponentUsername: string,

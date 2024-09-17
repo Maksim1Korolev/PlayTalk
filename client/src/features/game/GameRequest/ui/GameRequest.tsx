@@ -2,7 +2,7 @@ import cls from "./GameRequest.module.scss";
 import { useState, useEffect, useContext, ReactNode } from "react";
 import { Rnd } from "react-rnd";
 
-import { AddonCircle, UiButton, SVGProps } from "@/shared/ui";
+import { AddonCircle, UiButton, SVGProps, AppSvg } from "@/shared/ui";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
 import { useModalDrag } from "@/shared/hooks/useModalDrag";
 import getImagePath from "@/shared/utils/getImagePath";
@@ -34,44 +34,63 @@ export const GameRequest = ({
   const { isDragged, handleDragStart, handleDragStop } = useModalDrag();
   const { users } = useContext(UsersContext);
 
+  const [iconSvgMap, setIconSvgMap] = useState<{
+    [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  }>({});
   const [avatarIconMap, setAvatarIconMap] = useState<{
     [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   }>({});
 
   useEffect(() => {
-    const loadAvatars = async () => {
+    const loadIcons = async () => {
+      const iconMap: {
+        [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+      } = {};
       const avatarMap: {
         [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
       } = {};
 
       for (const invite of invites) {
+        const { gameName, senderUsername } = invite;
+
+        // Load game icon
+        const iconPath = getImagePath({ gameName });
+        try {
+          const importedIcon = await import(iconPath);
+          iconMap[gameName] = importedIcon.ReactComponent;
+        } catch (error) {
+          console.error(`Failed to load game icon: ${gameName}`, error);
+        }
+
+        // Load avatar icon
         const inviteUser = users.find(
-          (user: User) => user.username === invite.senderUsername
+          (user: User) => user.username === senderUsername
         );
-        if (inviteUser && inviteUser.avatarFileName) {
+        if (inviteUser?.avatarFileName) {
           const avatarPath = getImagePath({
             avatarFileName: inviteUser.avatarFileName,
           });
 
           try {
             const importedAvatar = await import(avatarPath);
-            avatarMap[invite.senderUsername] = importedAvatar.ReactComponent;
+            avatarMap[senderUsername] = importedAvatar.ReactComponent;
           } catch (error) {
             console.error(
-              `Failed to load avatar for user: ${invite.senderUsername}`,
+              `Failed to load avatar for user: ${senderUsername}`,
               error
             );
           }
         }
       }
 
+      setIconSvgMap(iconMap);
       setAvatarIconMap(avatarMap);
     };
 
     if (invites.length > 0) {
-      loadAvatars();
+      loadIcons();
     }
-  }, [invites]);
+  }, [invites, users]);
 
   const handleYesButtonClick = () => {
     if (currentInvite) {
@@ -94,20 +113,29 @@ export const GameRequest = ({
   };
 
   const getInviteCircle = (): ReactNode => {
-    const AvatarComponent = avatarIconMap[currentInvite.senderUsername];
-    if (!AvatarComponent) return null;
+    const gameIcon = iconSvgMap[currentInvite.gameName];
+    const avatarIcon = avatarIconMap[currentInvite.senderUsername];
 
-    const svgProps: SVGProps = {
-      Svg: AvatarComponent,
+    if (!gameIcon || !avatarIcon) return null;
+
+    const gameIconProps: SVGProps = {
+      Svg: gameIcon,
       width: 80,
       height: 80,
       highlight: "secondary",
     };
 
+    const avatarIconProps: SVGProps = {
+      Svg: avatarIcon,
+      width: 30,
+      height: 30,
+    };
+
     return (
       <AddonCircle
         className={`${cls.GameRequest} ${className}`}
-        iconProps={svgProps}
+        iconProps={gameIconProps}
+        addonTopRight={<AppSvg {...avatarIconProps} ref={undefined} />}
         addonBottomLeft={yesButton}
         addonBottomRight={noButton}
         addonTopLeft={skipButton}
