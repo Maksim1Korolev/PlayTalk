@@ -2,3 +2,5 @@
 /.ngnix
 /.commands.txt
 /.structure.txt
+
+/profile/**.env*
