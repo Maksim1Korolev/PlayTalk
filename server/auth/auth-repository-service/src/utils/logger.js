@@ -11,35 +11,29 @@ const consoleFormat = printf(({ level, message, label }) => {
   return `[${label}] [${level.toUpperCase()}]: ${message}`;
 });
 
+const createTransports = customLabel => [
+  new transports.Console({
+    format: combine(label({ label: customLabel }), consoleFormat),
+  }),
+  new DailyRotateFile({
+    filename: "logs/application-%DATE%.log",
+    datePattern: "YYYY-MM-DD",
+    maxFiles: "14d",
+    format: combine(label({ label: customLabel }), timestamp(), customFormat),
+  }),
+  new DailyRotateFile({
+    filename: "logs/error-%DATE%.log",
+    level: "error",
+    datePattern: "YYYY-MM-DD",
+    maxFiles: "14d",
+    format: combine(label({ label: customLabel }), timestamp(), customFormat),
+  }),
+];
+
 export const getLogger = (customLabel = "Default") => {
   return createLogger({
     level: "info",
     format: label({ label: customLabel }),
-    transports: [
-      new transports.Console({
-        format: combine(label({ label: customLabel }), consoleFormat),
-      }),
-      new DailyRotateFile({
-        filename: "logs/application-%DATE%.log",
-        datePattern: "YYYY-MM-DD",
-        maxFiles: "14d",
-        format: combine(
-          label({ label: customLabel }),
-          timestamp(),
-          customFormat
-        ),
-      }),
-      new DailyRotateFile({
-        filename: "logs/error-%DATE%.log",
-        level: "error",
-        datePattern: "YYYY-MM-DD",
-        maxFiles: "14d",
-        format: combine(
-          label({ label: customLabel }),
-          timestamp(),
-          customFormat
-        ),
-      }),
-    ],
+    transports: createTransports(customLabel),
   });
 };
