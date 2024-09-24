@@ -1,6 +1,5 @@
-.fttemplates/
-/.ngnix
-/.commands.txt
-/.structure.txt
+.ngnix/
+.commands.txt
+.structure.txt
 
 /profile/**.env*
