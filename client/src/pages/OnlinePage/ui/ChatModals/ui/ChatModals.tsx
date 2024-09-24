@@ -1,6 +1,6 @@
 import { User } from "@/entities/User";
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
-import { ChatBox } from "@/features/Chat/ui/Chat/ui/ChatBox";
+import { ChatBox } from "@/features/Chat";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 import { ChatModalState } from "@/pages/OnlinePage/hooks/useChatModals";
 import { AddonCircleProps, CircleModal, SVGProps } from "@/shared/ui";
@@ -9,11 +9,9 @@ import { memo, useCallback, useEffect, useState } from "react";
 
 export const ChatModals = memo(
   ({
-    className,
     currentUser,
     chatModals,
   }: {
-    className?: string;
     currentUser: User;
     chatModals: ChatModalState[] | undefined;
   }) => {
@@ -31,10 +29,10 @@ export const ChatModals = memo(
         avatarFileName: string;
         isOnline: boolean;
       }) => {
-        const avatarIconProps: SVGProps | undefined = await getAvatarIconProps(
-          avatarFileName
-        );
+        const avatarIconProps = await getAvatarIconProps(avatarFileName);
+
         if (!avatarIconProps) return;
+				
         const addonCircleProps: AddonCircleProps = {
           iconProps: avatarIconProps,
           addonTopRight: (
@@ -57,7 +55,7 @@ export const ChatModals = memo(
         const AvatarSvg = await import(iconPath);
 
         const svgProps: SVGProps = {
-          Svg: AvatarSvg,
+          Svg: AvatarSvg.ReactComponent,
           width: size,
           height: size,
         };
@@ -77,7 +75,7 @@ export const ChatModals = memo(
         if (chatModals) {
           for (const { user } of chatModals) {
             newAddonCirclePropsMap[user._id] = await getAddonCircleProps({
-              avatarFileName: user.avatarFileName,
+              avatarFileName: user?.avatarFileName,
               isOnline: user.isOnline,
               unreadMessagesCount: user.unreadMessageCount,
             });
@@ -91,21 +89,18 @@ export const ChatModals = memo(
     }, [chatModals, getAddonCircleProps]);
 
     const renderChatModals = useCallback(() => {
-      return chatModals?.map(({ user, position }) => (
-        <>
-          <CircleModal
-            position={position}
-            key={`${user._id}`}
-            onClose={() => closeChatModal}
-            headerString={`Chat with ${user.username}`}
-            addonCircleProps={addonCirclePropsMap[user._id]}
-          >
-            <ChatBox currentUser={currentUser} receiverUser={user} />
-          </CircleModal>
-        </>
+      return chatModals?.map(({ user }) => (
+        <CircleModal
+          key={`${user._id}`}
+          onClose={() => closeChatModal}
+          headerString={`Chat with ${user.username}`}
+          addonCircleProps={addonCirclePropsMap[user._id]}
+        >
+          <ChatBox currentUser={currentUser} receiverUser={user} />
+        </CircleModal>
       ));
     }, [addonCirclePropsMap, chatModals, closeChatModal, currentUser]);
 
-    return <div className={className}>{renderChatModals()}</div>;
+    return <>{renderChatModals()}</>;
   }
 );

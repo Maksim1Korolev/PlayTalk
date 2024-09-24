@@ -27,8 +27,8 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const [chatModals, setChatModals] = useState<ChatModalState[]>();
 
   const findNewModalPosition = (modals: ChatModalState[]) => {
-    let x = window.innerWidth - 400;
-    let y = window.innerHeight - 300;
+    let x = 400;
+    let y = 300;
     const offset = 30;
 
     for (let i = 0; i < modals.length; i++) {
@@ -123,11 +123,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
             handleUserPlayButton={handleOpenGameSelector}
           />
 
-          <ChatModals
-            currentUser={currentUser}
-            chatModals={chatModals}
-            setChatModals={setChatModals}
-          />
+          <ChatModals currentUser={currentUser} chatModals={chatModals} />
           {invites && (
             <GameRequest
               handleYesButton={handleGameRequestYesButton}
