@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import express from "express";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware";
-import userRouter from "./profile/users.routes";
+import profileRouter from "./profile/profiles.routes";
 import { getLogger } from "./utils/logger";
 import {
   connectToMongoDB,
@@ -20,16 +20,15 @@ dotenv.config();
 const app = express();
 
 async function main() {
-  app.use(cors());
   app.use(express.json());
+  app.use(cors());
 
-  //app.use("/api/online", onlineRouter);
+  app.use("/api/profiles", profileRouter);
 
   app.use(errorHandler);
   app.use(notFound);
-  app.use("/api/users", userRouter);
 
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 3040;
 
   await connectToMongoDB();
   await redisClient.connect();

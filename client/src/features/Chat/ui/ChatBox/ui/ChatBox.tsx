@@ -5,7 +5,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { ChatInput } from "../../ChatInput";
 import { ChatMessage, Message } from "../../ChatMessage";
 import { useChatMessages } from "../hooks/useChatMessages";
-import cls from "./Chat.module.scss";
+import cls from "./ChatBox.module.scss";
 
 export const ChatBox = memo(
   ({
