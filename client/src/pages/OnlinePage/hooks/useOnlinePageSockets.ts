@@ -20,8 +20,11 @@ export const useOnlinePageSockets = () => {
         return prevUsers.map(user => {
           if (user.username === username) {
             const {
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               _id,
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               username,
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               avatarFileName,
               ...allowedProps
             }: Partial<User> = updatedProps;

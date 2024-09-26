@@ -1,7 +1,8 @@
 import { User } from "@/entities/User";
 import { communicationApiService } from "./communicationApiService";
-import { usersApiService } from "./usersApiService";
 import { gameApiService } from "./gameApiService";
+import { profileApiService } from "./profileApiService";
+import { usersApiService } from "./usersApiService";
 
 export const fetchUsersStatus = async ({
   setError,
@@ -20,8 +21,11 @@ export const fetchUsersStatus = async ({
 }) => {
   setIsLoading(true);
   try {
-    const users = await usersApiService.getUsers(token);
+    let users = await profileApiService.getProfiles(token);
 
+    if (!users) {
+      users = await usersApiService.getUsers(token);
+    }
     const results = await Promise.allSettled([
       communicationApiService.getOnlineUsernames(token),
       communicationApiService.getUnreadMessageCount(
