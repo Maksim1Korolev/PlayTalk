@@ -9,11 +9,18 @@ const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
 const serviceName = "communication_gateway_service";
 
 class UserService {
-  static getUserById = async userId => {
-    const cacheKey = `user:id:${userId}`;
+  static async getUserById(userId) {
+    if (!userId) {
+      const error = "Invalid user ID";
+      logger.error(error);
+      throw new Error(error);
+    }
 
     try {
-      const cachedUser = await redisClient.get(cacheKey);
+      const cachedUser = await redisClient.hGet(
+        process.env.REDIS_USERS_ID_KEY,
+        userId
+      );
       if (cachedUser) {
         logger.info(`Cache hit for user ID: ${userId}`);
         return JSON.parse(cachedUser);
@@ -32,9 +39,14 @@ class UserService {
       const user = response.data.user;
 
       if (user) {
-        await redisClient.set(cacheKey, JSON.stringify(user), {
-          EX: 3600,
-        });
+        await redisClient.hSet(
+          process.env.REDIS_USERS_ID_KEY,
+          userId,
+          JSON.stringify(user),
+          {
+            EX: 3600,
+          }
+        );
         logger.info(`User data cached for ID: ${userId}`);
       }
 
@@ -43,7 +55,7 @@ class UserService {
       logger.error(`Error fetching user by ID: ${userId} - ${error.message}`);
       throw new Error("Failed to fetch user data");
     }
-  };
+  }
 }
 
 export default UserService;
