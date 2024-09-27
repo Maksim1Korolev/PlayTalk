@@ -1,6 +1,6 @@
-import UserService from "../services/userService.js";
-import User from "../schemas/User.js";
-import redisClient from "../utils/redisClient.js";
+import redisClient from "../../utils/redisClient.js";
+import User from "../../schemas/User.js";
+import UserService from "../userService.js";
 
 describe("UserService", () => {
   beforeEach(() => {

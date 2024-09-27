@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 import redisClient from "../utils/redisClient.js";
 import { getLogger } from "../utils/logger.js";
 const logger = getLogger("UserService");
@@ -7,98 +6,170 @@ const logger = getLogger("UserService");
 import User from "../schemas/User.js";
 
 class UserService {
-  static async getUsers() {
-    const cachedUsers = await redisClient.get(process.env.REDIS_USERS_KEY);
-    if (cachedUsers) {
-      logger.info("Fetched users from Redis cache.");
-      return JSON.parse(cachedUsers);
-    }
-
-    const users = await User.find();
-    await redisClient.set(process.env.REDIS_USERS_KEY, JSON.stringify(users), {
-      EX: 3600,
-    });
-    logger.info("Fetched users from database and cached in Redis.");
-    return users;
-  }
-
   static async addUser(user) {
-    const newUser = await User.create(user);
-    await redisClient.del(process.env.REDIS_USERS_KEY);
-    logger.info(`Added new user: ${newUser._id}`);
-    return newUser;
-  }
+    try {
+      const addedUser = await User.create({ ...user });
 
-  static async deleteUser(id) {
-    if (!id) {
-      throw new Error("Invalid user ID");
-    }
-
-    const deletedUser = await User.findByIdAndDelete(id);
-    await redisClient.del(process.env.REDIS_USERS_KEY);
-    logger.info(`Deleted user: ${id}`);
-    return deletedUser;
-  }
-
-  static async getUserByUsername(username) {
-    const cacheKey = `user:username:${username}`;
-    const cachedUser = await redisClient.get(cacheKey);
-    if (cachedUser) {
-      logger.info(`Fetched user ${username} from Redis cache.`);
-      return JSON.parse(cachedUser);
-    }
-
-    const user = await User.findOne({ username });
-    if (user) {
-      await redisClient.set(cacheKey, JSON.stringify(user), {
-        EX: 3600,
-      });
-      logger.info(
-        `Fetched user ${username} from database and cached in Redis.`
+      await redisClient.hSet(
+        process.env.REDIS_USERS_USERNAME_KEY,
+        addedUser.username,
+        JSON.stringify(addedUser)
       );
+
+      logger.info(`User added: ${addedUser.username}`);
+      return addedUser;
+    } catch (error) {
+      logger.error(`Error adding user: ${error.message}`);
+      throw new Error("Failed to add user");
     }
-    return user;
+  }
+
+  static async getUsers() {
+    try {
+      const cachedUsers = await redisClient.hGetAll(
+        process.env.REDIS_USERS_USERNAME_KEY
+      );
+
+      if (cachedUsers && Object.keys(cachedUsers).length > 0) {
+        logger.info("Fetched users from Redis cache.");
+        return Object.values(cachedUsers).map(user => JSON.parse(user));
+      }
+
+      const users = await User.find();
+      for (const user of users) {
+        await redisClient.hSet(
+          process.env.REDIS_USERS_USERNAME_KEY,
+          user.username,
+          JSON.stringify(user)
+        );
+      }
+      logger.info("Fetched users from database and cached in Redis.");
+      logger.info(users);
+      return users;
+    } catch (error) {
+      logger.error(`Error fetching users: ${error.message}`);
+      throw new Error("Failed to fetch users");
+    }
   }
 
   static async getUserById(id) {
-    const cacheKey = `user:id:${id}`;
-    const cachedUser = await redisClient.get(cacheKey);
-    if (cachedUser) {
-      logger.info(`Fetched user with ID ${id} from Redis cache.`);
-      return JSON.parse(cachedUser);
-    }
-
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-      throw new Error("Invalid user ID");
+      const error = "Invalid user ID";
+      logger.error(error);
+      throw new Error(error);
     }
 
-    const user = await User.findById(id);
-    if (user) {
-      await redisClient.set(cacheKey, JSON.stringify(user), {
-        EX: 3600,
-      });
-      logger.info(
-        `Fetched user with ID ${id} from database and cached in Redis.`
+    try {
+      const cachedUser = await redisClient.hGet(
+        process.env.REDIS_USERS_ID_KEY,
+        id
       );
+
+      if (cachedUser) {
+        logger.info(`Cache hit for user with ID: ${id}`);
+        return JSON.parse(cachedUser);
+      }
+
+      const user = await User.findById(id);
+      if (user) {
+        await redisClient.hSet(
+          process.env.REDIS_USERS_ID_KEY,
+          user._id.toString(),
+          JSON.stringify(user)
+        );
+        logger.info(`Fetched and cached user with ID: ${id}`);
+      }
+      return user;
+    } catch (error) {
+      logger.error(`Error fetching user by ID: ${error.message}`);
+      throw new Error("Failed to fetch user by ID");
     }
-    return user;
+  }
+
+  static async getUserByUsername(username) {
+    try {
+      const cachedUser = await redisClient.hGet(
+        process.env.REDIS_USERS_USERNAME_KEY,
+        username
+      );
+
+      if (cachedUser) {
+        logger.info(`Cache hit for user: ${username}`);
+        return JSON.parse(cachedUser);
+      }
+
+      const user = await User.findOne({ username });
+      if (user) {
+        await redisClient.hSet(
+          process.env.REDIS_USERS_USERNAME_KEY,
+          username,
+          JSON.stringify(user)
+        );
+        logger.info(`Fetched and cached user: ${username}`);
+      }
+
+      return user;
+    } catch (error) {
+      logger.error(`Error fetching user by username: ${error.message}`);
+      throw new Error("Failed to fetch user by username");
+    }
   }
 
   static async updateUser(user) {
     if (!user._id) {
-      throw new Error("Invalid user ID");
+      const error = "Invalid user ID";
+      logger.error(error);
+      throw new Error(error);
     }
 
-    const updatedUser = await User.findByIdAndUpdate(user._id, user, {
-      new: true,
-    });
-    await redisClient.del(process.env.REDIS_USERS_KEY);
-    if (updatedUser) {
-      await redisClient.del(`user:id:${updatedUser._id}`);
-      await redisClient.del(`user:username:${updatedUser.username}`);
-      logger.info(`Updated user: ${updatedUser._id}`);
+    try {
+      const updatedUser = await User.findByIdAndUpdate(user._id, user, {
+        new: true,
+      });
+
+      if (updatedUser) {
+        await redisClient.hSet(
+          process.env.REDIS_USERS_USERNAME_KEY,
+          updatedUser.username,
+          JSON.stringify(updatedUser)
+        );
+        await redisClient.hSet(
+          process.env.REDIS_USERS_ID_KEY,
+          updatedUser._id.toString(),
+          JSON.stringify(updatedUser)
+        );
+        logger.info(`Updated and cached user: ${updatedUser.username}`);
+      }
+
+      return updatedUser;
+    } catch (error) {
+      logger.error(`Error updating user: ${error.message}`);
+      throw new Error("Failed to update user");
     }
-    return updatedUser;
+  }
+
+  static async deleteUser(id) {
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      const error = "Invalid user ID";
+      logger.error(error);
+      throw new Error(error);
+    }
+
+    try {
+      const deletedUser = await User.findByIdAndDelete(id);
+      if (deletedUser) {
+        await redisClient.hDel(
+          process.env.REDIS_USERS_USERNAME_KEY,
+          deletedUser.username
+        );
+        await redisClient.hDel(process.env.REDIS_USERS_ID_KEY, deletedUser._id);
+        logger.info(`Deleted user: ${deletedUser.username}`);
+      }
+      return deletedUser;
+    } catch (error) {
+      logger.error(`Error deleting user: ${error.message}`);
+      throw new Error("Failed to delete user");
+    }
   }
 }
 
