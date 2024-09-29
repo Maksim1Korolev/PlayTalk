@@ -1,9 +1,13 @@
 import { User } from "@/entities/User";
+import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
 import { ChatBox } from "@/features/Chat";
-import { ChatModalStateProps } from "@/pages/OnlinePage/hooks/useChatModals";
+import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
+
 import { AddonCircleProps, CircleModal } from "@/shared/ui";
 import { AppImageProps } from "@/shared/ui/AppImage";
+import { getAvatarPath } from "@/shared/ui/AppImage/ui/AppImage";
 import { memo, useCallback, useEffect, useState } from "react";
+import { ChatModalStateProps } from "../hooks/useChatModals";
 
 export const ChatModals = memo(
   ({
@@ -28,16 +32,9 @@ export const ChatModals = memo(
         for (const modal of chatModals) {
           const { user: opponentUser } = modal;
 
-          const avatarUrl = `https://testforavatars.s3.eu-north-1.amazonaws.com/avatars/${opponentUser.avatarFileName}`;
+          const avatarUrl = getAvatarPath(opponentUser.avatarFileName);
 
-          try {
-            avatarMap[opponentUser.avatarFileName] = avatarUrl;
-          } catch (error) {
-            console.error(
-              `Failed to load avatar for user: ${opponentUser.username}`,
-              error
-            );
-          }
+          avatarMap[opponentUser.avatarFileName] = avatarUrl;
         }
 
         setAvatarIconMap(avatarMap);
@@ -74,10 +71,12 @@ export const ChatModals = memo(
 
         const addonCircleProps: AddonCircleProps = {
           iconProps: avatarIconProps,
-          // addonTopRight: (
-          //   <UnreadMessagesCountIndicator unreadMessagesCount={unreadMessageCount} />
-          // ),
-          // addonBottomRight: <UserOnlineIndicator isOnline={isOnline} />,
+          addonTopRight: (
+            <UnreadMessagesCountIndicator
+              unreadMessagesCount={unreadMessageCount}
+            />
+          ),
+          addonBottomRight: <UserOnlineIndicator isOnline={isOnline} />,
         };
 
         return addonCircleProps;

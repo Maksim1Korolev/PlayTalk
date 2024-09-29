@@ -28,7 +28,7 @@ export interface AppImageProps extends HTMLImageAttributes {
 //TODO:Relocate?
 export const getAvatarPath = (avatar?: string) => {
   return avatar
-    ? `${import.meta.env.VITE_AUTH_SERVICE_STATIC_URL}/avatars${avatar}`
+    ? `${import.meta.env.VITE_S3_BUCKET_URL}/avatars/${avatar}`
     : "";
 };
 

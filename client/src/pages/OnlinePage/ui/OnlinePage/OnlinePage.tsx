@@ -1,5 +1,5 @@
 import { cx } from "@/shared/lib/cx";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import cls from "./OnlinePage.module.scss";
 
@@ -11,9 +11,9 @@ import { GameModals, GameRequest, GameSelector } from "@/features/game";
 import { HStack, Loader, UiText, VStack } from "@/shared/ui";
 import { Sidebar } from "@/widgets/Sidebar";
 import { fetchUsersStatus } from "../../api/updateUsersStatusApiService";
-import { ChatModalStateProps } from "../../hooks/useChatModals";
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
+import { useChatModals } from "../ChatModals/hooks/useChatModals";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -24,57 +24,8 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const token = cookies["jwt-cookie"]?.token;
   const currentUser: User = cookies["jwt-cookie"]?.user;
 
-  const [chatModals, setChatModals] = useState<ChatModalStateProps[]>([]);
-
-  const findNewModalPosition = (modals: ChatModalStateProps[]) => {
-    let x = 400;
-    let y = 300;
-    const offset = 30;
-
-    for (let i = 0; i < modals.length; i++) {
-      const modal = modals[i];
-      if (x === modal.position?.x && y === modal.position.y) {
-        x -= offset;
-        y -= offset;
-
-        if (x < 0 || y < 0) {
-          x = window.innerWidth - 400;
-          y = window.innerHeight - 300;
-        }
-      }
-    }
-    console.log(x, y);
-
-    return { x, y };
-  };
-
-  const handleOpenChatModal = useCallback(
-    (user: User) => {
-      if (chatModals && chatModals.length > 5) {
-        alert(resources.chatModalQuantityError);
-        return;
-      }
-      if (
-        chatModals?.find(
-          ({ user: currentUser }) => currentUser.username === user.username
-        )
-      ) {
-        return;
-      }
-      const position = findNewModalPosition(chatModals || []);
-
-      const newChatModalProps: ChatModalStateProps = { user, position };
-
-      setChatModals(prev => [...(prev || []), newChatModalProps]);
-    },
-    [chatModals]
-  );
-
-  const handleCloseChatModal = (username: string) => {
-    setChatModals(prev =>
-      prev.filter(modal => modal.user.username !== username)
-    );
-  };
+  const { chatModals, handleCloseChatModal, handleOpenChatModal } =
+    useChatModals();
 
   const {
     users: upToDateUsers,
@@ -113,9 +64,9 @@ const OnlinePage = ({ className }: { className?: string }) => {
 
   if (isError && error) {
     {
-      isError && error ? (
+      return (
         <UiText>{`${resources.errorMessagePrefix} ${error.message}`}</UiText>
-      ) : null;
+      );
     }
   }
   return (
