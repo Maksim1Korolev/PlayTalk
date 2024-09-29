@@ -12,14 +12,13 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
 import { memo, ReactNode, useState } from "react";
 import { Rnd } from "react-rnd";
-import { Skeleton } from "../../Skeleton";
 import cls from "./CircleModal.module.scss";
 
 interface CircleModalProps {
   className?: string;
   children?: ReactNode;
   position?: { x: number; y: number };
-  addonCircleProps?: AddonCircleProps;
+  addonCircleProps: AddonCircleProps;
   headerString?: string;
   onClose: () => void;
 }
@@ -66,14 +65,7 @@ export const CircleModal = memo(
     return (
       <Rnd {...rndProps}>
         {isCollapsed ? (
-          addonCircleProps ? (
-            <AddonCircle
-              {...addonCircleProps}
-              onClick={handleOpenCircleModal}
-            />
-          ) : (
-            <Skeleton width={80} height={80} border="50%" />
-          )
+          <AddonCircle {...addonCircleProps} onClick={handleOpenCircleModal} />
         ) : (
           <VStack className={cx(cls.CircleModal, {}, [className])}>
             <HStack className={cx(cls.header, {}, ["drag-handle"])} max>

@@ -10,7 +10,7 @@ export const getProfiles = asyncHandler(async (req, res) => {
 });
 
 //TODO:middleware to check if username in token and in req.body the same?
-//TODO: return user with avatar on respond?
+
 // @desc   Add users
 // @route  POST /api/users/
 // @access Public

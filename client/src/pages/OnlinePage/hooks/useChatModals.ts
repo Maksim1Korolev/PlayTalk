@@ -1,6 +1,6 @@
 import { User } from "@/entities/User";
 
-export interface ChatModalState {
+export interface ChatModalStateProps {
   user: User;
   position: { x: number; y: number };
 }

@@ -11,7 +11,7 @@ import { GameModals, GameRequest, GameSelector } from "@/features/game";
 import { HStack, Loader, UiText, VStack } from "@/shared/ui";
 import { Sidebar } from "@/widgets/Sidebar";
 import { fetchUsersStatus } from "../../api/updateUsersStatusApiService";
-import { ChatModalState } from "../../hooks/useChatModals";
+import { ChatModalStateProps } from "../../hooks/useChatModals";
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
 
@@ -24,9 +24,9 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const token = cookies["jwt-cookie"]?.token;
   const currentUser: User = cookies["jwt-cookie"]?.user;
 
-  const [chatModals, setChatModals] = useState<ChatModalState[]>();
+  const [chatModals, setChatModals] = useState<ChatModalStateProps[]>([]);
 
-  const findNewModalPosition = (modals: ChatModalState[]) => {
+  const findNewModalPosition = (modals: ChatModalStateProps[]) => {
     let x = 400;
     let y = 300;
     const offset = 30;
@@ -63,12 +63,18 @@ const OnlinePage = ({ className }: { className?: string }) => {
       }
       const position = findNewModalPosition(chatModals || []);
 
-      const newChatModalProps: ChatModalState = { user, position };
+      const newChatModalProps: ChatModalStateProps = { user, position };
 
       setChatModals(prev => [...(prev || []), newChatModalProps]);
     },
     [chatModals]
   );
+
+  const handleCloseChatModal = (username: string) => {
+    setChatModals(prev =>
+      prev.filter(modal => modal.user.username !== username)
+    );
+  };
 
   const {
     users: upToDateUsers,
@@ -123,7 +129,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
             handleUserPlayButton={handleOpenGameSelector}
           />
 
-          <ChatModals currentUser={currentUser} chatModals={chatModals} />
           {invites && (
             <GameRequest
               handleYesButton={handleGameRequestYesButton}
@@ -141,6 +146,11 @@ const OnlinePage = ({ className }: { className?: string }) => {
             />
           )}
         </VStack>
+        <ChatModals
+          currentUser={currentUser}
+          chatModals={chatModals}
+          onClose={handleCloseChatModal}
+        />
         <GameModals gameModals={gameModals} onClose={onGameModalClose} />
       </HStack>
     </div>

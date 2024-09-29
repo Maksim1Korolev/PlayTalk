@@ -33,7 +33,7 @@ interface GameModalsProps {
     gameName: string;
   }) => void;
 }
-
+//get
 export const GameModals = memo(
   ({ className, gameModals, onClose }: GameModalsProps) => {
     const [cookies] = useCookies(["jwt-cookie"]);

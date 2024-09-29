@@ -4,6 +4,7 @@ export interface User {
   username: string;
   password: string;
   avatarFileName: string;
+  avatarUrl: string;
   isOnline: boolean;
   isInviting: boolean;
   activeGames: string[];

@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
 import { User } from "@/entities/User";
 import { AvatarWithProps } from "@/features/AvatarWithProps";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
+import { HighlightType, PlayButton } from "@/features/UserList/ui/PlayButton";
 import { cx } from "@/shared/lib/cx";
 import { HStack } from "@/shared/ui";
+import { useEffect, useState } from "react";
 import { UserOnlineIndicator } from "../../UserOnlineIndicator";
 import cls from "./UserListCard.module.scss";
-import { PlayButton, HighlightType } from "@/features/UserList/ui/PlayButton";
 
 interface UserListCardProps {
   className?: string;
@@ -57,7 +57,7 @@ export const UserListCard = ({
         clickable
         onClick={onChatOpen}
         size={50}
-        avatarSrc={user.avatarFileName}
+        avatarSrc={`https://testforavatars.s3.eu-north-1.amazonaws.com/avatars/${user.avatarFileName}`}
         addonTopRight={<UserOnlineIndicator isOnline={user.isOnline} />}
         addonBottomRight={
           <UnreadMessagesCountIndicator
