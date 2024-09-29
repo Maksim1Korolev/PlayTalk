@@ -1,8 +1,8 @@
 import { User } from "@/entities/User";
 import { ChatBox } from "@/features/Chat";
 import { ChatModalStateProps } from "@/pages/OnlinePage/hooks/useChatModals";
-import { AddonCircleProps, CircleModal, SVGProps } from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
+import { AddonCircleProps, CircleModal } from "@/shared/ui";
+import { AppImageProps } from "@/shared/ui/AppImage";
 import { memo, useCallback, useEffect, useState } from "react";
 
 export const ChatModals = memo(
@@ -16,43 +16,25 @@ export const ChatModals = memo(
     onClose: (username: string) => void;
   }) => {
     const [avatarIconMap, setAvatarIconMap] = useState<{
-      [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+      [key: string]: string; // Store the image URL directly
     }>({});
 
     useEffect(() => {
       const loadIcons = async () => {
-        const iconMap: {
-          [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-        } = {};
         const avatarMap: {
-          [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+          [key: string]: string; // Store the image URL directly
         } = {};
 
         for (const modal of chatModals) {
           const { user: opponentUser } = modal;
 
-          const iconPath = opponentUser.avatarUrl;
-          try {
-            const importedIcon = await import(iconPath);
-            iconMap[opponentUser.avatarFileName] = importedIcon.ReactComponent;
-          } catch (error) {
-            console.error(
-              `Failed to load icon for user: ${opponentUser.username}`,
-              error
-            );
-          }
-
-          const avatarPath = getImagePath({
-            avatarFileName: opponentUser?.avatarFileName,
-          });
+          const avatarUrl = `https://testforavatars.s3.eu-north-1.amazonaws.com/avatars/${opponentUser.avatarFileName}`;
 
           try {
-            const importedAvatar = await import(avatarPath);
-            avatarMap[opponentUser.avatarFileName] =
-              importedAvatar.ReactComponent;
+            avatarMap[opponentUser.avatarFileName] = avatarUrl;
           } catch (error) {
             console.error(
-              `Failed to load avatar for user: ${opponentUser}`,
+              `Failed to load avatar for user: ${opponentUser.username}`,
               error
             );
           }
@@ -76,12 +58,14 @@ export const ChatModals = memo(
       }) => {
         const getAvatarIconProps = (avatarFileName: string) => {
           const size = 80;
-          const AvatarSvg = avatarIconMap[avatarFileName];
+          const avatarUrl = avatarIconMap[avatarFileName];
 
-          const svgProps: SVGProps = {
-            Svg: AvatarSvg,
+          const svgProps: AppImageProps = {
+            src: avatarUrl,
             width: size,
             height: size,
+            draggable: false,
+            alt: avatarFileName,
           };
           return svgProps;
         };
@@ -90,21 +74,20 @@ export const ChatModals = memo(
 
         const addonCircleProps: AddonCircleProps = {
           iconProps: avatarIconProps,
-          //addonTopRight: (
-          //  <UnreadMessagesCountIndicator
-          //    unreadMessagesCount={unreadMessageCount}
-          //  />
-          //),
-          //addonBottomRight: <UserOnlineIndicator isOnline={isOnline} />,
+          // addonTopRight: (
+          //   <UnreadMessagesCountIndicator unreadMessagesCount={unreadMessageCount} />
+          // ),
+          // addonBottomRight: <UserOnlineIndicator isOnline={isOnline} />,
         };
 
         return addonCircleProps;
       },
-      []
+      [avatarIconMap]
     );
+
     const renderChatModals = useCallback(() => {
-      const handleCloseChatModal = (handleCloseChatModal: string) => {
-        onClose(handleCloseChatModal);
+      const handleCloseChatModal = (username: string) => {
+        onClose(username);
       };
 
       return chatModals?.map(({ user }) => {
@@ -126,7 +109,6 @@ export const ChatModals = memo(
       });
     }, [chatModals, currentUser, getAddonCircleProps, onClose]);
 
-    //TODO: Check if we need div
     return <div>{renderChatModals()}</div>;
   }
 );

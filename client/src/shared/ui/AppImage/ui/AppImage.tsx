@@ -16,7 +16,7 @@ type HTMLImageAttributes = Omit<
   "width" | "height"
 >;
 
-interface AppImageProps extends HTMLImageAttributes {
+export interface AppImageProps extends HTMLImageAttributes {
   className?: string;
   fallback?: ReactElement;
   errorFallback?: ReactElement;
