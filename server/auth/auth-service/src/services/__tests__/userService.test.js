@@ -1,7 +1,7 @@
 import axios from "axios";
 import UserService from "../userService.js";
 
-jest.mock("axios"); // Mock axios module
+jest.mock("axios");
 
 describe("UserService", () => {
   const username = "testUser";

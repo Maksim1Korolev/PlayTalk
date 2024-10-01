@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import generateToken from "../generateToken.js";
 
-jest.mock("jsonwebtoken"); // Mock the jsonwebtoken module
+jest.mock("jsonwebtoken");
 
 describe("generateToken", () => {
   const userId = "507f1f77bcf86cd799439011";
