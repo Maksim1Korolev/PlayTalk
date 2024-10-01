@@ -3,8 +3,6 @@ import jwt from "jsonwebtoken";
 import { getLogger } from "../utils/logger.js";
 const logger = getLogger("GenerateToken");
 
-// This function plays a vital role in authentication and is fundamental to server operations.
-// Wrapped in try-catch to prevent failures from propagating unnoticed.
 const generateToken = (userId, username) => {
   try {
     const token = jwt.sign(
