@@ -5,7 +5,7 @@ import {
 } from "../unreadController.js";
 import MessageHistoryService from "../../services/messageHistoryService.js";
 
-jest.mock("../../services/messageHistoryService.js"); // Mock the MessageHistoryService module
+jest.mock("../../services/messageHistoryService.js");
 
 describe("UnreadController", () => {
   let req, res;
