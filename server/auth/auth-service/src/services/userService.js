@@ -8,7 +8,7 @@ const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
 const serviceName = "auth_service";
 
 class UserService {
-  static addUser = async user => {
+  static async addUser(user) {
     logger.info(`Adding user: ${user.username}`);
     const url = repositoryServiceUrl;
     const response = await axios.post(
@@ -22,9 +22,9 @@ class UserService {
     );
     logger.info(`User added successfully: ${user.username}`);
     return response.data.user;
-  };
+  }
 
-  static getUserByUsername = async username => {
+  static async getUserByUsername(username) {
     logger.info(`Fetching user by username: ${username}`);
     const response = await axios.get(
       `${repositoryServiceUrl}/username/${username}`,
@@ -36,7 +36,7 @@ class UserService {
     );
     logger.info(`User fetched successfully: ${username}`);
     return response.data.user;
-  };
+  }
 }
 
 export default UserService;
