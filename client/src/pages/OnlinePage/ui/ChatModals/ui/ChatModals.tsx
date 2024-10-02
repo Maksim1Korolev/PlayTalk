@@ -2,42 +2,78 @@ import { User } from "@/entities/User";
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
 import { ChatBox } from "@/features/Chat";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
-import { ChatModalState } from "@/pages/OnlinePage/hooks/useChatModals";
-import { AddonCircleProps, CircleModal, SVGProps } from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
+
+import { AddonCircleProps, CircleModal } from "@/shared/ui";
+import { AppImageProps } from "@/shared/ui/AppImage";
+import { getAvatarPath } from "@/shared/ui/AppImage/ui/AppImage";
 import { memo, useCallback, useEffect, useState } from "react";
+import { ChatModalStateProps } from "../hooks/useChatModals";
 
 export const ChatModals = memo(
   ({
     currentUser,
     chatModals,
+    onClose,
   }: {
     currentUser: User;
-    chatModals: ChatModalState[] | undefined;
+    chatModals: ChatModalStateProps[];
+    onClose: (username: string) => void;
   }) => {
-    const [addonCirclePropsMap, setAddonCirclePropsMap] = useState<{
-      [userId: string]: AddonCircleProps | undefined;
+    const [avatarIconMap, setAvatarIconMap] = useState<{
+      [key: string]: string; // Store the image URL directly
     }>({});
 
+    useEffect(() => {
+      const loadIcons = async () => {
+        const avatarMap: {
+          [key: string]: string; // Store the image URL directly
+        } = {};
+
+        for (const modal of chatModals) {
+          const { user: opponentUser } = modal;
+
+          const avatarUrl = getAvatarPath(opponentUser.avatarFileName);
+
+          avatarMap[opponentUser.avatarFileName] = avatarUrl;
+        }
+
+        setAvatarIconMap(avatarMap);
+      };
+
+      loadIcons();
+    }, [chatModals]);
+
     const getAddonCircleProps = useCallback(
-      async ({
-        unreadMessagesCount,
+      ({
+        unreadMessageCount,
         avatarFileName,
         isOnline,
       }: {
-        unreadMessagesCount: number | undefined;
+        unreadMessageCount: number | undefined;
         avatarFileName: string;
         isOnline: boolean;
       }) => {
-        const avatarIconProps = await getAvatarIconProps(avatarFileName);
+        const getAvatarIconProps = (avatarFileName: string) => {
+          const size = 80;
+          const avatarUrl = avatarIconMap[avatarFileName];
 
-        if (!avatarIconProps) return;
-				
+          const svgProps: AppImageProps = {
+            src: avatarUrl,
+            width: size,
+            height: size,
+            draggable: false,
+            alt: avatarFileName,
+          };
+          return svgProps;
+        };
+
+        const avatarIconProps = getAvatarIconProps(avatarFileName);
+
         const addonCircleProps: AddonCircleProps = {
           iconProps: avatarIconProps,
           addonTopRight: (
             <UnreadMessagesCountIndicator
-              unreadMessagesCount={unreadMessagesCount}
+              unreadMessagesCount={unreadMessageCount}
             />
           ),
           addonBottomRight: <UserOnlineIndicator isOnline={isOnline} />,
@@ -45,62 +81,33 @@ export const ChatModals = memo(
 
         return addonCircleProps;
       },
-      []
+      [avatarIconMap]
     );
 
-    const getAvatarIconProps = async (avatarFileName: string) => {
-      const size = 80;
-      const iconPath = getImagePath({ avatarFileName });
-      try {
-        const AvatarSvg = await import(iconPath);
-
-        const svgProps: SVGProps = {
-          Svg: AvatarSvg.ReactComponent,
-          width: size,
-          height: size,
-        };
-        return svgProps;
-      } catch (error) {
-        console.error(`Failed to load icon for game: ${avatarFileName}`, error);
-      }
-    };
-    const closeChatModal = useCallback(() => {}, []);
-
-    useEffect(() => {
-      const fetchAddonCircleProps = async () => {
-        const newAddonCirclePropsMap: {
-          [userId: string]: AddonCircleProps | undefined;
-        } = {};
-
-        if (chatModals) {
-          for (const { user } of chatModals) {
-            newAddonCirclePropsMap[user._id] = await getAddonCircleProps({
-              avatarFileName: user?.avatarFileName,
-              isOnline: user.isOnline,
-              unreadMessagesCount: user.unreadMessageCount,
-            });
-          }
-        }
-
-        setAddonCirclePropsMap(newAddonCirclePropsMap);
+    const renderChatModals = useCallback(() => {
+      const handleCloseChatModal = (username: string) => {
+        onClose(username);
       };
 
-      fetchAddonCircleProps();
-    }, [chatModals, getAddonCircleProps]);
+      return chatModals?.map(({ user }) => {
+        const { unreadMessageCount, avatarFileName, isOnline } = user;
+        return (
+          <CircleModal
+            key={`${user.username}`}
+            onClose={() => handleCloseChatModal(user.username)}
+            headerString={`Chat with ${user.username}`}
+            addonCircleProps={getAddonCircleProps({
+              unreadMessageCount,
+              avatarFileName,
+              isOnline,
+            })}
+          >
+            <ChatBox currentUser={currentUser} receiverUser={user} />
+          </CircleModal>
+        );
+      });
+    }, [chatModals, currentUser, getAddonCircleProps, onClose]);
 
-    const renderChatModals = useCallback(() => {
-      return chatModals?.map(({ user }) => (
-        <CircleModal
-          key={`${user._id}`}
-          onClose={() => closeChatModal}
-          headerString={`Chat with ${user.username}`}
-          addonCircleProps={addonCirclePropsMap[user._id]}
-        >
-          <ChatBox currentUser={currentUser} receiverUser={user} />
-        </CircleModal>
-      ));
-    }, [addonCirclePropsMap, chatModals, closeChatModal, currentUser]);
-
-    return <>{renderChatModals()}</>;
+    return <div>{renderChatModals()}</div>;
   }
 );

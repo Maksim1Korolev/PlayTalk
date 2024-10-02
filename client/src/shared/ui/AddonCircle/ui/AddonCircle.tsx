@@ -1,11 +1,14 @@
-import { memo } from "react";
-import cls from "./AddonCircle.module.scss";
 import { cx } from "@/shared/lib/cx";
-import { SVGProps, AppSvg } from "@/shared/ui";
+import { AppSvg, SVGProps } from "@/shared/ui";
+import { memo } from "react";
+import { AppImage, AppImageProps } from "../../AppImage";
+import cls from "./AddonCircle.module.scss";
+
+export type AddonCircleIconProps = SVGProps | AppImageProps;
 
 export type AddonCircleProps = {
   className?: string;
-  iconProps: SVGProps;
+  iconProps: AddonCircleIconProps;
   addonTopRight?: React.ReactNode;
   addonBottomRight?: React.ReactNode;
   addonTopLeft?: React.ReactNode;
@@ -29,14 +32,20 @@ export const AddonCircle = memo(
       }
       return;
     };
-    const appIcon = (
-      <AppSvg
-        {...iconProps}
-        clickable
-        onClick={handleIconClicked}
-        ref={undefined}
-      />
-    );
+    const appIcon =
+      "Svg" in iconProps ? (
+        <AppSvg
+          {...(iconProps as SVGProps)} // Render AppSvg if the `Svg` property exists
+          clickable
+          onClick={handleIconClicked}
+          ref={undefined}
+        />
+      ) : (
+        <AppImage
+          {...(iconProps as AppImageProps)} // Render AppImage if the `src` property exists
+          onClick={handleIconClicked}
+        />
+      );
 
     return (
       <div className={cx(cls.AddonCircle, {}, [className])}>

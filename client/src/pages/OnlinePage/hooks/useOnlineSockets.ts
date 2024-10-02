@@ -1,7 +1,6 @@
-import { useContext, useEffect } from "react";
 import { User } from "@/entities/User";
-import { Socket } from "socket.io-client";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
+import { useContext, useEffect } from "react";
 
 export const useOnlineSockets = ({
   updateUserList,

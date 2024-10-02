@@ -122,7 +122,7 @@ class ProfileService {
   }
 
   static async getProfileById(id: string) {
-    const cacheKey = `profile:id:${id}`;
+    const cacheKey = `user:id:${id}`;
     const cachedProfile = await redisClient.get(cacheKey);
     if (cachedProfile) {
       logger.info(`Fetched profile with ID ${id} from Redis cache.`);

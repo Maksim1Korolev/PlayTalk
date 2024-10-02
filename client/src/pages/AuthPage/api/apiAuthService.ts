@@ -1,11 +1,10 @@
+import { $profileApi } from '@/pages/OnlinePage/api/profileApiService'
 import axios from "axios";
 
 export const $authApi = axios.create({
   baseURL: import.meta.env.VITE_AUTH_SERVICE_URL,
 });
-export const $profileApi = axios.create({
-  baseURL: import.meta.env.VITE_PROFILE_REPOSITORY_SERVICE_URL,
-});
+
 
 export const apiService = {
   login: async (username: string, password: string) => {

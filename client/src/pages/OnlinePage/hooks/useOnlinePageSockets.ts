@@ -12,6 +12,7 @@ export const useOnlinePageSockets = () => {
   const { user: currentUser } = cookies["jwt-cookie"];
   const { users, setUsers } = useContext(UsersContext);
 
+  //TODO: Maybe Transfer logic to UserContext
   const updateUserList = useCallback(
     (username: string, updatedProps: Partial<User>) => {
       setUsers((prevUsers: User[]) => {
@@ -20,8 +21,11 @@ export const useOnlinePageSockets = () => {
         return prevUsers.map(user => {
           if (user.username === username) {
             const {
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               _id,
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               username,
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               avatarFileName,
               ...allowedProps
             }: Partial<User> = updatedProps;
@@ -53,7 +57,7 @@ export const useOnlinePageSockets = () => {
       if (!currentUser) return;
 
       const otherUsers = userList.filter(
-        (user: User) => user._id !== currentUser._id
+        (user: User) => user.username !== currentUser.username
       );
 
       setUsers(otherUsers || []);

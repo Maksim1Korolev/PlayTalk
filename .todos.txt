@@ -10,6 +10,7 @@ Redis as one more possible point to get the data in more places
 OpponentUsername and gameName data type
 Make users from context into map
 Update highlight logic
+UserContext and logic Changing 
 
 To fix:
 ChatModal opens lower than the screen and scrollbar appears
@@ -30,6 +31,7 @@ Kubernetes
 Storybook
 
 Possible expansions:
+s3 signedUrls and images permission on client
 Group chats
 Friends
 Turns history and more stats on tic tac toe server

@@ -41,8 +41,8 @@ export const ChatBox = memo(
     const renderMessageHistory = useCallback(() => {
       return messageHistory?.map((message: Message, index: number) => (
         <ChatMessage
-          message={message}
           key={`${index} ${message.date}`}
+          message={message}
           isRight={currentUser.username == message.username}
           avatarSrc={
             currentUser.username == message.username
