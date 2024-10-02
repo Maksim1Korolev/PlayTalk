@@ -31,6 +31,7 @@ export const addMessageToHistory = asyncHandler(async (req, res) => {
 // @access Internal
 export const getMessageHistory = asyncHandler(async (req, res) => {
   const usernames = req.query.usernames;
+  logger.info(usernames);
   if (!usernames) {
     logger.warn("Usernames are missing in request");
     return res.status(400).json({ message: "Usernames are required." });
@@ -40,6 +41,7 @@ export const getMessageHistory = asyncHandler(async (req, res) => {
     const messageHistory = await MessageHistoryService.getMessageHistory(
       usernames
     );
+    logger.info(`Fetching message history for usernames: ${messageHistory}`);
 
     return res.json({ messageHistory });
   } catch (err) {

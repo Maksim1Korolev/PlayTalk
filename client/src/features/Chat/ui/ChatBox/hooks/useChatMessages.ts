@@ -26,7 +26,7 @@ export const useChatMessages = ({
       if (!communicationSocket) return;
       communicationSocket.emit("send-message", {
         receiverUsername,
-        message,
+        message: newMessage,
       });
     },
     [communicationSocket, currentUsername, receiverUsername]
@@ -46,6 +46,8 @@ export const useChatMessages = ({
     if (!communicationSocket) return;
 
     const updateChatHistory = (messages: Message[], senderUsername: string) => {
+      console.log(messages);
+
       if (receiverUsername === senderUsername) {
         setMessageHistory(messages);
       }
