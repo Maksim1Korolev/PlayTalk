@@ -13,6 +13,7 @@ export async function handleChatSubscriptions(socket, currentUsername) {
         currentUsername,
         receiverUsername,
       ]);
+
       if (data && data.messageHistory) {
         socket.emit("update-chat", data.messageHistory, receiverUsername);
         logger.info(
@@ -71,10 +72,7 @@ export async function handleChatSubscriptions(socket, currentUsername) {
         receiverUsername
       );
 
-      io.to(receiversSocketIds).emit("receive-message", {
-        username: currentUsername,
-        message,
-      });
+      io.to(receiversSocketIds).emit("receive-message", message);
 
       const unreadCount = await MessageHistoryService.getUnreadMessagesCount(
         receiverUsername,

@@ -69,6 +69,8 @@ export const useChatMessages = ({
   useEffect(() => {
     const onReceiveMessage = (message: Message) => {
       if (message.username === receiverUsername) {
+        console.log(message);
+
         setMessageHistory(prev => [...prev, message]);
         setIsTyping(false);
       }

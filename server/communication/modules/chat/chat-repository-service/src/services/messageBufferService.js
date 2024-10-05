@@ -130,8 +130,9 @@ class MessageBufferService {
 
       await redisClient.del(bufferKey);
       await redisClient.rPush(bufferKey, ...updatedMessages);
-
       logger.info(`Marked messages as read in buffer: ${bufferKey}`);
+
+      return updatedMessages;
     }
   }
 }
