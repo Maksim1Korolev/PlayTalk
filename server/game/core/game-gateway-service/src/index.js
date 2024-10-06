@@ -25,7 +25,7 @@ export const io = new Server(server, {
   cors: {},
 });
 
-socketAuthMiddleware(io);
+io.engine.use(socketAuthMiddleware);
 
 async function main() {
   app.use(cors());
@@ -58,7 +58,9 @@ main()
   .catch(async err => {
     logger.error(`Application startup error: ${err.message}`);
     redisClient.quit();
-    process.exit(1);
+    if (process.env.NODE_ENV !== "test") {
+      process.exit(1);
+    }
   });
 
 async function clearSocketCache() {

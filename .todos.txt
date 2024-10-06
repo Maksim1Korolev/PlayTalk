@@ -10,6 +10,7 @@ Redis as one more possible point to get the data in more places
 OpponentUsername and gameName data type
 Make users from context into map
 Update highlight logic
+Tests for chat repo services
 UserContext and logic Changing 
 
 To fix:
