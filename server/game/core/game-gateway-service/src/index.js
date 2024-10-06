@@ -25,11 +25,11 @@ export const io = new Server(server, {
   cors: {},
 });
 
-socketAuthMiddleware(io);
+io.engine.use(socketAuthMiddleware);
 
 async function main() {
   app.use(cors());
-  app.use(express.json());  
+  app.use(express.json());
 
   app.use("/api/online", onlineRouter);
   app.use("/api/game", gameRouter);
