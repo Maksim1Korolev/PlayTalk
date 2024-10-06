@@ -1,14 +1,18 @@
+import { CurrentUser, User } from "@/entities/User";
 import { createContext } from "react";
-import { User } from "@/entities/User";
 
 type UsersContextType = {
+  currentUser: CurrentUser;
   users: User[];
-  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+  updateAllUsers: (users: User[]) => void;
+  updateUser: (username: string, updatedProps: Partial<User>) => void;
 };
 
 const defaultUsersContext: UsersContextType = {
   users: [],
-  setUsers: () => {}, // Default to a no-op function
+  currentUser: null,
+  updateUser: () => {},
+  updateAllUsers: () => {},
 };
 
 //TODO:Rename to user singular?

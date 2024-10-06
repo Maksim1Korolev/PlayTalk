@@ -63,7 +63,7 @@ export const CircleModal = memo(
     };
 
     return (
-      <Rnd {...rndProps}>
+      <Rnd {...rndProps} style={{ zIndex: 100 }}>
         {isCollapsed ? (
           <AddonCircle {...addonCircleProps} onClick={handleOpenCircleModal} />
         ) : (

@@ -2,12 +2,13 @@
 export interface User {
   _id: string;
   username: string;
-  password: string;
-  avatarFileName: string;
-  avatarUrl: string;
-  isOnline: boolean;
-  isInviting: boolean;
-  activeGames: string[];
+  avatarFileName?: string;
+  avatarUrl?: string;
+  isOnline?: boolean;
+  isInviting?: boolean;
+  activeGames?: string[];
   unreadMessageCount?: number;
   isChatOpen?: boolean;
 }
+
+export type CurrentUser = User | undefined | null;

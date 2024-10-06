@@ -1,43 +1,13 @@
-import { useCallback, useContext } from "react";
-import { useCookies } from "react-cookie";
+import { useContext } from "react";
 
-import { User } from "@/entities/User";
 import { useSockets } from "@/shared/hooks/useSockets";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
 import { useGameSessionLogic } from "./useGameSessionLogic";
 import { useOnlineSockets } from "./useOnlineSockets";
 
 export const useOnlinePageSockets = () => {
-  const [cookies] = useCookies();
-  const { user: currentUser } = cookies["jwt-cookie"];
-  const { users, setUsers } = useContext(UsersContext);
-
-  //TODO: Maybe Transfer logic to UserContext
-  const updateUserList = useCallback(
-    (username: string, updatedProps: Partial<User>) => {
-      setUsers((prevUsers: User[]) => {
-        if (!prevUsers) return [];
-
-        return prevUsers.map(user => {
-          if (user.username === username) {
-            const {
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              _id,
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              username,
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              avatarFileName,
-              ...allowedProps
-            }: Partial<User> = updatedProps;
-            return { ...user, ...allowedProps };
-          }
-
-          return user;
-        });
-      });
-    },
-    [setUsers]
-  );
+  const { users, currentUser, updateAllUsers, updateUser } =
+    useContext(UsersContext);
 
   const {
     lastClickedPlayUser,
@@ -48,34 +18,22 @@ export const useOnlinePageSockets = () => {
     handleGameRequestNoButton,
     handleOpenGameSelector,
     onGameModalClose,
-  } = useGameSessionLogic(users, updateUserList);
+  } = useGameSessionLogic(users, updateUser);
 
   useSockets();
 
-  const updateUsersForList = useCallback(
-    (userList: User[]) => {
-      if (!currentUser) return;
-
-      const otherUsers = userList.filter(
-        (user: User) => user.username !== currentUser.username
-      );
-
-      setUsers(otherUsers || []);
-    },
-    [currentUser, setUsers]
-  );
-
   useOnlineSockets({
-    updateUserList,
+    updateUser,
   });
 
   return {
+    currentUser,
     users,
     invites,
     lastClickedPlayUser,
     gameModals,
     onGameModalClose,
-    updateUsers: updateUsersForList,
+    updateUsers: updateAllUsers,
     handleOpenGameSelector,
     handleGameClicked,
     handleGameRequestYesButton,

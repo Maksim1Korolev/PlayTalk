@@ -108,33 +108,6 @@ class MessageBufferService {
       return [];
     }
   }
-
-  static async markMessagesAsReadInBuffer(usernames, requestingUsername) {
-    const sortedUsernames = usernames.sort();
-    const cacheKey = sortedUsernames.join("-");
-    const bufferKey = `${process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY}:${cacheKey}`;
-
-    const messages = await redisClient.lRange(bufferKey, 0, -1);
-
-    if (messages.length > 0) {
-      const updatedMessages = messages.map(msg => {
-        const parsedMessage = JSON.parse(msg);
-        if (
-          parsedMessage.username !== requestingUsername &&
-          !parsedMessage.readAt
-        ) {
-          parsedMessage.readAt = new Date();
-        }
-        return JSON.stringify(parsedMessage);
-      });
-
-      await redisClient.del(bufferKey);
-      await redisClient.rPush(bufferKey, ...updatedMessages);
-      logger.info(`Marked messages as read in buffer: ${bufferKey}`);
-
-      return updatedMessages;
-    }
-  }
 }
 
 export default MessageBufferService;

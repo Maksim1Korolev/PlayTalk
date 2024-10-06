@@ -1,4 +1,4 @@
-import { User } from "@/entities/User";
+import { CurrentUser } from "@/entities/User";
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
 import { ChatBox } from "@/features/Chat";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
@@ -15,7 +15,7 @@ export const ChatModals = memo(
     chatModals,
     onClose,
   }: {
-    currentUser: User;
+    currentUser: CurrentUser;
     chatModals: ChatModalStateProps[];
     onClose: (username: string) => void;
   }) => {
@@ -33,8 +33,9 @@ export const ChatModals = memo(
           const { user: opponentUser } = modal;
 
           const avatarUrl = getAvatarPath(opponentUser.avatarFileName);
-
-          avatarMap[opponentUser.avatarFileName] = avatarUrl;
+          if (opponentUser.avatarFileName) {
+            avatarMap[opponentUser.avatarFileName] = avatarUrl;
+          }
         }
 
         setAvatarIconMap(avatarMap);
@@ -50,8 +51,8 @@ export const ChatModals = memo(
         isOnline,
       }: {
         unreadMessageCount: number | undefined;
-        avatarFileName: string;
-        isOnline: boolean;
+        avatarFileName: string | undefined;
+        isOnline: boolean | undefined;
       }) => {
         const getAvatarIconProps = (avatarFileName: string) => {
           const size = 80;
@@ -67,7 +68,7 @@ export const ChatModals = memo(
           return svgProps;
         };
 
-        const avatarIconProps = getAvatarIconProps(avatarFileName);
+        const avatarIconProps = getAvatarIconProps(avatarFileName || "");
 
         const addonCircleProps: AddonCircleProps = {
           iconProps: avatarIconProps,

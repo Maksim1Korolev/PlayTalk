@@ -1,15 +1,14 @@
 import { cx } from "@/shared/lib/cx";
 import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
 import cls from "./OnlinePage.module.scss";
 
 import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
 import userListResources from "@/shared/assets/locales/en/UserListResources.json";
 
-import { User } from "@/entities/User";
 import { GameModals, GameRequest, GameSelector } from "@/features/game";
 import { HStack, Loader, UiText, VStack } from "@/shared/ui";
 import { Sidebar } from "@/widgets/Sidebar";
+import { useCookies } from "react-cookie";
 import { fetchUsersStatus } from "../../api/updateUsersStatusApiService";
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
@@ -19,15 +18,14 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>();
-
-  const [cookies] = useCookies(["jwt-cookie"]);
-  const token = cookies["jwt-cookie"]?.token;
-  const currentUser: User = cookies["jwt-cookie"]?.user;
+  const [cookies] = useCookies();
+  const { user: currentUserFromCookies, token } = cookies["jwt-cookie"];
 
   const { chatModals, handleCloseChatModal, handleOpenChatModal } =
     useChatModals();
 
   const {
+    currentUser,
     users: upToDateUsers,
     invites,
     lastClickedPlayUser,
@@ -43,18 +41,16 @@ const OnlinePage = ({ className }: { className?: string }) => {
   useEffect(() => {
     const fetchData = async () => {
       await fetchUsersStatus({
+        currentUser: currentUserFromCookies,
+        token,
         setError,
         setIsError,
         setIsLoading,
-        token,
-        currentUser,
         updateUsers,
       });
     };
 
-    if (token) {
-      fetchData();
-    }
+    fetchData();
   }, []);
 
   if (isLoading) {

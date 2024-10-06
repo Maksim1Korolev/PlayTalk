@@ -1,4 +1,4 @@
-import { User } from "@/entities/User";
+import { CurrentUser, User } from "@/entities/User";
 import { cx } from "@/shared/lib/cx";
 import { Card, UiText, VStack } from "@/shared/ui";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
@@ -14,7 +14,7 @@ export const ChatBox = memo(
     receiverUser,
   }: {
     className?: string;
-    currentUser: User;
+    currentUser: CurrentUser;
     receiverUser: User;
   }) => {
     const dummy = useRef<HTMLDivElement>(null);
@@ -27,14 +27,14 @@ export const ChatBox = memo(
       notifyTyping,
       readAllUnreadMessages,
     } = useChatMessages({
-      currentUsername: currentUser.username,
+      currentUsername: currentUser!.username,
       receiverUsername: receiverUser.username,
     });
 
     useEffect(() => {
       dummy.current?.scrollIntoView({ behavior: "smooth" });
       readAllUnreadMessages(
-        [currentUser.username, receiverUser.username].sort()
+        [currentUser!.username, receiverUser.username].sort()
       );
     }, [messageHistory]);
 
@@ -43,20 +43,15 @@ export const ChatBox = memo(
         <ChatMessage
           key={`${index} ${message.date}`}
           message={message}
-          isRight={currentUser.username == message.username}
+          isRight={currentUser!.username === message.username}
           avatarSrc={
-            currentUser.username == message.username
-              ? currentUser.avatarFileName
+            currentUser!.username === message.username
+              ? currentUser!.avatarFileName
               : receiverUser.avatarFileName
           }
         />
       ));
-    }, [
-      messageHistory,
-      currentUser.username,
-      currentUser.avatarFileName,
-      receiverUser.avatarFileName,
-    ]);
+    }, [messageHistory, currentUser, receiverUser.avatarFileName]);
 
     return (
       <VStack className={cx(cls.Chat, {}, [className])} justify="start" max>

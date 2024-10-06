@@ -141,7 +141,6 @@ class MessageHistoryService {
       usernames: { $all: sortedUsernames },
     });
 
-    //This is a copy
     const messages = messageHistory?.messages.concat(bufferedMessages);
 
     let updated = false;
@@ -161,7 +160,6 @@ class MessageHistoryService {
     }
 
     if (updated) {
-      //It saves changes in messages???
       messageHistory.messages = messages;
       await messageHistory.save();
       await redisClient.hDel(

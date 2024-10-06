@@ -3,9 +3,9 @@ import { SocketContext } from "@/shared/lib/context/SocketContext";
 import { useContext, useEffect } from "react";
 
 export const useOnlineSockets = ({
-  updateUserList,
+  updateUser,
 }: {
-  updateUserList: (username: string, updatedProps: Partial<User>) => void;
+  updateUser: (username: string, updatedProps: Partial<User>) => void;
 }) => {
   const { sockets } = useContext(SocketContext);
   const { communicationSocket, gameSocket } = sockets;
@@ -21,14 +21,14 @@ export const useOnlineSockets = ({
       };
 
       const updateUserOnline = (username: string, isOnline: boolean) => {
-        updateUserList(username, { isOnline });
+        updateUser(username, { isOnline });
       };
 
       const unreadMessageCountChanged = (
         username: string,
         unreadMessageCount: number
       ) => {
-        updateUserList(username, { unreadMessageCount });
+        updateUser(username, { unreadMessageCount });
       };
 
       communicationSocket.on("connect", onCommunicationConnect);
@@ -53,5 +53,5 @@ export const useOnlineSockets = ({
         );
       };
     }
-  }, [communicationSocket, gameSocket, updateUserList]);
+  }, [communicationSocket, gameSocket, updateUser]);
 };
