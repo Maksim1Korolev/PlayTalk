@@ -10,12 +10,12 @@ export const UsersProvider = ({
   children?: ReactNode;
 }) => {
   const [cookies] = useCookies();
-  const { user: currentUserFromCookies } = cookies["jwt-cookie"];
+  const currentUserFromCookies = cookies["jwt-cookie"]?.user;
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<CurrentUser>();
 
   useEffect(() => {
-    if (!currentUser) {
+    if (!currentUser && currentUserFromCookies) {
       const newCurrentUser: CurrentUser = {
         username: currentUserFromCookies.username,
         _id: currentUserFromCookies._id,
