@@ -2,13 +2,14 @@
 // import { socketAuthMiddleware, protect } from "../authMiddleware.js";
 // import UserService from "../../services/userService.js";
 // import SocketService from "../../services/socketService.js";
+// import { Server } from "socket.io";
 
 // jest.mock("jsonwebtoken");
 // jest.mock("../../services/userService.js");
 // jest.mock("../../services/socketService.js");
 
 // describe("AuthMiddleware", () => {
-//   let req, res, next;
+//   let req, res, next, mockIo;
 
 //   beforeEach(() => {
 //     jest.clearAllMocks();
@@ -23,15 +24,11 @@
 //       json: jest.fn(),
 //     };
 //     next = jest.fn();
+//     mockIo = new Server();
+//     //{ engine: { use: jest.fn() } };
 //   });
 
 //   describe("socketAuthMiddleware", () => {
-//     const mockIo = {
-//       engine: {
-//         use: fn => fn(req, res, next),
-//       },
-//     };
-
 //     it("should pass through if it is not a handshake request", () => {
 //       req._query.sid = "some_sid";
 

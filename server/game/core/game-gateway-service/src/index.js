@@ -29,7 +29,7 @@ socketAuthMiddleware(io);
 
 async function main() {
   app.use(cors());
-  app.use(express.json());
+  app.use(express.json());  
 
   app.use("/api/online", onlineRouter);
   app.use("/api/game", gameRouter);
@@ -58,7 +58,9 @@ main()
   .catch(async err => {
     logger.error(`Application startup error: ${err.message}`);
     redisClient.quit();
-    process.exit(1);
+    if (process.env.NODE_ENV !== "test") {
+      process.exit(1);
+    }
   });
 
 async function clearSocketCache() {
