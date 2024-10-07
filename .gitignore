@@ -1,4 +1,5 @@
 .ngnix/
+logs/
 .commands.txt
 .structure.txt
 
