@@ -9,5 +9,7 @@ jest.mock("socket.io", () => ({
 jest.mock("../index.js", () => ({
   io: {
     on: jest.fn(),
+    to: jest.fn().mockReturnThis(),
+    emit: jest.fn(),
   },
 }));
