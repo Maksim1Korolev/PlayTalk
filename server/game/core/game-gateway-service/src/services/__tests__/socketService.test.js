@@ -4,6 +4,7 @@ import redisClient from "../../utils/redisClient.js";
 import { handleInviteSubscriptions } from "../socketGameSessionHandler.js";
 import { handleTicTacToeSubscriptions } from "../ticTacToe/socketSubs.js";
 
+import { setupMockSocketAndUser } from "../../__mocks__/io.js";
 jest.mock("../socketGameSessionHandler.js", () => ({
   handleInviteSubscriptions: jest.fn(),
 }));
@@ -20,18 +21,8 @@ describe("SocketService", () => {
     let mockSocket, mockUser;
 
     beforeEach(() => {
-      mockUser = { username: "testUser" };
-      mockSocket = {
-        id: "socket123",
-        request: { user: mockUser },
-        on: jest.fn(),
-        disconnect: jest.fn(),
-        emit: jest.fn(),
-        broadcast: {
-          emit: jest.fn(),
-        },
-      };
-
+      ({ mockSocket, mockUser } = setupMockSocketAndUser());
+      jest.clearAllMocks();
       io.on.mockImplementation((event, callback) => {
         if (event === "connection") {
           callback(mockSocket);

@@ -8,6 +8,7 @@ import SocketService from "../socketService.js";
 import ActiveGamesService from "../activeGamesService.js";
 import TicTacToeGameService from "../ticTacToe/gameService.js";
 
+import { setupMockSocketAndUser } from "../../__mocks__/io.js";
 jest.mock("../activeGamesService.js");
 jest.mock("../ticTacToe/gameService.js");
 jest.mock("../socketService.js", () => ({
@@ -15,25 +16,20 @@ jest.mock("../socketService.js", () => ({
 }));
 
 describe("SocketGameSessionHandler", () => {
-  let socket, mockUser;
+  let mockSocket, mockUser;
 
   beforeEach(() => {
+    ({ mockSocket, mockUser } = setupMockSocketAndUser());
     SocketService.getUserSockets.mockResolvedValue([]);
     jest.clearAllMocks();
-    socket = {
-      on: jest.fn(),
-      id: "socket123",
-    };
-    mockUser = { username: "testUser" };
-    socket.request = { user: mockUser };
   });
 
   describe("handleInviteSubscriptions", () => {
     describe("handleInviteSubscriptions", () => {
       it("should set up 'send-game-invite' listener but not call io.to() if no sockets are found", async () => {
-        await handleInviteSubscriptions(socket, mockUser.username);
+        await handleInviteSubscriptions(mockSocket, mockUser.username);
 
-        const eventHandler = socket.on.mock.calls.find(
+        const eventHandler = mockSocket.on.mock.calls.find(
           ([event]) => event === "send-game-invite"
         )[1];
         expect(eventHandler).toBeDefined();
@@ -50,9 +46,9 @@ describe("SocketGameSessionHandler", () => {
     });
 
     it("should set up 'accept-game' listener", async () => {
-      await handleInviteSubscriptions(socket, mockUser.username);
+      await handleInviteSubscriptions(mockSocket, mockUser.username);
 
-      const eventHandler = socket.on.mock.calls.find(
+      const eventHandler = mockSocket.on.mock.calls.find(
         ([event]) => event === "accept-game"
       )[1];
       expect(eventHandler).toBeDefined();
