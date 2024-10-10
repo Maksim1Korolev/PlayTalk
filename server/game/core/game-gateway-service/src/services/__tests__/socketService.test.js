@@ -5,6 +5,7 @@ import { handleInviteSubscriptions } from "../socketGameSessionHandler.js";
 import { handleTicTacToeSubscriptions } from "../ticTacToe/socketSubs.js";
 
 import { setupMockSocketAndUser } from "../../__mocks__/io.js";
+
 jest.mock("../socketGameSessionHandler.js", () => ({
   handleInviteSubscriptions: jest.fn(),
 }));
