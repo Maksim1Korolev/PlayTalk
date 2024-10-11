@@ -25,7 +25,7 @@ export const io = new Server(server, {
   cors: {},
 });
 
-socketAuthMiddleware(io);
+io.engine.use(socketAuthMiddleware);
 
 async function main() {
   app.use(cors());

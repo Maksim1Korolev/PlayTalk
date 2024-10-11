@@ -7,55 +7,53 @@ const logger = getLogger("AuthMiddleware");
 import UserService from "../services/userService.js";
 import SocketService from "../services/socketService.js";
 
-export const socketAuthMiddleware = io => {
-  io.engine.use((req, res, next) => {
-    const isHandshake = req._query.sid === undefined;
+export const socketAuthMiddleware = (req, res, next) => {
+  const isHandshake = req._query.sid === undefined;
 
-    if (!isHandshake) {
-      return next();
+  if (!isHandshake) {
+    return next();
+  }
+
+  const header = req.headers["authorization"];
+
+  if (!header) {
+    logger.warn("No token provided during socket handshake");
+    return next(new Error("No token provided"));
+  }
+
+  if (!header.startsWith("Bearer ")) {
+    logger.warn("Invalid token format in socket handshake");
+    return next(new Error("Invalid token format"));
+  }
+
+  const token = header.substring(7);
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      logger.error("Invalid token during socket handshake");
+      return next(new Error("Invalid token"));
     }
 
-    const header = req.headers["authorization"];
-
-    if (!header) {
-      logger.warn("No token provided during socket handshake");
-      return next(new Error("No token provided"));
-    }
-
-    if (!header.startsWith("Bearer ")) {
-      logger.warn("Invalid token format in socket handshake");
-      return next(new Error("Invalid token format"));
-    }
-
-    const token = header.substring(7);
-
-    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-      if (err) {
-        logger.error("Invalid token during socket handshake");
-        return next(new Error("Invalid token"));
-      }
-
-      try {
-        const userFound = await UserService.getUserById(decoded.userId);
-        if (userFound) {
-          req.user = userFound;
-          logger.info(
-            `Socket handshake successful for user: ${userFound.username}`
-          );
-          next();
-        } else {
-          logger.warn(
-            `User not found during socket handshake: userId ${decoded.userId}`
-          );
-          return next(new Error("User not found"));
-        }
-      } catch (error) {
-        logger.error(
-          `Error fetching user during socket handshake: ${error.message}`
+    try {
+      const userFound = await UserService.getUserById(decoded.userId);
+      if (userFound) {
+        req.user = userFound;
+        logger.info(
+          `Socket handshake successful for user: ${userFound.username}`
         );
-        return next(new Error("Error fetching user"));
+        next();
+      } else {
+        logger.warn(
+          `User not found during socket handshake: userId ${decoded.userId}`
+        );
+        return next(new Error("User not found"));
       }
-    });
+    } catch (error) {
+      logger.error(
+        `Error fetching user during socket handshake: ${error.message}`
+      );
+      return next(new Error("Error fetching user"));
+    }
   });
 };
 
