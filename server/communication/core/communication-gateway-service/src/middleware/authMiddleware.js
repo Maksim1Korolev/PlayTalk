@@ -76,14 +76,15 @@ export const protect = asyncHandler(async (req, res, next) => {
     const onlineUsernames = await SocketService.getOnlineUsernames();
     const isUserOnline = onlineUsernames.includes(decoded.username);
 
-    let userFound = {
-      id: decoded.userId,
-      username: decoded.username,
-    };
+    let userFound;
 
-    if (!isUserOnline) {
+    if (isUserOnline) {
+      userFound = {
+        id: decoded.userId,
+        username: decoded.username,
+      };
+    } else {
       userFound = await UserService.getUserById(decoded.userId);
-      logger.info(`User fetched from UserService: ${userFound.username}`);
     }
 
     if (!userFound) {
