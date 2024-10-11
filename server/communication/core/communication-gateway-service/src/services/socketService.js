@@ -11,6 +11,7 @@ class SocketService {
       const user = socket.request.user;
 
       if (!user) {
+        logger.warn("Unauthorized socket connection attempt.");
         socket.disconnect(true);
         return;
       }
