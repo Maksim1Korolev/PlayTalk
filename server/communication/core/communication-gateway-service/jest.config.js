@@ -1,9 +1,6 @@
 const mocksDir = "<rootDir>/src/__mocks__";
 
 export default {
-  setupFilesAfterEnv: [
-    `${mocksDir}/redisClient.js`,
-    `${mocksDir}/mongooseClient.js`,
-  ],
+  setupFilesAfterEnv: [`${mocksDir}/redisClient.js`, `${mocksDir}/io.js`],
   testEnvironment: "node",
 };
