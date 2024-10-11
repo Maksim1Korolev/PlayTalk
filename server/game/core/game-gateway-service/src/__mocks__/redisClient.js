@@ -4,7 +4,6 @@ jest.mock("../utils/redisClient.js", () => ({
   hGetAll: jest.fn(),
   hDel: jest.fn(),
   hKeys: jest.fn(),
-  del: jest.fn(),
   connect: jest.fn(),
   quit: jest.fn(),
   createClient: jest.fn(() => ({
