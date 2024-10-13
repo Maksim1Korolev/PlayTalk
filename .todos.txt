@@ -11,7 +11,8 @@ OpponentUsername and gameName data type
 Make users from context into map
 Update highlight logic
 Tests for chat repo services
-UserContext and logic Changing 
+Open modals logic to client through cookies
+Modals limitation
 
 To fix:
 ChatModal opens lower than the screen and scrollbar appears
