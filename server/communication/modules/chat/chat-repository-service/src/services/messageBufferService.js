@@ -6,6 +6,8 @@ const logger = getLogger("MessageBufferService");
 import MessageHistory from "../schemas/MessageHistory.js";
 
 class MessageBufferService {
+  static flushTimer = null;
+
   static async addToBuffer(usernames, message) {
     const sortedUsernames = usernames.sort();
     const cacheKey = sortedUsernames.join("-");
@@ -24,37 +26,97 @@ class MessageBufferService {
     }
   }
 
+  static async replaceBuffer(usernames, updatedMessages) {
+    const sortedUsernames = usernames.sort();
+    const cacheKey = sortedUsernames.join("-");
+    const bufferKey = `${process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY}:${cacheKey}`;
+
+    const existingMessages = await redisClient.lRange(bufferKey, 0, -1);
+
+    const parsedMessages = existingMessages.map(msg => JSON.parse(msg));
+
+    await redisClient.del(bufferKey);
+    logger.info(`Cleared existing buffer for: ${cacheKey}`);
+
+    // Add the updated messages to the buffer
+    if (parsedMessages.length > 0) {
+      const messageStrings = updatedMessages.map(msg => JSON.stringify(msg));
+      await redisClient.rPush(bufferKey, ...messageStrings);
+      logger.info(
+        `Replaced buffer with ${parsedMessages.length} updated messages for: ${cacheKey}`
+      );
+    }
+  }
+
   static async flushBufferToDatabase(usernames, bufferKey) {
     const messages = await redisClient.lRange(bufferKey, 0, -1);
-    if (messages.length > 0) {
-      logger.info(
-        `Flushing ${messages.length} messages from buffer: ${bufferKey}`
-      );
-      const parsedMessages = messages.map(msg => JSON.parse(msg));
-
-      const messageHistory = await MessageHistory.findOneAndUpdate(
-        { usernames },
-        { $push: { messages: { $each: parsedMessages } } },
-        { new: true, upsert: true }
-      );
-
-      logger.info(
-        `Message history updated in the database for users: ${usernames.join(
-          ", "
-        )}`
-      );
-
-      await redisClient.del(bufferKey);
-      logger.info(`Buffer cleared. Buffer key: ${bufferKey}`);
-
-      const cacheKey = usernames.join("-");
-      await redisClient.hDel(process.env.REDIS_MESSAGE_HISTORY_KEY, cacheKey);
-      logger.info(`Cache key invalidated: ${cacheKey}`);
-
-      return messageHistory;
-    } else {
+    if (messages.length < 1) {
       logger.warn(`No messages found in buffer: ${bufferKey}`);
+      return;
     }
+    console.log("Messages from redis:");
+    console.log(messages);
+
+    logger.info(
+      `Flushing ${messages.length} messages from buffer: ${bufferKey}`
+    );
+    const parsedMessages = messages.map(msg => JSON.parse(msg));
+    console.log("Parsed messages from redis:");
+    console.log(messages);
+    const messageHistory = await MessageHistory.findOneAndUpdate(
+      { usernames },
+      { $push: { messages: { $each: parsedMessages } } },
+      { upsert: true }
+    );
+
+    logger.info(
+      `Message history updated in the database for users: ${usernames.join(
+        ", "
+      )}`
+    );
+
+    await redisClient.del(bufferKey);
+    logger.info(`Buffer cleared. Buffer key: ${bufferKey}`);
+
+    const cacheKey = usernames.join("-");
+    await redisClient.hDel(
+      process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY,
+      cacheKey
+    );
+    logger.info(`Cache key invalidated: ${cacheKey}`);
+
+    return messageHistory;
+  }
+
+  static async flushToDatabase(usernames) {
+    const sortedUsernames = usernames.sort();
+    const cacheKey = `${
+      process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY
+    }:${sortedUsernames.join("-")}`;
+
+    // Get combined message history from Redis
+    const messageHistory = await redisClient.lRange(cacheKey, 0, -1);
+
+    if (messageHistory.messages < 1) {
+      logger.warn(`No messages found to flush in Redis for: ${cacheKey}`);
+    }
+
+    logger.info(
+      `Flushing ${messageHistory.length} messages from Redis for: ${cacheKey}`
+    );
+
+    const parsedMessages = messageHistory.map(msg => JSON.parse(msg));
+
+    // Save messages to MongoDB
+    await MessageHistory.findOneAndUpdate(
+      { usernames: sortedUsernames },
+      { $push: { messages: { $each: parsedMessages } } },
+      { new: true, upsert: true }
+    );
+
+    // Clear Redis cache after flushing
+    await redisClient.del(cacheKey);
+    logger.info(`Cleared Redis cache for: ${cacheKey}`);
   }
 
   static async flushAllBuffers() {
@@ -80,15 +142,24 @@ class MessageBufferService {
   }
 
   static async subscribeToPeriodicFlush() {
+    if (this.flushTimer) {
+      logger.info("Periodic flush timer is already running.");
+      return;
+    }
+
     const MESSAGE_BUFFER_FLUSH_INTERVAL =
       parseInt(process.env.MESSAGE_BUFFER_FLUSH_INTERVAL) || 60000;
 
-    setInterval(async () => {
+    this.flushTimer = setInterval(async () => {
       const flushed = await this.flushAllBuffers();
       if (flushed) {
         logger.info("Periodic buffer flush executed.");
       }
     }, MESSAGE_BUFFER_FLUSH_INTERVAL);
+
+    logger.info(
+      `Started periodic buffer flush with interval: ${MESSAGE_BUFFER_FLUSH_INTERVAL}ms`
+    );
   }
 
   static async getMessagesFromBuffer(usernames) {

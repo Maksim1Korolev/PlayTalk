@@ -7,23 +7,36 @@ import {
 } from "react";
 
 import { cx } from "@/shared/lib/cx";
+import { HighlightType } from "../../AppSvg/ui/AppSvg";
 import cls from "./AppImage.module.scss";
 
 type ObjectFit = "cover" | "fill" | "contain" | "none";
 
 type HTMLImageAttributes = Omit<
   ImgHTMLAttributes<HTMLImageElement>,
-  "width" | "height"
+  "width" | "height" | "onClick"
 >;
 
-export interface AppImageProps extends HTMLImageAttributes {
+interface AppImageBaseProps extends HTMLImageAttributes {
   className?: string;
   fallback?: ReactElement;
   errorFallback?: ReactElement;
   objectFit?: ObjectFit;
+  highlight?: HighlightType;
   width?: number | string;
   height?: number | string;
 }
+
+interface ImageProps extends AppImageBaseProps {
+  clickable?: false;
+  onClick?: never;
+}
+interface ClickableImageProps extends AppImageBaseProps {
+  clickable: true;
+  onClick: () => void;
+}
+
+export type AppImageProps = ImageProps | ClickableImageProps;
 
 //TODO:Relocate?
 export const getAvatarPath = (avatar?: string) => {
@@ -38,7 +51,10 @@ export const AppImage = memo(
     src,
     alt = "image",
     fallback,
+    highlight,
     errorFallback,
+    clickable = false,
+    onClick,
     objectFit = "cover",
     width = 200,
     height = 200,
@@ -68,9 +84,13 @@ export const AppImage = memo(
       return errorFallback;
     }
 
-    return (
+    const image = (
       <img
-        className={cx("", {}, [className, cls[objectFit]])}
+        className={cx(
+          "",
+          { [cls[`highlight-${highlight}`]]: highlight !== "none" },
+          [className, cls[objectFit]]
+        )}
         alt={alt}
         src={src}
         width={width}
@@ -78,5 +98,19 @@ export const AppImage = memo(
         {...otherProps}
       />
     );
+
+    if (clickable) {
+      return (
+        <button
+          style={{ width, height }}
+          type="button"
+          className={cx(cls.button, {}, [className])}
+          onClick={onClick}
+        >
+          {image}
+        </button>
+      );
+    }
+    return image;
   }
 );

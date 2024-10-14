@@ -1,7 +1,6 @@
 import { ObjectId } from "mongodb";
 import MessageHistory from "../schemas/MessageHistory.js";
 import { getLogger } from "../utils/logger.js";
-import redisClient from "../utils/redisClient.js";
 import MessageBufferService from "./messageBufferService.js";
 const logger = getLogger("MessageHistoryService");
 
@@ -10,7 +9,6 @@ class MessageHistoryService {
     return usernames.sort();
   }
 
-  ///////////////messageHistories
   static async addMessage(usernames, message) {
     const sortedUsernames = this.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
@@ -28,66 +26,41 @@ class MessageHistoryService {
     const sortedUsernames = this.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
     logger.info(`Fetching message history. Cache key: ${cacheKey}`);
+    //TODO: Rename?
+    const bufferedMessageHistory =
+      await MessageBufferService.getMessagesFromBuffer(sortedUsernames);
 
-    const cachedMessageHistory = await redisClient.hGet(
-      process.env.REDIS_MESSAGE_HISTORY_KEY,
-      cacheKey
-    );
-
-    const messagesFromBuffer = await MessageBufferService.getMessagesFromBuffer(
-      sortedUsernames
-    );
-
-    let combinedMessages = [];
-
-    if (cachedMessageHistory) {
+    if (bufferedMessageHistory?.length > 0) {
       logger.info("Cache hit. Getting cached message history.");
 
-      combinedMessages = JSON.parse(cachedMessageHistory);
-
-      if (messagesFromBuffer.length > 0) {
-        logger.info("Adding messages from buffer to cached message history.");
-        combinedMessages = combinedMessages.concat(messagesFromBuffer);
-      }
-
-      return combinedMessages;
-    } else {
-      logger.info("Cache miss. No cached message history found.");
+      return bufferedMessageHistory;
     }
+
+    logger.info("Cache miss. No cached message history found.");
 
     const messageHistory = await MessageHistory.findOne({
       usernames: sortedUsernames,
     });
 
+    logger.info(`Get message history of ${usernames} from Mongo`);
+
     if (messageHistory) {
-      combinedMessages = messageHistory.messages;
+      const messages = messageHistory.messages;
 
-      if (messagesFromBuffer.length > 0) {
-        logger.info("Adding messages from buffer to database message history.");
-        combinedMessages = combinedMessages.concat(messagesFromBuffer);
-      }
-
-      await redisClient.hSet(
-        process.env.REDIS_MESSAGE_HISTORY_KEY,
-        cacheKey,
-        JSON.stringify(combinedMessages)
-      );
+      await MessageBufferService.replaceBuffer(sortedUsernames, messages);
       logger.info(`Message history cached. Cache key: ${cacheKey}`);
-    } else if (messagesFromBuffer.length > 0) {
-      logger.info("Buffer cache hit. Returning messages from buffer.");
-      combinedMessages = messagesFromBuffer;
     }
 
-    return combinedMessages;
+    return messageHistory;
   }
 
-  ///////////////unread
+  //unread
   static async getUnreadMessagesCount(usernames, requestingUsername) {
     const sortedUsernames = this.getSortedUsernames(usernames);
 
-    const combinedMessages = await this.getMessageHistory(sortedUsernames);
+    const messages = await this.getMessageHistory(sortedUsernames).messages;
 
-    const unreadCount = combinedMessages.reduce((count, message) => {
+    const unreadCount = messages.reduce((count, message) => {
       if (message.username !== requestingUsername && !message.readAt) {
         return count + 1;
       }
@@ -132,40 +105,39 @@ class MessageHistoryService {
     const sortedUsernames = this.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
     logger.info(`Marking messages as read. Cache key: ${cacheKey}`);
+    let messagesToChange = [];
 
+    logger.info("Get messages from buffer to mark as read");
     const bufferedMessages = await MessageBufferService.getMessagesFromBuffer(
       sortedUsernames
     );
 
-    const messageHistory = await MessageHistory.findOne({
-      usernames: { $all: sortedUsernames },
-    });
-
-    const messages = messageHistory?.messages.concat(bufferedMessages);
+    if (bufferedMessages?.length > 0) {
+      messagesToChange = bufferedMessages;
+    } else {
+      logger.info("No messages in buffer. Get messages from DB");
+      const messageHistory = this.getMessageHistory(sortedUsernames);
+      messagesToChange = messageHistory.messages;
+    }
 
     let updated = false;
-
-    for (let i = 0; i < messages.length; i++) {
-      if (!messages[i].message) {
+    logger.info("Trying to find messages to mark as read");
+    for (let i = 0; i < messagesToChange.length; i++) {
+      if (!messagesToChange[i].message) {
         logger.warn(`Skipping message ${i} because it has no message field.`);
         continue;
       }
       if (
-        messages[i].username !== requestingUsername &&
-        messages[i].readAt === undefined
+        messagesToChange[i].username !== requestingUsername &&
+        messagesToChange[i].readAt === undefined
       ) {
-        messages[i].readAt = new Date();
+        messagesToChange[i].readAt = new Date();
         updated = true;
       }
     }
 
     if (updated) {
-      messageHistory.messages = messages;
-      await messageHistory.save();
-      await redisClient.hDel(
-        process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY,
-        cacheKey
-      );
+      await MessageBufferService.replaceBuffer(usernames, messagesToChange);
       logger.info(
         `Messages marked as read in DB. Cache key invalidated: ${cacheKey}`
       );
@@ -175,7 +147,7 @@ class MessageHistoryService {
       );
     }
 
-    return messageHistory;
+    return messagesToChange;
   }
 }
 

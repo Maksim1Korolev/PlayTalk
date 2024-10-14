@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react";
 import { Invite, getInviteKey } from "@/entities/Game/model";
 import { User } from "@/entities/User";
+import { useCallback, useState } from "react";
 import { useGameModals } from "./useGameModals";
 import { useGameSessionSocket } from "./useGameSessionSocket";
 
@@ -78,36 +78,45 @@ export const useGameSessionLogic = (
     onGameEnd,
   });
 
-  const updateInvitingStatus = (senderUsername: string) => {
-    updateUserList(senderUsername, {
-      isInviting: false,
-    });
-  };
+  const updateInvitingStatus = useCallback(
+    (senderUsername: string) => {
+      updateUserList(senderUsername, {
+        isInviting: false,
+      });
+    },
+    [updateUserList]
+  );
 
-  const handleGameRequestYesButton = (invite: Invite) => {
-    handleAcceptGame({
-      opponentUsername: invite.senderUsername,
-      gameName: invite.gameName,
-    });
-    const inviteKey = getInviteKey(invite);
-    setInviteMap(prevInvites => {
-      const { [inviteKey]: removed, ...remainingInvites } = prevInvites;
-      return remainingInvites;
-    });
-    updateInvitingStatus(invite.senderUsername);
-  };
+  const handleGameRequestYesButton = useCallback(
+    (invite: Invite) => {
+      handleAcceptGame({
+        opponentUsername: invite.senderUsername,
+        gameName: invite.gameName,
+      });
+      const inviteKey = getInviteKey(invite);
+      setInviteMap(prevInvites => {
+        const { [inviteKey]: removed, ...remainingInvites } = prevInvites;
+        return remainingInvites;
+      });
+      updateInvitingStatus(invite.senderUsername);
+    },
+    [handleAcceptGame, updateInvitingStatus]
+  );
 
-  const handleGameRequestNoButton = (invite: Invite) => {
-    const inviteKey = getInviteKey({
-      senderUsername: invite.senderUsername,
-      gameName: invite.gameName,
-    });
-    setInviteMap(prevInvites => {
-      const { [inviteKey]: removed, ...remainingInvites } = prevInvites;
-      return remainingInvites;
-    });
-    updateInvitingStatus(invite.senderUsername);
-  };
+  const handleGameRequestNoButton = useCallback(
+    (invite: Invite) => {
+      const inviteKey = getInviteKey({
+        senderUsername: invite.senderUsername,
+        gameName: invite.gameName,
+      });
+      setInviteMap(prevInvites => {
+        const { [inviteKey]: removed, ...remainingInvites } = prevInvites;
+        return remainingInvites;
+      });
+      updateInvitingStatus(invite.senderUsername);
+    },
+    [updateInvitingStatus]
+  );
 
   const handleGameClicked = ({
     opponentUsername,
