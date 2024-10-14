@@ -10,7 +10,7 @@ import { sortUsers } from "../../utils/userListUtils";
 
 export interface UserListProps {
   className?: string;
-  users?: User[]; // Change 'users?: User[]' to 'users: User[]'
+  users: User[];
   collapsed?: boolean;
   handleUserChatButton: (user: User) => void;
   handleUserPlayButton: (user: User) => void;
