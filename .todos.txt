@@ -11,6 +11,7 @@ OpponentUsername and gameName data type
 Make users from context into map
 Update highlight logic
 Tests for chat repo services
+Tests for ttt
 Open modals logic to client through cookies
 Modals limitation
 
