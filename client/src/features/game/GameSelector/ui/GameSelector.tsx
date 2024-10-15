@@ -6,7 +6,7 @@ import {
   AddonCircle,
   AddonCircleProps,
 } from "@/shared/ui/AddonCircle/ui/AddonCircle";
-import { AppImageProps } from "@/shared/ui/AppImage";
+import { AppImage, AppImageProps } from "@/shared/ui/AppImage";
 import getImagePath from "@/shared/utils/getImagePath";
 import { memo, ReactNode, useEffect, useState } from "react";
 import cls from "./GameSelector.module.scss";
@@ -93,16 +93,13 @@ export const GameSelector = memo(
         src: gameIconUrl,
         width: size,
         height: size,
-        //TODO:Fix useState (real-time problems)
+        //TODO:Fix useState (real-time problems in case game selector doesn't disappear)
         highlight: highlight,
         clickable: true,
         onClick: () => handleIconClick(gameName),
       };
 
-      const addonCircleProps: AddonCircleProps = {
-        iconProps: appImageProps,
-      };
-      return <AddonCircle {...addonCircleProps} />;
+      return <AppImage {...appImageProps} />;
     };
 
     return (
