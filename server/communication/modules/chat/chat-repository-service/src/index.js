@@ -2,12 +2,12 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
-import redisClient from "./utils/redisClient.js";
+import { getLogger } from "./utils/logger.js";
 import {
   connectToMongoDB,
   disconnectFromMongoDB,
 } from "./utils/mongooseClient.js";
-import { getLogger } from "./utils/logger.js";
+import redisClient from "./utils/redisClient.js";
 const logger = getLogger("Main");
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";

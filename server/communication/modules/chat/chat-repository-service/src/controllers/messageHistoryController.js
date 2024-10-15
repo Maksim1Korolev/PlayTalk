@@ -42,8 +42,6 @@ export const getMessageHistory = asyncHandler(async (req, res) => {
       usernames
     );
 
-    logger.info(`Fetching message history for usernames: ${messageHistory}`);
-
     return res.json({ messageHistory });
   } catch (err) {
     logger.error(`Error fetching message history: ${err.message}`);

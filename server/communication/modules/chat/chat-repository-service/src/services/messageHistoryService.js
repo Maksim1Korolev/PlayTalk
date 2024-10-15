@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import mongoose from "mongoose";
 import MessageHistory from "../schemas/MessageHistory.js";
 import { getLogger } from "../utils/logger.js";
 import MessageBufferService from "./messageBufferService.js";
@@ -9,19 +9,24 @@ class MessageHistoryService {
     return usernames.sort();
   }
 
+  //the problem with id!!!!!!!!?
   static async addMessage(usernames, message) {
     const sortedUsernames = this.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
     logger.info(`Adding message. Cache key: ${cacheKey}`);
 
+    var newId = new mongoose.mongo.ObjectId();
+    console.log(newId);
+
     const wrappedMessage = {
-      _id: new ObjectId(),
+      _id: newId,
       ...message,
     };
 
     await MessageBufferService.addToBuffer(sortedUsernames, wrappedMessage);
   }
 
+  // Maybe the problem in async requests
   static async getMessageHistory(usernames) {
     const sortedUsernames = this.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
@@ -51,14 +56,14 @@ class MessageHistoryService {
       logger.info(`Message history cached. Cache key: ${cacheKey}`);
     }
 
-    return messageHistory;
+    return messageHistory.messages;
   }
 
   //unread
   static async getUnreadMessagesCount(usernames, requestingUsername) {
     const sortedUsernames = this.getSortedUsernames(usernames);
 
-    const messages = await this.getMessageHistory(sortedUsernames).messages;
+    const messages = await this.getMessageHistory(sortedUsernames);
 
     const unreadCount = messages.reduce((count, message) => {
       if (message.username !== requestingUsername && !message.readAt) {
@@ -101,6 +106,7 @@ class MessageHistoryService {
     return unreadMessageMap;
   }
 
+  //maybe the problem in async
   static async markAsRead(usernames, requestingUsername) {
     const sortedUsernames = this.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
@@ -121,12 +127,14 @@ class MessageHistoryService {
     }
 
     let updated = false;
+
     logger.info("Trying to find messages to mark as read");
     for (let i = 0; i < messagesToChange.length; i++) {
       if (!messagesToChange[i].message) {
         logger.warn(`Skipping message ${i} because it has no message field.`);
         continue;
       }
+
       if (
         messagesToChange[i].username !== requestingUsername &&
         messagesToChange[i].readAt === undefined
