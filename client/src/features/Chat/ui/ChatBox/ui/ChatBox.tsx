@@ -39,8 +39,6 @@ export const ChatBox = memo(
     }, [messageHistory]);
 
     const renderMessageHistory = useCallback(() => {
-      console.log(messageHistory);
-
       return messageHistory?.map((message: Message, index: number) => (
         <ChatMessage
           key={`${index} ${message.date}`}
