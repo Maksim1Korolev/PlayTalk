@@ -1,4 +1,5 @@
 export { AppImage } from "./AppImage";
+export type { AppImageProps } from "./AppImage";
 export { AppSvg } from "./AppSvg";
 export type { SVGProps } from "./AppSvg";
 export { Card } from "./Card";

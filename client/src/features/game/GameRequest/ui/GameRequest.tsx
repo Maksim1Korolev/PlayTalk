@@ -2,7 +2,7 @@ import cls from "./GameRequest.module.scss";
 import { useState, useEffect, useContext, ReactNode } from "react";
 import { Rnd } from "react-rnd";
 
-import { AddonCircle, UiButton, SVGProps, AppSvg } from "@/shared/ui";
+import { AddonCircle, UiButton, AppImage, AppImageProps } from "@/shared/ui";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
 import { useModalDrag } from "@/shared/hooks/useModalDrag";
 import getImagePath from "@/shared/utils/getImagePath";
@@ -34,35 +34,20 @@ export const GameRequest = ({
   const { isDragged, handleDragStart, handleDragStop } = useModalDrag();
   const { users } = useContext(UsersContext);
 
-  const [iconSvgMap, setIconSvgMap] = useState<{
-    [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-  }>({});
-  const [avatarIconMap, setAvatarIconMap] = useState<{
-    [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-  }>({});
+  const [iconMap, setIconMap] = useState<{ [key: string]: string }>({});
+  const [avatarMap, setAvatarMap] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     const loadIcons = async () => {
-      const iconMap: {
-        [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-      } = {};
-      const avatarMap: {
-        [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-      } = {};
+      const iconPaths: { [key: string]: string } = {};
+      const avatarPaths: { [key: string]: string } = {};
 
       for (const invite of invites) {
         const { gameName, senderUsername } = invite;
 
-        // Load game icon
         const iconPath = getImagePath({ gameName });
-        try {
-          const importedIcon = await import(iconPath);
-          iconMap[gameName] = importedIcon.ReactComponent;
-        } catch (error) {
-          console.error(`Failed to load game icon: ${gameName}`, error);
-        }
+        iconPaths[gameName] = iconPath;
 
-        // Load avatar icon
         const inviteUser = users.find(
           (user: User) => user.username === senderUsername
         );
@@ -70,21 +55,12 @@ export const GameRequest = ({
           const avatarPath = getImagePath({
             avatarFileName: inviteUser.avatarFileName,
           });
-
-          try {
-            const importedAvatar = await import(avatarPath);
-            avatarMap[senderUsername] = importedAvatar.ReactComponent;
-          } catch (error) {
-            console.error(
-              `Failed to load avatar for user: ${senderUsername}`,
-              error
-            );
-          }
+          avatarPaths[senderUsername] = avatarPath;
         }
       }
 
-      setIconSvgMap(iconMap);
-      setAvatarIconMap(avatarMap);
+      setIconMap(iconPaths);
+      setAvatarMap(avatarPaths);
     };
 
     if (invites.length > 0) {
@@ -113,20 +89,21 @@ export const GameRequest = ({
   };
 
   const getInviteCircle = (): ReactNode => {
-    const gameIcon = iconSvgMap[currentInvite.gameName];
-    const avatarIcon = avatarIconMap[currentInvite.senderUsername];
+    const gameIconUrl = iconMap[currentInvite.gameName];
+    const avatarIconUrl = avatarMap[currentInvite.senderUsername];
 
-    if (!gameIcon || !avatarIcon) return null;
+    if (!gameIconUrl || !avatarIconUrl) return null;
 
-    const gameIconProps: SVGProps = {
-      Svg: gameIcon,
+    const gameIconProps: AppImageProps = {
+      src: gameIconUrl,
+      draggable: false,
       width: 80,
       height: 80,
       highlight: "secondary",
     };
 
-    const avatarIconProps: SVGProps = {
-      Svg: avatarIcon,
+    const avatarIconProps: AppImageProps = {
+      src: avatarIconUrl,
       width: 30,
       height: 30,
     };
@@ -134,8 +111,8 @@ export const GameRequest = ({
     return (
       <AddonCircle
         className={`${cls.GameRequest} ${className}`}
-        iconProps={gameIconProps}
-        addonTopRight={<AppSvg {...avatarIconProps} ref={undefined} />}
+        iconProps={{ ...gameIconProps }}
+        addonTopRight={<AppImage {...avatarIconProps} />}
         addonBottomLeft={yesButton}
         addonBottomRight={noButton}
         addonTopLeft={skipButton}

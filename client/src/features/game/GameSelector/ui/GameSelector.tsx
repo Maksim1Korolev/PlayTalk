@@ -1,15 +1,11 @@
+import cls from "./GameSelector.module.scss";
+import { memo, ReactNode, useEffect, useState } from "react";
+
 import { GameNames } from "@/entities/Game/model";
 import { User } from "@/entities/User";
 import { cx } from "@/shared/lib/cx";
-import { Card, HStack, Loader } from "@/shared/ui";
-import {
-  AddonCircle,
-  AddonCircleProps,
-} from "@/shared/ui/AddonCircle/ui/AddonCircle";
-import { AppImage, AppImageProps } from "@/shared/ui/AppImage";
+import { Card, HStack, Loader, AppImage, AppImageProps } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
-import { memo, ReactNode, useEffect, useState } from "react";
-import cls from "./GameSelector.module.scss";
 
 interface GameSelectorProps {
   className?: string;
@@ -91,6 +87,7 @@ export const GameSelector = memo(
 
       const appImageProps: AppImageProps = {
         src: gameIconUrl,
+        draggable: false,
         width: size,
         height: size,
         //TODO:Fix useState (real-time problems in case game selector doesn't disappear)
