@@ -14,6 +14,22 @@
   object-fit: fill;
 }
 
+.button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+}
+
+.button:hover .icon {
+  color: var(--accent-color);
+}
+
+.icon {
+  transition: all 0.3s ease;
+}
 
 .highlight-primary {
   filter: brightness(1.5) drop-shadow(0 0 10px var(--primary-color));
@@ -22,4 +38,3 @@
 .highlight-secondary {
   filter: brightness(1.5) drop-shadow(0 0 10px var(--secondary-color));
 }
-
