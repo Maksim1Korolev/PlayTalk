@@ -6,7 +6,7 @@ export interface User {
   avatarUrl?: string;
   isOnline?: boolean;
   isInviting?: boolean;
-  activeGames?: string[];
+  activeGames?: string[] ;
   unreadMessageCount?: number;
   isChatOpen?: boolean;
 }

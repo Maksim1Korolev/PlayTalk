@@ -58,14 +58,15 @@ export const ChatModals = memo(
           const size = 80;
           const avatarUrl = avatarIconMap[avatarFileName];
 
-          const svgProps: AppImageProps = {
+          const imageProps: AppImageProps = {
             src: avatarUrl,
+						clickable: false,
             width: size,
             height: size,
             draggable: false,
             alt: avatarFileName,
           };
-          return svgProps;
+          return imageProps;
         };
 
         const avatarIconProps = getAvatarIconProps(avatarFileName || "");

@@ -47,6 +47,7 @@ export const useChatMessages = ({
 
     const updateChatHistory = (messages: Message[], senderUsername: string) => {
       console.log(messages);
+      console.log("Updating chat history");
 
       if (receiverUsername === senderUsername) {
         setMessageHistory(messages);

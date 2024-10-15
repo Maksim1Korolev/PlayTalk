@@ -41,10 +41,7 @@ export const AddonCircle = memo(
           ref={undefined}
         />
       ) : (
-        <AppImage
-          {...(iconProps as AppImageProps)} // Render AppImage if the `src` property exists
-          onClick={handleIconClicked}
-        />
+        <AppImage {...iconProps} clickable onClick={handleIconClicked} />
       );
 
     return (

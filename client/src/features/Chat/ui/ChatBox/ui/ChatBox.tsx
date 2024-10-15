@@ -39,6 +39,8 @@ export const ChatBox = memo(
     }, [messageHistory]);
 
     const renderMessageHistory = useCallback(() => {
+      console.log(messageHistory);
+
       return messageHistory?.map((message: Message, index: number) => (
         <ChatMessage
           key={`${index} ${message.date}`}
@@ -59,7 +61,7 @@ export const ChatBox = memo(
           <VStack max>
             <div className={cls.chatBoxOverlay}></div>
             <div className={cls.chatLogs}>
-              {renderMessageHistory()}
+              {messageHistory && renderMessageHistory()}
               <div ref={dummy} />
             </div>
             {isTyping && (

@@ -1,10 +1,15 @@
-import { memo, useState, useEffect, ReactNode } from "react";
-import cls from "./GameSelector.module.scss";
-import { cx } from "@/shared/lib/cx";
-import { Card, HStack, SVGProps, AppSvg, Loader } from "@/shared/ui";
 import { GameNames } from "@/entities/Game/model";
 import { User } from "@/entities/User";
+import { cx } from "@/shared/lib/cx";
+import { Card, HStack, Loader } from "@/shared/ui";
+import {
+  AddonCircle,
+  AddonCircleProps,
+} from "@/shared/ui/AddonCircle/ui/AddonCircle";
+import { AppImageProps } from "@/shared/ui/AppImage";
 import getImagePath from "@/shared/utils/getImagePath";
+import { memo, ReactNode, useEffect, useState } from "react";
+import cls from "./GameSelector.module.scss";
 
 interface GameSelectorProps {
   className?: string;
@@ -27,7 +32,7 @@ export const GameSelector = memo(
     const gameNames = Object.values(GameNames);
 
     const [iconMap, setIconMap] = useState<{
-      [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+      [key: string]: string;
     }>({});
     const [highlight, setHighlight] = useState<
       "none" | "primary" | "secondary"
@@ -36,37 +41,34 @@ export const GameSelector = memo(
     useEffect(() => {
       const loadIcons = async () => {
         const icons: {
-          [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+          [key: string]: string;
         } = {};
 
         for (const gameName of gameNames) {
           const iconPath = getImagePath({ gameName });
-          try {
-            const importedIcon = await import(iconPath);
-            icons[gameName] = importedIcon.ReactComponent;
-          } catch (error) {
-            console.error(`Failed to load icon for game: ${gameName}`, error);
-          }
+
+          icons[gameName] = iconPath;
         }
 
         setIconMap(icons);
       };
 
       loadIcons();
-    }, [gameNames]);
+    }, []);
 
     useEffect(() => {
       const newHighlight =
-        user.activeGames.length > 0
+        user.activeGames && user.activeGames.length > 0
           ? "primary"
           : user.isInviting
           ? "secondary"
           : "none";
       setHighlight(newHighlight);
-    }, [user.activeGames.length, user.isInviting]);
+    }, []);
 
     const isGameActive = (gameName: string): boolean => {
-      return user.activeGames.includes(gameName);
+      if (user.activeGames) return user.activeGames.includes(gameName);
+      return false;
     };
 
     const handleIconClick = (gameName: string): void => {
@@ -75,20 +77,20 @@ export const GameSelector = memo(
         opponentUsername: user.username,
         gameName,
         isActive,
-        isInviting: user.isInviting,
+        isInviting: user.isInviting || false,
       });
     };
 
     const getGameIcon = (gameName: string): ReactNode => {
       const size = 60;
-      const SvgComponent = iconMap[gameName];
+      const gameIconUrl = iconMap[gameName];
 
-      if (!SvgComponent) {
+      if (!gameIconUrl) {
         return <Loader />;
       }
 
-      const svgProps: SVGProps = {
-        Svg: SvgComponent,
+      const appImageProps: AppImageProps = {
+        src: gameIconUrl,
         width: size,
         height: size,
         //TODO:Fix useState (real-time problems)
@@ -97,7 +99,10 @@ export const GameSelector = memo(
         onClick: () => handleIconClick(gameName),
       };
 
-      return <AppSvg {...svgProps} ref={undefined} />;
+      const addonCircleProps: AddonCircleProps = {
+        iconProps: appImageProps,
+      };
+      return <AddonCircle {...addonCircleProps} />;
     };
 
     return (
