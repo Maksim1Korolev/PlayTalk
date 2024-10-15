@@ -2,7 +2,7 @@ import { cx } from "@/shared/lib/cx";
 import { forwardRef } from "react";
 
 import { AppImage } from "@/shared/ui/AppImage";
-import { getAvatarPath } from "@/shared/ui/AppImage/ui/AppImage";
+import getImagePath from "@/shared/utils/getImagePath";
 import cls from "./ChatMessage.module.scss";
 
 export interface Message {
@@ -17,11 +17,11 @@ interface ChatMessageProps {
   className?: string;
   isRight?: boolean;
   message: Message;
-  avatarSrc?: string;
+  avatarFileName?: string;
 }
 
 export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
-  ({ className, isRight, message, avatarSrc }, ref) => {
+  ({ className, isRight, message, avatarFileName }, ref) => {
     return (
       <div
         ref={ref}
@@ -32,7 +32,9 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
         )}
       >
         <span className={cls.msgAvatar}>
-          {avatarSrc && <AppImage src={getAvatarPath(avatarSrc)} />}
+          {avatarFileName && (
+            <AppImage src={getImagePath({ avatarFileName })} />
+          )}
         </span>
         <div className={cls.cmMsgText}>{message.message}</div>
       </div>

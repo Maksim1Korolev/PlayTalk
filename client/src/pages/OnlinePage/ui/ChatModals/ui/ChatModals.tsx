@@ -3,9 +3,8 @@ import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
 import { ChatBox } from "@/features/Chat";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 
-import { AddonCircleProps, CircleModal } from "@/shared/ui";
-import { AppImageProps } from "@/shared/ui/AppImage";
-import { getAvatarPath } from "@/shared/ui/AppImage/ui/AppImage";
+import { AddonCircleProps, CircleModal, AppImageProps } from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
 import { memo, useCallback, useEffect, useState } from "react";
 import { ChatModalStateProps } from "../hooks/useChatModals";
 
@@ -20,19 +19,21 @@ export const ChatModals = memo(
     onClose: (username: string) => void;
   }) => {
     const [avatarIconMap, setAvatarIconMap] = useState<{
-      [key: string]: string; // Store the image URL directly
+      [key: string]: string;
     }>({});
 
     useEffect(() => {
       const loadIcons = async () => {
         const avatarMap: {
-          [key: string]: string; // Store the image URL directly
+          [key: string]: string;
         } = {};
 
         for (const modal of chatModals) {
           const { user: opponentUser } = modal;
 
-          const avatarUrl = getAvatarPath(opponentUser.avatarFileName);
+          const avatarUrl = getImagePath({
+            avatarFileName: opponentUser.avatarFileName,
+          });
           if (opponentUser.avatarFileName) {
             avatarMap[opponentUser.avatarFileName] = avatarUrl;
           }
@@ -60,7 +61,7 @@ export const ChatModals = memo(
 
           const imageProps: AppImageProps = {
             src: avatarUrl,
-						clickable: false,
+            clickable: false,
             width: size,
             height: size,
             draggable: false,

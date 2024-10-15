@@ -38,13 +38,6 @@ interface ClickableImageProps extends AppImageBaseProps {
 
 export type AppImageProps = ImageProps | ClickableImageProps;
 
-//TODO:Relocate?
-export const getAvatarPath = (avatar?: string) => {
-  return avatar
-    ? `${import.meta.env.VITE_S3_BUCKET_URL}/avatars/${avatar}`
-    : "";
-};
-
 export const AppImage = memo(
   ({
     className,

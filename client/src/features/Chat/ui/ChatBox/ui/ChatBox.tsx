@@ -46,7 +46,7 @@ export const ChatBox = memo(
           key={`${index} ${message.date}`}
           message={message}
           isRight={currentUser!.username === message.username}
-          avatarSrc={
+          avatarFileName={
             currentUser!.username === message.username
               ? currentUser!.avatarFileName
               : receiverUser.avatarFileName
