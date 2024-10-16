@@ -1,1 +1,1 @@
-export { GameModals } from "./ui/GameModals/GameModals";
+export { GameModals } from "./ui/GameModals";
