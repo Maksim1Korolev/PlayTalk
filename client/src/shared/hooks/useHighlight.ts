@@ -1,6 +1,5 @@
-// shared/hooks/useHighlight.ts
 import { useMemo } from "react";
-import cls from "../styles/highlightStyles.module.scss"; // Assuming the highlight styles are stored in a shared stylesheet
+import cls from "../styles/highlightStyles.module.scss"; //
 
 export type HighlightType = "none" | "primary" | "secondary";
 
