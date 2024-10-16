@@ -11,8 +11,7 @@ import {
 import { TicTacToe } from "@/features/game/TicTacToe/";
 import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
-import { AddonCircleProps, AppSvg, CircleModal, SVGProps } from "@/shared/ui";
-import { HighlightType } from "@/shared/ui/AppSvg/ui/AppSvg";
+import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
 const generateModalId = (
@@ -33,23 +32,16 @@ interface GameModalsProps {
     gameName: string;
   }) => void;
 }
-//get
+
 export const GameModals = memo(
   ({ className, gameModals, onClose }: GameModalsProps) => {
     const [cookies] = useCookies(["jwt-cookie"]);
     const { user: currentUser, token } = cookies["jwt-cookie"];
 
     const { users } = useContext(UsersContext);
-
     const [games, setGames] = useState<{ [key: string]: Game }>({});
-
-    const [iconSvgMap, setIconSvgMap] = useState<{
-      [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-    }>({});
-
-    const [avatarIconMap, setAvatarIconMap] = useState<{
-      [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-    }>({});
+    const [iconMap, setIconMap] = useState<{ [key: string]: string }>({});
+    const [avatarMap, setAvatarMap] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
       const fetchGames = async () => {
@@ -79,44 +71,24 @@ export const GameModals = memo(
 
     useEffect(() => {
       const loadIcons = async () => {
-        const iconMap: {
-          [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-        } = {};
-        const avatarMap: {
-          [key: string]: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-        } = {};
+        const icons: { [key: string]: string } = {};
+        const avatars: { [key: string]: string } = {};
 
         for (const modal of gameModals) {
           const { gameName, opponentUsername } = modal;
 
-          const iconPath = getImagePath({ gameName });
-          try {
-            const importedIcon = await import(iconPath);
-            iconMap[gameName] = importedIcon.ReactComponent;
-          } catch (error) {
-            console.error(`Failed to load icon for game: ${gameName}`, error);
-          }
+          icons[gameName] = getImagePath({ gameName });
 
           const opponentUser = users.find(
             user => user.username === opponentUsername
           );
-          const avatarPath = getImagePath({
+          avatars[opponentUsername] = getImagePath({
             avatarFileName: opponentUser?.avatarFileName,
           });
-
-          try {
-            const importedAvatar = await import(avatarPath);
-            avatarMap[opponentUsername] = importedAvatar.ReactComponent;
-          } catch (error) {
-            console.error(
-              `Failed to load avatar for user: ${opponentUsername}`,
-              error
-            );
-          }
         }
 
-        setIconSvgMap(iconMap);
-        setAvatarIconMap(avatarMap);
+        setIconMap(icons);
+        setAvatarMap(avatars);
       };
 
       loadIcons();
@@ -124,12 +96,11 @@ export const GameModals = memo(
 
     const handleCloseGameModal = (modalId: string) => {
       const [opponentUsername, gameName] = modalId.split("_");
-
       onClose({ opponentUsername, gameName });
     };
 
     const getGameComponent = (opponentUsername: string, gameName: string) => {
-      const gameId: string = generateModalId(opponentUsername, gameName);
+      const gameId = generateModalId(opponentUsername, gameName);
       const game: TicTacToeGame = games[gameId] as TicTacToeGame;
 
       if (!game) return null;
@@ -146,42 +117,26 @@ export const GameModals = memo(
       opponentUsername: string,
       currentGameName: string
     ): AddonCircleProps => {
-      const gameIconProps = getGameIconProps(currentGameName);
-      const addonTopRight = getAvatarIcon(opponentUsername);
+      const gameIconUrl = iconMap[currentGameName];
+      const avatarIconUrl = avatarMap[opponentUsername];
 
-      const addonCircleProps: AddonCircleProps = {
-        iconProps: gameIconProps,
-        addonTopRight,
+      return {
+        iconProps: {
+          src: gameIconUrl,
+          width: 80,
+          height: 80,
+          draggable: false,
+          highlight: "primary",
+        },
+        addonTopRight: avatarIconUrl ? (
+          <AppImage
+            src={avatarIconUrl}
+            width={30}
+            height={30}
+            draggable={false}
+          />
+        ) : null,
       };
-
-      return addonCircleProps;
-    };
-
-    const getGameIconProps = (currentGameName: string): SVGProps => {
-      const size = 80;
-      const highlight: HighlightType = "primary";
-      const SvgComponent = iconSvgMap[currentGameName];
-
-      const svgProps: SVGProps = {
-        Svg: SvgComponent,
-        width: size,
-        height: size,
-        highlight,
-      };
-
-      return svgProps;
-    };
-
-    const getAvatarIcon = (opponentUsername: string): React.ReactNode => {
-      const SvgComponent = avatarIconMap[opponentUsername];
-
-      if (!SvgComponent) return null;
-
-      const svgProps: SVGProps = {
-        Svg: SvgComponent,
-      };
-
-      return <AppSvg {...svgProps} ref={undefined} />;
     };
 
     return (
