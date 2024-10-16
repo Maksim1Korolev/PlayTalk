@@ -56,19 +56,3 @@
 .drag-handle {
   cursor: grab;
 }
-
-@media (max-width: 768px) {
-  .CircleModal {
-    min-width: 90vw;
-    min-height: 90vh;
-    padding: 8px;
-  }
-}
-
-@media (max-width: 480px) {
-  .CircleModal {
-    min-width: 100vw;
-    min-height: 100vh;
-    padding: 4px;
-  }
-}

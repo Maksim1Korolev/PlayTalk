@@ -5,5 +5,17 @@
 .app {
   background: var(--bg-color);
   color: var(--text);
+  overflow: hidden;
   height: 100vh;
+}
+
+.content {
+  height: 100vh;
+  width: 98vw;
+  margin: 2vh;
+}
+
+.navbar {
+  position: absolute;
+  margin: 10px;
 }

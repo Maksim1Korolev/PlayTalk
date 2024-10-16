@@ -1,16 +1,19 @@
 import "./styles/index.scss";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { AppRouter } from "./providers/";
 import { Navbar } from "@/widgets/Navbar";
 
 function App() {
+  useEffect(() => {
+    document.body.className = "app";
+  }, []);
   return (
-    <div id="app" className="app">
+    <>
       <Suspense fallback="">
-        <Navbar />
-        <AppRouter />
+        <Navbar className="navbar" />
+        <AppRouter className="content" />
       </Suspense>
-    </div>
+    </>
   );
 }
 

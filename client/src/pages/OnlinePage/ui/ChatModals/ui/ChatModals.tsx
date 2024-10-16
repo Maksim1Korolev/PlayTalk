@@ -1,7 +1,5 @@
-import cls from "./ChatModals.module.scss";
 import { memo, useCallback, useEffect, useState } from "react";
 
-import { cx } from "@/shared/lib/cx";
 import { CurrentUser } from "@/entities/User";
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
 import { ChatBox } from "@/features/Chat";
@@ -12,12 +10,10 @@ import { ChatModalStateProps } from "../hooks/useChatModals";
 
 export const ChatModals = memo(
   ({
-    className,
     currentUser,
     chatModals,
     onClose,
   }: {
-    className?: string;
     currentUser: CurrentUser;
     chatModals: ChatModalStateProps[];
     onClose: (username: string) => void;
@@ -115,10 +111,6 @@ export const ChatModals = memo(
       });
     }, [chatModals, currentUser, getAddonCircleProps, onClose]);
 
-    return (
-      <div className={cx(cls.ChatModals, {}, [className])}>
-        {renderChatModals()}
-      </div>
-    );
+    return renderChatModals();
   }
 );

@@ -66,14 +66,14 @@ const OnlinePage = ({ className }: { className?: string }) => {
   }
   return (
     <div className={cx(cls.OnlinePage, {}, [className])}>
+      <Sidebar
+        users={upToDateUsers}
+        handleUserChatButton={handleOpenChatModal}
+        handleUserPlayButton={handleOpenGameSelector}
+      />
       <HStack max>
         <VStack>
           <UiText size="xl">{userListResources.userListHeader}</UiText>
-          <Sidebar
-            users={upToDateUsers}
-            handleUserChatButton={handleOpenChatModal}
-            handleUserPlayButton={handleOpenGameSelector}
-          />
 
           {invites && (
             <GameRequest
@@ -92,13 +92,13 @@ const OnlinePage = ({ className }: { className?: string }) => {
             />
           )}
         </VStack>
-        <ChatModals
-          currentUser={currentUser}
-          chatModals={chatModals}
-          onClose={handleCloseChatModal}
-        />
-        <GameModals gameModals={gameModals} onClose={onGameModalClose} />
       </HStack>
+      <ChatModals
+        currentUser={currentUser}
+        chatModals={chatModals}
+        onClose={handleCloseChatModal}
+      />
+      <GameModals gameModals={gameModals} onClose={onGameModalClose} />
     </div>
   );
 };
