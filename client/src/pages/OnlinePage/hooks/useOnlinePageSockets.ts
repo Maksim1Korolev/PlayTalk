@@ -17,7 +17,7 @@ export const useOnlinePageSockets = () => {
     handleGameRequestYesButton,
     handleGameRequestNoButton,
     handleOpenGameSelector,
-    onGameModalClose,
+    handleCloseGameModal,
   } = useGameSessionLogic(users, updateUser);
 
   useSockets();
@@ -32,7 +32,7 @@ export const useOnlinePageSockets = () => {
     invites,
     lastClickedPlayUser,
     gameModals,
-    onGameModalClose,
+    handleCloseGameModal,
     updateUsers: updateAllUsers,
     handleOpenGameSelector,
     handleGameClicked,

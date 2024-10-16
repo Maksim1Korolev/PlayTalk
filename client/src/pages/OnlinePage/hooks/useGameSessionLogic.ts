@@ -17,7 +17,7 @@ type GameEndPayload = {
 
 export const useGameSessionLogic = (
   users: User[],
-  updateUserList: (username: string, updatedProps: Partial<User>) => void
+  updateUser: (username: string, updatedProps: Partial<User>) => void
 ) => {
   const [inviteMap, setInviteMap] = useState<{ [key: string]: Invite }>({});
   const [lastClickedPlayUser, setLastClickedPlayUser] = useState<User | null>(
@@ -43,15 +43,14 @@ export const useGameSessionLogic = (
       [inviteKey]: invite,
     }));
 
-    updateUserList(invite.senderUsername, {
+    updateUser(invite.senderUsername, {
       isInviting: true,
     });
   };
 
   const onGameStart = ({ opponentUsername, gameName }: GameStartPayload) => {
-    const user = getUser(opponentUsername); // Retrieve the user
-
-    updateUserList(opponentUsername, {
+    const user = getUser(opponentUsername);
+    updateUser(opponentUsername, {
       activeGames: [...(user?.activeGames || []), gameName],
     });
 
@@ -65,7 +64,7 @@ export const useGameSessionLogic = (
   }: GameEndPayload) => {
     const user = getUser(opponentUsername);
 
-    updateUserList(opponentUsername, {
+    updateUser(opponentUsername, {
       activeGames: (user?.activeGames || []).filter(game => game !== gameName),
     });
 
@@ -80,11 +79,11 @@ export const useGameSessionLogic = (
 
   const updateInvitingStatus = useCallback(
     (senderUsername: string) => {
-      updateUserList(senderUsername, {
+      updateUser(senderUsername, {
         isInviting: false,
       });
     },
-    [updateUserList]
+    [updateUser]
   );
 
   const handleGameRequestYesButton = useCallback(
@@ -147,6 +146,6 @@ export const useGameSessionLogic = (
     handleGameRequestYesButton,
     handleGameRequestNoButton,
     handleOpenGameSelector,
-    onGameModalClose: handleCloseGameModal,
+    handleCloseGameModal,
   };
 };

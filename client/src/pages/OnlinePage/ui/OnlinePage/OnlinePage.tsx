@@ -30,7 +30,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
     invites,
     lastClickedPlayUser,
     gameModals,
-    onGameModalClose,
+    handleCloseGameModal,
     updateUsers,
     handleOpenGameSelector,
     handleGameClicked,
@@ -98,7 +98,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
         chatModals={chatModals}
         onClose={handleCloseChatModal}
       />
-      <GameModals gameModals={gameModals} onClose={onGameModalClose} />
+      <GameModals gameModals={gameModals} onClose={handleCloseGameModal} />
     </div>
   );
 };

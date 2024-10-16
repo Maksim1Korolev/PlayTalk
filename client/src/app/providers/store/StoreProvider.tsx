@@ -18,5 +18,3 @@ export const StoreProvider = ({ children }: StoreProviderProps) => {
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 };
-{
-}
