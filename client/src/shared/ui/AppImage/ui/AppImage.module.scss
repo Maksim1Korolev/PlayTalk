@@ -31,10 +31,3 @@
   transition: all 0.3s ease;
 }
 
-.highlight-primary {
-  filter: brightness(1.5) drop-shadow(0 0 10px var(--primary-color));
-}
-
-.highlight-secondary {
-  filter: brightness(1.5) drop-shadow(0 0 10px var(--secondary-color));
-}

@@ -1,10 +1,8 @@
+import resources from "@/shared/assets/locales/en/UserListResources.json";
+import { HighlightType, useHighlight } from "@/shared/hooks/useHighlight";
 import { cx } from "@/shared/lib/cx";
 import { ButtonProps, UiButton } from "@/shared/ui";
 import cls from "./PlayButton.module.scss";
-import resources from "@/shared/assets/locales/en/UserListResources.json";
-
-//TODO:Use UiButton here and move all the props (this type could be stored in a separate file, also used in AppSvg)
-export type HighlightType = "none" | "primary" | "secondary";
 
 interface PlayButtonProps extends ButtonProps {
   className?: string;
@@ -16,13 +14,13 @@ export const PlayButton = ({
   highlight = "none",
   ...buttonProps
 }: PlayButtonProps) => {
+  const highlightClass = useHighlight(highlight);
   return (
     <UiButton
       className={cx(
         cls.PlayButton,
         {
-          [cls.highlightPrimary]: highlight === "primary",
-          [cls.highlightSecondary]: highlight === "secondary",
+          [highlightClass]: !!highlightClass,
         },
         [className]
       )}

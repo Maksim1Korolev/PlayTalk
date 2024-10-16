@@ -9,7 +9,6 @@ Winner and players logic to client
 Redis as one more possible point to get the data in more places
 OpponentUsername and gameName data type
 Make users from context into map
-Update highlight logic
 Tests for chat repo services
 Tests for ttt service
 Open modals logic to client through cookies
@@ -18,7 +17,6 @@ User search
 Game Selector
 
 To fix:
-ChatModal opens lower than the screen and scrollbar appears
 Getting error in communication service when requesting unread messages with count of 0
 Sort features folder
 Empty data doesn't count as redis cache

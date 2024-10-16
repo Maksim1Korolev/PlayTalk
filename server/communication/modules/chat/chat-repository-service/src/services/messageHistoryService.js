@@ -56,7 +56,7 @@ class MessageHistoryService {
       logger.info(`Message history cached. Cache key: ${cacheKey}`);
     }
 
-    return messageHistory.messages;
+    return messageHistory?.messages;
   }
 
   //unread
