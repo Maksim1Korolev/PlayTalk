@@ -57,7 +57,9 @@ export const CircleModal = memo(
         height: 80,
       },
       minWidth: isCollapsed ? 80 : 365,
-      minHeight: isCollapsed ? 80 : 475,
+      minHeight: isCollapsed ? 80 : 420,
+      maxWidth: isCollapsed ? 80 : 730,
+      maxHeight: isCollapsed ? 80 : 840,
       bounds: "window",
       enableResizing: !isCollapsed,
     };
