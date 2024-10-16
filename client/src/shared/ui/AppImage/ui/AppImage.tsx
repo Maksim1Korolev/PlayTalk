@@ -6,8 +6,8 @@ import {
   useState,
 } from "react";
 
+import { HighlightType, useHighlight } from "@/shared/hooks/useHighlight";
 import { cx } from "@/shared/lib/cx";
-import { HighlightType } from "../../AppSvg/ui/AppSvg";
 import cls from "./AppImage.module.scss";
 
 type ObjectFit = "cover" | "fill" | "contain" | "none";
@@ -44,7 +44,7 @@ export const AppImage = memo(
     src,
     alt = "image",
     fallback,
-    highlight,
+    highlight = "none",
     errorFallback,
     clickable = false,
     onClick,
@@ -69,6 +69,8 @@ export const AppImage = memo(
       };
     }, [src]);
 
+    const highlightClass = useHighlight(highlight);
+
     if (isLoading && fallback) {
       return fallback;
     }
@@ -79,11 +81,10 @@ export const AppImage = memo(
 
     const image = (
       <img
-        className={cx(
-          "",
-          { [cls[`highlight-${highlight}`]]: highlight !== "none" },
-          [className, cls[objectFit]]
-        )}
+        className={cx("", { [highlightClass]: !!highlightClass }, [
+          className,
+          cls[objectFit],
+        ])}
         alt={alt}
         src={src}
         width={width}

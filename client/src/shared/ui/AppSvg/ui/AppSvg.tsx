@@ -1,3 +1,4 @@
+import { HighlightType, useHighlight } from "@/shared/hooks/useHighlight";
 import { cx } from "@/shared/lib/cx";
 import { memo } from "react";
 import cls from "./AppSvg.module.scss";
@@ -24,8 +25,6 @@ interface ClickableSVGProps extends SVGBaseProps {
 export type SVGProps = ImageSVGProps | ClickableSVGProps;
 
 type BackgroundColor = "white" | "black" | "primary";
-//TODO:Get rid of two highlight types
-export type HighlightType = "none" | "primary" | "secondary";
 
 export const AppSvg = memo((props: SVGProps) => {
   const {
@@ -45,13 +44,15 @@ export const AppSvg = memo((props: SVGProps) => {
     backgroundColor.charAt(0).toUpperCase() + backgroundColor.slice(1)
   }`;
 
+  const highlightClass = useHighlight(highlight);
+
   const icon = (
     <Svg
       className={cx(
         cls.icon,
         {
           [cls.fill]: fill,
-          [cls[`highlight-${highlight}`]]: highlight !== "none",
+          [highlightClass]: !!highlightClass,
         },
         [colorClass]
       )}
