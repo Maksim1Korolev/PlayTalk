@@ -1,5 +1,4 @@
 import { User } from "@/entities/User";
-import { useState } from "react";
 
 export interface ChatModalStateProps {
   user: User;

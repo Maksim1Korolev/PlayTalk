@@ -1,4 +1,4 @@
-import { Message } from "@/features/Chat/ui/ChatMessage/ui/ChatMessage";
+import { Message } from "@/features/chat/ChatBox/ui/ChatMessage/ui/ChatMessage";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 import { useCallback, useContext, useEffect, useState } from "react";
 

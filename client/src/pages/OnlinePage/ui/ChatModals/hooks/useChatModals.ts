@@ -1,11 +1,9 @@
-import { User } from "@/entities/User";
-import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
 import { useCallback, useState } from "react";
 
-export interface ChatModalStateProps {
-  user: User;
-  position?: { x: number; y: number };
-}
+import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
+
+import { User } from "@/entities/User";
+import { ChatModalStateProps } from "@/entities/Chat/model/types/chatModalStateProps";
 
 export const useChatModals = () => {
   const [chatModals, setChatModals] = useState<ChatModalStateProps[]>([]);

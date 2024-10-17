@@ -2,11 +2,11 @@ import { memo, useCallback, useEffect, useState } from "react";
 
 import { CurrentUser } from "@/entities/User";
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
-import { ChatBox } from "@/features/Chat";
+import { ChatBox } from "@/features/chat";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 import { AddonCircleProps, CircleModal, AppImageProps } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
-import { ChatModalStateProps } from "../hooks/useChatModals";
+import { ChatModalStateProps } from "@/entities/Chat/model/types/chatModalStateProps";
 
 export const ChatModals = memo(
   ({
