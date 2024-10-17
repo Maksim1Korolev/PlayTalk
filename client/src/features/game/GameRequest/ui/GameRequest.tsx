@@ -8,10 +8,6 @@ import { useModalDrag } from "@/shared/lib/hooks/useModalDrag";
 import getImagePath from "@/shared/utils/getImagePath";
 import { Invite } from "@/entities/Game/model";
 import { User } from "@/entities/User";
-import { useModalDrag } from "@/shared/hooks/useModalDrag";
-import { UsersContext } from "@/shared/lib/context/UsersContext";
-import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
 
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
