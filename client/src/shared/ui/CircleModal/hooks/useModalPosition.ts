@@ -1,7 +1,8 @@
-import { useState, useCallback } from "react";
+import { useContext, useCallback } from "react";
+import { ModalContext } from "@/shared/lib/context/ModalContext";
 
 export const useModalPosition = () => {
-  const [modalCount, setModalCount] = useState(0);
+  const { modalCount } = useContext(ModalContext);
 
   const getStartingPosition = useCallback(() => {
     const offset = 30;
@@ -11,13 +12,5 @@ export const useModalPosition = () => {
     return { x, y };
   }, [modalCount]);
 
-  const increaseModalCount = useCallback(() => {
-    setModalCount(prevCount => prevCount + 1);
-  }, []);
-
-  const decreaseModalCount = useCallback(() => {
-    setModalCount(prevCount => Math.max(prevCount - 1, 0));
-  }, []);
-
-  return { getStartingPosition, increaseModalCount, decreaseModalCount };
+  return { getStartingPosition };
 };

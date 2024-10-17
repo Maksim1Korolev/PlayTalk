@@ -22,6 +22,7 @@ import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";
 
 import getImagePath from "@/shared/utils/getImagePath";
 import { useModalPosition } from "@/shared/ui/CircleModal";
+import { ModalContext } from "@/shared/lib/context/ModalContext";
 
 const generateModalId = (gameData: GameData): string => {
   return `${gameData.opponentUsername}_${gameData.gameName}`;
@@ -41,8 +42,8 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
   const [iconMap, setIconMap] = useState<{ [key: string]: string }>({});
   const [avatarMap, setAvatarMap] = useState<{ [key: string]: string }>({});
 
-  const { getStartingPosition, increaseModalCount, decreaseModalCount } =
-    useModalPosition();
+  const { increaseModalCount, decreaseModalCount } = useContext(ModalContext);
+  const { getStartingPosition } = useModalPosition();
 
   useEffect(() => {
     const fetchGames = async () => {

@@ -1,4 +1,11 @@
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { CurrentUser } from "@/entities/User";
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
@@ -8,6 +15,7 @@ import { AddonCircleProps, CircleModal, AppImageProps } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 import { ChatModal } from "@/entities/Chat/model/types/chatModal";
 import { useModalPosition } from "@/shared/ui/CircleModal";
+import { ModalContext } from "@/shared/lib/context/ModalContext";
 
 export const ChatModals = memo(
   ({
@@ -23,8 +31,8 @@ export const ChatModals = memo(
       [key: string]: string;
     }>({});
 
-    const { getStartingPosition, increaseModalCount, decreaseModalCount } =
-      useModalPosition();
+    const { increaseModalCount, decreaseModalCount } = useContext(ModalContext);
+    const { getStartingPosition } = useModalPosition();
 
     useEffect(() => {
       const loadIcons = async () => {

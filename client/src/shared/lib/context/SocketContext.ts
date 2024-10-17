@@ -13,7 +13,7 @@ type SocketContextType = {
 
 const defaultSocketContext: SocketContextType = {
   sockets: { communicationSocket: null, gameSocket: null },
-  setSockets: sockets => {}, // Default to a no-op function
+  setSockets: () => {},
 };
 
 export const SocketContext =
