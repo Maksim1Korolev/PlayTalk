@@ -1,31 +1,23 @@
-import { User } from "@/entities/User";
-
-export interface ChatModal {
-  user: User;
-  position: { x: number; y: number };
-}
+import { useState, useCallback } from "react";
 
 export const useModalPosition = () => {
-  const findNewModalPosition = (modals: ChatModal[]) => {
-    let x = 400;
-    let y = 300;
+  const [modalCount, setModalCount] = useState(0);
+
+  const getStartingPosition = useCallback(() => {
     const offset = 30;
-
-    for (let i = 0; i < modals.length; i++) {
-      const modal = modals[i];
-      if (x === modal.position?.x && y === modal.position.y) {
-        x -= offset;
-        y -= offset;
-
-        if (x < 0 || y < 0) {
-          x = window.innerWidth - 400;
-          y = window.innerHeight - 300;
-        }
-      }
-    }
+    const x = 400 + modalCount * offset;
+    const y = 300 + modalCount * offset;
 
     return { x, y };
-  };
+  }, [modalCount]);
 
-  return {};
+  const increaseModalCount = useCallback(() => {
+    setModalCount(prevCount => prevCount + 1);
+  }, []);
+
+  const decreaseModalCount = useCallback(() => {
+    setModalCount(prevCount => Math.max(prevCount - 1, 0));
+  }, []);
+
+  return { getStartingPosition, increaseModalCount, decreaseModalCount };
 };

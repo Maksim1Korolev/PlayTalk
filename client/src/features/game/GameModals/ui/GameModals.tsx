@@ -1,4 +1,11 @@
-import { memo, useCallback, useContext, useEffect, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useCookies } from "react-cookie";
 
 import {
@@ -14,6 +21,7 @@ import { UsersContext } from "@/shared/lib/context/UsersContext";
 import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";
 
 import getImagePath from "@/shared/utils/getImagePath";
+import { useModalPosition } from "@/shared/ui/CircleModal";
 
 const generateModalId = (gameData: GameData): string => {
   return `${gameData.opponentUsername}_${gameData.gameName}`;
@@ -32,6 +40,9 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
   const [games, setGames] = useState<{ [key: string]: Game }>({});
   const [iconMap, setIconMap] = useState<{ [key: string]: string }>({});
   const [avatarMap, setAvatarMap] = useState<{ [key: string]: string }>({});
+
+  const { getStartingPosition, increaseModalCount, decreaseModalCount } =
+    useModalPosition();
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -82,7 +93,9 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
       setAvatarMap(avatars);
     };
 
-    loadIcons();
+    if (gameModals.length > 0) {
+      loadIcons();
+    }
   }, [gameModals, users]);
 
   const renderGameModals = useCallback(() => {
@@ -126,10 +139,26 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
       };
     };
 
+    const previousModalCountRef = useRef(gameModals.length);
+
+    useEffect(() => {
+      const previousCount = previousModalCountRef.current;
+      const currentCount = gameModals.length;
+
+      if (currentCount > previousCount) {
+        increaseModalCount();
+      } else if (currentCount < previousCount) {
+        decreaseModalCount();
+      }
+
+      previousModalCountRef.current = currentCount;
+    }, [gameModals.length]);
+
     const handleCloseGameModal = (modalId: string) => {
       const [opponentUsername, gameName] = modalId.split("_");
       if (!isGameName(gameName)) return;
 
+      decreaseModalCount();
       onClose({ gameData: { opponentUsername, gameName } });
     };
 
@@ -137,9 +166,12 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
       const modalId = generateModalId(modal.gameData);
       const headerString = `Opponent: ${modal.gameData.opponentUsername}`;
 
+      const position = getStartingPosition();
+
       return (
         <CircleModal
           key={modalId}
+          position={position}
           onClose={() => handleCloseGameModal(modalId)}
           headerString={headerString}
           addonCircleProps={getAddonCircleProps(

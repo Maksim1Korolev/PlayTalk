@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 
 import { CurrentUser } from "@/entities/User";
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
@@ -7,6 +7,7 @@ import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndi
 import { AddonCircleProps, CircleModal, AppImageProps } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 import { ChatModal } from "@/entities/Chat/model/types/chatModal";
+import { useModalPosition } from "@/shared/ui/CircleModal";
 
 export const ChatModals = memo(
   ({
@@ -21,6 +22,9 @@ export const ChatModals = memo(
     const [avatarIconMap, setAvatarIconMap] = useState<{
       [key: string]: string;
     }>({});
+
+    const { getStartingPosition, increaseModalCount, decreaseModalCount } =
+      useModalPosition();
 
     useEffect(() => {
       const loadIcons = async () => {
@@ -42,7 +46,9 @@ export const ChatModals = memo(
         setAvatarIconMap(avatarMap);
       };
 
-      loadIcons();
+      if (chatModals.length > 0) {
+        loadIcons();
+      }
     }, [chatModals]);
 
     const getAddonCircleProps = useCallback(
@@ -87,6 +93,21 @@ export const ChatModals = memo(
       [avatarIconMap]
     );
 
+    const previousModalCountRef = useRef(chatModals.length);
+
+    useEffect(() => {
+      const previousCount = previousModalCountRef.current;
+      const currentCount = chatModals.length;
+
+      if (currentCount > previousCount) {
+        increaseModalCount();
+      } else if (currentCount < previousCount) {
+        decreaseModalCount();
+      }
+
+      previousModalCountRef.current = currentCount;
+    }, [chatModals.length]);
+
     const renderChatModals = useCallback(() => {
       const handleCloseChatModal = (modalId: string) => {
         onClose(modalId);
@@ -95,9 +116,13 @@ export const ChatModals = memo(
       return chatModals?.map(({ user }) => {
         const { unreadMessageCount, avatarFileName, isOnline } = user;
         const modalId = user.username;
+
+        const position = getStartingPosition();
+
         return (
           <CircleModal
             key={modalId}
+            position={position}
             onClose={() => handleCloseChatModal(modalId)}
             headerString={`Chat with ${user.username}`}
             addonCircleProps={getAddonCircleProps({

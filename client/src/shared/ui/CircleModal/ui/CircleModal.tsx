@@ -1,5 +1,9 @@
-import { useModalDrag } from "@/shared/lib/hooks/useModalDrag";
+import cls from "./CircleModal.module.scss";
+import { Rnd, Props as RndProps } from "react-rnd";
+import { memo, ReactNode, useState } from "react";
+
 import { cx } from "@/shared/lib/cx";
+import { useModalDrag } from "@/shared/lib/hooks/useModalDrag";
 import {
   AddonCircle,
   AddonCircleProps,
@@ -8,11 +12,9 @@ import {
   UiText,
   VStack,
 } from "@/shared/ui";
+
 import CancelIcon from "@mui/icons-material/Cancel";
 import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
-import { memo, ReactNode, useState } from "react";
-import { Rnd, Props as RndProps } from "react-rnd";
-import cls from "./CircleModal.module.scss";
 
 interface CircleModalProps {
   className?: string;
