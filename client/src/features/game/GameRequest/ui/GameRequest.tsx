@@ -1,13 +1,13 @@
-import cls from "./GameRequest.module.scss";
-import { useState, useEffect, useContext, ReactNode } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { Rnd } from "react-rnd";
+import cls from "./GameRequest.module.scss";
 
-import { AddonCircle, UiButton, AppImage, AppImageProps } from "@/shared/ui";
-import { UsersContext } from "@/shared/lib/context/UsersContext";
-import { useModalDrag } from "@/shared/hooks/useModalDrag";
-import getImagePath from "@/shared/utils/getImagePath";
 import { Invite } from "@/entities/Game/model";
 import { User } from "@/entities/User";
+import { useModalDrag } from "@/shared/hooks/useModalDrag";
+import { UsersContext } from "@/shared/lib/context/UsersContext";
+import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
 
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -69,19 +69,19 @@ export const GameRequest = ({
   }, [invites, users]);
 
   const handleYesButtonClick = () => {
-    if (currentInvite) {
+    if (!isDragged && currentInvite) {
       handleYesButton(currentInvite);
     }
   };
 
   const handleNoButtonClick = () => {
-    if (currentInvite) {
+    if (!isDragged && currentInvite) {
       handleNoButton(currentInvite);
     }
   };
 
   const handleSkipButtonClick = () => {
-    if (currentInviteIndex < invites.length - 1) {
+    if (!isDragged && currentInviteIndex < invites.length - 1) {
       setCurrentInviteIndex(currentInviteIndex + 1);
     } else {
       setCurrentInviteIndex(0);
@@ -89,6 +89,9 @@ export const GameRequest = ({
   };
 
   const getInviteCircle = (): ReactNode => {
+    const gameIconSize = 80;
+    const avatarIconSize = 80;
+
     const gameIconUrl = iconMap[currentInvite.gameName];
     const avatarIconUrl = avatarMap[currentInvite.senderUsername];
 
@@ -97,15 +100,16 @@ export const GameRequest = ({
     const gameIconProps: AppImageProps = {
       src: gameIconUrl,
       draggable: false,
-      width: 80,
-      height: 80,
+      width: gameIconSize,
+      height: gameIconSize,
       highlight: "secondary",
     };
 
     const avatarIconProps: AppImageProps = {
       src: avatarIconUrl,
-      width: 30,
-      height: 30,
+      width: avatarIconSize,
+      height: avatarIconSize,
+      draggable: false,
     };
 
     return (

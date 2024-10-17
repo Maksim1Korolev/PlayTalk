@@ -62,6 +62,7 @@ export const CircleModal = memo(
       maxHeight: isCollapsed ? 80 : 840,
       bounds: ".content",
       enableResizing: !isCollapsed,
+      dragHandleClassName: isCollapsed ? "" : cls.header,
     };
 
     return (
