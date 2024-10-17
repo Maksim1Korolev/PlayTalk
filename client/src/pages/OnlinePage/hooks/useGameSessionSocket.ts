@@ -1,33 +1,19 @@
+import { GameData, Invite, isGameName } from "@/entities/Game/model";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 import { useCallback, useContext, useEffect } from "react";
-import { Socket } from "socket.io-client";
 
 export const useGameSessionSocket = ({
   onReceiveInvite,
   onGameStart,
   onGameEnd,
 }: {
-  onReceiveInvite: ({
-    senderUsername,
-    gameName,
-  }: {
-    senderUsername: string;
-    gameName: string;
-  }) => void;
-  onGameStart: ({
-    opponentUsername,
-    gameName,
-  }: {
-    opponentUsername: string;
-    gameName: string;
-  }) => void;
+  onReceiveInvite: ({ invite }: { invite: Invite }) => void;
+  onGameStart: ({ gameData }: { gameData: GameData }) => void;
   onGameEnd: ({
-    opponentUsername,
-    gameName,
+    gameData,
     winner,
   }: {
-    opponentUsername: string;
-    gameName: string;
+    gameData: GameData;
     winner: string;
   }) => void;
 }) => {
@@ -80,7 +66,7 @@ export const useGameSessionSocket = ({
         console.log(
           `Game request received from ${senderUsername} for game ${gameName}`
         );
-        onReceiveInvite({ senderUsername, gameName });
+        onReceiveInvite({ invite: { senderUsername, gameName } });
       };
 
       const handleStartGame = ({
@@ -93,8 +79,11 @@ export const useGameSessionSocket = ({
         console.log(
           `Game started with opponent ${opponentUsername} for game ${gameName}`
         );
-
-        onGameStart({ opponentUsername, gameName });
+        if (!isGameName(gameName)) {
+          //TODO: log on incorrect
+          return;
+        }
+        onGameStart({ gameData: { opponentUsername, gameName } });
       };
 
       const handleEndGame = ({
@@ -109,7 +98,11 @@ export const useGameSessionSocket = ({
         console.log(
           `Game ended with opponent ${opponentUsername} for game ${gameName}. Winner: ${winner}`
         );
-        onGameEnd({ opponentUsername, gameName, winner });
+        if (!isGameName(gameName)) {
+          //TODO: log on incorrect
+          return;
+        }
+        onGameEnd({ gameData: { opponentUsername, gameName }, winner });
       };
 
       gameSocket.on("receive-game-invite", handleReceiveInvite);

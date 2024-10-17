@@ -1,23 +1,26 @@
-import cls from "./GameSelector.module.scss";
 import { memo, ReactNode, useEffect, useState } from "react";
+import cls from "./GameSelector.module.scss";
 
-import { GameNames } from "@/entities/Game/model";
+import {
+  GameData,
+  GameName,
+  GameNames,
+  isGameName,
+} from "@/entities/Game/model";
 import { User } from "@/entities/User";
 import { cx } from "@/shared/lib/cx";
-import { Card, HStack, Loader, AppImage, AppImageProps } from "@/shared/ui";
+import { AppImage, AppImageProps, Card, HStack, Loader } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
 interface GameSelectorProps {
   className?: string;
   user: User;
   onGameSelect: ({
-    opponentUsername,
-    gameName,
+    gameData,
     isActive,
     isInviting,
   }: {
-    opponentUsername: string;
-    gameName: string;
+    gameData: GameData;
     isActive: boolean;
     isInviting: boolean;
   }) => void;
@@ -62,16 +65,19 @@ export const GameSelector = memo(
       setHighlight(newHighlight);
     }, []);
 
-    const isGameActive = (gameName: string): boolean => {
+    const isGameActive = (gameName: GameName): boolean => {
       if (user.activeGames) return user.activeGames.includes(gameName);
       return false;
     };
 
     const handleIconClick = (gameName: string): void => {
+      if (!isGameName(gameName)) return;
       const isActive = isGameActive(gameName);
       onGameSelect({
-        opponentUsername: user.username,
-        gameName,
+        gameData: {
+          opponentUsername: user.username,
+          gameName,
+        },
         isActive,
         isInviting: user.isInviting || false,
       });

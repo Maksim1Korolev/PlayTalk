@@ -1,31 +1,31 @@
+import {
+  GameData,
+  GameModalStateProps,
+} from "@/entities/Game/model/types/gameModalStateProps";
 import { useCallback, useState } from "react";
-import { GameModalStateProps } from "@/entities/Game/model/types/gameModalStateProps";
 
 export const useGameModals = () => {
   const [gameModals, setGameModals] = useState<GameModalStateProps[]>([]);
 
   const handleOpenGameModal = useCallback(
     ({
-      opponentUsername,
-      gameName,
+      gameData,
       position,
     }: {
-      opponentUsername: string;
-      gameName: string;
+      gameData: GameData;
       position?: { x: number; y: number };
     }) => {
       const isAlreadyOpen = gameModals.some(
         modal =>
-          modal.opponentUsername === opponentUsername &&
-          modal.gameName === gameName
+          modal.gameData.opponentUsername === gameData.opponentUsername &&
+          modal.gameData.gameName === gameData.gameName
       );
 
       const isMaxModalsOpen = gameModals.length >= 5;
 
       if (!isAlreadyOpen && !isMaxModalsOpen) {
         const newGameModalProps: GameModalStateProps = {
-          opponentUsername,
-          gameName,
+          gameData,
           position,
         };
 
@@ -36,18 +36,12 @@ export const useGameModals = () => {
   );
 
   const handleCloseGameModal = useCallback(
-    ({
-      opponentUsername,
-      gameName,
-    }: {
-      opponentUsername: string;
-      gameName: string;
-    }) => {
+    ({ gameData }: { gameData: GameData }) => {
       setGameModals(prev =>
         prev.filter(
           modal =>
-            modal.opponentUsername !== opponentUsername ||
-            modal.gameName !== gameName
+            modal.gameData.opponentUsername !== gameData.opponentUsername ||
+            modal.gameData.gameName !== gameData.gameName
         )
       );
     },

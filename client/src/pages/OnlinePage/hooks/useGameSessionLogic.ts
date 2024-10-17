@@ -1,17 +1,15 @@
-import { Invite, getInviteKey } from "@/entities/Game/model";
+import { GameData, Invite, getInviteKey } from "@/entities/Game/model";
 import { User } from "@/entities/User";
 import { useCallback, useState } from "react";
 import { useGameModals } from "./useGameModals";
 import { useGameSessionSocket } from "./useGameSessionSocket";
 
 type GameStartPayload = {
-  opponentUsername: string;
-  gameName: string;
+  gameData: GameData;
 };
 
 type GameEndPayload = {
-  opponentUsername: string;
-  gameName: string;
+  gameData: GameData;
   winner: string;
 };
 
@@ -35,7 +33,7 @@ export const useGameSessionLogic = (
     setLastClickedPlayUser(user);
   }, []);
 
-  const onReceiveInvite = (invite: Invite) => {
+  const onReceiveInvite = ({ invite }: { invite: Invite }) => {
     const inviteKey = getInviteKey(invite);
 
     setInviteMap(prevInvites => ({
@@ -48,27 +46,25 @@ export const useGameSessionLogic = (
     });
   };
 
-  const onGameStart = ({ opponentUsername, gameName }: GameStartPayload) => {
-    const user = getUser(opponentUsername);
-    updateUser(opponentUsername, {
-      activeGames: [...(user?.activeGames || []), gameName],
+  const onGameStart = ({ gameData }: GameStartPayload) => {
+    const user = getUser(gameData.opponentUsername);
+    updateUser(gameData.opponentUsername, {
+      activeGames: [...(user?.activeGames || []), gameData.gameName],
     });
 
-    handleOpenGameModal({ opponentUsername, gameName });
+    handleOpenGameModal({ gameData });
   };
 
-  const onGameEnd = ({
-    opponentUsername,
-    gameName,
-    winner,
-  }: GameEndPayload) => {
-    const user = getUser(opponentUsername);
+  const onGameEnd = ({ gameData, winner }: GameEndPayload) => {
+    const user = getUser(gameData.opponentUsername);
 
-    updateUser(opponentUsername, {
-      activeGames: (user?.activeGames || []).filter(game => game !== gameName),
+    updateUser(gameData.opponentUsername, {
+      activeGames: (user?.activeGames || []).filter(
+        game => game !== gameData.gameName
+      ),
     });
 
-    handleCloseGameModal({ opponentUsername, gameName });
+    handleCloseGameModal({ gameData });
   };
 
   const { handleSendGameInvite, handleAcceptGame } = useGameSessionSocket({
@@ -118,23 +114,27 @@ export const useGameSessionLogic = (
   );
 
   const handleGameClicked = ({
-    opponentUsername,
-    gameName,
+    gameData,
     isActive,
     isInviting,
   }: {
-    opponentUsername: string;
-    gameName: string;
+    gameData: GameData;
     isActive: boolean;
     isInviting: boolean;
   }) => {
     if (isInviting) {
-      const invite: Invite = { senderUsername: opponentUsername, gameName };
+      const invite: Invite = {
+        senderUsername: gameData.opponentUsername,
+        gameName: gameData.gameName,
+      };
       handleGameRequestYesButton(invite);
     } else if (isActive) {
-      handleOpenGameModal({ opponentUsername, gameName });
+      handleOpenGameModal({ gameData });
     } else {
-      handleSendGameInvite({ receiverUsername: opponentUsername, gameName });
+      handleSendGameInvite({
+        receiverUsername: gameData.opponentUsername,
+        gameName: gameData.gameName,
+      });
     }
   };
 

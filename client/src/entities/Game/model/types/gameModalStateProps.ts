@@ -1,8 +1,8 @@
 export type GameName = "tic-tac-toe" | "chess";
 
 export type GameData = {
-  gameName: GameName;
   opponentUsername: string;
+  gameName: GameName;
 };
 
 export type GameModalStateProps = {
