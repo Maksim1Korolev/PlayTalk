@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import cls from "../styles/highlightStyles.module.scss"; //
+import cls from "../../styles/highlightStyles.module.scss";
 
 export type HighlightType = "none" | "primary" | "secondary";
 

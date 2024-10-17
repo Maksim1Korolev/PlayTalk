@@ -6,7 +6,7 @@ import { ChatBox } from "@/features/chat";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 import { AddonCircleProps, CircleModal, AppImageProps } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
-import { ChatModalStateProps } from "@/entities/Chat/model/types/chatModalStateProps";
+import { ChatModal } from "@/entities/Chat/model/types/chatModal";
 
 export const ChatModals = memo(
   ({
@@ -15,7 +15,7 @@ export const ChatModals = memo(
     onClose,
   }: {
     currentUser: CurrentUser;
-    chatModals: ChatModalStateProps[];
+    chatModals: ChatModal[];
     onClose: (username: string) => void;
   }) => {
     const [avatarIconMap, setAvatarIconMap] = useState<{

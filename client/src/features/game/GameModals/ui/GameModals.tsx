@@ -4,7 +4,7 @@ import { useCookies } from "react-cookie";
 import {
   Game,
   GameData,
-  GameModalStateProps,
+  GameModal,
   isGameName,
   TicTacToeGame,
 } from "@/entities/Game/model/";
@@ -20,7 +20,7 @@ const generateModalId = (gameData: GameData): string => {
 };
 
 interface GameModalsProps {
-  gameModals: GameModalStateProps[];
+  gameModals: GameModal[];
   onClose: ({ gameData }: { gameData: GameData }) => void;
 }
 

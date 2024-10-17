@@ -3,13 +3,13 @@ import { useCallback, useState } from "react";
 import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
 
 import { User } from "@/entities/User";
-import { ChatModalStateProps } from "@/entities/Chat/model/types/chatModalStateProps";
+import { ChatModal } from "@/entities/Chat/model/types/chatModal";
 
 export const useChatModals = () => {
-  const [chatModals, setChatModals] = useState<ChatModalStateProps[]>([]);
+  const [chatModals, setChatModals] = useState<ChatModal[]>([]);
 
   //TODO:Remove
-  // const findNewModalPosition = (modals: ChatModalStateProps[]) => {
+  // const findNewModalPosition = (modals: ChatModal[]) => {
   //   let x = 400;
   //   let y = 300;
   //   const offset = 30;
@@ -46,7 +46,7 @@ export const useChatModals = () => {
       }
       //  const position = findNewModalPosition(chatModals || []);
 
-      const newChatModalProps: ChatModalStateProps = { user }; // { user, position };
+      const newChatModalProps: ChatModal = { user }; // { user, position };
 
       setChatModals(prev => [...(prev || []), newChatModalProps]);
     },

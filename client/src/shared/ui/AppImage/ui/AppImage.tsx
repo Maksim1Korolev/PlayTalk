@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 
-import { HighlightType, useHighlight } from "@/shared/hooks/useHighlight";
+import { HighlightType, useHighlight } from "@/shared/lib/hooks/useHighlight";
 import { cx } from "@/shared/lib/cx";
 import cls from "./AppImage.module.scss";
 

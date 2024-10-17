@@ -2,6 +2,10 @@ import { ReactNode, useContext, useEffect, useState } from "react";
 import { Rnd } from "react-rnd";
 import cls from "./GameRequest.module.scss";
 
+import { AddonCircle, UiButton, AppImage, AppImageProps } from "@/shared/ui";
+import { UsersContext } from "@/shared/lib/context/UsersContext";
+import { useModalDrag } from "@/shared/lib/hooks/useModalDrag";
+import getImagePath from "@/shared/utils/getImagePath";
 import { Invite } from "@/entities/Game/model";
 import { User } from "@/entities/User";
 import { useModalDrag } from "@/shared/hooks/useModalDrag";

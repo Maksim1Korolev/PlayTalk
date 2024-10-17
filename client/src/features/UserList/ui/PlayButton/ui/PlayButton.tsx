@@ -1,5 +1,5 @@
 import resources from "@/shared/assets/locales/en/UserListResources.json";
-import { HighlightType, useHighlight } from "@/shared/hooks/useHighlight";
+import { HighlightType, useHighlight } from "@/shared/lib/hooks/useHighlight";
 import { cx } from "@/shared/lib/cx";
 import { ButtonProps, UiButton } from "@/shared/ui";
 import cls from "./PlayButton.module.scss";

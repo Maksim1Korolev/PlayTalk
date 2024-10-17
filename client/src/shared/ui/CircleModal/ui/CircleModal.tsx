@@ -1,4 +1,4 @@
-import { useModalDrag } from "@/shared/hooks/useModalDrag";
+import { useModalDrag } from "@/shared/lib/hooks/useModalDrag";
 import { cx } from "@/shared/lib/cx";
 import {
   AddonCircle,

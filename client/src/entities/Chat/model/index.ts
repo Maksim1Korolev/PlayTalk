@@ -1,1 +1,1 @@
-export type { ChatModalStateProps } from "./types/chatModalStateProps";
+export type { ChatModal } from "./types/chatModal";

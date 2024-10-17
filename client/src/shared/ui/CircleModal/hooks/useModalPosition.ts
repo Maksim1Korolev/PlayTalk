@@ -1,12 +1,12 @@
 import { User } from "@/entities/User";
 
-export interface ChatModalStateProps {
+export interface ChatModal {
   user: User;
   position: { x: number; y: number };
 }
 
 export const useModalPosition = () => {
-  const findNewModalPosition = (modals: ChatModalStateProps[]) => {
+  const findNewModalPosition = (modals: ChatModal[]) => {
     let x = 400;
     let y = 300;
     const offset = 30;

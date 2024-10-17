@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { useSockets } from "@/shared/hooks/useSockets";
+import { useSockets } from "@/shared/lib/hooks/useSockets";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
 import { useGameSessionLogic } from "./useGameSessionLogic";
 import { useOnlineSockets } from "./useOnlineSockets";

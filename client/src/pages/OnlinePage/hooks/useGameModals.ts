@@ -1,11 +1,8 @@
-import {
-  GameData,
-  GameModalStateProps,
-} from "@/entities/Game/model/types/gameModalStateProps";
+import { GameData, GameModal } from "@/entities/Game/model/types/gameModal";
 import { useCallback, useState } from "react";
 
 export const useGameModals = () => {
-  const [gameModals, setGameModals] = useState<GameModalStateProps[]>([]);
+  const [gameModals, setGameModals] = useState<GameModal[]>([]);
 
   const handleOpenGameModal = useCallback(
     ({
@@ -24,7 +21,7 @@ export const useGameModals = () => {
       const isMaxModalsOpen = gameModals.length >= 5;
 
       if (!isAlreadyOpen && !isMaxModalsOpen) {
-        const newGameModalProps: GameModalStateProps = {
+        const newGameModalProps: GameModal = {
           gameData,
           position,
         };

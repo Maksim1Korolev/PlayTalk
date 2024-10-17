@@ -1,4 +1,4 @@
-import { HighlightType, useHighlight } from "@/shared/hooks/useHighlight";
+import { HighlightType, useHighlight } from "@/shared/lib/hooks/useHighlight";
 import { cx } from "@/shared/lib/cx";
 import { memo } from "react";
 import cls from "./AppSvg.module.scss";
