@@ -4,33 +4,34 @@ import { useCallback, useState } from "react";
 
 export interface ChatModalStateProps {
   user: User;
-  position: { x: number; y: number };
+  position?: { x: number; y: number };
 }
 
 export const useChatModals = () => {
   const [chatModals, setChatModals] = useState<ChatModalStateProps[]>([]);
 
-  const findNewModalPosition = (modals: ChatModalStateProps[]) => {
-    let x = 400;
-    let y = 300;
-    const offset = 30;
+  //TODO:Remove
+  // const findNewModalPosition = (modals: ChatModalStateProps[]) => {
+  //   let x = 400;
+  //   let y = 300;
+  //   const offset = 30;
 
-    for (let i = 0; i < modals.length; i++) {
-      const modal = modals[i];
-      if (x === modal.position?.x && y === modal.position.y) {
-        x -= offset;
-        y -= offset;
+  //   for (let i = 0; i < modals.length; i++) {
+  //     const modal = modals[i];
+  //     if (x === modal.position?.x && y === modal.position.y) {
+  //       x -= offset;
+  //       y -= offset;
 
-        if (x < 0 || y < 0) {
-          x = window.innerWidth - 400;
-          y = window.innerHeight - 300;
-        }
-      }
-    }
-    console.log(x, y);
+  //       if (x < 0 || y < 0) {
+  //         x = window.innerWidth - 400;
+  //         y = window.innerHeight - 300;
+  //       }
+  //     }
+  //   }
+  //   console.log(x, y);
 
-    return { x, y };
-  };
+  //   return { x, y };
+  // };
 
   const handleOpenChatModal = useCallback(
     (user: User) => {
@@ -45,9 +46,9 @@ export const useChatModals = () => {
       ) {
         return;
       }
-      const position = findNewModalPosition(chatModals || []);
+      //  const position = findNewModalPosition(chatModals || []);
 
-      const newChatModalProps: ChatModalStateProps = { user, position };
+      const newChatModalProps: ChatModalStateProps = { user }; // { user, position };
 
       setChatModals(prev => [...(prev || []), newChatModalProps]);
     },

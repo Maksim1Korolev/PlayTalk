@@ -51,8 +51,8 @@ export const CircleModal = memo(
       onDragStart: handleDragStart,
       onDragStop: handleDragStop,
       default: {
-        x: position?.x || 0,
-        y: position?.y || 0,
+        x: position?.x || 250,
+        y: position?.y || 250,
         width: 80,
         height: 80,
       },

@@ -88,16 +88,17 @@ export const ChatModals = memo(
     );
 
     const renderChatModals = useCallback(() => {
-      const handleCloseChatModal = (username: string) => {
-        onClose(username);
+      const handleCloseChatModal = (modalId: string) => {
+        onClose(modalId);
       };
 
       return chatModals?.map(({ user }) => {
         const { unreadMessageCount, avatarFileName, isOnline } = user;
+        const modalId = user.username;
         return (
           <CircleModal
-            key={`${user.username}`}
-            onClose={() => handleCloseChatModal(user.username)}
+            key={modalId}
+            onClose={() => handleCloseChatModal(modalId)}
             headerString={`Chat with ${user.username}`}
             addonCircleProps={getAddonCircleProps({
               unreadMessageCount,
