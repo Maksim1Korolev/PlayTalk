@@ -1,20 +1,18 @@
 import { CurrentUser, User } from "@/entities/User";
 import { createContext } from "react";
 
-type UsersContextType = {
+type UserContextType = {
   currentUser: CurrentUser;
   users: User[];
   updateAllUsers: (users: User[]) => void;
   updateUser: (username: string, updatedProps: Partial<User>) => void;
 };
 
-const defaultUsersContext: UsersContextType = {
+const defaultUsersContext: UserContextType = {
   users: [],
   currentUser: null,
   updateUser: () => {},
   updateAllUsers: () => {},
 };
 
-//TODO:Rename to user singular?
-export const UsersContext =
-  createContext<UsersContextType>(defaultUsersContext);
+export const UserContext = createContext<UserContextType>(defaultUsersContext);

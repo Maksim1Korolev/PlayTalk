@@ -3,7 +3,7 @@ import { Rnd } from "react-rnd";
 import cls from "./GameRequest.module.scss";
 
 import { AddonCircle, UiButton, AppImage, AppImageProps } from "@/shared/ui";
-import { UsersContext } from "@/shared/lib/context/UsersContext";
+import { UserContext } from "@/shared/lib/context/UserContext";
 import { useModalDrag } from "@/shared/lib/hooks/useModalDrag";
 import getImagePath from "@/shared/utils/getImagePath";
 import { Invite } from "@/entities/Game/model";
@@ -36,7 +36,7 @@ export const GameRequest = ({
   const currentInvite = invites[currentInviteIndex] || null;
 
   const { isDragged, handleDragStart, handleDragStop } = useModalDrag();
-  const { users } = useContext(UsersContext);
+  const { users } = useContext(UserContext);
 
   const [iconMap, setIconMap] = useState<{ [key: string]: string }>({});
   const [avatarMap, setAvatarMap] = useState<{ [key: string]: string }>({});

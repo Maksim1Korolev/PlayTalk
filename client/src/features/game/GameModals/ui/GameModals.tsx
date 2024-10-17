@@ -17,7 +17,7 @@ import {
 } from "@/entities/Game/model/";
 import { TicTacToe } from "@/features/game/TicTacToe/";
 import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
-import { UsersContext } from "@/shared/lib/context/UsersContext";
+import { UserContext } from "@/shared/lib/context/UserContext";
 import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";
 
 import getImagePath from "@/shared/utils/getImagePath";
@@ -36,7 +36,7 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
   const [cookies] = useCookies(["jwt-cookie"]);
   const { user: currentUser, token } = cookies["jwt-cookie"];
 
-  const { users } = useContext(UsersContext);
+  const { users } = useContext(UserContext);
   const [games, setGames] = useState<{ [key: string]: Game }>({});
   const [iconMap, setIconMap] = useState<{ [key: string]: string }>({});
   const [avatarMap, setAvatarMap] = useState<{ [key: string]: string }>({});

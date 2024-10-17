@@ -1,9 +1,9 @@
 import { CurrentUser, User } from "@/entities/User";
-import { UsersContext } from "@/shared/lib/context/UsersContext";
+import { UserContext } from "@/shared/lib/context/UserContext";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useCookies } from "react-cookie";
 // TODO: maybe fetching list here in useEffect
-export const UsersProvider = ({
+export const UserProvider = ({
   children,
 }: {
   className?: string;
@@ -72,8 +72,6 @@ export const UsersProvider = ({
     [currentUser, updateAllUsers, updateUser, users]
   );
   return (
-    <UsersContext.Provider value={defaultValue}>
-      {children}
-    </UsersContext.Provider>
+    <UserContext.Provider value={defaultValue}>{children}</UserContext.Provider>
   );
 };
