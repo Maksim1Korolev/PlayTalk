@@ -18,3 +18,4 @@ export interface ChessGame extends GameBase {
 }
 
 export type Game = TicTacToeGame | ChessGame;
+

@@ -1,37 +1,30 @@
-import cls from "./GameModals.module.scss";
 import { memo, useContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import cls from "./GameModals.module.scss";
 
-import { cx } from "@/shared/lib/cx";
 import {
   Game,
+  GameData,
   GameModalStateProps,
+  isGameName,
   TicTacToeGame,
 } from "@/entities/Game/model/";
 import { TicTacToe } from "@/features/game/TicTacToe/";
 import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
+import { HighlightType } from "@/shared/hooks/useHighlight";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
+import { cx } from "@/shared/lib/cx";
 import { AddonCircleProps, AppSvg, CircleModal, SVGProps } from "@/shared/ui";
-import { HighlightType } from "@/shared/ui/AppSvg/ui/AppSvg";
 import getImagePath from "@/shared/utils/getImagePath";
 
-const generateModalId = (
-  opponentUsername: string,
-  gameName: string
-): string => {
-  return `${opponentUsername}_${gameName}`;
+const generateModalId = (gameData: GameData): string => {
+  return `${gameData.opponentUsername}_${gameData.gameName}`;
 };
 
 interface GameModalsProps {
   className?: string;
   gameModals: GameModalStateProps[];
-  onClose: ({
-    opponentUsername,
-    gameName,
-  }: {
-    opponentUsername: string;
-    gameName: string;
-  }) => void;
+  onClose: ({ gameData }: { gameData: GameData }) => void;
 }
 //get
 export const GameModals = memo(
@@ -56,12 +49,12 @@ export const GameModals = memo(
         const fetchedGames = await Promise.all(
           gameModals.map(async modal => {
             const data = await gameApiService.getGame(token, {
-              gameName: modal.gameName,
+              gameName: modal.gameData.gameName,
               player1Username: currentUser.username,
-              player2Username: modal.opponentUsername,
+              player2Username: modal.gameData.opponentUsername,
             });
             return {
-              id: generateModalId(modal.opponentUsername, modal.gameName),
+              id: generateModalId(modal.gameData),
               game: data.game,
             };
           })
@@ -87,7 +80,8 @@ export const GameModals = memo(
         } = {};
 
         for (const modal of gameModals) {
-          const { gameName, opponentUsername } = modal;
+          const { gameData } = modal;
+          const { gameName, opponentUsername } = gameData;
 
           const iconPath = getImagePath({ gameName });
           try {
@@ -124,12 +118,16 @@ export const GameModals = memo(
 
     const handleCloseGameModal = (modalId: string) => {
       const [opponentUsername, gameName] = modalId.split("_");
+      if (!isGameName(gameName)) return;
 
-      onClose({ opponentUsername, gameName });
+      onClose({ gameData: { opponentUsername, gameName } });
     };
 
     const getGameComponent = (opponentUsername: string, gameName: string) => {
-      const gameId: string = generateModalId(opponentUsername, gameName);
+      if (!isGameName(gameName)) return;
+
+      const gameId: string = generateModalId({ opponentUsername, gameName });
+
       const game: TicTacToeGame = games[gameId] as TicTacToeGame;
 
       if (!game) return null;
@@ -187,11 +185,8 @@ export const GameModals = memo(
     return (
       <div className={cx(cls.GameModals, {}, [className])}>
         {gameModals.map(modal => {
-          const modalId = generateModalId(
-            modal.opponentUsername,
-            modal.gameName
-          );
-          const headerString = `Opponent: ${modal.opponentUsername}`;
+          const modalId = generateModalId(modal.gameData);
+          const headerString = `Opponent: ${modal.gameData.opponentUsername}`;
 
           return (
             <CircleModal
@@ -199,11 +194,14 @@ export const GameModals = memo(
               onClose={() => handleCloseGameModal(modalId)}
               headerString={headerString}
               addonCircleProps={getAddonCircleProps(
-                modal.opponentUsername,
-                modal.gameName
+                modal.gameData.opponentUsername,
+                modal.gameData.gameName
               )}
             >
-              {getGameComponent(modal.opponentUsername, modal.gameName)}
+              {getGameComponent(
+                modal.gameData.opponentUsername,
+                modal.gameData.gameName
+              )}
             </CircleModal>
           );
         })}
