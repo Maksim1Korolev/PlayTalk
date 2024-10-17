@@ -11,7 +11,7 @@ import {
 import CancelIcon from "@mui/icons-material/Cancel";
 import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
 import { memo, ReactNode, useState } from "react";
-import { Props as RndProps, Rnd } from "react-rnd";
+import { Rnd, Props as RndProps } from "react-rnd";
 import cls from "./CircleModal.module.scss";
 
 interface CircleModalProps {
