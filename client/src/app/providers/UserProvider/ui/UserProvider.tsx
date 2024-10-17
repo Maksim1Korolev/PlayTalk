@@ -2,7 +2,7 @@ import { CurrentUser, User } from "@/entities/User";
 import { UserContext } from "@/shared/lib/context/UserContext";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useCookies } from "react-cookie";
-// TODO: maybe fetching list here in useEffect
+// TODO: maybe fetch the list of users here in useEffect
 export const UserProvider = ({
   children,
 }: {
