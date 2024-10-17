@@ -4,15 +4,15 @@ import { createContext } from "react";
 type UserContextType = {
   currentUser: CurrentUser;
   users: User[];
-  updateAllUsers: (users: User[]) => void;
   updateUser: (username: string, updatedProps: Partial<User>) => void;
+  initializeUsers: (users: User[]) => void;
 };
 
 const defaultUsersContext: UserContextType = {
   users: [],
   currentUser: null,
   updateUser: () => {},
-  updateAllUsers: () => {},
+  initializeUsers: () => {},
 };
 
 export const UserContext = createContext<UserContextType>(defaultUsersContext);

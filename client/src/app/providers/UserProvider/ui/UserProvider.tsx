@@ -49,7 +49,7 @@ export const UserProvider = ({
     },
     [setUsers]
   );
-  const updateAllUsers = useCallback(
+  const initializeUsers = useCallback(
     (users: User[]) => {
       if (!currentUserFromCookies) return;
 
@@ -68,8 +68,8 @@ export const UserProvider = ({
   );
 
   const defaultValue = useMemo(
-    () => ({ users, updateAllUsers, updateUser, currentUser }),
-    [currentUser, updateAllUsers, updateUser, users]
+    () => ({ users, initializeUsers, updateUser, currentUser }),
+    [currentUser, initializeUsers, updateUser, users]
   );
   return (
     <UserContext.Provider value={defaultValue}>{children}</UserContext.Provider>
