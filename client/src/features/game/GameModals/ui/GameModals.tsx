@@ -3,31 +3,25 @@ import { useCookies } from "react-cookie";
 
 import {
   Game,
+  GameData,
   GameModalStateProps,
+  isGameName,
   TicTacToeGame,
 } from "@/entities/Game/model/";
 import { TicTacToe } from "@/features/game/TicTacToe/";
 import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
 import { UsersContext } from "@/shared/lib/context/UsersContext";
 import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";
+
 import getImagePath from "@/shared/utils/getImagePath";
 
-const generateModalId = (
-  opponentUsername: string,
-  gameName: string
-): string => {
-  return `${opponentUsername}_${gameName}`;
+const generateModalId = (gameData: GameData): string => {
+  return `${gameData.opponentUsername}_${gameData.gameName}`;
 };
 
 interface GameModalsProps {
   gameModals: GameModalStateProps[];
-  onClose: ({
-    opponentUsername,
-    gameName,
-  }: {
-    opponentUsername: string;
-    gameName: string;
-  }) => void;
+  onClose: ({ gameData }: { gameData: GameData }) => void;
 }
 
 export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
@@ -44,12 +38,12 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
       const fetchedGames = await Promise.all(
         gameModals.map(async modal => {
           const data = await gameApiService.getGame(token, {
-            gameName: modal.gameName,
+            gameName: modal.gameData.gameName,
             player1Username: currentUser.username,
-            player2Username: modal.opponentUsername,
+            player2Username: modal.gameData.opponentUsername,
           });
           return {
-            id: generateModalId(modal.opponentUsername, modal.gameName),
+            id: generateModalId(modal.gameData),
             game: data.game,
           };
         })
@@ -63,7 +57,7 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
     };
 
     fetchGames();
-  }, [gameModals, currentUser.username]);
+  }, [gameModals, currentUser.username, token]);
 
   useEffect(() => {
     const loadIcons = async () => {
@@ -71,7 +65,8 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
       const avatars: { [key: string]: string } = {};
 
       for (const modal of gameModals) {
-        const { gameName, opponentUsername } = modal;
+        const { gameData } = modal;
+        const { gameName, opponentUsername } = gameData;
 
         icons[gameName] = getImagePath({ gameName });
 
@@ -90,55 +85,57 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
     loadIcons();
   }, [gameModals, users]);
 
-  const getGameComponent = (opponentUsername: string, gameName: string) => {
-    const gameId = generateModalId(opponentUsername, gameName);
-    const game: TicTacToeGame = games[gameId] as TicTacToeGame;
-
-    if (!game) return null;
-
-    switch (gameName) {
-      case "tic-tac-toe":
-        return <TicTacToe key={gameId} game={game} />;
-      default:
-        return <div>No game found</div>;
-    }
-  };
-
-  const getAddonCircleProps = (
-    opponentUsername: string,
-    currentGameName: string
-  ): AddonCircleProps => {
-    const gameIconUrl = iconMap[currentGameName];
-    const avatarIconUrl = avatarMap[opponentUsername];
-
-    return {
-      iconProps: {
-        src: gameIconUrl,
-        width: 80,
-        height: 80,
-        draggable: false,
-        highlight: "primary",
-      },
-      addonTopRight: avatarIconUrl ? (
-        <AppImage
-          src={avatarIconUrl}
-          width={30}
-          height={30}
-          draggable={false}
-        />
-      ) : null,
-    };
-  };
-
   const renderGameModals = useCallback(() => {
+    const getGameComponent = (gameData: GameData) => {
+      const gameId: string = generateModalId(gameData);
+      const game: TicTacToeGame = games[gameId] as TicTacToeGame;
+
+      if (!game) return null;
+
+      switch (gameData.gameName) {
+        case "tic-tac-toe":
+          return <TicTacToe key={gameId} game={game} />;
+        default:
+          return <div>No game found</div>;
+      }
+    };
+
+    const getAddonCircleProps = (
+      opponentUsername: string,
+      currentGameName: string
+    ): AddonCircleProps => {
+      const gameIconUrl = iconMap[currentGameName];
+      const avatarIconUrl = avatarMap[opponentUsername];
+
+      return {
+        iconProps: {
+          src: gameIconUrl,
+          width: 80,
+          height: 80,
+          draggable: false,
+          highlight: "primary",
+        },
+        addonTopRight: avatarIconUrl ? (
+          <AppImage
+            src={avatarIconUrl}
+            width={30}
+            height={30}
+            draggable={false}
+          />
+        ) : null,
+      };
+    };
+
     const handleCloseGameModal = (modalId: string) => {
       const [opponentUsername, gameName] = modalId.split("_");
-      onClose({ opponentUsername, gameName });
+      if (!isGameName(gameName)) return;
+
+      onClose({ gameData: { opponentUsername, gameName } });
     };
 
     return gameModals.map(modal => {
-      const modalId = generateModalId(modal.opponentUsername, modal.gameName);
-      const headerString = `Opponent: ${modal.opponentUsername}`;
+      const modalId = generateModalId(modal.gameData);
+      const headerString = `Opponent: ${modal.gameData.opponentUsername}`;
 
       return (
         <CircleModal
@@ -146,15 +143,15 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
           onClose={() => handleCloseGameModal(modalId)}
           headerString={headerString}
           addonCircleProps={getAddonCircleProps(
-            modal.opponentUsername,
-            modal.gameName
+            modal.gameData.opponentUsername,
+            modal.gameData.gameName
           )}
         >
-          {getGameComponent(modal.opponentUsername, modal.gameName)}
+          {getGameComponent(modal.gameData)}
         </CircleModal>
       );
     });
-  }, [gameModals, currentUser, getAddonCircleProps, onClose]);
+  }, [gameModals, games, iconMap, avatarMap, onClose]);
 
   return renderGameModals();
 });
