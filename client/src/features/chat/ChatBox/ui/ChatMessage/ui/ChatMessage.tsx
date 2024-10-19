@@ -1,9 +1,9 @@
-import { cx } from "@/shared/lib/cx";
+import cls from "./ChatMessage.module.scss";
+import { cx } from "@/shared/lib";
 import { forwardRef } from "react";
 
-import { AppImage } from "@/shared/ui/AppImage";
+import { AppImage } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
-import cls from "./ChatMessage.module.scss";
 
 export interface Message {
   _id?: string;

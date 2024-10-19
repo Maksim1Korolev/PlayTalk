@@ -1,8 +1,10 @@
-import { ReactComponent as LogoutSvg } from "@/shared/assets/icons/logout.svg";
-import { cx } from "@/shared/lib/cx";
-import { AppSvg } from "@/shared/ui/AppSvg";
-import { ButtonHTMLAttributes } from "react";
 import cls from "./LogoutButton.module.scss";
+import { cx } from "@/shared/lib";
+import { ButtonHTMLAttributes } from "react";
+
+import { ReactComponent as LogoutSvg } from "@/shared/assets/icons/logout.svg";
+
+import { AppSvg } from "@/shared/ui/AppSvg";
 
 interface LogoutButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;

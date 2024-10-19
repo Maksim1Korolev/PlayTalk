@@ -1,11 +1,12 @@
-import { CurrentUser, User } from "@/entities/User";
-import { cx } from "@/shared/lib/cx";
-import { Card, UiText, VStack } from "@/shared/ui";
+import cls from "./ChatBox.module.scss";
+import { cx } from "@/shared/lib";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
+
+import { CurrentUser, User } from "@/entities/User";
+import { Card, UiText, VStack } from "@/shared/ui";
 import { ChatInput } from "../ChatInput";
 import { ChatMessage, Message } from "../ChatMessage";
 import { useChatMessages } from "../../hooks/useChatMessages";
-import cls from "./ChatBox.module.scss";
 
 export const ChatBox = memo(
   ({

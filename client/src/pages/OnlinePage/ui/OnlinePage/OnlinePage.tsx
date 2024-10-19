@@ -1,4 +1,4 @@
-import { cx } from "@/shared/lib/cx";
+import { cx } from "@/shared/lib";
 import cls from "./OnlinePage.module.scss";
 
 import { GameModals, GameRequest, GameSelector } from "@/features/game";
@@ -7,7 +7,7 @@ import { Sidebar } from "@/widgets/Sidebar";
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
 import { useChatModals } from "../ChatModals/hooks/useChatModals";
-import { useAppSelector } from "@/shared/lib/hooks/storeHooks";
+import { useAppSelector } from "@/shared/lib";
 import { getCurrentUser } from "@/entities/User";
 
 const OnlinePage = ({ className }: { className?: string }) => {

@@ -1,6 +1,7 @@
-import { memo } from "react";
 import cls from "./Square.module.scss";
-import { cx } from "@/shared/lib/cx";
+import { cx } from "@/shared/lib";
+import { memo } from "react";
+
 import { UiButton } from "@/shared/ui";
 
 interface SquareProps {

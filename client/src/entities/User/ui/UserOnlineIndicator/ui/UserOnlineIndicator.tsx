@@ -1,4 +1,4 @@
-import { cx } from "@/shared/lib/cx";
+import { cx } from "@/shared/lib";
 import cls from "./UserOnlineIndicator.module.scss";
 
 export const UserOnlineIndicator = ({

@@ -1,6 +1,7 @@
-import { memo } from "react";
 import cls from "./Board.module.scss";
-import { cx } from "@/shared/lib/cx";
+import { cx } from "@/shared/lib";
+import { memo } from "react";
+
 import { Card } from "@/shared/ui";
 import { Square } from "../Square/ui/Square";
 

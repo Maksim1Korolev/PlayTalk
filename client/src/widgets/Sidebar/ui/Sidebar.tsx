@@ -1,10 +1,12 @@
+import cls from "./Sidebar.module.scss";
+import { cx } from "@/shared/lib";
+import { useState } from "react";
+
+import { ReactComponent as ArrowIcon } from "@/shared/assets/icons/arrow-bottom.svg";
+
 import { UserList } from "@/features/UserList";
 import { UserListProps } from "@/features/UserList";
-import { ReactComponent as ArrowIcon } from "@/shared/assets/icons/arrow-bottom.svg";
-import { cx } from "@/shared/lib/cx";
 import { AppSvg } from "@/shared/ui";
-import { useState } from "react";
-import cls from "./Sidebar.module.scss";
 
 type SidebarProps = UserListProps;
 

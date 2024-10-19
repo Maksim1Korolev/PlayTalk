@@ -1,6 +1,6 @@
 import { userActions } from "@/entities/User";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
-import { useAppDispatch } from "@/shared/lib/hooks/storeHooks";
+import { useAppDispatch } from "@/shared/lib";
 import { useContext, useEffect } from "react";
 
 export const useOnlineSockets = () => {

@@ -1,7 +1,6 @@
-import { CSSProperties, memo } from "react";
-
-import { cx } from "@/shared/lib/cx";
 import cls from "./Skeleton.module.scss";
+import { cx } from "@/shared/lib";
+import { CSSProperties, memo } from "react";
 
 interface SkeletonProps {
   className?: string;

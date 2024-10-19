@@ -1,7 +1,8 @@
-import { HighlightType, useHighlight } from "@/shared/lib/hooks/useHighlight";
-import { cx } from "@/shared/lib/cx";
-import { memo } from "react";
 import cls from "./AppSvg.module.scss";
+import { cx } from "@/shared/lib";
+import { memo } from "react";
+
+import { HighlightType, useHighlight } from "@/shared/lib";
 
 type SvgProps = Omit<React.SVGProps<SVGSVGElement>, "onClick" | "fill">;
 

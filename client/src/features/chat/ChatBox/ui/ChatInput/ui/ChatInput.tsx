@@ -1,5 +1,5 @@
-import { cx } from "@/shared/lib/cx";
 import cls from "./ChatInput.module.scss";
+import { cx } from "@/shared/lib";
 
 interface ChatInputProps {
   className?: string;

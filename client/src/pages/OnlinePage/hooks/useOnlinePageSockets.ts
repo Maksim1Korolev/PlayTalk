@@ -1,10 +1,10 @@
 import { useContext } from "react";
 
-import { useSockets } from "@/shared/lib/hooks/useSockets";
+import { useSockets } from "@/shared/lib";
 import { UserContext } from "@/shared/lib/context/UserContext";
 import { useGameSessionLogic } from "./useGameSessionLogic";
 import { useOnlineSockets } from "./useOnlineSockets";
-import { useAppSelector } from "@/shared/lib/hooks/storeHooks";
+import { useAppSelector } from "@/shared/lib";
 import {
   getCurrentUser,
   getUsers,

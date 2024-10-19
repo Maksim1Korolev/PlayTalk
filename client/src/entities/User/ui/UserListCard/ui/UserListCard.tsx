@@ -1,7 +1,7 @@
 import { User } from "@/entities/User";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 import { HighlightType, PlayButton } from "@/features/UserList/ui/PlayButton";
-import { cx } from "@/shared/lib/cx";
+import { cx } from "@/shared/lib";
 import { AddonCircle, AppImageProps, HStack } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 import { useEffect, useState } from "react";

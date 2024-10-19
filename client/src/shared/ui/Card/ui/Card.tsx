@@ -1,6 +1,6 @@
-import { cx } from "@/shared/lib/cx";
-import { HTMLAttributes, ReactNode, memo } from "react";
 import cls from "./Card.module.scss";
+import { cx } from "@/shared/lib";
+import { HTMLAttributes, ReactNode, memo } from "react";
 
 type CardVariant = "default" | "outlined" | "light";
 type CardBorder = "default" | "round";

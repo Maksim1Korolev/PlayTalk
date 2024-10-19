@@ -1,17 +1,17 @@
+import cls from "./GameRequest.module.scss";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { Rnd } from "react-rnd";
-import cls from "./GameRequest.module.scss";
-
-import { AddonCircle, UiButton, AppImage, AppImageProps } from "@/shared/ui";
-import { UserContext } from "@/shared/lib/context/UserContext";
-import { useModalDrag } from "@/shared/lib/hooks/useModalDrag";
-import getImagePath from "@/shared/utils/getImagePath";
-import { Invite } from "@/entities/Game/model";
-import { User } from "@/entities/User";
 
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
+
+import { AddonCircle, UiButton, AppImage, AppImageProps } from "@/shared/ui";
+import { UserContext } from "@/shared/lib/context/UserContext";
+import { useModalDrag } from "@/shared/lib";
+import getImagePath from "@/shared/utils/getImagePath";
+import { Invite } from "@/entities/Game/model";
+import { User } from "@/entities/User";
 
 interface GameRequestProps {
   className?: string;

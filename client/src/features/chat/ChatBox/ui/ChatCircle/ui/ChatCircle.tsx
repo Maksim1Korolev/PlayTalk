@@ -1,9 +1,10 @@
+import cls from "./ChatCircle.module.scss";
+import { cx } from "@/shared/lib";
+import { memo } from "react";
+
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
 import { AvatarWithProps } from "@/features/AvatarWithProps";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
-import { cx } from "@/shared/lib/cx";
-import { memo } from "react";
-import cls from "./ChatCircle.module.scss";
 
 export const ChatCircle = memo(
   ({

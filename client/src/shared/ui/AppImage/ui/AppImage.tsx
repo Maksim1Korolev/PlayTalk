@@ -1,3 +1,5 @@
+import { cx } from "@/shared/lib";
+import cls from "./AppImage.module.scss";
 import {
   ImgHTMLAttributes,
   ReactElement,
@@ -6,9 +8,7 @@ import {
   useState,
 } from "react";
 
-import { HighlightType, useHighlight } from "@/shared/lib/hooks/useHighlight";
-import { cx } from "@/shared/lib/cx";
-import cls from "./AppImage.module.scss";
+import { HighlightType, useHighlight } from "@/shared/lib";
 
 type ObjectFit = "cover" | "fill" | "contain" | "none";
 

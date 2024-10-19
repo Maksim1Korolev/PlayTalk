@@ -1,5 +1,5 @@
-import { cx } from "@/shared/lib/cx";
 import cls from "./UnreadMessagesCountIndicator.module.scss";
+import { cx } from "@/shared/lib";
 
 export const UnreadMessagesCountIndicator = ({
   className,

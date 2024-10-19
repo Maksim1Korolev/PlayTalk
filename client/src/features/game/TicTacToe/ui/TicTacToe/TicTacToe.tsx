@@ -1,12 +1,13 @@
-import { TicTacToeGame } from "@/entities/Game/model";
-import resources from "@/shared/assets/locales/en/games/TicTacToeResources.json";
-import { cx } from "@/shared/lib/cx";
-import { UiButton, UiText, VStack } from "@/shared/ui";
+import cls from "./TicTacToe.module.scss";
+import { cx } from "@/shared/lib";
 import { memo, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
-import cls from "./TicTacToe.module.scss";
 
+import resources from "@/shared/assets/locales/en/games/TicTacToeResources.json";
+
+import { TicTacToeGame } from "@/entities/Game/model";
+import { UiButton, UiText, VStack } from "@/shared/ui";
+import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
 import { User } from "@/entities/User";
 import { Board } from "../Board";
 

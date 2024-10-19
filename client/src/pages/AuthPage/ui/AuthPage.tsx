@@ -1,4 +1,13 @@
-import { cx } from "@/shared/lib/cx";
+import cls from "./AuthPage.module.scss";
+import { cx } from "@/shared/lib";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
+
+import resources from "@/shared/assets/locales/en/AuthPageResources.json";
+
+import { apiService } from "../api/apiAuthService";
 import {
   Card,
   HStack,
@@ -8,14 +17,6 @@ import {
   UiText,
   VStack,
 } from "@/shared/ui";
-import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
-import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
-import { apiService } from "../api/apiAuthService";
-import cls from "./AuthPage.module.scss";
-
-import resources from "@/shared/assets/locales/en/AuthPageResources.json";
 
 interface AuthPageProps {
   className?: string;

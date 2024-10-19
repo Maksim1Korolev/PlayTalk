@@ -1,4 +1,4 @@
-import { cx } from "@/shared/lib/cx";
+import { cx } from "@/shared/lib";
 import { Avatar } from "@/shared/ui/Avatar";
 import { memo } from "react";
 import cls from "./AvatarWithProps.module.scss";

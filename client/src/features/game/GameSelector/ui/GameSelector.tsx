@@ -1,5 +1,6 @@
-import { memo, ReactNode, useEffect, useState } from "react";
 import cls from "./GameSelector.module.scss";
+import { cx } from "@/shared/lib";
+import { memo, ReactNode, useEffect, useState } from "react";
 
 import {
   GameData,
@@ -8,7 +9,6 @@ import {
   isGameName,
 } from "@/entities/Game/model";
 import { User } from "@/entities/User";
-import { cx } from "@/shared/lib/cx";
 import { AppImage, AppImageProps, Card, HStack, Loader } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 

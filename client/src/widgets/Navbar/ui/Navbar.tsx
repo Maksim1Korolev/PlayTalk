@@ -1,10 +1,11 @@
-import { cx } from "@/shared/lib/cx";
-import { HStack } from "@/shared/ui";
-import { LogoutButton } from "@/shared/ui/UiButton";
+import cls from "./Navbar.module.scss";
+import { cx } from "@/shared/lib";
 import { memo } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import cls from "./Navbar.module.scss";
+
+import { LogoutButton } from "@/shared/ui/UiButton";
+import { HStack } from "@/shared/ui";
 
 export const Navbar = memo(({ className }: { className?: string }) => {
   const [cookie, , removeCookie] = useCookies(["jwt-cookie"]);

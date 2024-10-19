@@ -1,8 +1,8 @@
-import { cx } from "@/shared/lib/cx";
-import { AppSvg, SVGProps } from "@/shared/ui";
-import { memo } from "react";
-import { AppImage, AppImageProps } from "../../AppImage";
 import cls from "./AddonCircle.module.scss";
+import { cx } from "@/shared/lib";
+import { memo } from "react";
+
+import { AppSvg, SVGProps, AppImage, AppImageProps } from "@/shared/ui";
 
 export type AddonCircleIconProps = SVGProps | AppImageProps;
 
