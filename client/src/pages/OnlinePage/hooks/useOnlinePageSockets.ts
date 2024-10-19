@@ -4,10 +4,10 @@ import { useSockets } from "@/shared/lib/hooks/useSockets";
 import { UserContext } from "@/shared/lib/context/UserContext";
 import { useGameSessionLogic } from "./useGameSessionLogic";
 import { useOnlineSockets } from "./useOnlineSockets";
+import { User } from "@/entities/User";
 
-export const useOnlinePageSockets = () => {
-  const { users, currentUser, updateAllUsers, updateUser } =
-    useContext(UserContext);
+export const useOnlinePageSockets = (users: User[]) => {
+  const { currentUser, initializeUsers, updateUser } = useContext(UserContext);
 
   const {
     lastClickedPlayUser,
@@ -33,7 +33,7 @@ export const useOnlinePageSockets = () => {
     lastClickedPlayUser,
     gameModals,
     handleCloseGameModal,
-    updateUsers: updateAllUsers,
+    initializeUsers,
     handleOpenGameSelector,
     handleGameClicked,
     handleGameRequestYesButton,

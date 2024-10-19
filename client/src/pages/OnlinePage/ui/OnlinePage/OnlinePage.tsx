@@ -13,6 +13,9 @@ import { fetchUsersStatus } from "../../api/updateUsersStatusApiService";
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
 import { useChatModals } from "../ChatModals/hooks/useChatModals";
+import { useAppDispatch, useAppSelector } from "@/shared/lib/hooks/storeHooks";
+import { getUsers } from "@/entities/User/model/selectors/getUsers";
+import { initializeUsers } from "@/entities/User/model/slice/userSlice";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,6 +24,11 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const [cookies] = useCookies();
   const { user: currentUserFromCookies, token } = cookies["jwt-cookie"];
 
+  const dispatch = useAppDispatch();
+
+  // Use Redux selectors to access state
+  const users = useAppSelector(getUsers);
+  // const currentUser = useAppSelector(state => state.user.currentUser);
   const { chatModals, handleCloseChatModal, handleOpenChatModal } =
     useChatModals();
 
@@ -31,27 +39,35 @@ const OnlinePage = ({ className }: { className?: string }) => {
     lastClickedPlayUser,
     gameModals,
     handleCloseGameModal,
-    updateUsers,
     handleOpenGameSelector,
     handleGameClicked,
     handleGameRequestYesButton,
     handleGameRequestNoButton,
-  } = useOnlinePageSockets();
+  } = useOnlinePageSockets(users);
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchUsersStatus({
-        currentUser: currentUserFromCookies,
-        token,
-        setError,
-        setIsError,
-        setIsLoading,
-        updateUsers,
-      });
+      try {
+        const updatedUsers = await fetchUsersStatus({
+          currentUser: currentUserFromCookies,
+          token,
+          setError,
+          setIsError,
+          setIsLoading,
+        });
+
+        // Dispatch the result to initialize users
+        dispatch(initializeUsers(updatedUsers));
+      } catch (error) {
+        console.error("Error fetching users status:", error);
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchData();
-  }, []);
+  }, [dispatch, currentUserFromCookies, token]);
 
   if (isLoading) {
     return <Loader />;

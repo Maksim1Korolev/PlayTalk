@@ -11,7 +11,7 @@ type StoreProviderProps = {
   children?: React.ReactNode;
 };
 
-//TODO:REMOVE?
+//TODO:Replace
 export const StoreProvider = ({ children }: StoreProviderProps) => {
   const queryClient = new QueryClient();
   return (

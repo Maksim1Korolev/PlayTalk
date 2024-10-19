@@ -9,7 +9,6 @@ import { store } from "./app/providers/StoreProvider";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <Provider store={store}>
-      //TODO:Remove?
       <StoreProvider>
         <SocketProvider>
           <UserProvider>

@@ -1,10 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User, CurrentUser } from "@/entities/User";
-
-interface UserState {
-  users: User[];
-  currentUser: CurrentUser | null;
-}
+import { UserState } from "../types/user";
 
 const initialState: UserState = {
   users: [],

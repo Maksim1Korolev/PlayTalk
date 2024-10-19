@@ -14,8 +14,8 @@ import {
   GameModal,
   isGameName,
   TicTacToeGame,
-} from "@/entities/Game/model/";
-import { TicTacToe } from "@/features/game/TicTacToe/";
+} from "@/entities/Game/model";
+import { TicTacToe } from "@/features/game/TicTacToe";
 import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
 import { UserContext } from "@/shared/lib/context/UserContext";
 import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";

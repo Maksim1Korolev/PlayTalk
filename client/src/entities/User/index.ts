@@ -1,2 +1,2 @@
-export type { CurrentUser, User } from "./model/user";
+export type { CurrentUser, User, UserState } from "./model/types/user";
 export { UserListCard } from "./ui/UserListCard";

@@ -4,28 +4,30 @@ import { gameApiService } from "./gameApiService";
 import { profileApiService } from "./profileApiService";
 import { usersApiService } from "./usersApiService";
 
-export const fetchUsersStatus = async ({
-  setError,
-  setIsError,
-  setIsLoading,
-  token,
-  currentUser,
-  updateUsers,
-}: {
+interface FetchUsersStatusParams {
   token: string;
   currentUser: User;
   setError: React.Dispatch<React.SetStateAction<Error | null | undefined>>;
   setIsError: React.Dispatch<React.SetStateAction<boolean>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  updateUsers: (users: User[]) => void;
-}) => {
+}
+
+export const fetchUsersStatus = async ({
+  token,
+  currentUser,
+  setError,
+  setIsError,
+  setIsLoading,
+}: FetchUsersStatusParams) => {
   setIsLoading(true);
+
   try {
     let users = await profileApiService.getProfiles(token);
 
     if (!users) {
       users = await usersApiService.getUsers(token);
     }
+
     const results = await Promise.allSettled([
       communicationApiService.getOnlineUsernames(token),
       communicationApiService.getUnreadMessageCount(
@@ -41,6 +43,7 @@ export const fetchUsersStatus = async ({
       results[1].status === "fulfilled" ? results[1].value : {};
     const activeGames =
       results[2].status === "fulfilled" ? results[2].value : {};
+
     const onlineSet = new Set(onlineUsernames);
 
     const updatedUsers = users.map((user: User) => ({
@@ -50,10 +53,11 @@ export const fetchUsersStatus = async ({
       activeGames: activeGames[user.username] || [],
     }));
 
-    updateUsers(updatedUsers);
     setIsLoading(false);
     setIsError(false);
     setError(null);
+
+    return updatedUsers;
   } catch (err: unknown) {
     setIsLoading(false);
     setIsError(true);
