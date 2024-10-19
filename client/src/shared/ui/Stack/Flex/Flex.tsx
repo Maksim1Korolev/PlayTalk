@@ -1,7 +1,7 @@
 import { DetailedHTMLProps, HTMLAttributes, ReactNode, memo } from "react";
 
 import cls from "./Flex.module.scss";
-import { Mods, cx } from "@/shared/lib/cx";
+import { Mods, cx } from "@/shared/lib";
 
 type FlexJustify = "start" | "center" | "end" | "between";
 type FlexWrap = "nowrap" | "wrap";

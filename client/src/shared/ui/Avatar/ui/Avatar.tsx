@@ -1,4 +1,4 @@
-import { cx } from "@/shared/lib/cx"
+import { cx } from "@/shared/lib"
 import { AppImage } from "../../AppImage"
 import cls from "./Avatar.module.scss"
 

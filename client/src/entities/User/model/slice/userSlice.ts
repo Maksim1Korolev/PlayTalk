@@ -1,5 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User, CurrentUser } from "@/entities/User";
+import { useCookies } from "react-cookie";
+
+import { CurrentUser, User } from "@/entities/User";
+
 import { UserState } from "../types/user";
 
 const initialState: UserState = {
@@ -11,15 +14,15 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    initializeUsers: (state, action: PayloadAction<User[]>) => {
-      const users = action.payload;
-      const currentUserFromCookies = users.find(
-        user => user.username === state.currentUser?.username
-      );
+    initializeUsers: (
+      state,
+      action: PayloadAction<{ users: User[]; currentUser: CurrentUser | null }>
+    ) => {
+      const { users, currentUser } = action.payload;
 
-      state.currentUser = currentUserFromCookies || state.currentUser;
+      state.currentUser = currentUser;
       state.users = users.filter(
-        user => user.username !== state.currentUser?.username
+        user => user.username !== currentUser?.username
       );
     },
     updateUser: (
@@ -41,5 +44,4 @@ const userSlice = createSlice({
 
 export const { initializeUsers, updateUser, setCurrentUser } =
   userSlice.actions;
-
 export const { reducer: userReducer, actions: userActions } = userSlice;

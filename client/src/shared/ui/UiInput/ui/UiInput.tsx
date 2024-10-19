@@ -1,4 +1,4 @@
-import { cx } from '@/shared/lib/cx'
+import { cx } from '@/shared/lib'
 import { ChangeEvent, InputHTMLAttributes } from 'react'
 import { VStack } from '../..'
 import cls from './UiInput.module.scss'

@@ -1,7 +1,9 @@
-import { userActions } from "@/entities/User";
-import { SocketContext } from "@/shared/lib/context/SocketContext";
-import { useAppDispatch } from "@/shared/lib";
 import { useContext, useEffect } from "react";
+
+import { useAppDispatch } from "@/shared/lib";
+import { SocketContext } from "@/shared/lib/context/SocketContext";
+
+import { userActions } from "@/entities/User";
 
 export const useOnlineSockets = () => {
   const dispatch = useAppDispatch();
@@ -57,5 +59,5 @@ export const useOnlineSockets = () => {
         );
       };
     }
-  }, [communicationSocket, gameSocket]);
+  }, [communicationSocket, gameSocket, dispatch]);
 };

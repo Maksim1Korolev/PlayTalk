@@ -1,4 +1,4 @@
-import { Mods, cx } from "@/shared/lib/cx";
+import { Mods, cx } from "@/shared/lib";
 import { ReactNode, memo } from "react";
 import cls from "./UiText.module.scss";
 

@@ -1,4 +1,4 @@
-import { Mods, cx } from "@/shared/lib/cx";
+import { Mods, cx } from "@/shared/lib";
 import { ButtonHTMLAttributes } from "react";
 import cls from "./UiButton.module.scss";
 

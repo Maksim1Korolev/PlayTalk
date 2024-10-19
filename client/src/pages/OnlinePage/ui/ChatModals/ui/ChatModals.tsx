@@ -7,26 +7,28 @@ import {
   useState,
 } from "react";
 
-import { CurrentUser } from "@/entities/User";
+import { useAppSelector } from "@/shared/lib";
+import { ModalContext } from "@/shared/lib/context/ModalContext";
+import { AddonCircleProps, AppImageProps, CircleModal } from "@/shared/ui";
+import { useModalPosition } from "@/shared/ui/CircleModal";
+import getImagePath from "@/shared/utils/getImagePath";
+
+import { ChatModal } from "@/entities/Chat/model/types/chatModal";
+import { getCurrentUser } from "@/entities/User";
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
 import { ChatBox } from "@/features/chat";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
-import { AddonCircleProps, CircleModal, AppImageProps } from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
-import { ChatModal } from "@/entities/Chat/model/types/chatModal";
-import { useModalPosition } from "@/shared/ui/CircleModal";
-import { ModalContext } from "@/shared/lib/context/ModalContext";
 
 export const ChatModals = memo(
   ({
-    currentUser,
     chatModals,
     onClose,
   }: {
-    currentUser: CurrentUser;
     chatModals: ChatModal[];
     onClose: (username: string) => void;
   }) => {
+    const currentUser = useAppSelector(getCurrentUser);
+
     const [avatarIconMap, setAvatarIconMap] = useState<{
       [key: string]: string;
     }>({});

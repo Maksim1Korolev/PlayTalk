@@ -1,6 +1,10 @@
-import { GameData, Invite, getInviteKey } from "@/entities/Game/model";
-import { User } from "@/entities/User";
 import { useCallback, useState } from "react";
+
+import { useAppDispatch } from "@/shared/lib";
+
+import { GameData, getInviteKey, Invite } from "@/entities/Game/model";
+import { User, userActions } from "@/entities/User";
+
 import { useGameModals } from "./useGameModals";
 import { useGameSessionSocket } from "./useGameSessionSocket";
 
@@ -13,10 +17,9 @@ type GameEndPayload = {
   winner: string;
 };
 
-export const useGameSessionLogic = (
-  users: User[],
-  updateUser: (username: string, updatedProps: Partial<User>) => void
-) => {
+export const useGameSessionLogic = (users: User[]) => {
+  const dispatch = useAppDispatch();
+
   const [inviteMap, setInviteMap] = useState<{ [key: string]: Invite }>({});
   const [lastClickedPlayUser, setLastClickedPlayUser] = useState<User | null>(
     null
@@ -41,16 +44,27 @@ export const useGameSessionLogic = (
       [inviteKey]: invite,
     }));
 
-    updateUser(invite.senderUsername, {
-      isInviting: true,
-    });
+    dispatch(
+      userActions.updateUser({
+        username: invite.senderUsername,
+        updatedProps: {
+          isInviting: true,
+        },
+      })
+    );
   };
 
   const onGameStart = ({ gameData }: GameStartPayload) => {
     const user = getUser(gameData.opponentUsername);
-    updateUser(gameData.opponentUsername, {
-      activeGames: [...(user?.activeGames || []), gameData.gameName],
-    });
+
+    dispatch(
+      userActions.updateUser({
+        username: gameData.opponentUsername,
+        updatedProps: {
+          activeGames: [...(user?.activeGames || []), gameData.gameName],
+        },
+      })
+    );
 
     handleOpenGameModal({ gameData });
   };
@@ -58,11 +72,16 @@ export const useGameSessionLogic = (
   const onGameEnd = ({ gameData, winner }: GameEndPayload) => {
     const user = getUser(gameData.opponentUsername);
 
-    updateUser(gameData.opponentUsername, {
-      activeGames: (user?.activeGames || []).filter(
-        game => game !== gameData.gameName
-      ),
-    });
+    dispatch(
+      userActions.updateUser({
+        username: gameData.opponentUsername,
+        updatedProps: {
+          activeGames: (user?.activeGames || []).filter(
+            game => game !== gameData.gameName
+          ),
+        },
+      })
+    );
 
     handleCloseGameModal({ gameData });
   };
@@ -75,11 +94,16 @@ export const useGameSessionLogic = (
 
   const updateInvitingStatus = useCallback(
     (senderUsername: string) => {
-      updateUser(senderUsername, {
-        isInviting: false,
-      });
+      dispatch(
+        userActions.updateUser({
+          username: senderUsername,
+          updatedProps: {
+            isInviting: false,
+          },
+        })
+      );
     },
-    [updateUser]
+    [dispatch]
   );
 
   const handleGameRequestYesButton = useCallback(

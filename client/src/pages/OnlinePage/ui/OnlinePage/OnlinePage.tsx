@@ -1,20 +1,18 @@
 import cls from "./OnlinePage.module.scss";
+
 import { cx } from "@/shared/lib";
+import { HStack, VStack } from "@/shared/ui";
 
 import { GameModals, GameRequest, GameSelector } from "@/features/game";
-import { HStack, VStack } from "@/shared/ui";
 import { Sidebar } from "@/widgets/Sidebar";
+
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
 import { useChatModals } from "../ChatModals/hooks/useChatModals";
-import { useAppSelector } from "@/shared/lib";
-import { getCurrentUser } from "@/entities/User";
 
 const OnlinePage = ({ className }: { className?: string }) => {
   const { chatModals, handleCloseChatModal, handleOpenChatModal } =
     useChatModals();
-
-  const currentUser = useAppSelector(getCurrentUser);
 
   const {
     invites,
@@ -53,11 +51,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
           )}
         </VStack>
       </HStack>
-      <ChatModals
-        currentUser={currentUser}
-        chatModals={chatModals}
-        onClose={handleCloseChatModal}
-      />
+      <ChatModals chatModals={chatModals} onClose={handleCloseChatModal} />
       <GameModals gameModals={gameModals} onClose={handleCloseGameModal} />
     </div>
   );

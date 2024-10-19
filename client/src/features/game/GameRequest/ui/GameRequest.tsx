@@ -1,3 +1,5 @@
+import cls from "./GameRequest.module.scss";
+
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
@@ -10,8 +12,6 @@ import getImagePath from "@/shared/utils/getImagePath";
 
 import { Invite } from "@/entities/Game/model";
 import { getUsers, User } from "@/entities/User";
-
-import cls from "./GameRequest.module.scss";
 
 interface GameRequestProps {
   className?: string;
