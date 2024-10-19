@@ -8,5 +8,17 @@
   "jsxSingleQuote": false,
   "bracketSpacing": true,
   "jsxBracketSameLine": false,
-  "arrowParens": "avoid"
-}
+  "arrowParens": "avoid",
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "^.+\\.scss$",                     
+    "<THIRD_PARTY_MODULES>",           
+    "^@/shared/(.*)$",                 
+    "^@/(app|entities|features|pages|widgets)(/.*)?$", 
+    "^\\.{2}/",                        
+    "^\\./"                            
+  ],
+  "importOrderSeparation": true,       
+  "importOrderSortSpecifiers": true,   
+  "importOrderGroupNamespaceSpecifiers": true, 
+  "importOrderCaseInsensitive": true     }

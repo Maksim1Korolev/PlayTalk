@@ -8,6 +8,12 @@ import {
 } from "react";
 import { useCookies } from "react-cookie";
 
+import { useAppSelector } from "@/shared/lib";
+import { ModalContext } from "@/shared/lib/context/ModalContext";
+import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";
+import { useModalPosition } from "@/shared/ui/CircleModal";
+import getImagePath from "@/shared/utils/getImagePath";
+
 import {
   Game,
   GameData,
@@ -15,14 +21,9 @@ import {
   isGameName,
   TicTacToeGame,
 } from "@/entities/Game/model";
+import { getUsers } from "@/entities/User";
 import { TicTacToe } from "@/features/game/TicTacToe";
 import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
-import { UserContext } from "@/shared/lib/context/UserContext";
-import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";
-
-import getImagePath from "@/shared/utils/getImagePath";
-import { useModalPosition } from "@/shared/ui/CircleModal";
-import { ModalContext } from "@/shared/lib/context/ModalContext";
 
 const generateModalId = (gameData: GameData): string => {
   return `${gameData.opponentUsername}_${gameData.gameName}`;
@@ -37,7 +38,8 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
   const [cookies] = useCookies(["jwt-cookie"]);
   const { user: currentUser, token } = cookies["jwt-cookie"];
 
-  const { users } = useContext(UserContext);
+  const users = useAppSelector(getUsers);
+
   const [games, setGames] = useState<{ [key: string]: Game }>({});
   const [iconMap, setIconMap] = useState<{ [key: string]: string }>({});
   const [avatarMap, setAvatarMap] = useState<{ [key: string]: string }>({});

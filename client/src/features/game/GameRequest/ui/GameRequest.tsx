@@ -1,17 +1,17 @@
-import cls from "./GameRequest.module.scss";
-import { ReactNode, useContext, useEffect, useState } from "react";
-import { Rnd } from "react-rnd";
-
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
+import { ReactNode, useEffect, useState } from "react";
+import { Rnd } from "react-rnd";
 
-import { AddonCircle, UiButton, AppImage, AppImageProps } from "@/shared/ui";
-import { UserContext } from "@/shared/lib/context/UserContext";
-import { useModalDrag } from "@/shared/lib";
+import { useAppSelector, useModalDrag } from "@/shared/lib";
+import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
+
 import { Invite } from "@/entities/Game/model";
-import { User } from "@/entities/User";
+import { getUsers, User } from "@/entities/User";
+
+import cls from "./GameRequest.module.scss";
 
 interface GameRequestProps {
   className?: string;
@@ -32,7 +32,8 @@ export const GameRequest = ({
   const currentInvite = invites[currentInviteIndex] || null;
 
   const { isDragged, handleDragStart, handleDragStop } = useModalDrag();
-  const { users } = useContext(UserContext);
+
+  const users = useAppSelector(getUsers);
 
   const [iconMap, setIconMap] = useState<{ [key: string]: string }>({});
   const [avatarMap, setAvatarMap] = useState<{ [key: string]: string }>({});

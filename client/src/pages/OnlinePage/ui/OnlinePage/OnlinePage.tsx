@@ -1,5 +1,5 @@
-import { cx } from "@/shared/lib";
 import cls from "./OnlinePage.module.scss";
+import { cx } from "@/shared/lib";
 
 import { GameModals, GameRequest, GameSelector } from "@/features/game";
 import { HStack, VStack } from "@/shared/ui";
