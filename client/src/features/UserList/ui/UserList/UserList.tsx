@@ -5,12 +5,12 @@ import { memo, useEffect, useMemo, useRef, useState } from "react";
 import resources from "@/shared/assets/locales/en/UserListResources.json";
 import tempResources from "@/shared/assets/locales/en/OnlinePageResources.json";
 
-import { initializeUsers, User, UserListCard } from "@/entities/User";
+import { User, userActions, UserListCard } from "@/entities/User";
 import { Card, Loader, UiText, VStack } from "@/shared/ui";
 import { sortUsers } from "../../utils/userListUtils";
 import { useCookies } from "react-cookie";
 import { useAppDispatch, useAppSelector } from "@/shared/lib/hooks/storeHooks";
-import { getUsers } from "@/entities/User/model/selectors/getUsers";
+import { getUsers } from "@/entities/User";
 import { fetchUsersStatus } from "@/pages/OnlinePage/api/updateUsersStatusApiService";
 
 export interface UserListProps {
@@ -47,7 +47,6 @@ export const UserList = memo(
     const [error, setError] = useState<Error | null>();
 
     const dispatch = useAppDispatch();
-
     const users = useAppSelector(getUsers);
 
     const userRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -71,7 +70,7 @@ export const UserList = memo(
             setIsLoading,
           });
 
-          dispatch(initializeUsers(upToDateUsers));
+          dispatch(userActions.initializeUsers(upToDateUsers));
         } catch (error) {
           console.error("Error fetching users status:", error);
           setIsError(true);

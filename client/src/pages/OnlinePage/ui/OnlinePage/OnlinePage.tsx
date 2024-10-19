@@ -8,16 +8,15 @@ import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets";
 import { ChatModals } from "../ChatModals";
 import { useChatModals } from "../ChatModals/hooks/useChatModals";
 import { useAppSelector } from "@/shared/lib/hooks/storeHooks";
-import { getUsers } from "@/entities/User/model/selectors/getUsers";
+import { getCurrentUser } from "@/entities/User";
 
 const OnlinePage = ({ className }: { className?: string }) => {
-  const users = useAppSelector(getUsers);
-
   const { chatModals, handleCloseChatModal, handleOpenChatModal } =
     useChatModals();
 
+  const currentUser = useAppSelector(getCurrentUser);
+
   const {
-    currentUser,
     invites,
     lastClickedPlayUser,
     gameModals,
@@ -26,7 +25,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
     handleGameClicked,
     handleGameRequestYesButton,
     handleGameRequestNoButton,
-  } = useOnlinePageSockets(users);
+  } = useOnlinePageSockets();
 
   return (
     <div className={cx(cls.OnlinePage, {}, [className])}>

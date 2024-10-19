@@ -1,12 +1,11 @@
-import { User } from "@/entities/User";
+import { userActions } from "@/entities/User";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
+import { useAppDispatch } from "@/shared/lib/hooks/storeHooks";
 import { useContext, useEffect } from "react";
 
-export const useOnlineSockets = ({
-  updateUser,
-}: {
-  updateUser: (username: string, updatedProps: Partial<User>) => void;
-}) => {
+export const useOnlineSockets = () => {
+  const dispatch = useAppDispatch();
+
   const { sockets } = useContext(SocketContext);
   const { communicationSocket, gameSocket } = sockets;
 
@@ -21,14 +20,19 @@ export const useOnlineSockets = ({
       };
 
       const updateUserOnline = (username: string, isOnline: boolean) => {
-        updateUser(username, { isOnline });
+        dispatch(
+          userActions.updateUser({ username, updatedProps: { isOnline } })
+        );
       };
 
       const unreadMessageCountChanged = (
         username: string,
         unreadMessageCount: number
       ) => {
-        updateUser(username, { unreadMessageCount });
+        userActions.updateUser({
+          username,
+          updatedProps: { unreadMessageCount },
+        });
       };
 
       communicationSocket.on("connect", onCommunicationConnect);
@@ -53,5 +57,5 @@ export const useOnlineSockets = ({
         );
       };
     }
-  }, [communicationSocket, gameSocket, updateUser]);
+  }, [communicationSocket, gameSocket]);
 };
