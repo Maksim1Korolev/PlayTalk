@@ -28,7 +28,6 @@ export const useOnlinePageSockets = (users: User[]) => {
 
   return {
     currentUser,
-    users,
     invites,
     lastClickedPlayUser,
     gameModals,

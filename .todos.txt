@@ -15,6 +15,7 @@ Open modals logic to client through cookies
 Modals limitation
 User search
 Game Selector
+Index file to lib folder in shared and implement it. Add cx to className folder 
 
 To fix:
 Getting error in communication service when requesting unread messages with count of 0

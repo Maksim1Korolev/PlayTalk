@@ -1,16 +1,20 @@
 import cls from "./UserList.module.scss";
 import { cx } from "@/shared/lib/cx";
-import { memo, useEffect, useMemo, useRef } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 
 import resources from "@/shared/assets/locales/en/UserListResources.json";
+import tempResources from "@/shared/assets/locales/en/OnlinePageResources.json";
 
-import { User, UserListCard } from "@/entities/User";
-import { Card, VStack } from "@/shared/ui";
+import { initializeUsers, User, UserListCard } from "@/entities/User";
+import { Card, Loader, UiText, VStack } from "@/shared/ui";
 import { sortUsers } from "../../utils/userListUtils";
+import { useCookies } from "react-cookie";
+import { useAppDispatch, useAppSelector } from "@/shared/lib/hooks/storeHooks";
+import { getUsers } from "@/entities/User/model/selectors/getUsers";
+import { fetchUsersStatus } from "@/pages/OnlinePage/api/updateUsersStatusApiService";
 
 export interface UserListProps {
   className?: string;
-  users: User[];
   collapsed?: boolean;
   handleUserChatButton: (user: User) => void;
   handleUserPlayButton: (user: User) => void;
@@ -31,11 +35,21 @@ const adjustFontSize = (
 export const UserList = memo(
   ({
     className,
-    users,
     collapsed,
     handleUserChatButton,
     handleUserPlayButton,
   }: UserListProps) => {
+    const [cookies] = useCookies();
+    const { user: currentUserFromCookies, token } = cookies["jwt-cookie"];
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isError, setIsError] = useState<boolean>(false);
+    const [error, setError] = useState<Error | null>();
+
+    const dispatch = useAppDispatch();
+
+    const users = useAppSelector(getUsers);
+
     const userRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
     useEffect(() => {
@@ -45,6 +59,29 @@ export const UserList = memo(
         }
       });
     }, [users]);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const upToDateUsers = await fetchUsersStatus({
+            currentUser: currentUserFromCookies,
+            token,
+            setError,
+            setIsError,
+            setIsLoading,
+          });
+
+          dispatch(initializeUsers(upToDateUsers));
+        } catch (error) {
+          console.error("Error fetching users status:", error);
+          setIsError(true);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchData();
+    }, [dispatch, currentUserFromCookies, token]);
 
     const userList = useMemo(() => {
       const sortedUsers = users ? [...users].sort(sortUsers) : [];
@@ -67,8 +104,21 @@ export const UserList = memo(
       return <p>{resources.noUsers}</p>;
     }
 
+    if (isLoading) {
+      return <Loader />;
+    }
+
+    if (isError && error) {
+      {
+        return (
+          <UiText>{`${tempResources.errorMessagePrefix} ${error.message}`}</UiText>
+        );
+      }
+    }
+
     return (
       <Card className={cx(cls.UserList, {}, [className])}>
+        <UiText size="xl">{resources.userListHeader}</UiText>
         <VStack gap="16">{userList}</VStack>
       </Card>
     );
