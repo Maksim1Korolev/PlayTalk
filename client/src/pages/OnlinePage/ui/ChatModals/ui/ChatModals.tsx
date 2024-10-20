@@ -4,7 +4,7 @@ import { CurrentUser } from "@/entities/User";
 import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
 import { ChatBox } from "@/features/Chat";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
-import { AddonCircleProps, CircleModal, AppImageProps } from "@/shared/ui";
+import { AddonCircleProps, AppImageProps, CircleModal } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 import { ChatModalStateProps } from "../hooks/useChatModals";
 
@@ -32,7 +32,8 @@ export const ChatModals = memo(
           const { user: opponentUser } = modal;
 
           const avatarUrl = getImagePath({
-            avatarFileName: opponentUser.avatarFileName,
+            collection: "avatars",
+            fileName: opponentUser.avatarFileName,
           });
           if (opponentUser.avatarFileName) {
             avatarMap[opponentUser.avatarFileName] = avatarUrl;

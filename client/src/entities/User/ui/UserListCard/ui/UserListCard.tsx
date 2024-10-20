@@ -1,9 +1,10 @@
 import { User } from "@/entities/User";
-import { AvatarWithProps } from "@/features/AvatarWithProps";
+
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 import { HighlightType, PlayButton } from "@/features/UserList/ui/PlayButton";
 import { cx } from "@/shared/lib/cx";
-import { HStack } from "@/shared/ui";
+import { AddonCircle, AppImageProps, HStack } from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
 import { useEffect, useState } from "react";
 import { UserOnlineIndicator } from "../../UserOnlineIndicator";
 import cls from "./UserListCard.module.scss";
@@ -28,14 +29,14 @@ export const UserListCard = ({
   const [highlight, setHighlight] = useState<HighlightType>("none");
 
   useEffect(() => {
-    if (user.activeGames.length > 0) {
+    if (user.activeGames && user.activeGames?.length > 0) {
       setHighlight("primary");
     } else if (user.isInviting) {
       setHighlight("secondary");
     } else {
       setHighlight("none");
     }
-  }, [user.activeGames.length, user.isInviting]);
+  }, [user.activeGames, user.isInviting]);
 
   const onChatOpen = () => {
     handleChatButton(user);
@@ -43,6 +44,24 @@ export const UserListCard = ({
 
   const onPlayButton = () => {
     handlePlayButton(user);
+  };
+
+  const setIconProps = () => {
+    const size = 50;
+
+    const avatarSrc = getImagePath({
+      collection: "avatars",
+      fileName: user.avatarFileName,
+    });
+
+    const iconProps: AppImageProps = {
+      src: avatarSrc,
+      width: size,
+      height: size,
+      alt: user.username,
+    };
+
+    return iconProps;
   };
 
   return (
@@ -53,29 +72,26 @@ export const UserListCard = ({
       gap="8"
       max
     >
-      <AvatarWithProps
-        clickable
-        onClick={onChatOpen}
-        size={50}
-        avatarSrc={`https://testforavatars.s3.eu-north-1.amazonaws.com/avatars/${user.avatarFileName}`}
+      <AddonCircle
+        iconProps={setIconProps()}
         addonTopRight={<UserOnlineIndicator isOnline={user.isOnline} />}
         addonBottomRight={
           <UnreadMessagesCountIndicator
             unreadMessagesCount={user.unreadMessageCount}
           />
         }
+        onClick={onChatOpen}
       />
       <HStack className={cls.userInfo} max>
         <span className={cls.username} ref={userRef}>
           {user.username}
         </span>
+
         <PlayButton
           className={cls.playButton}
           highlight={highlight}
-          onClick={onPlayButton}
-        >
-          Play
-        </PlayButton>
+          onSelectGame={onPlayButton}
+        />
       </HStack>
     </HStack>
   );

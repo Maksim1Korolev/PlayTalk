@@ -83,7 +83,10 @@ export const GameModals = memo(
           const { gameData } = modal;
           const { gameName, opponentUsername } = gameData;
 
-          const iconPath = getImagePath({ gameName });
+          const iconPath = getImagePath({
+            collection: "gameIcons",
+            fileName: gameName,
+          });
           try {
             const importedIcon = await import(iconPath);
             iconMap[gameName] = importedIcon.ReactComponent;
@@ -95,7 +98,8 @@ export const GameModals = memo(
             user => user.username === opponentUsername
           );
           const avatarPath = getImagePath({
-            avatarFileName: opponentUser?.avatarFileName,
+            collection: "avatars",
+            fileName: opponentUser?.avatarFileName,
           });
 
           try {

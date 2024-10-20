@@ -1,32 +1,77 @@
-import resources from "@/shared/assets/locales/en/UserListResources.json";
+import { GameName, GameNames } from "@/entities/Game/model";
 import { HighlightType, useHighlight } from "@/shared/hooks/useHighlight";
 import { cx } from "@/shared/lib/cx";
-import { ButtonProps, UiButton } from "@/shared/ui";
+import { AppImage } from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
+import { useState } from "react";
+import { CircleMenu, CircleMenuItem } from "react-circular-menu";
 import cls from "./PlayButton.module.scss";
 
-interface PlayButtonProps extends ButtonProps {
+interface PlayButtonProps {
   className?: string;
   highlight?: HighlightType;
+  onSelectGame: (gameName: GameName) => void;
 }
 
 export const PlayButton = ({
   className,
   highlight = "none",
-  ...buttonProps
+  onSelectGame,
 }: PlayButtonProps) => {
+  const gameNames = Object.values(GameNames);
   const highlightClass = useHighlight(highlight);
+  const [isSelectorOpen, setSelectorOpen] = useState(false);
+
+  const toggleSelector = () => {
+    setSelectorOpen(!isSelectorOpen);
+  };
+
+  const playButtonSrc = getImagePath({
+    collection: "appIcons",
+    fileName: "play",
+  });
+
   return (
-    <UiButton
-      className={cx(
-        cls.PlayButton,
-        {
-          [highlightClass]: !!highlightClass,
-        },
-        [className]
-      )}
-      {...buttonProps}
+    <CircleMenu
+      startAngle={-90}
+      rotationAngle={360}
+      itemSize={1.5}
+      radius={2.4}
+      rotationAngleInclusive={false}
+      menuToggleElement={
+        <AppImage
+          width={50}
+          height={50}
+          src={playButtonSrc}
+          clickable
+          onClick={toggleSelector}
+        />
+      }
+      open={isSelectorOpen}
     >
-      {resources.playButton}
-    </UiButton>
+      {gameNames.map(gameName => {
+        const gameSrc = getImagePath({
+          collection: "gameIcons",
+          fileName: gameName,
+        });
+        return (
+          <CircleMenuItem key={gameName} tooltip={gameName}>
+            <AppImage
+              src={gameSrc}
+              width={40}
+              height={40}
+              alt=""
+              className={cx(cls.PlayButton, {
+                [highlightClass]: !!highlightClass,
+              })}
+              clickable
+              onClick={() => {
+                onSelectGame(gameName);
+              }}
+            />
+          </CircleMenuItem>
+        );
+      })}
+    </CircleMenu>
   );
 };

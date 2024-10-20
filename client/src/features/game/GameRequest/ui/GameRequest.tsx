@@ -1,13 +1,13 @@
-import cls from "./GameRequest.module.scss";
-import { useState, useEffect, useContext, ReactNode } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { Rnd } from "react-rnd";
+import cls from "./GameRequest.module.scss";
 
-import { AddonCircle, UiButton, AppImage, AppImageProps } from "@/shared/ui";
-import { UsersContext } from "@/shared/lib/context/UsersContext";
-import { useModalDrag } from "@/shared/hooks/useModalDrag";
-import getImagePath from "@/shared/utils/getImagePath";
 import { Invite } from "@/entities/Game/model";
 import { User } from "@/entities/User";
+import { useModalDrag } from "@/shared/hooks/useModalDrag";
+import { UsersContext } from "@/shared/lib/context/UsersContext";
+import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
 
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -45,7 +45,10 @@ export const GameRequest = ({
       for (const invite of invites) {
         const { gameName, senderUsername } = invite;
 
-        const iconPath = getImagePath({ gameName });
+        const iconPath = getImagePath({
+          collection: "gameIcons",
+          fileName: gameName,
+        });
         iconPaths[gameName] = iconPath;
 
         const inviteUser = users.find(
@@ -53,7 +56,8 @@ export const GameRequest = ({
         );
         if (inviteUser?.avatarFileName) {
           const avatarPath = getImagePath({
-            avatarFileName: inviteUser.avatarFileName,
+            collection: "avatars",
+            fileName: inviteUser.avatarFileName,
           });
           avatarPaths[senderUsername] = avatarPath;
         }

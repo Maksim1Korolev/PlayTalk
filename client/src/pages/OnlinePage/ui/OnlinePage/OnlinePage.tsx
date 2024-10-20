@@ -85,12 +85,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
           {
             //TODO:Maybe move GameSelector to UserCard
           }
-          {lastClickedPlayUser && (
-            <GameSelector
-              user={lastClickedPlayUser}
-              onGameSelect={handleGameClicked}
-            />
-          )}
+          
         </VStack>
       </HStack>
       <ChatModals

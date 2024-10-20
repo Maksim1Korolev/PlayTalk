@@ -13,6 +13,9 @@ Tests for chat repo services
 Tests for ttt
 Open modals logic to client through cookies
 Modals limitation
+User search
+Game Selector
+Check avatar file
 
 To fix:
 Getting error in communication service when requesting unread messages with count of 0
