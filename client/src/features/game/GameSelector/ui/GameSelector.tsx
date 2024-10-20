@@ -37,6 +37,7 @@ export const GameSelector = memo(
       "none" | "primary" | "secondary"
     >("none");
 
+    //TODO: remove
     useEffect(() => {
       const loadIcons = async () => {
         const icons: {
@@ -44,7 +45,10 @@ export const GameSelector = memo(
         } = {};
 
         for (const gameName of gameNames) {
-          const iconPath = getImagePath({ gameName });
+          const iconPath = getImagePath({
+            collection: "gameIcons",
+            fileName: gameName,
+          });
 
           icons[gameName] = iconPath;
         }
@@ -64,6 +68,7 @@ export const GameSelector = memo(
           : "none";
       setHighlight(newHighlight);
     }, []);
+    //}, [user.activeGames, user.isInviting]);
 
     const isGameActive = (gameName: GameName): boolean => {
       if (user.activeGames) return user.activeGames.includes(gameName);

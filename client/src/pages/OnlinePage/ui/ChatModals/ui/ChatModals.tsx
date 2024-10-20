@@ -46,7 +46,8 @@ export const ChatModals = memo(
           const { user: opponentUser } = modal;
 
           const avatarUrl = getImagePath({
-            avatarFileName: opponentUser.avatarFileName,
+            collection: "avatars",
+            fileName: opponentUser.avatarFileName,
           });
           if (opponentUser.avatarFileName) {
             avatarMap[opponentUser.avatarFileName] = avatarUrl;

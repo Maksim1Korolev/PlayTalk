@@ -1,12 +1,12 @@
-import { User } from "@/entities/User";
-import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
-import { HighlightType, PlayButton } from "@/features/UserList/ui/PlayButton";
-import { cx } from "@/shared/lib";
-import { AddonCircle, AppImageProps, HStack } from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
-import { useEffect, useState } from "react";
-import { UserOnlineIndicator } from "../../UserOnlineIndicator";
-import cls from "./UserListCard.module.scss";
+import { User } from "@/entities/User"
+import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator"
+import { HighlightType, PlayButton } from "@/features/UserList/ui/PlayButton"
+import { cx } from "@/shared/lib"
+import { AddonCircle, AppImageProps, HStack } from "@/shared/ui"
+import getImagePath from "@/shared/utils/getImagePath"
+import { useEffect, useState } from "react"
+import { UserOnlineIndicator } from "../../UserOnlineIndicator"
+import cls from "./UserListCard.module.scss"
 
 interface UserListCardProps {
   className?: string;
@@ -28,14 +28,14 @@ export const UserListCard = ({
   const [highlight, setHighlight] = useState<HighlightType>("none");
 
   useEffect(() => {
-    if (user.activeGames?.length && user.activeGames?.length > 0) {
+    if (user.activeGames && user.activeGames?.length > 0) {
       setHighlight("primary");
     } else if (user.isInviting) {
       setHighlight("secondary");
     } else {
       setHighlight("none");
     }
-  }, [user.activeGames?.length, user.isInviting]);
+  }, [user.activeGames, user.isInviting]);
 
   const onChatOpen = () => {
     handleChatButton(user);
@@ -48,7 +48,10 @@ export const UserListCard = ({
   const setIconProps = () => {
     const size = 50;
 
-    const avatarSrc = getImagePath({ avatarFileName: user.avatarFileName });
+    const avatarSrc = getImagePath({
+      collection: "avatars",
+      fileName: user.avatarFileName,
+    });
 
     const iconProps: AppImageProps = {
       src: avatarSrc,
@@ -82,13 +85,12 @@ export const UserListCard = ({
         <span className={cls.username} ref={userRef}>
           {user.username}
         </span>
+
         <PlayButton
           className={cls.playButton}
           highlight={highlight}
-          onClick={onPlayButton}
-        >
-          Play
-        </PlayButton>
+          onSelectGame={onPlayButton}
+        />
       </HStack>
     </HStack>
   );

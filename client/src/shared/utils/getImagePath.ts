@@ -1,20 +1,20 @@
 type GetImagePathParams = {
-  avatarFileName?: string;
-  gameName?: string;
+  collection?: ImageCollection;
+  fileName?: string;
 };
 
-const getImagePath = ({
-  avatarFileName,
-  gameName,
-}: GetImagePathParams): string => {
+type ImageCollection = "appIcons" | "gameIcons" | "avatars";
+
+const getImagePath = ({ collection, fileName }: GetImagePathParams): string => {
   let imagePath = "";
 
-  if (avatarFileName) {
-    // Set the path for the avatar image
-    imagePath = `https://testforavatars.s3.eu-north-1.amazonaws.com/avatars/${avatarFileName}`;
-  } else if (gameName) {
-    //// Set the path for the game icon
-    imagePath = `https://testforavatars.s3.eu-north-1.amazonaws.com/gameIcons/${gameName}-icon.svg`;
+  if (collection && fileName) {
+    const folderName = collection;
+    imagePath = `https://testforavatars.s3.eu-north-1.amazonaws.com/${folderName}/${fileName}`;
+
+    if (collection === "gameIcons" || collection === "appIcons") {
+      imagePath = `https://testforavatars.s3.eu-north-1.amazonaws.com/${folderName}/${fileName}-icon.svg`;
+    }
   } else {
     // Fallback to the default image path
     imagePath = "/public/images/avatars/no-avatar.svg";

@@ -1,17 +1,17 @@
-import cls from "./GameRequest.module.scss";
+import cls from "./GameRequest.module.scss"
 
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
-import SkipNextIcon from "@mui/icons-material/SkipNext";
-import { ReactNode, useEffect, useState } from "react";
-import { Rnd } from "react-rnd";
+import CheckIcon from "@mui/icons-material/Check"
+import CloseIcon from "@mui/icons-material/Close"
+import SkipNextIcon from "@mui/icons-material/SkipNext"
+import { ReactNode, useEffect, useState } from "react"
+import { Rnd } from "react-rnd"
 
-import { useAppSelector, useModalDrag } from "@/shared/lib";
-import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
+import { useAppSelector, useModalDrag } from "@/shared/lib"
+import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui"
+import getImagePath from "@/shared/utils/getImagePath"
 
-import { Invite } from "@/entities/Game/model";
-import { getUsers, User } from "@/entities/User";
+import { Invite } from "@/entities/Game/model"
+import { getUsers, User } from "@/entities/User"
 
 interface GameRequestProps {
   className?: string;
@@ -46,7 +46,10 @@ export const GameRequest = ({
       for (const invite of invites) {
         const { gameName, senderUsername } = invite;
 
-        const iconPath = getImagePath({ gameName });
+        const iconPath = getImagePath({
+          collection: "gameIcons",
+          fileName: gameName,
+        });
         iconPaths[gameName] = iconPath;
 
         const inviteUser = users.find(
@@ -54,7 +57,8 @@ export const GameRequest = ({
         );
         if (inviteUser?.avatarFileName) {
           const avatarPath = getImagePath({
-            avatarFileName: inviteUser.avatarFileName,
+            collection: "avatars",
+            fileName: inviteUser.avatarFileName,
           });
           avatarPaths[senderUsername] = avatarPath;
         }

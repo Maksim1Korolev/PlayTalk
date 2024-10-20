@@ -1,29 +1,29 @@
 import {
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { useCookies } from "react-cookie";
+	memo,
+	useCallback,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from "react"
+import { useCookies } from "react-cookie"
 
-import { useAppSelector } from "@/shared/lib";
-import { ModalContext } from "@/shared/lib/context/ModalContext";
-import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";
-import { useModalPosition } from "@/shared/ui/CircleModal";
-import getImagePath from "@/shared/utils/getImagePath";
+import { useAppSelector } from "@/shared/lib"
+import { ModalContext } from "@/shared/lib/context/ModalContext"
+import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui"
+import { useModalPosition } from "@/shared/ui/CircleModal"
+import getImagePath from "@/shared/utils/getImagePath"
 
 import {
-  Game,
-  GameData,
-  GameModal,
-  isGameName,
-  TicTacToeGame,
-} from "@/entities/Game/model";
-import { getUsers } from "@/entities/User";
-import { TicTacToe } from "@/features/game/TicTacToe";
-import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
+	Game,
+	GameData,
+	GameModal,
+	isGameName,
+	TicTacToeGame,
+} from "@/entities/Game/model"
+import { getUsers, User } from "@/entities/User"
+import { TicTacToe } from "@/features/game/TicTacToe"
+import { gameApiService } from "@/pages/OnlinePage/api/gameApiService"
 
 const generateModalId = (gameData: GameData): string => {
   return `${gameData.opponentUsername}_${gameData.gameName}`;
@@ -82,13 +82,14 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
         const { gameData } = modal;
         const { gameName, opponentUsername } = gameData;
 
-        icons[gameName] = getImagePath({ gameName });
+        icons[gameName] = getImagePath({ collection:"gameIcons",fileName:gameName });
 
         const opponentUser = users.find(
-          user => user.username === opponentUsername
+          (user: User) => user.username === opponentUsername
         );
         avatars[opponentUsername] = getImagePath({
-          avatarFileName: opponentUser?.avatarFileName,
+					collection: "avatars",
+          fileName: opponentUser?.avatarFileName,
         });
       }
 

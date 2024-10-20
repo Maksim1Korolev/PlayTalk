@@ -34,7 +34,10 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
         <span className={cls.msgAvatar}>
           {avatarFileName && (
             <AppImage
-              src={getImagePath({ avatarFileName })}
+              src={getImagePath({
+                collection: "avatars",
+                fileName: avatarFileName,
+              })}
               draggable={false}
             />
           )}
