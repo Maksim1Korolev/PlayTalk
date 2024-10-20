@@ -1,19 +1,17 @@
-import cls from "./UserList.module.scss";
+import cls from "./UserList.module.scss"
 
-import { memo, useEffect, useMemo, useRef, useState } from "react";
-import { useCookies } from "react-cookie";
+import { useEffect, useMemo, useRef, useState } from "react"
+import { useCookies } from "react-cookie"
 
-import tempResources from "@/shared/assets/locales/en/OnlinePageResources.json";
-import resources from "@/shared/assets/locales/en/UserListResources.json";
-import { cx } from "@/shared/lib";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
-import { Card, Loader, UiText, VStack } from "@/shared/ui";
+import tempResources from "@/shared/assets/locales/en/OnlinePageResources.json"
+import resources from "@/shared/assets/locales/en/UserListResources.json"
+import { cx, useAppDispatch, useAppSelector } from "@/shared/lib"
+import { Card, Loader, UiText, VStack } from "@/shared/ui"
 
-import { User, userActions, UserListCard } from "@/entities/User";
-import { getUsers } from "@/entities/User";
-import { fetchUsersStatus } from "@/pages/OnlinePage/api/updateUsersStatusApiService";
+import { getUsers, User, userActions, UserListCard } from "@/entities/User"
+import { fetchUsersStatus } from "@/pages/OnlinePage/api/updateUsersStatusApiService"
 
-import { sortUsers } from "../../utils/userListUtils";
+import { sortUsers } from "../../utils/userListUtils"
 
 export interface UserListProps {
   className?: string;

@@ -1,9 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { useCookies } from "react-cookie";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-import { CurrentUser, User } from "@/entities/User";
+import { CurrentUser, User } from "@/entities/User"
 
-import { UserState } from "../types/user";
+import { UserState } from "../types/user"
 
 const initialState: UserState = {
   users: [],
