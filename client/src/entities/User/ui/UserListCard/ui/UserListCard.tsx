@@ -1,5 +1,6 @@
+import { GameData, GameName } from '@/entities/Game/model'
 import { User } from "@/entities/User"
-import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator"
+import { UnreadMessagesCountIndicator } from "@/features/chat/UnreadMessagesCountIndicator"
 import { HighlightType, PlayButton } from "@/features/UserList/ui/PlayButton"
 import { cx } from "@/shared/lib"
 import { AddonCircle, AppImageProps, HStack } from "@/shared/ui"
@@ -12,7 +13,7 @@ interface UserListCardProps {
   className?: string;
   user: User;
   collapsed?: boolean;
-  handlePlayButton: (user: User) => void;
+  handlePlayButton: ({gameData, isInviting, isActive}: {gameData: GameData, isInviting: boolean, isActive: boolean}) => void;
   handleChatButton: (user: User) => void;
   userRef: (el: HTMLSpanElement | null) => void;
 }
@@ -41,8 +42,11 @@ export const UserListCard = ({
     handleChatButton(user);
   };
 
-  const onPlayButton = () => {
-    handlePlayButton(user);
+  const onPlayButton = (gameName: GameName) => {
+    handlePlayButton({gameData: {
+			gameName,
+			opponentUsername: user.username
+		}, isInviting: (user.isInviting || false), isActive: user.activeGames?.includes(gameName) || false});
   };
 
   const setIconProps = () => {
@@ -90,6 +94,7 @@ export const UserListCard = ({
           className={cls.playButton}
           highlight={highlight}
           onSelectGame={onPlayButton}
+					menuId={user.username}
         />
       </HStack>
     </HStack>

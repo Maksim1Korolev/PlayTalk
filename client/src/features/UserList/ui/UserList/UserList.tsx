@@ -11,13 +11,14 @@ import { Card, Loader, UiText, VStack } from "@/shared/ui"
 import { getUsers, User, userActions, UserListCard } from "@/entities/User"
 import { fetchUsersStatus } from "@/pages/OnlinePage/api/updateUsersStatusApiService"
 
+import { GameData } from '@/entities/Game/model'
 import { sortUsers } from "../../utils/userListUtils"
 
 export interface UserListProps {
   className?: string;
   collapsed?: boolean;
   handleUserChatButton: (user: User) => void;
-  handleUserPlayButton: (user: User) => void;
+  handleUserPlayButton: ({gameData, isInviting, isActive}: {gameData: GameData, isInviting: boolean, isActive: boolean}) => void;
 }
 
 const adjustFontSize = (

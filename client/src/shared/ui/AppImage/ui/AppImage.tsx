@@ -1,14 +1,14 @@
-import { cx } from "@/shared/lib";
-import cls from "./AppImage.module.scss";
+import { cx } from "@/shared/lib"
 import {
-  ImgHTMLAttributes,
-  ReactElement,
-  memo,
-  useLayoutEffect,
-  useState,
-} from "react";
+	ImgHTMLAttributes,
+	ReactElement,
+	memo,
+	useLayoutEffect,
+	useState,
+} from "react"
+import cls from "./AppImage.module.scss"
 
-import { HighlightType, useHighlight } from "@/shared/lib";
+import { HighlightType, useHighlight } from "@/shared/lib"
 
 type ObjectFit = "cover" | "fill" | "contain" | "none";
 
@@ -33,7 +33,7 @@ interface ImageProps extends AppImageBaseProps {
 }
 interface ClickableImageProps extends AppImageBaseProps {
   clickable: true;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export type AppImageProps = ImageProps | ClickableImageProps;

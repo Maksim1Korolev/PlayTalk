@@ -1,23 +1,23 @@
 import {
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+	memo,
+	useCallback,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from "react"
 
-import { useAppSelector } from "@/shared/lib";
-import { ModalContext } from "@/shared/lib/context/ModalContext";
-import { AddonCircleProps, AppImageProps, CircleModal } from "@/shared/ui";
-import { useModalPosition } from "@/shared/ui/CircleModal";
-import getImagePath from "@/shared/utils/getImagePath";
+import { useAppSelector } from "@/shared/lib"
+import { ModalContext } from "@/shared/lib/context/ModalContext"
+import { AddonCircleProps, AppImageProps, CircleModal } from "@/shared/ui"
+import { useModalPosition } from "@/shared/ui/CircleModal"
+import getImagePath from "@/shared/utils/getImagePath"
 
-import { ChatModal } from "@/entities/Chat/model/types/chatModal";
-import { getCurrentUser } from "@/entities/User";
-import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
-import { ChatBox } from "@/features/chat";
-import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
+import { ChatModal } from "@/entities/Chat/model/types/chatModal"
+import { getCurrentUser } from "@/entities/User"
+import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator"
+import { ChatBox } from "@/features/chat"
+import { UnreadMessagesCountIndicator } from "@/features/chat/UnreadMessagesCountIndicator"
 
 export const ChatModals = memo(
   ({
