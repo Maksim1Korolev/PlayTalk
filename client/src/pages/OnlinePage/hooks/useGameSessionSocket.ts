@@ -2,7 +2,8 @@ import { useCallback, useContext, useEffect } from "react";
 
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 
-import { GameData, Invite, isGameName } from "@/entities/game/Game";
+import { GameData, isGameName } from "@/entities/game/Game";
+import { Invite } from "@/entities/game/Invite";
 
 export const useGameSessionSocket = ({
   onReceiveInvite,
