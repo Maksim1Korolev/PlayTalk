@@ -1,8 +1,8 @@
-import cls from "./Card.module.scss";
-import { cx } from "@/shared/lib";
-import { HTMLAttributes, ReactNode, memo } from "react";
+import { cx } from "@/shared/lib"
+import { HTMLAttributes, ReactNode, memo } from "react"
+import cls from "./Card.module.scss"
 
-type CardVariant = "default" | "outlined" | "light";
+type CardVariant = "default" | "outlined" | "light" |  "blurred";
 type CardBorder = "default" | "round";
 
 type CardPadding = "0" | "8" | "16" | "24" | "32" | "45" | "60";

@@ -6,6 +6,7 @@ import { HStack, VStack } from "@/shared/ui"
 import { GameModals, GameRequest } from "@/features/game"
 import { Sidebar } from "@/widgets/Sidebar"
 
+import { StarsBackground } from '@/shared/ui/Background'
 import { useOnlinePageSockets } from "../../hooks/useOnlinePageSockets"
 import { ChatModals } from "../ChatModals"
 import { useChatModals } from "../ChatModals/hooks/useChatModals"
@@ -26,6 +27,8 @@ const OnlinePage = ({ className }: { className?: string }) => {
   } = useOnlinePageSockets();
 
   return (
+		<>
+		<StarsBackground/>
     <div className={cx(cls.OnlinePage, {}, [className])}>
       <Sidebar
         handleUserChatButton={handleOpenChatModal}
@@ -39,16 +42,13 @@ const OnlinePage = ({ className }: { className?: string }) => {
               handleNoButton={handleGameRequestNoButton}
               invites={invites}
             />
-          )}
-          {
-            //TODO:Maybe move GameSelector to UserCard
-          }
-          
+          )}        
         </VStack>
       </HStack>
       <ChatModals chatModals={chatModals} onClose={handleCloseChatModal} />
       <GameModals gameModals={gameModals} onClose={handleCloseGameModal} />
     </div>
+		</>
   );
 };
 

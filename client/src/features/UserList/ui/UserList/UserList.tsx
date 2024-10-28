@@ -121,7 +121,7 @@ export const UserList = ({
   }
 
   return (
-    <Card className={cx(cls.UserList, {}, [className])}>
+    <Card className={cx(cls.UserList, {}, [className])} variant='blurred'>
       <UiText size="xl">{resources.userListHeader}</UiText>
       <VStack gap="16">{userList}</VStack>
     </Card>
