@@ -1,4 +1,4 @@
-import cls from "./UserList.module.scss"
+import cls from "./UserList.module.scss";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
@@ -10,17 +10,25 @@ import { cx } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import { Card, Loader, UiText, VStack } from "@/shared/ui";
 
-import { getUsers, User, userActions, UserListCard } from "@/entities/User"
-import { fetchUsersStatus } from "@/pages/OnlinePage/api/updateUsersStatusApiService"
+import { GameData } from "@/entities/game/Game";
+import { getUsers, User, userActions, UserListCard } from "@/entities/User";
+import { fetchUsersStatus } from "@/pages/OnlinePage/api/updateUsersStatusApiService";
 
-import { GameData } from '@/entities/Game/model'
-import { sortUsers } from "../../utils/userListUtils"
+import { sortUsers } from "../../utils/userListUtils";
 
 export interface UserListProps {
   className?: string;
   collapsed?: boolean;
   handleUserChatButton: (user: User) => void;
-  handleUserPlayButton: ({gameData, isInviting, isActive}: {gameData: GameData, isInviting: boolean, isActive: boolean}) => void;
+  handleUserPlayButton: ({
+    gameData,
+    isInviting,
+    isActive,
+  }: {
+    gameData: GameData;
+    isInviting: boolean;
+    isActive: boolean;
+  }) => void;
 }
 
 const adjustFontSize = (
@@ -123,7 +131,7 @@ export const UserList = ({
   }
 
   return (
-    <Card className={cx(cls.UserList, {}, [className])} variant='blurred'>
+    <Card className={cx(cls.UserList, {}, [className])} variant="blurred">
       <UiText size="xl">{resources.userListHeader}</UiText>
       <VStack gap="16">{userList}</VStack>
     </Card>

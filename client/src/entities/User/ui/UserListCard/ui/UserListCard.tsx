@@ -1,14 +1,13 @@
 import cls from "./UserListCard.module.scss";
 
-import { useEffect, useState } from "react";
-
 import { cx } from "@/shared/lib";
 import { AddonCircle, AppImageProps, HStack } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
+import { GameData, GameName } from "@/entities/game/Game";
 import { User } from "@/entities/User";
-import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
-import { HighlightType, PlayButton } from "@/features/UserList/ui/PlayButton";
+import { UnreadMessagesCountIndicator } from "@/features/chat/UnreadMessagesCountIndicator";
+import { PlayButton } from "@/features/UserList/ui/PlayButton";
 
 import { UserOnlineIndicator } from "../../UserOnlineIndicator";
 
@@ -16,7 +15,15 @@ interface UserListCardProps {
   className?: string;
   user: User;
   collapsed?: boolean;
-  handlePlayButton: ({gameData, isInviting, isActive}: {gameData: GameData, isInviting: boolean, isActive: boolean}) => void;
+  handlePlayButton: ({
+    gameData,
+    isInviting,
+    isActive,
+  }: {
+    gameData: GameData;
+    isInviting: boolean;
+    isActive: boolean;
+  }) => void;
   handleChatButton: (user: User) => void;
   userRef: (el: HTMLSpanElement | null) => void;
 }
@@ -29,17 +36,19 @@ export const UserListCard = ({
   handleChatButton,
   userRef,
 }: UserListCardProps) => {
-
-
   const onChatOpen = () => {
     handleChatButton(user);
   };
 
   const onPlayButton = (gameName: GameName) => {
-    handlePlayButton({gameData: {
-			gameName,
-			opponentUsername: user.username
-		}, isInviting: (user.isInviting || false), isActive: user.activeGames?.includes(gameName) || false});
+    handlePlayButton({
+      gameData: {
+        gameName,
+        opponentUsername: user.username,
+      },
+      isInviting: user.isInviting || false,
+      isActive: user.activeGames?.includes(gameName) || false,
+    });
   };
 
   const setIconProps = () => {
@@ -84,10 +93,10 @@ export const UserListCard = ({
         </span>
 
         <PlayButton
-					highlight='none'
+          highlight="none"
           className={cls.playButton}
           onSelectGame={onPlayButton}
-					menuId={user.username}
+          menuId={user.username}
         />
       </HStack>
     </HStack>

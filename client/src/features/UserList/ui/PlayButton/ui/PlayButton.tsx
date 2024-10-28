@@ -1,16 +1,18 @@
-import { GameName, GameNames } from "@/entities/Game/model"
-import { cx } from "@/shared/lib/className/cx"
-import { HighlightType, useHighlight } from "@/shared/lib/hooks/useHighlight"
-import { AppImage } from "@/shared/ui"
-import getImagePath from "@/shared/utils/getImagePath"
-import { useEffect, useRef, useState } from "react"
-import { CircleMenu, CircleMenuItem } from "react-circular-menu"
-import ReactDOM from "react-dom"
+import cls from "./PlayButton.module.scss";
 
-import { CircleMenuActions } from '@/features/UserList'
-import { selectActiveMenuId } from '@/features/UserList/model/selectors/selectActiveMenuId'
-import { useAppDispatch, useAppSelector } from '@/shared/lib'
-import cls from "./PlayButton.module.scss"
+import { useEffect, useRef, useState } from "react";
+import { CircleMenu, CircleMenuItem } from "react-circular-menu";
+import ReactDOM from "react-dom";
+
+import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { cx } from "@/shared/lib/className/cx";
+import { HighlightType, useHighlight } from "@/shared/lib/hooks/useHighlight";
+import { AppImage } from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
+
+import { GameName, GameNames } from "@/entities/game/Game";
+import { CircleMenuActions } from "@/features/UserList";
+import { selectActiveMenuId } from "@/features/UserList/model/selectors/selectActiveMenuId";
 
 interface PlayButtonProps {
   className?: string;
@@ -40,12 +42,12 @@ export const PlayButton = ({
   const handleMenuToggle = () => {
     if (isSelectorOpen) {
       // Flip back when closing
-			setIsFlipped(false)
+      setIsFlipped(false);
       setTimeout(() => {
         dispatch(CircleMenuActions.closeMenu());
         setAnimateOpen(false);
         setShowMenu(false);
-      },100); // Wait for closing animation to finish
+      }, 100); // Wait for closing animation to finish
     } else {
       dispatch(CircleMenuActions.closeMenu()); // Close any other open menu before opening the current one
       const rect = playButtonRef.current?.getBoundingClientRect();
@@ -57,7 +59,7 @@ export const PlayButton = ({
       }
       setShowMenu(true);
       setTimeout(() => {
-				setIsFlipped(true); // Flip forward when opening
+        setIsFlipped(true); // Flip forward when opening
         setAnimateOpen(true);
         dispatch(CircleMenuActions.openMenu(menuId));
       }, 50); // Small delay to trigger animation
@@ -66,10 +68,9 @@ export const PlayButton = ({
 
   useEffect(() => {
     if (!isSelectorOpen) {
-      
-			setIsFlipped(false);
+      setIsFlipped(false);
       setTimeout(() => {
-				setAnimateOpen(false);
+        setAnimateOpen(false);
         setShowMenu(false);
       }, 100);
     }
@@ -83,7 +84,10 @@ export const PlayButton = ({
   // Custom Toggle Element for CircleMenu
   const CustomToggleElement = (
     <div
-      className={cx(cls.customToggle, { [cls.active]: isSelectorOpen, [cls.flipped]: isFlipped })}
+      className={cx(cls.customToggle, {
+        [cls.active]: isSelectorOpen,
+        [cls.flipped]: isFlipped,
+      })}
       onClick={handleMenuToggle}
     >
       <AppImage
@@ -95,15 +99,12 @@ export const PlayButton = ({
         clickable
         onClick={handleMenuToggle}
       />
-      
     </div>
   );
 
   return (
     <>
-      <div ref={playButtonRef}>
-        {CustomToggleElement}
-      </div>
+      <div ref={playButtonRef}>{CustomToggleElement}</div>
       {showMenu &&
         ReactDOM.createPortal(
           <div
@@ -123,14 +124,14 @@ export const PlayButton = ({
               onMenuToggle={handleMenuToggle}
               menuToggleElement={CustomToggleElement} // Pass the custom toggle element to CircleMenu
             >
-              {gameNames.map((gameName) => {
+              {gameNames.map(gameName => {
                 const gameSrc = getImagePath({
                   collection: "gameIcons",
                   fileName: gameName,
                 });
                 return (
                   <CircleMenuItem
-									className={cls.circleMenuItem}
+                    className={cls.circleMenuItem}
                     key={gameName}
                     tooltip={gameName}
                     onClick={() => onSelectGame(gameName)}
