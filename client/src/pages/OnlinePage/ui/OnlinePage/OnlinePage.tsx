@@ -15,14 +15,11 @@ const OnlinePage = ({ className }: { className?: string }) => {
     useChatModals();
 
   const {
-    invites,
     lastClickedPlayUser,
     gameModals,
     handleCloseGameModal,
     handleOpenGameSelector,
     handleGameClicked,
-    handleGameRequestYesButton,
-    handleGameRequestNoButton,
   } = useOnlinePageSockets();
 
   return (
@@ -33,13 +30,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
       />
       <HStack max>
         <VStack>
-          {invites && (
-            <GameRequest
-              handleYesButton={handleGameRequestYesButton}
-              handleNoButton={handleGameRequestNoButton}
-              invites={invites}
-            />
-          )}
+          <GameRequest />
           {lastClickedPlayUser && (
             <GameSelector
               user={lastClickedPlayUser}

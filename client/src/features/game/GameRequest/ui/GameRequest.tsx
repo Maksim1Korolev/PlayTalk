@@ -1,41 +1,33 @@
 import cls from "./GameRequest.module.scss";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { Rnd } from "react-rnd";
 
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 
-import { useAppSelector, useModalDrag } from "@/shared/lib";
+import { useAppDispatch, useAppSelector, useModalDrag } from "@/shared/lib";
 import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
-import { Invite } from "@/entities/game/Invite";
-import { getUsers, User } from "@/entities/User";
+import { getInvites, Invite, inviteActions } from "@/entities/game/Invite";
+import { getUsers, User, userActions } from "@/entities/User";
 
 interface GameRequestProps {
   className?: string;
   position?: { x: number; y: number };
-  invites: Invite[];
-  handleYesButton: (invite: Invite) => void;
-  handleNoButton: (invite: Invite) => void;
 }
 
-export const GameRequest = ({
-  className,
-  position,
-  invites,
-  handleYesButton,
-  handleNoButton,
-}: GameRequestProps) => {
+export const GameRequest = ({ className, position }: GameRequestProps) => {
+  const dispatch = useAppDispatch();
+  const invites = Object.values(useAppSelector(getInvites));
+  const users = useAppSelector(getUsers);
+
   const [currentInviteIndex, setCurrentInviteIndex] = useState(0);
   const currentInvite = invites[currentInviteIndex] || null;
 
   const { isDragged, handleDragStart, handleDragStop } = useModalDrag();
-
-  const users = useAppSelector(getUsers);
-
   const [iconMap, setIconMap] = useState<{ [key: string]: string }>({});
   const [avatarMap, setAvatarMap] = useState<{ [key: string]: string }>({});
 
@@ -47,17 +39,15 @@ export const GameRequest = ({
       for (const invite of invites) {
         const { gameName, senderUsername } = invite;
 
-        const iconPath = getImagePath({ gameName });
-        iconPaths[gameName] = iconPath;
+        iconPaths[gameName] = getImagePath({ gameName });
 
         const inviteUser = users.find(
           (user: User) => user.username === senderUsername
         );
         if (inviteUser?.avatarFileName) {
-          const avatarPath = getImagePath({
+          avatarPaths[senderUsername] = getImagePath({
             avatarFileName: inviteUser.avatarFileName,
           });
-          avatarPaths[senderUsername] = avatarPath;
         }
       }
 
@@ -68,34 +58,62 @@ export const GameRequest = ({
     if (invites.length > 0) {
       loadIcons();
     }
-  }, [invites, users]);
+  }, [users]);
+
+  const updateInvitingStatus = useCallback(
+    (senderUsername: string, isInviting: boolean) => {
+      dispatch(
+        userActions.updateUser({
+          username: senderUsername,
+          updatedProps: { isInviting },
+        })
+      );
+    },
+    [dispatch]
+  );
+
+  const handleAcceptGameInvite = useCallback(
+    (invite: Invite) => {
+      const inviteKey = `${invite.senderUsername}:${invite.gameName}`;
+      dispatch(inviteActions.removeInvite(inviteKey));
+      updateInvitingStatus(invite.senderUsername, false);
+    },
+    [dispatch]
+  );
+
+  const handleRejectGameInvite = useCallback(
+    (invite: Invite) => {
+      const inviteKey = `${invite.senderUsername}:${invite.gameName}`;
+      dispatch(inviteActions.removeInvite(inviteKey));
+      updateInvitingStatus(invite.senderUsername, false);
+    },
+    [dispatch, updateInvitingStatus]
+  );
 
   const handleYesButtonClick = () => {
     if (!isDragged && currentInvite) {
-      handleYesButton(currentInvite);
+      handleAcceptGameInvite(currentInvite);
     }
   };
 
   const handleNoButtonClick = () => {
     if (!isDragged && currentInvite) {
-      handleNoButton(currentInvite);
+      handleRejectGameInvite(currentInvite);
     }
   };
 
   const handleSkipButtonClick = () => {
-    if (!isDragged && currentInviteIndex < invites.length - 1) {
-      setCurrentInviteIndex(currentInviteIndex + 1);
-    } else {
-      setCurrentInviteIndex(0);
-    }
+    setCurrentInviteIndex(prevIndex =>
+      prevIndex < invites.length - 1 ? prevIndex + 1 : 0
+    );
   };
 
   const getInviteCircle = (): ReactNode => {
     const gameIconSize = 80;
-    const avatarIconSize = 80;
+    const avatarIconSize = 36;
 
-    const gameIconUrl = iconMap[currentInvite.gameName];
-    const avatarIconUrl = avatarMap[currentInvite.senderUsername];
+    const gameIconUrl = iconMap[currentInvite?.gameName || ""];
+    const avatarIconUrl = avatarMap[currentInvite?.senderUsername || ""];
 
     if (!gameIconUrl || !avatarIconUrl) return null;
 
@@ -156,9 +174,7 @@ export const GameRequest = ({
     </UiButton>
   );
 
-  if (!currentInvite) {
-    return null;
-  }
+  if (!currentInvite) return null;
 
   const rndProps = {
     onDragStart: handleDragStart,
@@ -174,6 +190,8 @@ export const GameRequest = ({
     bounds: "window",
     enableResizing: false,
   };
+
+  if (invites.length === 0) return null;
 
   return <Rnd {...rndProps}>{getInviteCircle()}</Rnd>;
 };

@@ -3,7 +3,12 @@ import { useCallback, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 
 import { GameData } from "@/entities/game/Game";
-import { getInviteKey, Invite } from "@/entities/game/Invite";
+import {
+  getInviteKey,
+  getInvites,
+  Invite,
+  inviteActions,
+} from "@/entities/game/Invite";
 import { getUsers, User, userActions } from "@/entities/User";
 
 import { useGameModals } from "./useGameModals";
@@ -20,9 +25,9 @@ type GameEndPayload = {
 
 export const useGameSessionLogic = () => {
   const users = useAppSelector(getUsers);
+  const invites = useAppSelector(getInvites);
   const dispatch = useAppDispatch();
 
-  const [inviteMap, setInviteMap] = useState<{ [key: string]: Invite }>({});
   const [lastClickedPlayUser, setLastClickedPlayUser] = useState<User | null>(
     null
   );
@@ -39,19 +44,12 @@ export const useGameSessionLogic = () => {
   }, []);
 
   const onReceiveInvite = ({ invite }: { invite: Invite }) => {
-    const inviteKey = getInviteKey(invite);
-
-    setInviteMap(prevInvites => ({
-      ...prevInvites,
-      [inviteKey]: invite,
-    }));
+    dispatch(inviteActions.receiveInvite(invite));
 
     dispatch(
       userActions.updateUser({
         username: invite.senderUsername,
-        updatedProps: {
-          isInviting: true,
-        },
+        updatedProps: { isInviting: true },
       })
     );
   };
@@ -94,49 +92,23 @@ export const useGameSessionLogic = () => {
     onGameEnd,
   });
 
-  const updateInvitingStatus = useCallback(
-    (senderUsername: string) => {
-      dispatch(
-        userActions.updateUser({
-          username: senderUsername,
-          updatedProps: {
-            isInviting: false,
-          },
-        })
-      );
-    },
-    [dispatch]
-  );
-
   const handleAcceptGameInvite = useCallback(
     (invite: Invite) => {
       handleAcceptGame({
         opponentUsername: invite.senderUsername,
         gameName: invite.gameName,
       });
-      const inviteKey = getInviteKey(invite);
-      setInviteMap(prevInvites => {
-        const { [inviteKey]: removed, ...remainingInvites } = prevInvites;
-        return remainingInvites;
-      });
-      updateInvitingStatus(invite.senderUsername);
-    },
-    [handleAcceptGame, updateInvitingStatus]
-  );
 
-  const handleRejectGameInvite = useCallback(
-    (invite: Invite) => {
-      const inviteKey = getInviteKey({
-        senderUsername: invite.senderUsername,
-        gameName: invite.gameName,
-      });
-      setInviteMap(prevInvites => {
-        const { [inviteKey]: removed, ...remainingInvites } = prevInvites;
-        return remainingInvites;
-      });
-      updateInvitingStatus(invite.senderUsername);
+      dispatch(inviteActions.removeInvite(getInviteKey(invite)));
+
+      dispatch(
+        userActions.updateUser({
+          username: invite.senderUsername,
+          updatedProps: { isInviting: false },
+        })
+      );
     },
-    [updateInvitingStatus]
+    [dispatch, handleAcceptGame]
   );
 
   const handleGameClicked = ({
@@ -148,11 +120,12 @@ export const useGameSessionLogic = () => {
     isActive: boolean;
     isInviting: boolean;
   }) => {
+    const invite: Invite = {
+      senderUsername: gameData.opponentUsername,
+      gameName: gameData.gameName,
+    };
+
     if (isInviting) {
-      const invite: Invite = {
-        senderUsername: gameData.opponentUsername,
-        gameName: gameData.gameName,
-      };
       handleAcceptGameInvite(invite);
     } else if (isActive) {
       handleOpenGameModal({ gameData });
@@ -166,11 +139,9 @@ export const useGameSessionLogic = () => {
 
   return {
     lastClickedPlayUser,
-    invites: Object.values(inviteMap),
+    invites: Object.values(invites),
     gameModals,
     handleGameClicked,
-    handleGameRequestYesButton: handleAcceptGameInvite,
-    handleGameRequestNoButton: handleRejectGameInvite,
     handleOpenGameSelector,
     handleCloseGameModal,
   };

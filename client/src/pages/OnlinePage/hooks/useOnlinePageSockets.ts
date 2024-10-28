@@ -11,11 +11,8 @@ export const useOnlinePageSockets = () => {
 
   const {
     lastClickedPlayUser,
-    invites,
     gameModals,
     handleGameClicked,
-    handleGameRequestYesButton,
-    handleGameRequestNoButton,
     handleOpenGameSelector,
     handleCloseGameModal,
   } = useGameSessionLogic();
@@ -26,13 +23,10 @@ export const useOnlinePageSockets = () => {
 
   return {
     currentUser,
-    invites,
     lastClickedPlayUser,
     gameModals,
     handleCloseGameModal,
     handleOpenGameSelector,
     handleGameClicked,
-    handleGameRequestYesButton,
-    handleGameRequestNoButton,
   };
 };
