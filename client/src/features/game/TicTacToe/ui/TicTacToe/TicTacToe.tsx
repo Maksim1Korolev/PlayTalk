@@ -8,7 +8,7 @@ import resources from "@/shared/assets/locales/en/games/TicTacToeResources.json"
 import { cx } from "@/shared/lib";
 import { UiButton, UiText, VStack } from "@/shared/ui";
 
-import { TicTacToeGame } from "@/entities/Game";
+import { TicTacToeGame } from "@/entities/game/Game";
 import { User } from "@/entities/User";
 
 import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";

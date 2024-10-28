@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import { GameData, GameModal } from "@/entities/Game";
+import { GameData, GameModal } from "@/entities/game/Game";
 
 export const useGameModals = () => {
   const [gameModals, setGameModals] = useState<GameModal[]>([]);

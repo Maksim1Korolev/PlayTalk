@@ -20,7 +20,7 @@ import {
   GameModal,
   isGameName,
   TicTacToeGame,
-} from "@/entities/Game";
+} from "@/entities/game/Game";
 import { getUsers } from "@/entities/User";
 import { TicTacToe } from "@/features/game";
 import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";

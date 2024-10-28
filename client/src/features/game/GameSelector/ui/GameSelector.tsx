@@ -6,7 +6,12 @@ import { cx } from "@/shared/lib";
 import { AppImage, AppImageProps, Card, HStack, Loader } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
-import { GameData, GameName, GameNames, isGameName } from "@/entities/Game";
+import {
+  GameData,
+  GameName,
+  GameNames,
+  isGameName,
+} from "@/entities/game/Game";
 import { User } from "@/entities/User";
 
 interface GameSelectorProps {

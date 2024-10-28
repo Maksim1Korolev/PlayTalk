@@ -11,7 +11,7 @@ import { useAppSelector, useModalDrag } from "@/shared/lib";
 import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
-import { Invite } from "@/entities/Game";
+import { Invite } from "@/entities/game/Game";
 import { getUsers, User } from "@/entities/User";
 
 interface GameRequestProps {

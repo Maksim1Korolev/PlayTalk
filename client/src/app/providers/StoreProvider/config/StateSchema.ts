@@ -1,4 +1,4 @@
-import { InvitesState } from "@/entities/Game";
+import { InvitesState } from "@/entities/game/Invites";
 import { UserState } from "@/entities/User";
 
 export interface StateSchema {

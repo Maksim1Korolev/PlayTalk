@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import { invitesReducer } from "@/entities/Game";
+import { invitesReducer } from "@/entities/game/Invites";
 import { userReducer } from "@/entities/User";
 
 export const store = configureStore({
