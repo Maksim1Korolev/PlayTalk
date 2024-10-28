@@ -53,6 +53,7 @@ export const GameRequest = ({ className, position }: GameRequestProps) => {
             collection: "avatars",
             fileName: inviteUser.avatarFileName,
           });
+          avatarPaths[senderUsername] = avatarPath;
         }
       }
 
