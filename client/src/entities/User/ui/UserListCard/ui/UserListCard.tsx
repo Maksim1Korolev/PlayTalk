@@ -1,12 +1,16 @@
-import { GameData, GameName } from '@/entities/Game/model'
-import { User } from "@/entities/User"
-import { UnreadMessagesCountIndicator } from "@/features/chat/UnreadMessagesCountIndicator"
-import { PlayButton } from "@/features/UserList/ui/PlayButton"
-import { cx } from "@/shared/lib"
-import { AddonCircle, AppImageProps, HStack } from "@/shared/ui"
-import getImagePath from "@/shared/utils/getImagePath"
-import { UserOnlineIndicator } from "../../UserOnlineIndicator"
-import cls from "./UserListCard.module.scss"
+import cls from "./UserListCard.module.scss";
+
+import { useEffect, useState } from "react";
+
+import { cx } from "@/shared/lib";
+import { AddonCircle, AppImageProps, HStack } from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
+
+import { User } from "@/entities/User";
+import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
+import { HighlightType, PlayButton } from "@/features/UserList/ui/PlayButton";
+
+import { UserOnlineIndicator } from "../../UserOnlineIndicator";
 
 interface UserListCardProps {
   className?: string;

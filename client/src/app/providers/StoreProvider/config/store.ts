@@ -1,10 +1,12 @@
-import { userReducer } from "@/entities/User/model/slice/userSlice"
-import { CircleMenuReducer } from '@/features/UserList'
-import { configureStore } from "@reduxjs/toolkit"
+import { configureStore } from "@reduxjs/toolkit";
+
+import { inviteReducer } from "@/entities/game/Invite";
+import { userReducer } from "@/entities/User";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
+    invite: inviteReducer,
 		circleMenu: CircleMenuReducer,
   },
 });

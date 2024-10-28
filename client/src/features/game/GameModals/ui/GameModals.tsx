@@ -15,15 +15,15 @@ import { useModalPosition } from "@/shared/ui/CircleModal"
 import getImagePath from "@/shared/utils/getImagePath"
 
 import {
-	Game,
-	GameData,
-	GameModal,
-	isGameName,
-	TicTacToeGame,
-} from "@/entities/Game/model"
-import { getUsers, User } from "@/entities/User"
-import { TicTacToe } from "@/features/game/TicTacToe"
-import { gameApiService } from "@/pages/OnlinePage/api/gameApiService"
+  Game,
+  GameData,
+  GameModal,
+  isGameName,
+  TicTacToeGame,
+} from "@/entities/game/Game";
+import { getUsers } from "@/entities/User";
+import { TicTacToe } from "@/features/game";
+import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
 
 const generateModalId = (gameData: GameData): string => {
   return `${gameData.opponentUsername}_${gameData.gameName}`;

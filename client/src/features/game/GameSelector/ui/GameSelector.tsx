@@ -1,16 +1,18 @@
 import cls from "./GameSelector.module.scss";
-import { cx } from "@/shared/lib";
+
 import { memo, ReactNode, useEffect, useState } from "react";
+
+import { cx } from "@/shared/lib";
+import { AppImage, AppImageProps, Card, HStack, Loader } from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
 
 import {
   GameData,
   GameName,
   GameNames,
   isGameName,
-} from "@/entities/Game/model";
+} from "@/entities/game/Game";
 import { User } from "@/entities/User";
-import { AppImage, AppImageProps, Card, HStack, Loader } from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
 
 interface GameSelectorProps {
   className?: string;
@@ -64,8 +66,8 @@ export const GameSelector = memo(
         user.activeGames && user.activeGames.length > 0
           ? "primary"
           : user.isInviting
-          ? "secondary"
-          : "none";
+            ? "secondary"
+            : "none";
       setHighlight(newHighlight);
     }, []);
     //}, [user.activeGames, user.isInviting]);

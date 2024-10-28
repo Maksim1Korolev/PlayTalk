@@ -15,6 +15,7 @@ Open modals logic to client through cookies
 Modals limitation
 User search
 Game Selector
+Add modals to portal
 
 To fix:
 Getting error in communication service when requesting unread messages with count of 0
