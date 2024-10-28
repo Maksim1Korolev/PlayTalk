@@ -2,8 +2,8 @@ import { useCallback, useState } from "react";
 
 import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
 
+import { ChatModal } from "@/entities/Chat";
 import { User } from "@/entities/User";
-import { ChatModal } from "@/entities/Chat/model/types/chatModal";
 
 export const useChatModals = () => {
   const [chatModals, setChatModals] = useState<ChatModal[]>([]);

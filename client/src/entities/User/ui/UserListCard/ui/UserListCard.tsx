@@ -1,12 +1,16 @@
-import { User } from "@/entities/User";
-import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
-import { HighlightType, PlayButton } from "@/features/UserList/ui/PlayButton";
+import cls from "./UserListCard.module.scss";
+
+import { useEffect, useState } from "react";
+
 import { cx } from "@/shared/lib";
 import { AddonCircle, AppImageProps, HStack } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
-import { useEffect, useState } from "react";
+
+import { User } from "@/entities/User";
+import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
+import { HighlightType, PlayButton } from "@/features/UserList/ui/PlayButton";
+
 import { UserOnlineIndicator } from "../../UserOnlineIndicator";
-import cls from "./UserListCard.module.scss";
 
 interface UserListCardProps {
   className?: string;

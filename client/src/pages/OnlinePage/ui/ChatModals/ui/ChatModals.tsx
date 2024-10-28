@@ -13,9 +13,8 @@ import { AddonCircleProps, AppImageProps, CircleModal } from "@/shared/ui";
 import { useModalPosition } from "@/shared/ui/CircleModal";
 import getImagePath from "@/shared/utils/getImagePath";
 
-import { ChatModal } from "@/entities/Chat/model/types/chatModal";
-import { getCurrentUser } from "@/entities/User";
-import { UserOnlineIndicator } from "@/entities/User";
+import { ChatModal } from "@/entities/Chat";
+import { getCurrentUser, UserOnlineIndicator } from "@/entities/User";
 import { ChatBox } from "@/features/chat";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 
