@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 
-import { GameData, getInviteKey, Invite } from "@/entities/Game/model";
+import { GameData, getInviteKey, Invite } from "@/entities/Game";
 import { getUsers, User, userActions } from "@/entities/User";
 
 import { useGameModals } from "./useGameModals";

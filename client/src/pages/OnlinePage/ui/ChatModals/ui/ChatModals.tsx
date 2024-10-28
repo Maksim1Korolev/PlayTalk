@@ -15,7 +15,7 @@ import getImagePath from "@/shared/utils/getImagePath";
 
 import { ChatModal } from "@/entities/Chat/model/types/chatModal";
 import { getCurrentUser } from "@/entities/User";
-import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
+import { UserOnlineIndicator } from "@/entities/User";
 import { ChatBox } from "@/features/chat";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 

@@ -1,14 +1,17 @@
 import cls from "./TicTacToe.module.scss";
-import { cx } from "@/shared/lib";
+
 import { memo, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import resources from "@/shared/assets/locales/en/games/TicTacToeResources.json";
 
-import { TicTacToeGame } from "@/entities/Game/model";
+import { cx } from "@/shared/lib";
 import { UiButton, UiText, VStack } from "@/shared/ui";
-import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
+
+import { TicTacToeGame } from "@/entities/Game";
 import { User } from "@/entities/User";
+
+import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
 import { Board } from "../Board";
 
 interface TicTacToeProps {

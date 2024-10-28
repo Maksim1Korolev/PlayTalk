@@ -1,10 +1,7 @@
 import { useSockets } from "@/shared/lib";
 import { useAppSelector } from "@/shared/lib";
 
-import {
-  getCurrentUser,
-  getUsers,
-} from "@/entities/User/model/selectors/getUsers";
+import { getCurrentUser, getUsers } from "@/entities/User";
 
 import { useGameSessionLogic } from "./useGameSessionLogic";
 import { useOnlineSockets } from "./useOnlineSockets";

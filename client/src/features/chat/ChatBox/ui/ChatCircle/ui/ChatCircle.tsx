@@ -1,8 +1,10 @@
 import cls from "./ChatCircle.module.scss";
-import { cx } from "@/shared/lib";
+
 import { memo } from "react";
 
-import { UserOnlineIndicator } from "@/entities/User/ui/UserOnlineIndicator";
+import { cx } from "@/shared/lib";
+
+import { UserOnlineIndicator } from "@/entities/User";
 import { AvatarWithProps } from "@/features/AvatarWithProps";
 import { UnreadMessagesCountIndicator } from "@/features/UnreadMessagesCountIndicator";
 
