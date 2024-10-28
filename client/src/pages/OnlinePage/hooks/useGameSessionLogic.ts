@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 
 import { GameData } from "@/entities/game/Game";
-import { getInviteKey, Invite } from "@/entities/game/Invites";
+import { getInviteKey, Invite } from "@/entities/game/Invite";
 import { getUsers, User, userActions } from "@/entities/User";
 
 import { useGameModals } from "./useGameModals";
