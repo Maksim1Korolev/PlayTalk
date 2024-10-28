@@ -40,9 +40,6 @@ const OnlinePage = ({ className }: { className?: string }) => {
               invites={invites}
             />
           )}
-          {
-            //TODO:Maybe move GameSelector to UserCard
-          }
           {lastClickedPlayUser && (
             <GameSelector
               user={lastClickedPlayUser}
