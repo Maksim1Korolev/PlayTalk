@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Invite, InvitesState } from "../types/invite";
+import { Invite, InviteState } from "../types/invite";
 
-const initialState: InvitesState = {
+const initialState: InviteState = {
   invites: {},
 };
 
-const invitesSlice = createSlice({
-  name: "gameInvites",
+const inviteSlice = createSlice({
+  name: "invite",
   initialState,
   reducers: {
     receiveInvite(state, action: PayloadAction<Invite>) {
@@ -24,7 +24,6 @@ const invitesSlice = createSlice({
 });
 
 export const { receiveInvite, removeInvite, clearInvites } =
-  invitesSlice.actions;
+  inviteSlice.actions;
 
-export const { reducer: invitesReducer, actions: invitesActions } =
-  invitesSlice;
+export const { reducer: inviteReducer, actions: inviteActions } = inviteSlice;

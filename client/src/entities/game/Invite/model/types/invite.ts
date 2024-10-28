@@ -3,7 +3,7 @@ export type Invite = {
   gameName: string;
 };
 
-export interface InvitesState {
+export interface InviteState {
   invites: { [key: string]: Invite };
 }
 
