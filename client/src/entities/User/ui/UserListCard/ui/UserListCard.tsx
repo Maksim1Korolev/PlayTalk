@@ -1,11 +1,10 @@
 import { GameData, GameName } from '@/entities/Game/model'
 import { User } from "@/entities/User"
 import { UnreadMessagesCountIndicator } from "@/features/chat/UnreadMessagesCountIndicator"
-import { HighlightType, PlayButton } from "@/features/UserList/ui/PlayButton"
+import { PlayButton } from "@/features/UserList/ui/PlayButton"
 import { cx } from "@/shared/lib"
 import { AddonCircle, AppImageProps, HStack } from "@/shared/ui"
 import getImagePath from "@/shared/utils/getImagePath"
-import { useEffect, useState } from "react"
 import { UserOnlineIndicator } from "../../UserOnlineIndicator"
 import cls from "./UserListCard.module.scss"
 
@@ -26,17 +25,7 @@ export const UserListCard = ({
   handleChatButton,
   userRef,
 }: UserListCardProps) => {
-  const [highlight, setHighlight] = useState<HighlightType>("none");
 
-  useEffect(() => {
-    if (user.activeGames && user.activeGames?.length > 0) {
-      setHighlight("primary");
-    } else if (user.isInviting) {
-      setHighlight("secondary");
-    } else {
-      setHighlight("none");
-    }
-  }, [user.activeGames, user.isInviting]);
 
   const onChatOpen = () => {
     handleChatButton(user);
@@ -91,8 +80,8 @@ export const UserListCard = ({
         </span>
 
         <PlayButton
+					highlight='none'
           className={cls.playButton}
-          highlight={highlight}
           onSelectGame={onPlayButton}
 					menuId={user.username}
         />

@@ -45,7 +45,7 @@ export const PlayButton = ({
         dispatch(CircleMenuActions.closeMenu());
         setAnimateOpen(false);
         setShowMenu(false);
-      }, 300); // Wait for closing animation to finish
+      },100); // Wait for closing animation to finish
     } else {
       dispatch(CircleMenuActions.closeMenu()); // Close any other open menu before opening the current one
       const rect = playButtonRef.current?.getBoundingClientRect();
@@ -69,9 +69,9 @@ export const PlayButton = ({
       
 			setIsFlipped(false);
       setTimeout(() => {
-        setAnimateOpen(false);
+				setAnimateOpen(false);
         setShowMenu(false);
-      }, 300);
+      }, 100);
     }
   }, [isSelectorOpen]);
 
