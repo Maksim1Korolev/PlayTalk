@@ -1,10 +1,11 @@
 import cls from "./GameRequest.module.scss";
 
+import { ReactNode, useEffect, useState } from "react";
+import { Rnd } from "react-rnd";
+
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
-import { ReactNode, useEffect, useState } from "react";
-import { Rnd } from "react-rnd";
 
 import { useAppSelector, useModalDrag } from "@/shared/lib";
 import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
