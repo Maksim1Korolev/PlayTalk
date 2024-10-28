@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { Invite } from "@/entities/Game";
 
-import { InvitesState } from "../types/invite";
+import { InvitesState } from "../types/game";
 
 const initialState: InvitesState = {
   invites: {},
