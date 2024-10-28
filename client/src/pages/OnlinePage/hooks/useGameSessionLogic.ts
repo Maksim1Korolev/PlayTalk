@@ -107,7 +107,7 @@ export const useGameSessionLogic = () => {
     [dispatch]
   );
 
-  const handleGameRequestYesButton = useCallback(
+  const handleAcceptGameInvite = useCallback(
     (invite: Invite) => {
       handleAcceptGame({
         opponentUsername: invite.senderUsername,
@@ -123,7 +123,7 @@ export const useGameSessionLogic = () => {
     [handleAcceptGame, updateInvitingStatus]
   );
 
-  const handleGameRequestNoButton = useCallback(
+  const handleRejectGameInvite = useCallback(
     (invite: Invite) => {
       const inviteKey = getInviteKey({
         senderUsername: invite.senderUsername,
@@ -152,7 +152,7 @@ export const useGameSessionLogic = () => {
         senderUsername: gameData.opponentUsername,
         gameName: gameData.gameName,
       };
-      handleGameRequestYesButton(invite);
+      handleAcceptGameInvite(invite);
     } else if (isActive) {
       handleOpenGameModal({ gameData });
     } else {
@@ -168,8 +168,8 @@ export const useGameSessionLogic = () => {
     invites: Object.values(inviteMap),
     gameModals,
     handleGameClicked,
-    handleGameRequestYesButton,
-    handleGameRequestNoButton,
+    handleGameRequestYesButton: handleAcceptGameInvite,
+    handleGameRequestNoButton: handleRejectGameInvite,
     handleOpenGameSelector,
     handleCloseGameModal,
   };

@@ -22,7 +22,7 @@ import {
   TicTacToeGame,
 } from "@/entities/Game";
 import { getUsers } from "@/entities/User";
-import { TicTacToe } from "@/features/game/TicTacToe";
+import { TicTacToe } from "@/features/game";
 import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
 
 const generateModalId = (gameData: GameData): string => {

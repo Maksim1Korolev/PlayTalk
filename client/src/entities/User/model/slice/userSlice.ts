@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { useCookies } from "react-cookie";
 
 import { CurrentUser, User } from "@/entities/User";
 
