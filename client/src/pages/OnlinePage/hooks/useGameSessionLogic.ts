@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 
-import { useAppDispatch } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/lib";
 
 import { GameData, getInviteKey, Invite } from "@/entities/Game/model";
-import { User, userActions } from "@/entities/User";
+import { getUsers, User, userActions } from "@/entities/User";
 
 import { useGameModals } from "./useGameModals";
 import { useGameSessionSocket } from "./useGameSessionSocket";
@@ -17,7 +17,8 @@ type GameEndPayload = {
   winner: string;
 };
 
-export const useGameSessionLogic = (users: User[]) => {
+export const useGameSessionLogic = () => {
+  const users = useAppSelector(getUsers);
   const dispatch = useAppDispatch();
 
   const [inviteMap, setInviteMap] = useState<{ [key: string]: Invite }>({});

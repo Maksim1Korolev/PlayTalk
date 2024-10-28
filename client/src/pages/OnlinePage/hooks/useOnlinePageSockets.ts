@@ -10,7 +10,6 @@ import { useGameSessionLogic } from "./useGameSessionLogic";
 import { useOnlineSockets } from "./useOnlineSockets";
 
 export const useOnlinePageSockets = () => {
-  const users = useAppSelector(getUsers);
   const currentUser = useAppSelector(getCurrentUser);
 
   const {
@@ -22,7 +21,7 @@ export const useOnlinePageSockets = () => {
     handleGameRequestNoButton,
     handleOpenGameSelector,
     handleCloseGameModal,
-  } = useGameSessionLogic(users);
+  } = useGameSessionLogic();
 
   useSockets();
 
