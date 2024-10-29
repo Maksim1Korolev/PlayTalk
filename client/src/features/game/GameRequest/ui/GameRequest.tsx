@@ -1,6 +1,6 @@
 import cls from "./GameRequest.module.scss";
 
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { Rnd } from "react-rnd";
 
 import CheckIcon from "@mui/icons-material/Check";
@@ -8,10 +8,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 
 import { useAppDispatch, useAppSelector, useModalDrag } from "@/shared/lib";
+import { SocketContext } from "@/shared/lib/context/SocketContext";
 import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
-import { getInvites, Invite, inviteActions } from "@/entities/game/Invite";
+import {
+  acceptGameInvite,
+  getInvites,
+  Invite,
+  inviteActions,
+} from "@/entities/game/Invite";
 import { getUsers, User, userActions } from "@/entities/User";
 
 interface GameRequestProps {
@@ -23,6 +29,9 @@ export const GameRequest = ({ className, position }: GameRequestProps) => {
   const dispatch = useAppDispatch();
   const invites = Object.values(useAppSelector(getInvites));
   const users = useAppSelector(getUsers);
+
+  const { sockets } = useContext(SocketContext);
+  const { gameSocket } = sockets;
 
   const [currentInviteIndex, setCurrentInviteIndex] = useState(0);
   const currentInvite = invites[currentInviteIndex] || null;
@@ -80,11 +89,10 @@ export const GameRequest = ({ className, position }: GameRequestProps) => {
 
   const handleAcceptGameInvite = useCallback(
     (invite: Invite) => {
-      const inviteKey = `${invite.senderUsername}:${invite.gameName}`;
-      dispatch(inviteActions.removeInvite(inviteKey));
+      dispatch(acceptGameInvite(gameSocket, invite));
       updateInvitingStatus(invite.senderUsername, false);
     },
-    [dispatch]
+    [dispatch, gameSocket, updateInvitingStatus]
   );
 
   const handleRejectGameInvite = useCallback(

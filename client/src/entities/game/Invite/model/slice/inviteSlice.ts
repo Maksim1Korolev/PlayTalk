@@ -23,6 +23,22 @@ const inviteSlice = createSlice({
   },
 });
 
+export const acceptGameInvite =
+  (gameSocket: any, invite: Invite) => (dispatch: any) => {
+    if (gameSocket) {
+      console.log(
+        `Accepting game invite with opponent ${invite.senderUsername} for game ${invite.gameName}`
+      );
+      gameSocket.emit("accept-game", {
+        opponentUsername: invite.senderUsername,
+        gameName: invite.gameName,
+      });
+
+      const inviteKey = `${invite.senderUsername}:${invite.gameName}`;
+      dispatch(inviteSlice.actions.removeInvite(inviteKey));
+    }
+  };
+
 export const { receiveInvite, removeInvite, clearInvites } =
   inviteSlice.actions;
 
