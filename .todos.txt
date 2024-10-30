@@ -17,6 +17,7 @@ User search
 Game Selector
 Add modals to portal
 
+
 To fix:
 Getting error in communication service when requesting unread messages with count of 0
 Sort features folder
@@ -30,8 +31,7 @@ Ttt styles
 Adjust accept invite logic
 
 To add (In the end):
-Auth on all servers, updated auth for some data
-Cors
+Rate limiting to auth
 Add environment (development/production)
 Kubernetes
 Storybook

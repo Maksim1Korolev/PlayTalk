@@ -1,18 +1,18 @@
 import {
-	memo,
-	useCallback,
-	useContext,
-	useEffect,
-	useRef,
-	useState,
-} from "react"
-import { useCookies } from "react-cookie"
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { useCookies } from "react-cookie";
 
-import { useAppSelector } from "@/shared/lib"
-import { ModalContext } from "@/shared/lib/context/ModalContext"
-import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui"
-import { useModalPosition } from "@/shared/ui/CircleModal"
-import getImagePath from "@/shared/utils/getImagePath"
+import { useAppSelector } from "@/shared/lib";
+import { ModalContext } from "@/shared/lib/context/ModalContext";
+import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";
+import { useModalPosition } from "@/shared/ui/CircleModal";
+import getImagePath from "@/shared/utils/getImagePath";
 
 import {
   Game,
@@ -21,7 +21,7 @@ import {
   isGameName,
   TicTacToeGame,
 } from "@/entities/game/Game";
-import { getUsers } from "@/entities/User";
+import { getUsers, User } from "@/entities/User";
 import { TicTacToe } from "@/features/game";
 import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
 
@@ -82,13 +82,16 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
         const { gameData } = modal;
         const { gameName, opponentUsername } = gameData;
 
-        icons[gameName] = getImagePath({ collection:"gameIcons",fileName:gameName });
+        icons[gameName] = getImagePath({
+          collection: "gameIcons",
+          fileName: gameName,
+        });
 
         const opponentUser = users.find(
           (user: User) => user.username === opponentUsername
         );
         avatars[opponentUsername] = getImagePath({
-					collection: "avatars",
+          collection: "avatars",
           fileName: opponentUser?.avatarFileName,
         });
       }
