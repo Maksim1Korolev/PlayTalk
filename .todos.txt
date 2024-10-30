@@ -16,6 +16,7 @@ Modals limitation
 User search
 Game Selector
 Add modals to portal
+Token expiration logic
 
 
 To fix:

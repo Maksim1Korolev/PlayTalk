@@ -1,14 +1,9 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 
 import { GameData } from "@/entities/game/Game";
-import {
-  getInviteKey,
-  getInvites,
-  Invite,
-  inviteActions,
-} from "@/entities/game/Invite";
+import { getInviteKey, Invite, inviteActions } from "@/entities/game/Invite";
 import { getUsers, User, userActions } from "@/entities/User";
 
 import { useGameModals } from "./useGameModals";
@@ -25,12 +20,7 @@ type GameEndPayload = {
 
 export const useGameSessionLogic = () => {
   const users = useAppSelector(getUsers);
-  const invites = useAppSelector(getInvites);
   const dispatch = useAppDispatch();
-
-  const [lastClickedPlayUser, setLastClickedPlayUser] = useState<User | null>(
-    null
-  );
 
   const { gameModals, handleOpenGameModal, handleCloseGameModal } =
     useGameModals();
@@ -38,10 +28,6 @@ export const useGameSessionLogic = () => {
   const getUser = (username: string): User | undefined => {
     return users.find(user => user.username === username);
   };
-
-  const handleOpenGameSelector = useCallback((user: User) => {
-    setLastClickedPlayUser(user);
-  }, []);
 
   const onReceiveInvite = ({ invite }: { invite: Invite }) => {
     dispatch(inviteActions.receiveInvite(invite));
@@ -138,11 +124,8 @@ export const useGameSessionLogic = () => {
   };
 
   return {
-    lastClickedPlayUser,
-    invites: Object.values(invites),
     gameModals,
     handleGameClicked,
-    handleOpenGameSelector,
     handleCloseGameModal,
   };
 };

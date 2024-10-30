@@ -1,7 +1,6 @@
 import cls from "./OnlinePage.module.scss";
 
 import { cx } from "@/shared/lib";
-import { HStack, VStack } from "@/shared/ui";
 import { StarsBackground } from "@/shared/ui/Background";
 
 import { GameModals, GameRequest } from "@/features/game";
@@ -26,11 +25,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
           handleUserChatButton={handleOpenChatModal}
           handleUserPlayButton={handleGameClicked}
         />
-        <HStack max>
-          <VStack>
-            <GameRequest />
-          </VStack>
-        </HStack>
+        <GameRequest />
         <ChatModals chatModals={chatModals} onClose={handleCloseChatModal} />
         <GameModals gameModals={gameModals} onClose={handleCloseGameModal} />
       </div>
