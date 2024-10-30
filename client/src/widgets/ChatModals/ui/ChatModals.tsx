@@ -13,10 +13,9 @@ import { AddonCircleProps, AppImageProps, CircleModal } from "@/shared/ui";
 import { useModalPosition } from "@/shared/ui/CircleModal";
 import getImagePath from "@/shared/utils/getImagePath";
 
-import { ChatModal } from "@/entities/Chat";
+import { ChatModal, UnreadMessagesCountIndicator } from "@/entities/Chat";
 import { getCurrentUser, UserOnlineIndicator } from "@/entities/User";
 import { ChatBox } from "@/features/chat";
-import { UnreadMessagesCountIndicator } from "@/features/chat/UnreadMessagesCountIndicator";
 
 export const ChatModals = memo(
   ({
