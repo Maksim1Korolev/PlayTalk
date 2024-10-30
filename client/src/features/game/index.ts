@@ -1,3 +1,3 @@
 export { GameSelector } from "./GameSelector";
 export { GameRequest } from "./GameRequest";
-export { TicTacToe } from "./TicTacToe";
+export { TicTacToe } from "./games/TicTacToe";

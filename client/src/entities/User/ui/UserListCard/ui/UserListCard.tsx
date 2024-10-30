@@ -5,9 +5,8 @@ import { AddonCircle, AppImageProps, HStack } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
 import { UnreadMessagesCountIndicator } from "@/entities/Chat";
-import { GameData, GameName } from "@/entities/game/Game";
+import { GameData, GameName, PlayButton } from "@/entities/game/Game";
 import { User } from "@/entities/User";
-import { PlayButton } from "@/features/UserList/ui/PlayButton";
 
 import { UserOnlineIndicator } from "../../UserOnlineIndicator";
 

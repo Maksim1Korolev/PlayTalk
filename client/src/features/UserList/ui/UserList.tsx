@@ -14,7 +14,7 @@ import { GameData } from "@/entities/game/Game";
 import { getUsers, User, userActions, UserListCard } from "@/entities/User";
 import { fetchUsersStatus } from "@/pages/MainPage/api/updateUsersStatusApiService";
 
-import { sortUsers } from "../../utils/userListUtils";
+import { sortUsers } from "../utils/userListUtils";
 
 export interface UserListProps {
   className?: string;

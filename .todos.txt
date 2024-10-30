@@ -31,6 +31,8 @@ Highlight types
 Ttt styles
 Adjust accept invite logic
 Update resource files
+Remove socket folder from entities (git bug)
+Remove circleMenuSlice
 
 To add (In the end):
 Rate limiting to auth
