@@ -15,7 +15,7 @@ const OnlinePage = ({ className }: { className?: string }) => {
   const { chatModals, handleCloseChatModal, handleOpenChatModal } =
     useChatModals();
 
-  const { gameModals, handleGameClicked, handleCloseGameModal } =
+  const { gameModals, handleCloseGameModal, handleGameClicked } =
     useGameSessionLogic();
 
   useSockets();
