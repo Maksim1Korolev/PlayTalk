@@ -1,21 +1,28 @@
 .CircleModal {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background-color: var(--modals-bg-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 8px;
   width: 100%;
-  height: 100%;
+	height: 100%;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
 }
 
 .header {
+	height: 50px; 
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
   justify-content: space-between;
-  margin-right: 5px;
+  background-color: var(--modals-bg-color);
+  padding: 10px;
 }
+
+.contentCard {
+  flex-grow: 1; 
+  display: flex;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
 
 .headerString {
   display: flex;
@@ -52,6 +59,7 @@
   background-color: var(--inverted-bg-color);
   color: var(--accent-color);
 }
+
 
 .drag-handle {
   cursor: grab;

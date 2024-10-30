@@ -122,6 +122,7 @@ export const PlayButton = ({
               open={animateOpen}
               onMenuToggle={handleMenuToggle}
               menuToggleElement={CustomToggleElement} // Pass the custom toggle element to CircleMenu
+
             >
               {gameNames.map((gameName) => {
                 const gameSrc = getImagePath({
@@ -130,7 +131,7 @@ export const PlayButton = ({
                 });
                 return (
                   <CircleMenuItem
-									className={cls.circleMenuItem}
+										className={cls.circleMenuItem}
                     key={gameName}
                     tooltip={gameName}
                     onClick={() => onSelectGame(gameName)}

@@ -1,25 +1,23 @@
 .Chat {
-  background: var(--bg-color);
+  background: var(--blurred-background);
   flex-direction: column;
   justify-content: space-between;
-  height: 91%;
+  height: 100%;
   max-width: 98vw;
   max-height: 100vh;
-  border-radius: 5px;
 }
 
 .body {
   position: relative;
   display: flex;
-  height: 100%;
+  height: 91%;
   border: 1px solid #ccc;
-  border-radius: 4px;
   overflow: hidden;
 }
 
 .chatLogs {
   padding: 15px;
-  height: 100%;
+  height: 80%;
   width: 100%;
   flex-grow: 1;
   overflow-y: scroll;
