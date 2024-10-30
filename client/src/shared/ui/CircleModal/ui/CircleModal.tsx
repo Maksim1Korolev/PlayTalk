@@ -1,20 +1,21 @@
-import cls from "./CircleModal.module.scss";
-import { cx } from "@/shared/lib";
-import { memo, ReactNode, useState } from "react";
-import { Rnd, Props as RndProps } from "react-rnd";
+import { cx } from "@/shared/lib"
+import { memo, ReactNode, useState } from "react"
+import { Rnd, Props as RndProps } from "react-rnd"
+import cls from "./CircleModal.module.scss"
 
-import CancelIcon from "@mui/icons-material/Cancel";
-import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
+import CancelIcon from "@mui/icons-material/Cancel"
+import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn"
 
-import { useModalDrag } from "@/shared/lib";
+import { useModalDrag } from "@/shared/lib"
 import {
-  AddonCircle,
-  AddonCircleProps,
-  HStack,
-  UiButton,
-  UiText,
-  VStack,
-} from "@/shared/ui";
+	AddonCircle,
+	AddonCircleProps,
+	Card,
+	HStack,
+	UiButton,
+	UiText,
+	VStack,
+} from "@/shared/ui"
 
 interface CircleModalProps {
   className?: string;
@@ -37,6 +38,15 @@ export const CircleModal = memo(
     const [isCollapsed, setIsCollapsed] = useState(false);
     const { isDragged, handleDragStart, handleDragStop } = useModalDrag();
 
+		const headerHeight = 50; // This should match the CSS fixed height for header
+    const [modalHeight, setModalHeight] = useState(420);
+
+    const handleResize = (e, dir, ref) => {
+      setModalHeight(ref.offsetHeight); // Update modal height on resize
+    };
+
+    const contentHeight = modalHeight - headerHeight;
+
     const handleOpenCircleModal = () => {
       if (!isDragged) {
         setIsCollapsed(false);
@@ -52,6 +62,7 @@ export const CircleModal = memo(
     const rndProps: RndProps = {
       onDragStart: handleDragStart,
       onDragStop: handleDragStop,
+			onResize: handleResize,
       default: {
         x: position?.x || 250,
         y: position?.y || 250,
@@ -72,9 +83,9 @@ export const CircleModal = memo(
         {isCollapsed ? (
           <AddonCircle {...addonCircleProps} onClick={handleOpenCircleModal} />
         ) : (
-          <VStack className={cx(cls.CircleModal, {}, [className])}>
+					<VStack className={cx(cls.CircleModal, {}, [className])}>
             <HStack className={cx(cls.header, {}, ["drag-handle"])} max>
-              <UiText className={cls.headerString} max>
+              <UiText className={cls.headerString} bold max>
                 {headerString}
               </UiText>
               <HStack className={cls.controlButtons}>
@@ -94,8 +105,10 @@ export const CircleModal = memo(
                 </UiButton>
               </HStack>
             </HStack>
+						<Card style={{ height: `${contentHeight}px` }} className={cls.contentCard} max padding={"0"} variant='matte' border='default'>
             {children}
-          </VStack>
+					</Card>
+          </VStack>							
         )}
       </Rnd>
     );

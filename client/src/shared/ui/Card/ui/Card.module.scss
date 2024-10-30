@@ -20,11 +20,15 @@
   background: var(--card-bg-color);
 }
 
+.matte {
+	border: 7px solid var(--modals-bg-color);
+}
+
 .blurred {
-  background: rgba(255, 255, 255, 0.1); 
+	background: var(--blurred-background);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px); 
-  border: 1px solid rgba(255, 255, 255, 0.3); 
+	border: 1px solid var(--blurred-border);
 }
 
 // gap
@@ -63,4 +67,8 @@
 
 .border_default {
   border-radius: 12px;
+}
+
+.border_none {
+  border-radius: 0;
 }
