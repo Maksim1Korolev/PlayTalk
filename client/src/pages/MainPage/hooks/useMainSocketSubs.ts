@@ -5,7 +5,7 @@ import { SocketContext } from "@/shared/lib/context/SocketContext";
 
 import { userActions } from "@/entities/User";
 
-export const useOnlineSockets = () => {
+export const useMainSocketSubs = () => {
   const dispatch = useAppDispatch();
 
   const { sockets } = useContext(SocketContext);

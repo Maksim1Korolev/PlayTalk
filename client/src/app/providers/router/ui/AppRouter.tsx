@@ -1,9 +1,12 @@
-import { Suspense, memo } from "react";
+import { memo, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import { AuthPage } from "@/pages/AuthPage";
-import { OnlinePage } from "@/pages/OnlinePage";
-import { RequireAuth } from "./RequireAuth";
+
 import { Loader } from "@/shared/ui";
+
+import { AuthPage } from "@/pages/AuthPage";
+import { MainPage } from "@/pages/MainPage";
+
+import { RequireAuth } from "./RequireAuth";
 
 const AppRouter = ({ className }: { className?: string }) => {
   return (
@@ -14,7 +17,7 @@ const AppRouter = ({ className }: { className?: string }) => {
           element={
             <RequireAuth>
               <Suspense fallback={<Loader />}>
-                <OnlinePage />
+                <MainPage />
               </Suspense>
             </RequireAuth>
           }

@@ -1,3 +1,4 @@
+export { StarsBackground } from "./Background";
 export { AppImage } from "./AppImage";
 export type { AppImageProps } from "./AppImage";
 export { AppSvg } from "./AppSvg";

@@ -5,8 +5,8 @@ import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import { GameData } from "@/entities/game/Game";
 import { getInviteKey, Invite, inviteActions } from "@/entities/game/Invite";
 import { getUsers, User, userActions } from "@/entities/User";
+import { useGameModals } from "@/widgets/GameModals";
 
-import { useGameModals } from "./useGameModals";
 import { useGameSessionSocket } from "./useGameSessionSocket";
 
 type GameStartPayload = {

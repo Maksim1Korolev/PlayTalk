@@ -23,7 +23,7 @@ import {
 } from "@/entities/game/Game";
 import { getUsers, User } from "@/entities/User";
 import { TicTacToe } from "@/features/game";
-import { gameApiService } from "@/pages/OnlinePage/api/gameApiService";
+import { gameApiService } from "@/pages/MainPage/api/gameApiService";
 
 const generateModalId = (gameData: GameData): string => {
   return `${gameData.opponentUsername}_${gameData.gameName}`;

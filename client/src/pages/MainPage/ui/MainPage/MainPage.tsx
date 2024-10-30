@@ -1,17 +1,15 @@
-import cls from "./OnlinePage.module.scss";
+import { useSockets } from "@/shared/lib";
+import { StarsBackground } from "@/shared/ui";
 
-import { cx, useSockets } from "@/shared/lib";
-import { StarsBackground } from "@/shared/ui/Background";
-
-import { GameModals, GameRequest } from "@/features/game";
+import { GameRequest } from "@/features/game";
+import { ChatModals, useChatModals } from "@/widgets/ChatModals";
+import { GameModals } from "@/widgets/GameModals";
 import { Sidebar } from "@/widgets/Sidebar";
 
 import { useGameSessionLogic } from "../../hooks/useGameSessionLogic";
-import { useOnlineSockets } from "../../hooks/useOnlineSockets";
-import { ChatModals } from "../ChatModals";
-import { useChatModals } from "../ChatModals/hooks/useChatModals";
+import { useMainSocketSubs } from "../../hooks/useMainSocketSubs";
 
-const OnlinePage = ({ className }: { className?: string }) => {
+const MainPage = ({ className }: { className?: string }) => {
   const { chatModals, handleCloseChatModal, handleOpenChatModal } =
     useChatModals();
 
@@ -20,12 +18,12 @@ const OnlinePage = ({ className }: { className?: string }) => {
 
   useSockets();
 
-  useOnlineSockets();
+  useMainSocketSubs();
 
   return (
     <>
       <StarsBackground />
-      <div className={cx(cls.OnlinePage, {}, [className])}>
+      <div className={className}>
         <Sidebar
           handleUserChatButton={handleOpenChatModal}
           handleUserPlayButton={handleGameClicked}
@@ -38,4 +36,4 @@ const OnlinePage = ({ className }: { className?: string }) => {
   );
 };
 
-export default OnlinePage;
+export default MainPage;
