@@ -6,8 +6,8 @@ import { ChatModals, useChatModals } from "@/widgets/ChatModals";
 import { GameModals } from "@/widgets/GameModals";
 import { Sidebar } from "@/widgets/Sidebar";
 
-import { useGameSessionLogic } from "../../hooks/useGameSessionLogic";
-import { useMainSocketSubs } from "../../hooks/useMainSocketSubs";
+import { useGameSessionLogic } from "../hooks/useGameSessionLogic";
+import { useMainSocketSubs } from "../hooks/useMainSocketSubs";
 
 const MainPage = ({ className }: { className?: string }) => {
   const { chatModals, handleCloseChatModal, handleOpenChatModal } =
