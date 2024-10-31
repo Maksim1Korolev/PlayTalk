@@ -1,9 +1,9 @@
-import cls from "./ChatMessage.module.scss";
-import { cx } from "@/shared/lib";
-import { forwardRef } from "react";
+import { cx } from "@/shared/lib"
+import { forwardRef } from "react"
+import cls from "./ChatMessage.module.scss"
 
-import { AppImage } from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
+import { AppImage } from "@/shared/ui"
+import getImagePath from "@/shared/utils/getImagePath"
 
 export interface Message {
   _id?: string;
@@ -32,7 +32,7 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
         )}
       >
         <span className={cls.msgAvatar}>
-          {avatarFileName && (
+          
             <AppImage
               src={getImagePath({
                 collection: "avatars",
@@ -40,7 +40,7 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
               })}
               draggable={false}
             />
-          )}
+          
         </span>
         <div className={cls.cmMsgText}>{message.message}</div>
       </div>

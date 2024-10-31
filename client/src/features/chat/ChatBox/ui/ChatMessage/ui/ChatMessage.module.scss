@@ -1,49 +1,44 @@
 .ChatMessage {
+  display: flex;
   padding-inline: 20px;
   max-width: 60%;
 }
 
-.chatMsg.user > .msgAvatar img {
+.chatMsg {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between avatar and message */
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+
+.chatMsg.user {
+  flex-direction: row; /* Default left-to-right */
+}
+
+.chatMsg.self {
+	margin-left: auto;
+  flex-direction: row-reverse; /* Right-to-left for user’s own messages */
+}
+
+.msgAvatar img {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  float: left;
 }
-.chatMsg.self > .msgAvatar img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  float: right;
-}
+
 .cmMsgText {
-  background: white;
-  padding: 10px 15px 10px 15px;
-  color: #666;
+  background: var(--text);
+  padding: 10px 15px;
+  color: var(--text-dark);
   max-width: 75%;
-  float: left;
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
-  margin-left: 10px;
-  position: relative;
-  margin-bottom: 20px;
-  border-radius: 30px;
+  border-radius: 20px;
 }
-.chatMsg {
-  clear: both;
-}
-.chatMsg.self > .cmMsgText {
-  float: right;
-  margin-right: 10px;
-  background: #5a5eb9;
-  color: white;
-}
-.cmMsgButton > ul > li {
-  list-style: none;
-  float: left;
-  width: 50%;
-}
-.cmMsgButton {
-  clear: both;
-  margin-bottom: 70px;
+
+.chatMsg.self .cmMsgText {
+  background: var(--accent-color);
+  color: var(--text);
 }

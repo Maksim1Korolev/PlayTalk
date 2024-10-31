@@ -1,18 +1,18 @@
-import cls from "./PlayButton.module.scss";
+import cls from "./PlayButton.module.scss"
 
-import { useEffect, useRef, useState } from "react";
-import { CircleMenu, CircleMenuItem } from "react-circular-menu";
-import ReactDOM from "react-dom";
+import { useEffect, useRef, useState } from "react"
+import { CircleMenu, CircleMenuItem } from "react-circular-menu"
+import ReactDOM from "react-dom"
 
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
-import { cx } from "@/shared/lib/className/cx";
-import { HighlightType, useHighlight } from "@/shared/lib/hooks/useHighlight";
-import { AppImage } from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
+import { useAppDispatch, useAppSelector } from "@/shared/lib"
+import { cx } from "@/shared/lib/className/cx"
+import { HighlightType, useHighlight } from "@/shared/lib/hooks/useHighlight"
+import { AppImage } from "@/shared/ui"
+import getImagePath from "@/shared/utils/getImagePath"
 
-import { GameName, GameNames } from "@/entities/game/Game";
-import { CircleMenuActions } from "@/features/UserList";
-import { selectActiveMenuId } from "@/features/UserList/model/selectors/selectActiveMenuId";
+import { GameName, GameNames } from "@/entities/game/Game"
+import { CircleMenuActions } from "@/features/UserList"
+import { selectActiveMenuId } from "@/features/UserList/model/selectors/selectActiveMenuId"
 
 interface PlayButtonProps {
   className?: string;
@@ -94,7 +94,7 @@ export const PlayButton = ({
         className={cls.playIcon}
         width={50}
         height={50}
-        src={playButtonSrc}
+        src={"../../../../../../../public/play-icon.svg"}
         draggable={false}
         clickable
         onClick={handleMenuToggle}

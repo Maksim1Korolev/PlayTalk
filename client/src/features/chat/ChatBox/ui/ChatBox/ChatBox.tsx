@@ -62,10 +62,11 @@ export const ChatBox = memo(
         <Card className={cx(cls.body)} padding={"0"}variant="blurred" border='none'  max>
           <VStack max>
             <div className={cls.chatBoxOverlay}></div>
-            <div className={cls.chatLogs}>
+            <VStack className={cls.chatLogs} max>
               {messageHistory && renderMessageHistory()}
               <div ref={dummy} />
-            </div>
+            </VStack>
+						<div className="spacer" />
             {isTyping && (
               <UiText dimmed className="typingLabel">
                 Typing...

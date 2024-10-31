@@ -41,7 +41,7 @@ export const CircleModal = memo(
 		const headerHeight = 50; // This should match the CSS fixed height for header
     const [modalHeight, setModalHeight] = useState(420);
 
-    const handleResize = (e, dir, ref) => {
+    const handleResize = (e: MouseEvent | TouchEvent, dir, ref: HTMLElement) => {
       setModalHeight(ref.offsetHeight); // Update modal height on resize
     };
 

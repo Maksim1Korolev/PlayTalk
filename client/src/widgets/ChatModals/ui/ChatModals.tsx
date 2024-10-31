@@ -144,7 +144,7 @@ export const ChatModals = memo(
           </CircleModal>
         );
       });
-    }, [chatModals, currentUser, getAddonCircleProps, onClose]);
+    }, [chatModals, currentUser, getAddonCircleProps, getStartingPosition, onClose]);
 
     return renderChatModals();
   }

@@ -7,14 +7,14 @@
   display: flex;
   position: absolute;
   top: 0.1rem;
-  inset-inline-end: 0.1rem;
+  inset-inline-end: -0.1rem;
 }
 
 .addonBottomRight {
   display: flex;
   position: absolute;
-  bottom: 0rem;
-  inset-inline-end: -1rem;
+  bottom: 0.1rem;
+  inset-inline-end: -0.1rem;
 }
 
 .addonTopLeft {

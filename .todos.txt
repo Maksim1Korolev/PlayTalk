@@ -17,6 +17,8 @@ User search
 Game Selector
 Add modals to portal
 Token expiration logic
+Add api in config of RTK
+Logic of fetching users in Thunk 
 
 
 To fix:
