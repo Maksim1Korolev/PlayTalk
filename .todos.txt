@@ -1,29 +1,21 @@
 To add:
 Multiple sources for the main list of users and online
-Update resource files in assets folder
-Update game request logic
 Upgrade UserList scrollbar
-Current user (data from cookie) to context
-"Api" to general .env variable keys that pass only api
 Winner and players logic to client
-Redis as one more possible point to get the data in more places
-OpponentUsername and gameName data type
 Make users from context into map
-Tests for chat repo services
 Tests for ttt service
-Open modals logic to client through cookies
 Modals limitation
 User search
-Game Selector
 Add modals to portal
-Token expiration logic
+Token expiration logic on client
 Add api in config of RTK
 Logic of fetching users in Thunk 
-
+Update resource files in assets folder/
+"Api" to general .env variable keys that pass only api/
+Tests for chat repo services/
 
 To fix:
 Getting error in communication service when requesting unread messages with count of 0
-Sort features folder
 Empty data doesn't count as redis cache
 Check online and api client logic
 Memo template
@@ -31,10 +23,9 @@ Issues when redis connects late (-restart?)
 Adjust modal drag
 Highlight types
 Ttt styles
-Adjust accept invite logic
-Update resource files
-Remove socket folder from entities (git bug)
+Adjust location of accept invite emit
 Remove circleMenuSlice
+Your own avatar doesn't show in messageHistory
 
 To add (In the end):
 Rate limiting to auth

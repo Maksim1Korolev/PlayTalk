@@ -3,7 +3,7 @@
 @import "./reset.scss";
 
 .app {
-  background: var(--bg-color);
+  background: linear-gradient(#16161d, #1f1f3a, #3b2f4a); // var(--bg-color);
   color: var(--text);
   overflow: hidden;
   height: 100vh;
