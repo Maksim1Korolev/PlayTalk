@@ -3,14 +3,16 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
-import { errorHandler, notFound } from "./middleware/errorMiddleware";
-import profileRouter from "./profile/profiles.routes";
 import { getLogger } from "./utils/logger";
 import {
   connectToMongoDB,
   disconnectFromMongoDB,
 } from "./utils/mongooseClient";
 import redisClient from "./utils/redisClient";
+
+import { errorHandler, notFound } from "./middleware/errorMiddleware";
+
+import profileRouter from "./profile/profiles.routes";
 
 const logger = getLogger("Main");
 
@@ -35,7 +37,7 @@ async function main() {
 
   app.listen(PORT, () => {
     logger.info(
-      `profile-repository-service is running in ${process.env.NODE_ENV} mode on port ${PORT}`
+      `profile-service is running in ${process.env.NODE_ENV} mode on port ${PORT}`
     );
   });
 }

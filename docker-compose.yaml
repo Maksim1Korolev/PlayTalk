@@ -39,8 +39,8 @@ services:
           action: sync
 
   #Profile
-  profile_repository_service:
-    build: ./server/profile/profile-repository-service
+  profile_service:
+    build: ./server/profile/profile-service
     ports:
       - "3040:3040"
     networks:
@@ -52,9 +52,9 @@ services:
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
-        - path: ./server/profile/profile-repository-service/package.json
+        - path: ./server/profile/profile-service/package.json
           action: rebuild
-        - path: ./server/profile/profile-repository-service
+        - path: ./server/profile/profile-service
           target: /usr/src/app
           action: sync
 
