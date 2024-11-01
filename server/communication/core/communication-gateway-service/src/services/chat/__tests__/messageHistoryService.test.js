@@ -5,7 +5,7 @@ import MessageHistoryService from "../messageHistoryService.js";
 jest.mock("axios");
 
 describe("MessageHistoryService", () => {
-  const chatRepositoryServiceUrl = process.env.CHAT_REPOSITORY_SERVICE_API_URL;
+  const chatServiceApiUrl = process.env.CHAT_SERVICE_API_URL;
   const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
   const serviceName = "communication_gateway_service";
 
@@ -26,7 +26,7 @@ describe("MessageHistoryService", () => {
       const query = usernames
         .map(u => `usernames=${encodeURIComponent(u)}`)
         .join("&");
-      const expectedUrl = `${chatRepositoryServiceUrl}/messageHistories/messageHistory?${query}`;
+      const expectedUrl = `${chatServiceApiUrl}/messageHistories/messageHistory?${query}`;
 
       expect(axios.get).toHaveBeenCalledWith(expectedUrl, {
         headers: {
@@ -49,7 +49,7 @@ describe("MessageHistoryService", () => {
         message
       );
 
-      const expectedUrl = `${chatRepositoryServiceUrl}/messageHistories/messages/message`;
+      const expectedUrl = `${chatServiceApiUrl}/messageHistories/messages/message`;
 
       expect(axios.post).toHaveBeenCalledWith(
         expectedUrl,
@@ -75,7 +75,7 @@ describe("MessageHistoryService", () => {
           requestingUsername
         );
 
-      const expectedUrl = `${chatRepositoryServiceUrl}/unread/getAll/${requestingUsername}`;
+      const expectedUrl = `${chatServiceApiUrl}/unread/getAll/${requestingUsername}`;
 
       expect(axios.get).toHaveBeenCalledWith(expectedUrl, {
         headers: {
@@ -98,7 +98,7 @@ describe("MessageHistoryService", () => {
         usernames
       );
 
-      const expectedUrl = `${chatRepositoryServiceUrl}/unread/${requestingUsername}?usernames=${usernames.join(
+      const expectedUrl = `${chatServiceApiUrl}/unread/${requestingUsername}?usernames=${usernames.join(
         ","
       )}`;
 
@@ -123,7 +123,7 @@ describe("MessageHistoryService", () => {
         usernames
       );
 
-      const expectedUrl = `${chatRepositoryServiceUrl}/unread/markAsRead/${requestingUsername}`;
+      const expectedUrl = `${chatServiceApiUrl}/unread/markAsRead/${requestingUsername}`;
 
       expect(axios.post).toHaveBeenCalledWith(
         expectedUrl,
