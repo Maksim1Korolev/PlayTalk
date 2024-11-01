@@ -30,7 +30,6 @@ Sometimes the ttt turn doesn't change on opponent's client, although the sign is
 Get sensitive data for .env sorted out, adjust location for client's .env
 Blurred messages and gap between them
 Index file of the profile service
-Background moves on components update
 
 To add (In the end):
 Rate limiting to auth

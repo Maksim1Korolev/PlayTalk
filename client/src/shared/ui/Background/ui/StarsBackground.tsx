@@ -1,6 +1,8 @@
 import cls from "./StarsBackground.module.scss";
 
-export const StarsBackground = () => {
+import { memo } from "react";
+
+export const StarsBackground = memo(() => {
   const generateStars = () => {
     const stars = [];
     for (let i = 0; i < 200; i++) {
@@ -71,4 +73,4 @@ export const StarsBackground = () => {
       </svg>
     </div>
   );
-};
+});
