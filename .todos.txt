@@ -25,8 +25,9 @@ Adjust location of accept invite emit
 Remove circleMenuSlice
 Your own avatar doesn't show in messageHistory
 No avatars = no list
-Sometimes the ttt turn doesn't change in client
+Sometimes the ttt turn doesn't change on opponent's client, although the sign is set
 Get sensitive data for .env sorted out, adjust location for client's .env
+Blurred messages and gap between them
 
 To add (In the end):
 Rate limiting to auth

@@ -1,15 +1,15 @@
-import cls from "./ChatBox.module.scss"
+import cls from "./ChatBox.module.scss";
 
-import { memo, useCallback, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 
-import { cx } from "@/shared/lib"
-import { Card, UiText, VStack } from "@/shared/ui"
+import { cx } from "@/shared/lib";
+import { Card, UiText, VStack } from "@/shared/ui";
 
-import { CurrentUser, User } from "@/entities/User"
+import { CurrentUser, User } from "@/entities/User";
 
-import { useChatMessages } from "../../hooks/useChatMessages"
-import { ChatInput } from "../ChatInput"
-import { ChatMessage, Message } from "../ChatMessage"
+import { useChatMessages } from "../../hooks/useChatMessages";
+import { ChatInput } from "../ChatInput";
+import { ChatMessage, Message } from "../ChatMessage";
 
 export const ChatBox = memo(
   ({
@@ -59,14 +59,20 @@ export const ChatBox = memo(
 
     return (
       <VStack className={cx(cls.Chat, {}, [className])} justify="start" max>
-        <Card className={cx(cls.body)} padding={"0"}variant="blurred" border='none'  max>
+        <Card
+          className={cx(cls.body)}
+          padding={"0"}
+          variant="blurred"
+          border="none"
+          max
+        >
           <VStack max>
             <div className={cls.chatBoxOverlay}></div>
             <VStack className={cls.chatLogs} max>
               {messageHistory && renderMessageHistory()}
               <div ref={dummy} />
             </VStack>
-						<div className="spacer" />
+            <div className="spacer" />
             {isTyping && (
               <UiText dimmed className="typingLabel">
                 Typing...

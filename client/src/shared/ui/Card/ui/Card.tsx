@@ -1,8 +1,10 @@
-import { cx } from "@/shared/lib"
-import { HTMLAttributes, ReactNode, memo } from "react"
-import cls from "./Card.module.scss"
+import cls from "./Card.module.scss";
 
-type CardVariant = "default" | "outlined" | "light" |  "blurred" | "matte";
+import { HTMLAttributes, memo, ReactNode } from "react";
+
+import { cx } from "@/shared/lib";
+
+type CardVariant = "default" | "outlined" | "light" | "blurred" | "matte";
 type CardBorder = "default" | "round" | "none";
 
 type CardPadding = "0" | "8" | "16" | "24" | "32" | "45" | "60";
@@ -28,6 +30,7 @@ const mapPaddingToClass: Record<CardPadding, string> = {
 const mapBorderToClass: Record<CardBorder, string> = {
   round: "border_round",
   default: "border_default",
+  none: "",
 };
 
 export const Card = memo(

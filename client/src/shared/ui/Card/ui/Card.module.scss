@@ -21,14 +21,14 @@
 }
 
 .matte {
-	border: 7px solid var(--modals-bg-color);
+  border: 7px solid var(--modals-bg-color);
 }
 
 .blurred {
-	background: var(--blurred-background);
+  background: var(--blurred-background);
   backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px); 
-	border: 1px solid var(--blurred-border);
+  -webkit-backdrop-filter: blur(2px); //For Safari browser
+  border: 1px solid var(--blurred-border);
 }
 
 // gap
