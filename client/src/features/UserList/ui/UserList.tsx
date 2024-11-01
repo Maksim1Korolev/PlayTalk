@@ -3,8 +3,7 @@ import cls from "./UserList.module.scss";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 
-import tempResources from "@/shared/assets/locales/en/OnlinePageResources.json";
-import resources from "@/shared/assets/locales/en/UserListResources.json";
+import { userListResources } from "@/shared/assets";
 
 import { cx } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
@@ -115,24 +114,25 @@ export const UserList = ({
   }, [collapsed, handleUserChatButton, handleUserPlayButton, users]);
 
   if (!users || users.length === 0) {
-    return <p>{resources.noUsers}</p>;
+    return <p>{userListResources.noUsers}</p>;
   }
 
   if (isLoading) {
     return <Loader />;
   }
 
+  //TODO:Only show when in development
   if (isError && error) {
     {
       return (
-        <UiText>{`${tempResources.errorMessagePrefix} ${error.message}`}</UiText>
+        <UiText>{`${userListResources.errorMessagePrefix} ${error.message}`}</UiText>
       );
     }
   }
 
   return (
     <Card className={cx(cls.UserList, {}, [className])} variant="blurred">
-      <UiText size="xl">{resources.userListHeader}</UiText>
+      <UiText size="xl">{userListResources.userListHeader}</UiText>
       <VStack gap="16">{userList}</VStack>
     </Card>
   );

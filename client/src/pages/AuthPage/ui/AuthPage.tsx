@@ -1,13 +1,13 @@
 import cls from "./AuthPage.module.scss";
-import { cx } from "@/shared/lib";
+
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 
-import resources from "@/shared/assets/locales/en/AuthPageResources.json";
+import { authPageResources } from "@/shared/assets";
 
-import { apiService } from "../api/apiAuthService";
+import { cx } from "@/shared/lib";
 import {
   Card,
   HStack,
@@ -17,6 +17,8 @@ import {
   UiText,
   VStack,
 } from "@/shared/ui";
+
+import { apiService } from "../api/apiAuthService";
 
 interface AuthPageProps {
   className?: string;
@@ -109,10 +111,14 @@ const AuthPage = ({ className }: AuthPageProps) => {
         <VStack gap="60" max>
           <VStack gap="8" max>
             <UiText size="l" bold fontFamily="main">
-              {isSignUp ? resources.title_sign_up : resources.title_login}
+              {isSignUp
+                ? authPageResources.title_sign_up
+                : authPageResources.title_login}
             </UiText>
             <UiText size="m" dimmed fontFamily="main">
-              {isSignUp ? resources.subtitle_sign_up : resources.subtitle_login}
+              {isSignUp
+                ? authPageResources.subtitle_sign_up
+                : authPageResources.subtitle_login}
             </UiText>
             {error && (
               <UiText className={cls.error} color="error">
@@ -124,11 +130,11 @@ const AuthPage = ({ className }: AuthPageProps) => {
             <VStack gap="24" max>
               <VStack max gap="8">
                 <UiText size="l" fontFamily="text">
-                  {resources.label_username}
+                  {authPageResources.label_username}
                 </UiText>
                 <UiInput
                   maxLength={15}
-                  placeholder={resources.placeholder_username}
+                  placeholder={authPageResources.placeholder_username}
                   value={username}
                   onChange={handleUsernameChange}
                   max
@@ -137,11 +143,11 @@ const AuthPage = ({ className }: AuthPageProps) => {
 
               <VStack max gap="8">
                 <UiText size="l" fontFamily="text">
-                  {resources.label_password}
+                  {authPageResources.label_password}
                 </UiText>
                 <UiInput
                   maxLength={30}
-                  placeholder={resources.placeholder_password}
+                  placeholder={authPageResources.placeholder_password}
                   type="password"
                   value={password}
                   onChange={handlePasswordChange}
@@ -154,8 +160,8 @@ const AuthPage = ({ className }: AuthPageProps) => {
             <HStack gap="16">
               <UiText size="m" fontFamily="main">
                 {isSignUp
-                  ? resources.action_already_have_account
-                  : resources.action_dont_have_account}
+                  ? authPageResources.action_already_have_account
+                  : authPageResources.action_dont_have_account}
               </UiText>
 
               <UiButton
@@ -166,13 +172,15 @@ const AuthPage = ({ className }: AuthPageProps) => {
               >
                 <UiText size="m" fontFamily="main">
                   {isSignUp
-                    ? resources.button_sign_in
-                    : resources.button_sign_up}
+                    ? authPageResources.button_sign_in
+                    : authPageResources.button_sign_up}
                 </UiText>
               </UiButton>
             </HStack>
             <UiButton max variant="filled" onClick={handleAuthAction}>
-              {isSignUp ? resources.button_sign_up : resources.button_sign_in}
+              {isSignUp
+                ? authPageResources.button_sign_up
+                : authPageResources.button_sign_in}
             </UiButton>
             {(signInMutation.isLoading || signUpMutation.isLoading) && (
               <Loader />

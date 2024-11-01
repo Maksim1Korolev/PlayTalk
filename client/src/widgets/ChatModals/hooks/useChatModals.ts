@@ -1,17 +1,16 @@
 import { useCallback, useState } from "react";
 
-import resources from "@/shared/assets/locales/en/OnlinePageResources.json";
-
 import { ChatModal } from "@/entities/Chat";
 import { User } from "@/entities/User";
 
 export const useChatModals = () => {
   const [chatModals, setChatModals] = useState<ChatModal[]>([]);
 
+  //TODO:Remove and move modals limitation logic
   const handleOpenChatModal = useCallback(
     (user: User) => {
       if (chatModals && chatModals.length > 5) {
-        alert(resources.chatModalQuantityError);
+        alert("AAA! Too many chat modals!");
         return;
       }
       if (

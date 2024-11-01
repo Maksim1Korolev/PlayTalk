@@ -1,5 +1,5 @@
 {
   "userListHeader": "",
-  "playButton": "Play",
-  "noUsers":"No users available"
+  "noUsers": "No users available",
+  "errorMessagePrefix": "Error:"
 }
