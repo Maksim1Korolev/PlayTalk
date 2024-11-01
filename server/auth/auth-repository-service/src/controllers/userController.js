@@ -1,9 +1,10 @@
 import asyncHandler from "express-async-handler";
 
 import { getLogger } from "../utils/logger.js";
-const logger = getLogger("UserController");
 
 import UserService from "../services/userService.js";
+
+const logger = getLogger("UserController");
 
 // @desc   Get users
 // @route  GET /api/users

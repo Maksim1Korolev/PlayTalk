@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
-import redisClient from "../utils/redisClient.js";
+
 import { getLogger } from "../utils/logger.js";
-const logger = getLogger("UserService");
+
+import redisClient from "../utils/redisClient.js";
 
 import User from "../schemas/User.js";
+
+const logger = getLogger("UserService");
 
 class UserService {
   static async addUser(user) {

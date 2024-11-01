@@ -2,9 +2,10 @@ import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 
 import { getLogger } from "../utils/logger.js";
-const logger = getLogger("AuthMiddleware");
 
 import UserService from "../services/userService.js";
+
+const logger = getLogger("AuthMiddleware");
 
 export const protect = asyncHandler(async (req, res, next) => {
   const authorizationHeader = req.headers.authorization;

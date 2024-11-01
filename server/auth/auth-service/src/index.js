@@ -3,11 +3,11 @@ import dotenv from "dotenv";
 import express from "express";
 
 import { getLogger } from "./utils/logger.js";
-const logger = getLogger("Main");
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
-
 import authRouter from "./routes/authRoutes.js";
+
+const logger = getLogger("Main");
 
 dotenv.config();
 

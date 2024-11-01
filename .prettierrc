@@ -10,18 +10,42 @@
   "jsxBracketSameLine": false,
   "arrowParens": "avoid",
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
-  "importOrder": [
-    "^.+\\.scss$",
-    "<THIRD_PARTY_MODULES>",
-    "^@mui/icons-material/(.*)$",
-    "^@/shared/assets",
-    "^@/shared/(.*)$",
-    "^@/(app|entities|features|pages|widgets)(/.*)?$",
-    "^\\.{2}/",
-    "^\\./"
-  ],
+
+  "importOrder": ["<THIRD_PARTY_MODULES>", "^\\.{2}/", "^\\./"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "importOrderGroupNamespaceSpecifiers": true,
-  "importOrderCaseInsensitive": true
+  "importOrderCaseInsensitive": true,
+
+  "overrides": [
+    {
+      "files": ["client/**/*.{js,jsx,ts,tsx}"],
+      "options": {
+        "importOrder": [
+          "^.+\\.scss$",
+          "<THIRD_PARTY_MODULES>",
+          "^@mui/icons-material/(.*)$",
+          "^@/shared/assets",
+          "^@/shared/(.*)$",
+          "^@/(app|entities|features|pages|widgets)(/.*)?$",
+          "^\\.{2}/",
+          "^\\./"
+        ]
+      }
+    },
+    {
+      "files": ["server/**/*.{js,jsx,ts,tsx}"],
+      "options": {
+        "importOrder": [
+          "<THIRD_PARTY_MODULES>",
+          ".*/utils/logger\\.js$",
+          ".*/utils/(.*)$",
+          ".*/middleware/(.*)$",
+          ".*/services/(.*)$",
+          "^\\.{2}/",
+          "^\\./"
+        ]
+      }
+    }
+  ]
 }

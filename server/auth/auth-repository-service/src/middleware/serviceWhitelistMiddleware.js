@@ -1,4 +1,5 @@
 import { getLogger } from "../utils/logger.js";
+
 const logger = getLogger("ServiceWhitelistMiddleware");
 
 const WHITELISTED_SERVICES = [

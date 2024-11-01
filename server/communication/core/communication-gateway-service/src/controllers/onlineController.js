@@ -1,6 +1,7 @@
+import { getLogger } from "../utils/logger.js";
+
 import SocketService from "../services/socketService.js";
 
-import { getLogger } from "../utils/logger.js";
 const logger = getLogger("OnlineController");
 
 // @desc   Get all online usernames

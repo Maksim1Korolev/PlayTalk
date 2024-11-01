@@ -1,7 +1,8 @@
 import { getLogger } from "../utils/logger.js";
-const logger = getLogger("MessageHistoryController");
 
 import MessageHistoryService from "../services/chat/messageHistoryService.js";
+
+const logger = getLogger("MessageHistoryController");
 
 // @desc   Get counts of unread messages from all users
 // @route  GET /api/unread/getAll
@@ -13,9 +14,8 @@ export const getAllUnreadMessageCounts = async (req, res) => {
       `Fetching unread message counts for user: ${requestingUsername}`
     );
 
-    const { data } = await MessageHistoryService.getAllUnreadMessageCounts(
-      requestingUsername
-    );
+    const { data } =
+      await MessageHistoryService.getAllUnreadMessageCounts(requestingUsername);
     return res.status(200).json(data);
   } catch (err) {
     logger.error(`Error retrieving unread message counts: ${err.message}`);
