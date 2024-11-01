@@ -1,9 +1,10 @@
 import axios from "axios";
 
 import { getLogger } from "../../utils/logger.js";
+
 const logger = getLogger("MessageHistoryService");
 
-const chatRepositoryServiceUrl = process.env.CHAT_REPOSITORY_SERVICE_URL;
+const chatRepositoryServiceUrl = process.env.CHAT_REPOSITORY_SERVICE_API_URL;
 const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
 const serviceName = "communication_gateway_service";
 

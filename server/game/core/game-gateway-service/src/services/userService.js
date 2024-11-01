@@ -4,7 +4,7 @@ import redisClient from "../utils/redisClient.js";
 import { getLogger } from "../utils/logger.js";
 const logger = getLogger("UserService");
 
-const repositoryServiceUrl = `${process.env.AUTH_REPOSITORY_SERVICE_URL}/users/internal`;
+const repositoryServiceUrl = `${process.env.AUTH_REPOSITORY_SERVICE_API_URL}/users/internal`;
 const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
 const serviceName = "game_gateway_service";
 

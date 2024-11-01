@@ -21,7 +21,7 @@ describe("UserService", () => {
       const result = await UserService.addUser(user);
 
       expect(axios.post).toHaveBeenCalledWith(
-        `${process.env.AUTH_REPOSITORY_SERVICE_URL}/users/internal`,
+        `${process.env.AUTH_REPOSITORY_SERVICE_API_URL}/users/internal`,
         { user },
         {
           headers: {
@@ -47,7 +47,7 @@ describe("UserService", () => {
       const result = await UserService.getUserByUsername(username);
 
       expect(axios.get).toHaveBeenCalledWith(
-        `${process.env.AUTH_REPOSITORY_SERVICE_URL}/users/internal/username/${username}`,
+        `${process.env.AUTH_REPOSITORY_SERVICE_API_URL}/users/internal/username/${username}`,
         {
           headers: {
             [internalServiceHeaderKey]: serviceName,

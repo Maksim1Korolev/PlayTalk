@@ -1,10 +1,11 @@
 import axios from "axios";
+
 import MessageHistoryService from "../messageHistoryService.js";
 
 jest.mock("axios");
 
 describe("MessageHistoryService", () => {
-  const chatRepositoryServiceUrl = process.env.CHAT_REPOSITORY_SERVICE_URL;
+  const chatRepositoryServiceUrl = process.env.CHAT_REPOSITORY_SERVICE_API_URL;
   const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
   const serviceName = "communication_gateway_service";
 
@@ -69,9 +70,10 @@ describe("MessageHistoryService", () => {
       const mockResponse = { data: { unreadCount: 5 } };
       axios.get.mockResolvedValueOnce(mockResponse);
 
-      const result = await MessageHistoryService.getAllUnreadMessageCounts(
-        requestingUsername
-      );
+      const result =
+        await MessageHistoryService.getAllUnreadMessageCounts(
+          requestingUsername
+        );
 
       const expectedUrl = `${chatRepositoryServiceUrl}/unread/getAll/${requestingUsername}`;
 

@@ -5,7 +5,7 @@ jest.mock("axios");
 
 describe("PlayerService", () => {
   const mockUsername = "testUser";
-  const mockUrl = `${process.env.TIC_TAC_TOE_REPOSITORY_SERVICE_URL}/players/${mockUsername}`;
+  const mockUrl = `${process.env.TIC_TAC_TOE_REPOSITORY_SERVICE_API_URL}/players/${mockUsername}`;
   const mockHeaders = {
     headers: {
       [process.env.INTERNAL_SERVICE_HEADER]: "game_gateway_service",

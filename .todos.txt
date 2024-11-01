@@ -10,8 +10,6 @@ Add modals to portal
 Token expiration logic on client
 Add api in config of RTK
 Logic of fetching users in Thunk 
-Update resource files in assets folder/
-"Api" to general .env variable keys that pass only api/
 Tests for chat repo services/
 
 To fix:
@@ -26,6 +24,10 @@ Ttt styles
 Adjust location of accept invite emit
 Remove circleMenuSlice
 Your own avatar doesn't show in messageHistory
+No avatars = no list
+Sometimes the ttt turn doesn't change in client
+Prettier for servers
+Hide sensitive data from .env
 
 To add (In the end):
 Rate limiting to auth

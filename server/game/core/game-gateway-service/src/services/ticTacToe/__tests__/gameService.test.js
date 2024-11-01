@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import GameService from "../gameService.js";
 
 jest.mock("axios");
@@ -6,7 +7,7 @@ jest.mock("axios");
 describe("GameService", () => {
   const mockPlayer1 = "player1";
   const mockPlayer2 = "player2";
-  const mockGameUrl = process.env.TIC_TAC_TOE_SERVICE_URL;
+  const mockGameUrl = process.env.TIC_TAC_TOE_SERVICE_API_URL;
   const mockHeaders = {
     headers: {
       [process.env.INTERNAL_SERVICE_HEADER]: "game_gateway_service",

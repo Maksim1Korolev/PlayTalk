@@ -16,7 +16,7 @@ namespace TicTacToe.Services
         public PlayerService(IConfiguration configuration)
         {
             _httpClient = new HttpClient();
-            _repositoryServiceUrl = configuration["TIC_TAC_TOE_REPOSITORY_SERVICE_URL"] ?? "http://tic_tac_toe_repository_service:8082/api";
+            _repositoryServiceUrl = configuration["TIC_TAC_TOE_REPOSITORY_SERVICE_API_URL"] ?? "http://tic_tac_toe_repository_service:8082/api";
             _internalServiceHeaderKey = Environment.GetEnvironmentVariable("INTERNAL_SERVICE_HEADER")
                 ?? configuration["ServiceSettings:InternalServiceHeader"]
                 ?? "internal-service";

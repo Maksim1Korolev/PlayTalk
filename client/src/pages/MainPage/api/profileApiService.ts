@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const $profileApi = axios.create({
-  baseURL: import.meta.env.VITE_PROFILE_REPOSITORY_SERVICE_URL,
+  baseURL: `${import.meta.env.VITE_PROFILE_REPOSITORY_SERVICE_API_URL}/profiles`,
 });
 
 export const profileApiService = {

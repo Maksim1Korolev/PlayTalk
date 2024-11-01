@@ -3,7 +3,7 @@ import axios from "axios";
 import { $profileApi } from "@/pages/MainPage/api/profileApiService";
 
 export const $authApi = axios.create({
-  baseURL: import.meta.env.VITE_AUTH_SERVICE_URL,
+  baseURL: `${import.meta.env.VITE_AUTH_SERVICE_API_URL}/auth`,
 });
 
 export const apiService = {

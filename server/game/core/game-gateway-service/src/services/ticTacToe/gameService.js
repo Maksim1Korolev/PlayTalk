@@ -1,9 +1,10 @@
 import axios from "axios";
 
 import { getLogger } from "../../utils/logger.js";
+
 const logger = getLogger("TicTacToeGameService");
 
-const ticTacToeServiceUrl = `${process.env.TIC_TAC_TOE_SERVICE_URL}/Game`;
+const ticTacToeServiceUrl = `${process.env.TIC_TAC_TOE_SERVICE_API_URL}/Game`;
 const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
 const serviceName = "game_gateway_service";
 
