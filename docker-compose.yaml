@@ -80,10 +80,10 @@ services:
           action: sync
 
   # Chat
-  chat_repository_service:
-    build: ./server/communication/modules/chat/chat-repository-service
+  chat_service:
+    build: ./server/communication/modules/chat/chat-service
     ports:
-      - "3021:3021"
+      - "3020:3020"
     networks:
       - talkback-network
     environment:
@@ -92,9 +92,9 @@ services:
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
       watch:
-        - path: ./server/communication/modules/chat/chat-repository-service/package.json
+        - path: ./server/communication/modules/chat/chat-service/package.json
           action: rebuild
-        - path: ./server/communication/modules/chat/chat-repository-service
+        - path: ./server/communication/modules/chat/chat-service
           target: /usr/src/app
           action: sync
 
