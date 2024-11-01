@@ -10,7 +10,7 @@ Add modals to portal
 Token expiration logic on client
 Add api in config of RTK
 Logic of fetching users in Thunk 
-Tests for chat repo services/
+Tests for chat repo services
 
 To fix:
 Getting error in communication service when requesting unread messages with count of 0
@@ -26,8 +26,7 @@ Remove circleMenuSlice
 Your own avatar doesn't show in messageHistory
 No avatars = no list
 Sometimes the ttt turn doesn't change in client
-Prettier for servers
-Hide sensitive data from .env
+Get sensitive data for .env sorted out, adjust location for client's .env
 
 To add (In the end):
 Rate limiting to auth
