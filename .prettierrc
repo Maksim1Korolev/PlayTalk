@@ -14,7 +14,7 @@
     "^.+\\.scss$",
     "<THIRD_PARTY_MODULES>",
     "^@mui/icons-material/(.*)$",
-    "^@/shared/assets/(.*)$",
+    "^@/shared/assets",
     "^@/shared/(.*)$",
     "^@/(app|entities|features|pages|widgets)(/.*)?$",
     "^\\.{2}/",

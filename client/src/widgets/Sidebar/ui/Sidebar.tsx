@@ -1,12 +1,14 @@
 import cls from "./Sidebar.module.scss";
-import { cx } from "@/shared/lib";
+
 import { useState } from "react";
 
-import { ReactComponent as ArrowIcon } from "@/shared/assets/icons/arrow-bottom.svg";
+import { VArrowIcon } from "@/shared/assets";
+
+import { cx } from "@/shared/lib";
+import { AppSvg } from "@/shared/ui";
 
 import { UserList } from "@/features/UserList";
 import { UserListProps } from "@/features/UserList";
-import { AppSvg } from "@/shared/ui";
 
 type SidebarProps = UserListProps;
 
@@ -26,7 +28,7 @@ export const Sidebar = ({ className, ...otherProps }: SidebarProps) => {
       <AppSvg
         className={cls.collapseBtn}
         onClick={onToggle}
-        Svg={ArrowIcon}
+        Svg={VArrowIcon}
         clickable
       />
     </aside>

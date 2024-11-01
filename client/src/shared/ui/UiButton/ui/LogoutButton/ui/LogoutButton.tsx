@@ -1,9 +1,10 @@
 import cls from "./LogoutButton.module.scss";
-import { cx } from "@/shared/lib";
+
 import { ButtonHTMLAttributes } from "react";
 
-import { ReactComponent as LogoutSvg } from "@/shared/assets/icons/logout.svg";
+import { LogoutIcon } from "@/shared/assets";
 
+import { cx } from "@/shared/lib";
 import { AppSvg } from "@/shared/ui/AppSvg";
 
 interface LogoutButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -14,7 +15,7 @@ export const LogoutButton = ({ className, onClick }: LogoutButtonProps) => {
   return (
     <button onClick={onClick} className={cx(cls.LogoutButton, {}, [className])}>
       <div className={cls.sign}>
-        <AppSvg Svg={LogoutSvg} />
+        <AppSvg Svg={LogoutIcon} />
       </div>
 
       <div className={cls.text}>Logout</div>
