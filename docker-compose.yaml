@@ -47,6 +47,8 @@ services:
       - talkback-network
     environment:
       - AUTH_REPOSITORY_SERVICE_API_URL=${AUTH_REPOSITORY_SERVICE_API_URL}
+      - REDIS_URL=${REDIS_URL}
+      - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:

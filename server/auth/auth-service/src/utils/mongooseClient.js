@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 import { getLogger } from "./logger.js";
-
 const logger = getLogger("MongoDB");
 
 const connectToMongoDB = async () => {
