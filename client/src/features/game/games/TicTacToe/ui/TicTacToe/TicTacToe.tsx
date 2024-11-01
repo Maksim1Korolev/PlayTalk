@@ -3,7 +3,7 @@ import cls from "./TicTacToe.module.scss";
 import { memo, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-import resources from "@/shared/assets/locales/en/games/TicTacToeResources.json";
+import { ticTacToeResources } from "@/shared/assets";
 
 import { cx } from "@/shared/lib";
 import { UiButton, UiText, VStack } from "@/shared/ui";
@@ -49,12 +49,12 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
 
   const onMakeMove = ({ interactingIndex }: { interactingIndex: number }) => {
     if (currentPlayer !== currentUser.username) {
-      setStatusMessage(resources.notYourTurn);
+      setStatusMessage(ticTacToeResources.notYourTurn);
       return;
     }
 
     if (board[interactingIndex] !== "-") {
-      setStatusMessage(resources.squareOccupied);
+      setStatusMessage(ticTacToeResources.squareOccupied);
       return;
     }
 
@@ -103,8 +103,11 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
     <VStack max className={cx(cls.TicTacToe, {}, [className])}>
       <UiText max className={cls.statusMessage}>
         {currentPlayer === currentUser.username
-          ? resources.yourTurn
-          : resources.opponentsTurn.replace("{opponent}", currentPlayer)}
+          ? ticTacToeResources.yourTurn
+          : ticTacToeResources.opponentsTurn.replace(
+              "{opponent}",
+              currentPlayer
+            )}
       </UiText>
       {statusMessage && (
         <UiText max className={cls.statusMessage}>
@@ -119,7 +122,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
         className={cls.surrenderButton}
         onClick={() => handleSurrender({ opponentUsername })}
       >
-        {resources.surrenderButton}
+        {ticTacToeResources.surrenderButton}
       </UiButton>
     </VStack>
   );
