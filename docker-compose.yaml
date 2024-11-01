@@ -8,7 +8,6 @@ services:
       - talkback-network
     environment:
       - AUTH_SERVICE_API_URL=${AUTH_SERVICE_API_URL}
-      - AUTH_REPOSITORY_SERVICE_API_URL=${AUTH_REPOSITORY_SERVICE_API_URL}
       - COMMUNICATION_SOCKET_URL=${COMMUNICATION_SOCKET_URL}
       - GAME_SOCKET_URL=${GAME_SOCKET_URL}
     develop:
@@ -20,25 +19,6 @@ services:
           action: sync
 
   # Auth
-  auth_repository_service:
-    build: ./server/auth/auth-repository-service
-    ports:
-      - "3011:3011"
-    networks:
-      - talkback-network
-    environment:
-      - REDIS_URL=${REDIS_URL}
-      - DATABASE_URL=${DATABASE_URL}
-      - JWT_SECRET=${JWT_SECRET}
-      - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
-    develop:
-      watch:
-        - path: ./server/auth/auth-repository-service/package.json
-          action: rebuild
-        - path: ./server/auth/auth-repository-service
-          target: /usr/src/app
-          action: sync
-
   auth_service:
     build: ./server/auth/auth-service
     ports:
@@ -46,7 +26,6 @@ services:
     networks:
       - talkback-network
     environment:
-      - AUTH_REPOSITORY_SERVICE_API_URL=${AUTH_REPOSITORY_SERVICE_API_URL}
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
@@ -89,7 +68,7 @@ services:
     environment:
       - REDIS_URL=${REDIS_URL}
       - CHAT_REPOSITORY_SERVICE_API_URL=${CHAT_REPOSITORY_SERVICE_API_URL}
-      - AUTH_REPOSITORY_SERVICE_API_URL=${AUTH_REPOSITORY_SERVICE_API_URL}
+      - AUTH_SERVICE_API_URL=${AUTH_SERVICE_API_URL}
       - JWT_SECRET=${JWT_SECRET}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:
@@ -130,7 +109,7 @@ services:
       - REDIS_URL=${REDIS_URL}
       - TIC_TAC_TOE_SERVICE_API_URL=${TIC_TAC_TOE_SERVICE_API_URL}
       - TIC_TAC_TOE_REPOSITORY_SERVICE_API_URL=${TIC_TAC_TOE_REPOSITORY_SERVICE_API_URL}
-      - AUTH_REPOSITORY_SERVICE_API_URL=${AUTH_REPOSITORY_SERVICE_API_URL}
+      - AUTH_SERVICE_API_URL=${AUTH_SERVICE_API_URL}
       - JWT_SECRET=${JWT_SECRET}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     develop:

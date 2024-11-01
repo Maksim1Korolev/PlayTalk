@@ -1,10 +1,12 @@
 import axios from "axios";
 
-import redisClient from "../utils/redisClient.js";
 import { getLogger } from "../utils/logger.js";
+
+import redisClient from "../utils/redisClient.js";
+
 const logger = getLogger("UserService");
 
-const repositoryServiceUrl = `${process.env.AUTH_REPOSITORY_SERVICE_API_URL}/users/internal`;
+const repositoryServiceUrl = `${process.env.AUTH_SERVICE_API_URL}/users/internal`;
 const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
 const serviceName = "communication_gateway_service";
 

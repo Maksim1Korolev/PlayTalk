@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const $usersApi = axios.create({
-  baseURL: `${import.meta.env.VITE_AUTH_REPOSITORY_SERVICE_API_URL}/users`,
+  baseURL: `${import.meta.env.VITE_AUTH_SERVICE_API_URL}/users`,
 });
 
 export const usersApiService = {

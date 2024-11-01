@@ -1,6 +1,8 @@
-import UserService from "../userService.js";
 import axios from "axios";
+
 import redisClient from "../../utils/redisClient.js";
+
+import UserService from "../userService.js";
 
 jest.mock("axios");
 
@@ -13,7 +15,7 @@ describe("UserService", () => {
     const userId = "1234";
     const mockUser = { id: userId, username: "testUser" };
     const redisKey = process.env.REDIS_USERS_ID_KEY;
-    const repositoryServiceUrl = `${process.env.AUTH_REPOSITORY_SERVICE_API_URL}/users/internal`;
+    const repositoryServiceUrl = `${process.env.AUTH_SERVICE_API_URL}/users/internal`;
     const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
     const serviceName = "communication_gateway_service";
 
