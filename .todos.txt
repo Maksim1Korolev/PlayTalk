@@ -9,6 +9,7 @@ Add api in config of RTK
 Logic of fetching users in Thunk 
 Tests for chat repo services
 Boolean func to see if user is registered and implement it
+Put chat into slice
 
 To fix:
 Getting error in communication service when requesting unread messages with count of 0
