@@ -1,6 +1,6 @@
-import { Message } from "@/features/chat/ChatBox/ui/ChatMessage/ui/ChatMessage";
-import { SocketContext } from "@/shared/lib/context/SocketContext";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { Message } from "@/features/chat/ChatBox/ui/ChatMessage/ui/ChatMessage"
+import { SocketContext } from "@/shared/lib/context/SocketContext"
+import { useCallback, useContext, useEffect, useState } from "react"
 
 export const useChatMessages = ({
   currentUsername,
@@ -65,6 +65,13 @@ export const useChatMessages = ({
     communicationSocket.on("stop typing", senderUsername => {
       if (senderUsername === receiverUsername) setIsTyping(false);
     });
+
+		return () => {
+			communicationSocket.off("update-chat" )
+			communicationSocket.off("typing" )
+			communicationSocket.off("stop typing" )
+
+		}
   }, [communicationSocket, receiverUsername]);
 
   useEffect(() => {
