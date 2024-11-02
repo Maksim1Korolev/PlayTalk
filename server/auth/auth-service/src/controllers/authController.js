@@ -2,10 +2,11 @@ import { hash, verify } from "argon2";
 import asyncHandler from "express-async-handler";
 
 import { getLogger } from "../utils/logger.js";
-const logger = getLogger("AuthController");
 
-import UserService from "../services/userService.js";
 import generateToken from "../services/generateToken.js";
+import UserService from "../services/userService.js";
+
+const logger = getLogger("AuthController");
 
 // @desc   Auth user
 // @route  POST /api/users/login
@@ -32,7 +33,7 @@ export const authUser = asyncHandler(async (req, res) => {
 
     const token = generateToken(user._id, user.username);
     logger.info(`User authenticated successfully: ${username}`);
-    res.json({ user, token });
+    res.json({ token });
   } catch (error) {
     logger.error(`Error authenticating user: ${username} - ${error.message}`);
     res.status(401).json({ message: error.message });
@@ -70,7 +71,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 
     const token = generateToken(user._id, user.username);
     logger.info(`User registered successfully: ${username}`);
-    return res.status(201).json({ user, token });
+    return res.status(201).json({ token });
   } catch (error) {
     logger.error(`Error registering user: ${username}: ${error.message}`);
     return res.status(500).json({ message: "Internal server error" });

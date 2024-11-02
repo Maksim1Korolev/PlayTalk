@@ -49,7 +49,7 @@ export const UserList = ({
   handleUserPlayButton,
 }: UserListProps) => {
   const [cookies] = useCookies();
-  const { user: currentUserFromCookies, token } = cookies["jwt-cookie"];
+  const { currentUsername, token } = cookies["jwt-cookie"];
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -72,7 +72,7 @@ export const UserList = ({
     const fetchData = async () => {
       try {
         const upToDateUsers = await fetchUsersStatus({
-          currentUser: currentUserFromCookies,
+          currentUsername,
           token,
           setError,
           setIsError,
@@ -82,7 +82,7 @@ export const UserList = ({
         dispatch(
           userActions.initializeUsers({
             users: upToDateUsers,
-            currentUser: currentUserFromCookies,
+            currentUsername,
           })
         );
       } catch (error) {
@@ -94,7 +94,7 @@ export const UserList = ({
     };
 
     fetchData();
-  }, [dispatch, currentUserFromCookies, token]);
+  }, [dispatch, currentUsername, token]);
 
   const userList = useMemo(() => {
     const sortedUsers = users ? [...users].sort(sortUsers) : [];

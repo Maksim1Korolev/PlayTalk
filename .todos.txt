@@ -25,6 +25,8 @@ Get sensitive data for .env sorted out, adjust location for client's .env
 Blurred messages and gap between them
 Index file of the profile service
 Sort out game and modal types
+User has to be added in real time to the list when registered
+
 
 To add (In the end):
 Adjust location of accept invite emit

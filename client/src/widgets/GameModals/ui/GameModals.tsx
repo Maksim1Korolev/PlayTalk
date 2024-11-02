@@ -36,7 +36,7 @@ interface GameModalsProps {
 
 export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
   const [cookies] = useCookies(["jwt-cookie"]);
-  const { user: currentUser, token } = cookies["jwt-cookie"];
+  const { currentUsername, token } = cookies["jwt-cookie"];
 
   const users = useAppSelector(getUsers);
 
@@ -53,7 +53,7 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
         gameModals.map(async modal => {
           const data = await gameApiService.getGame(token, {
             gameName: modal.gameData.gameName,
-            player1Username: currentUser.username,
+            player1Username: currentUsername,
             player2Username: modal.gameData.opponentUsername,
           });
           return {
@@ -71,7 +71,7 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
     };
 
     fetchGames();
-  }, [gameModals, currentUser.username, token]);
+  }, [gameModals, currentUsername, token]);
 
   useEffect(() => {
     const loadIcons = async () => {

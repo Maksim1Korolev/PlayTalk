@@ -15,14 +15,13 @@ const userSlice = createSlice({
   reducers: {
     initializeUsers: (
       state,
-      action: PayloadAction<{ users: User[]; currentUser: CurrentUser | null }>
+      action: PayloadAction<{ users: User[]; currentUsername: string }>
     ) => {
-      const { users, currentUser } = action.payload;
+      const { users, currentUsername } = action.payload;
 
-      state.currentUser = currentUser;
-      state.users = users.filter(
-        user => user.username !== currentUser?.username
-      );
+      state.users = users.filter(user => user.username !== currentUsername);
+
+      state.currentUser = users.find(user => user.username === currentUsername);
     },
     updateUser: (
       state,

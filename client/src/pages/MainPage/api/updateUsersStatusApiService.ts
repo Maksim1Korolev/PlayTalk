@@ -1,20 +1,21 @@
 import { User } from "@/entities/User";
+
 import { communicationApiService } from "./communicationApiService";
 import { gameApiService } from "./gameApiService";
 import { profileApiService } from "./profileApiService";
 import { usersApiService } from "./usersApiService";
 
 interface FetchUsersStatusParams {
+  currentUsername: string;
   token: string;
-  currentUser: User;
   setError: React.Dispatch<React.SetStateAction<Error | null | undefined>>;
   setIsError: React.Dispatch<React.SetStateAction<boolean>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const fetchUsersStatus = async ({
+  currentUsername,
   token,
-  currentUser,
   setError,
   setIsError,
   setIsLoading,
@@ -30,11 +31,8 @@ export const fetchUsersStatus = async ({
 
     const results = await Promise.allSettled([
       communicationApiService.getOnlineUsernames(token),
-      communicationApiService.getUnreadMessageCount(
-        currentUser.username,
-        token
-      ),
-      gameApiService.getActiveGames(token, currentUser.username),
+      communicationApiService.getUnreadMessageCount(currentUsername, token),
+      gameApiService.getActiveGames(token, currentUsername),
     ]);
 
     const onlineUsernames =

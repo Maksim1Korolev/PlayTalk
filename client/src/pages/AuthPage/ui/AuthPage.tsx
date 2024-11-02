@@ -44,7 +44,11 @@ const AuthPage = ({ className }: AuthPageProps) => {
     () => apiService.login(username, password),
     {
       onSuccess: data => {
-        setCookie("jwt-cookie", data, { path: "/" });
+        setCookie(
+          "jwt-cookie",
+          { currentUsername: username, token: data.token },
+          { path: "/" }
+        );
         setIsAuthenticated(true);
       },
       onError: ({ response }) => {
@@ -58,7 +62,11 @@ const AuthPage = ({ className }: AuthPageProps) => {
     () => apiService.register(username, password),
     {
       onSuccess: data => {
-        setCookie("jwt-cookie", data, { path: "/" });
+        setCookie(
+          "jwt-cookie",
+          { currentUsername: username, token: data.token },
+          { path: "/" }
+        );
         setIsAuthenticated(true);
       },
       onError: ({ response }) => {

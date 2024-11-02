@@ -1,15 +1,14 @@
 import cls from "./TicTacToe.module.scss";
 
 import { memo, useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
 
 import { ticTacToeResources } from "@/shared/assets";
 
-import { cx } from "@/shared/lib";
+import { cx, useAppSelector } from "@/shared/lib";
 import { UiButton, UiText, VStack } from "@/shared/ui";
 
 import { TicTacToeGame } from "@/entities/game/Game";
-import { User } from "@/entities/User";
+import { CurrentUser, getCurrentUser } from "@/entities/User";
 
 import { useTicTacToeSocket } from "../../hooks/useTicTacToeSocket";
 import { Board } from "../Board";
@@ -20,8 +19,7 @@ interface TicTacToeProps {
 }
 
 export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
-  const [cookies] = useCookies(["jwt-cookie"]);
-  const currentUser: User = cookies["jwt-cookie"]?.user;
+  const currentUser: CurrentUser = useAppSelector(getCurrentUser);
 
   const [currentPlayer, setCurrentPlayer] = useState(game.currentPlayer);
   const [statusMessage, setStatusMessage] = useState("");
@@ -29,7 +27,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
   const [board, setBoard] = useState<("-" | "O" | "X")[]>(game.board);
 
   const opponentUsername =
-    currentUser.username === game.player1.username
+    currentUser!.username === game.player1.username
       ? game.player2.username
       : game.player1.username;
 
@@ -48,7 +46,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
   };
 
   const onMakeMove = ({ interactingIndex }: { interactingIndex: number }) => {
-    if (currentPlayer !== currentUser.username) {
+    if (currentPlayer !== currentUser!.username) {
       setStatusMessage(ticTacToeResources.notYourTurn);
       return;
     }
@@ -59,7 +57,10 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
     }
 
     handleMakeMove({ opponentUsername, interactingIndex });
-    onMoveMade({ interactingUsername: currentUser.username, interactingIndex });
+    onMoveMade({
+      interactingUsername: currentUser!.username,
+      interactingIndex,
+    });
   };
 
   const onMoveMade = ({
@@ -102,7 +103,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
   return (
     <VStack max className={cx(cls.TicTacToe, {}, [className])}>
       <UiText max className={cls.statusMessage}>
-        {currentPlayer === currentUser.username
+        {currentPlayer === currentUser!.username
           ? ticTacToeResources.yourTurn
           : ticTacToeResources.opponentsTurn.replace(
               "{opponent}",
