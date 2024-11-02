@@ -1,3 +1,4 @@
-export type { ChatModal } from "./model";
+export type { ChatData } from "./model"
 
-export { UnreadMessagesCountIndicator } from "./ui";
+export { UnreadMessagesCountIndicator } from "./ui"
+

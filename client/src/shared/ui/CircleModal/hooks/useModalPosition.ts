@@ -1,8 +1,9 @@
-import { useContext, useCallback } from "react";
-import { ModalContext } from "@/shared/lib/context/ModalContext";
+import { getModalCount } from '@/entities/Modal/model'
+import { useAppSelector } from '@/shared/lib'
+import { useCallback } from "react"
 
 export const useModalPosition = () => {
-  const { modalCount } = useContext(ModalContext);
+  const modalCount = useAppSelector(getModalCount)
 
   const getStartingPosition = useCallback(() => {
     const offset = 30;

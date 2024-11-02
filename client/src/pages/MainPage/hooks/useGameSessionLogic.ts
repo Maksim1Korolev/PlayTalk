@@ -1,13 +1,14 @@
-import { useCallback } from "react";
+import { useCallback } from "react"
 
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/lib"
 
-import { GameData } from "@/entities/game/Game";
-import { getInviteKey, Invite, inviteActions } from "@/entities/game/Invite";
-import { getUsers, User, userActions } from "@/entities/User";
-import { useGameModals } from "@/widgets/GameModals";
+import { GameData } from "@/entities/game/Game"
+import { getInviteKey, Invite, inviteActions } from "@/entities/game/Invite"
+import { getUsers, User, userActions } from "@/entities/User"
+import { useGameModals } from "@/widgets/GameModals"
 
-import { useGameSessionSocket } from "./useGameSessionSocket";
+import { generateModalId } from '@/widgets/GameModals/hooks/useGameModals'
+import { useGameSessionSocket } from "./useGameSessionSocket"
 
 type GameStartPayload = {
   gameData: GameData;
@@ -17,6 +18,7 @@ type GameEndPayload = {
   gameData: GameData;
   winner: string;
 };
+
 
 export const useGameSessionLogic = () => {
   const users = useAppSelector(getUsers);
@@ -69,7 +71,7 @@ export const useGameSessionLogic = () => {
       })
     );
 
-    handleCloseGameModal({ gameData });
+    handleCloseGameModal({ modalId: generateModalId(gameData) });
   };
 
   const { handleSendGameInvite, handleAcceptGame } = useGameSessionSocket({
@@ -106,6 +108,7 @@ export const useGameSessionLogic = () => {
     isActive: boolean;
     isInviting: boolean;
   }) => {
+		
     const invite: Invite = {
       senderUsername: gameData.opponentUsername,
       gameName: gameData.gameName,

@@ -22,4 +22,4 @@ const circleMenuSlice = createSlice({
 
 
 
-export const { reducer: CircleMenuReducer, actions: CircleMenuActions } = circleMenuSlice;
+export const { reducer: circleMenuReducer, actions: circleMenuActions } = circleMenuSlice;

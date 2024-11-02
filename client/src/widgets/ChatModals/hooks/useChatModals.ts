@@ -1,37 +1,45 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState } from "react"
 
-import { ChatModal } from "@/entities/Chat";
-import { User } from "@/entities/User";
+import { ChatData } from '@/entities/Chat'
+import { getModalCount, getModalMaxCount, Modal, modalActions } from '@/entities/Modal'
+import { User } from "@/entities/User"
+import { useAppDispatch, useAppSelector } from '@/shared/lib'
 
 export const useChatModals = () => {
-  const [chatModals, setChatModals] = useState<ChatModal[]>([]);
+  const [chatModals, setChatModals] = useState<Modal<ChatData>[]>([]);
+	const dispatch = useAppDispatch()
+	const modalCount = useAppSelector(getModalCount)
+	const modalMaxCount = useAppSelector(getModalMaxCount)
 
   //TODO:Remove and move modals limitation logic
   const handleOpenChatModal = useCallback(
     (user: User) => {
-      if (chatModals && chatModals.length > 5) {
-        alert("AAA! Too many chat modals!");
+      if (chatModals && modalCount > modalMaxCount) {
         return;
       }
       if (
         chatModals?.find(
-          ({ user: currentUser }) => currentUser.username === user.username
+          ({data: { user: currentUser }}) => currentUser.username === user.username
         )
       ) {
         return;
       }
 
-      const newChatModalProps: ChatModal = { user };
-
+      const newChatModalProps: Modal<ChatData> = { 
+				modalId: user.username,
+				data: { user }};
+			
       setChatModals(prev => [...(prev || []), newChatModalProps]);
+			dispatch(modalActions.addModal(newChatModalProps))
     },
-    [chatModals]
+    [chatModals, dispatch]
   );
 
-  const handleCloseChatModal = (username: string) => {
+  const handleCloseChatModal = (modalId: string) => {
     setChatModals(prev =>
-      prev.filter(modal => modal.user.username !== username)
+      prev.filter(modal => modal.modalId !== modalId)
     );
+		dispatch(modalActions.removeModal(modalId))
   };
 
   return {
