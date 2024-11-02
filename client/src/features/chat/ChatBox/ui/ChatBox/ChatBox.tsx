@@ -62,7 +62,7 @@ export const ChatBox = memo(
         <Card className={cx(cls.body)} padding={"0"}variant="blurred" border='none'  max>
           <VStack max>
             <div className={cls.chatBoxOverlay}></div>
-            <VStack className={cls.chatLogs} max>
+            <VStack className={cls.chatLogs} max >
               {messageHistory && renderMessageHistory()}
               <div ref={dummy} />
             </VStack>

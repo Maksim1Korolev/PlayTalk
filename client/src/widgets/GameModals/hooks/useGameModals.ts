@@ -1,9 +1,20 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState } from "react"
 
-import { GameData, GameModal } from "@/entities/game/Game";
+import { GameData } from "@/entities/game/Game"
+import { getModalCount, getModalMaxCount, Modal, modalActions } from '@/entities/Modal'
+import { useAppDispatch, useAppSelector } from '@/shared/lib'
+
+
+export const generateModalId = (gameData: GameData): string => {
+  return `${gameData.opponentUsername}_${gameData.gameName}`;
+};
 
 export const useGameModals = () => {
-  const [gameModals, setGameModals] = useState<GameModal[]>([]);
+  const [gameModals, setGameModals] = useState<Modal<GameData>[]>([]);
+
+	const dispatch = useAppDispatch()
+	const modalCount = useAppSelector(getModalCount)
+	const modalMaxCount = useAppSelector(getModalMaxCount)
 
   const handleOpenGameModal = useCallback(
     ({
@@ -13,35 +24,41 @@ export const useGameModals = () => {
       gameData: GameData;
       position?: { x: number; y: number };
     }) => {
+			const modalId = generateModalId(gameData)
+
       const isAlreadyOpen = gameModals.some(
         modal =>
-          modal.gameData.opponentUsername === gameData.opponentUsername &&
-          modal.gameData.gameName === gameData.gameName
+          modal.modalId === modalId
       );
 
-      const isMaxModalsOpen = gameModals.length >= 5;
+      const isMaxModalsOpen = modalCount >= modalMaxCount;
 
-      if (!isAlreadyOpen && !isMaxModalsOpen) {
-        const newGameModalProps: GameModal = {
-          gameData,
+      if (isAlreadyOpen || isMaxModalsOpen) {
+				return 
+			}
+
+        const newGameModalProps: Modal<GameData> = {
+					modalId ,
+          data: gameData,
           position,
         };
 
         setGameModals(prev => [...prev, newGameModalProps]);
-      }
+				dispatch(modalActions.addModal(newGameModalProps))
+      
     },
-    [gameModals]
+    [dispatch, gameModals, modalCount, modalMaxCount]
   );
 
   const handleCloseGameModal = useCallback(
-    ({ gameData }: { gameData: GameData }) => {
+    ({modalId }: {modalId: string}) => {
       setGameModals(prev =>
         prev.filter(
           modal =>
-            modal.gameData.opponentUsername !== gameData.opponentUsername ||
-            modal.gameData.gameName !== gameData.gameName
+            modal.modalId !== modalId 
         )
       );
+			dispatch(modalActions.removeModal(modalId))
     },
     []
   );

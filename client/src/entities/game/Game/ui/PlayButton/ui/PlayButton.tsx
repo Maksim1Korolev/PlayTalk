@@ -11,7 +11,7 @@ import { AppImage } from "@/shared/ui"
 import getImagePath from "@/shared/utils/getImagePath"
 
 import { GameName, GameNames } from "@/entities/game/Game"
-import { CircleMenuActions } from "@/features/UserList"
+import { circleMenuActions } from "@/features/UserList"
 import { selectActiveMenuId } from "@/features/UserList/model/selectors/selectActiveMenuId"
 
 interface PlayButtonProps {
@@ -44,12 +44,12 @@ export const PlayButton = ({
       // Flip back when closing
       setIsFlipped(false);
       setTimeout(() => {
-        dispatch(CircleMenuActions.closeMenu());
+        dispatch(circleMenuActions.closeMenu());
         setAnimateOpen(false);
         setShowMenu(false);
       }, 100); // Wait for closing animation to finish
     } else {
-      dispatch(CircleMenuActions.closeMenu()); // Close any other open menu before opening the current one
+      dispatch(circleMenuActions.closeMenu()); // Close any other open menu before opening the current one
       const rect = playButtonRef.current?.getBoundingClientRect();
       if (rect) {
         setMenuPosition({
@@ -61,7 +61,7 @@ export const PlayButton = ({
       setTimeout(() => {
         setIsFlipped(true); // Flip forward when opening
         setAnimateOpen(true);
-        dispatch(CircleMenuActions.openMenu(menuId));
+        dispatch(circleMenuActions.openMenu(menuId));
       }, 50); // Small delay to trigger animation
     }
   };
