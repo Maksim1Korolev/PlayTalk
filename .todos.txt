@@ -26,6 +26,7 @@ Blurred messages and gap between them
 Index file of the profile service
 Sort out game and modal types
 User has to be added in real time to the list when registered
+Initial http request for messageHistory
 
 
 To add (In the end):
