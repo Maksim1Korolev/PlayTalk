@@ -1,13 +1,10 @@
 To add:
 Multiple sources for the main list of users and online
 Upgrade UserList scrollbar
-Winner and players logic to client
 Make users from context into map
 Tests for ttt service
 Modals limitation
-User search
 Add modals to portal
-Token expiration logic on client
 Add api in config of RTK
 Logic of fetching users in Thunk 
 Tests for chat repo services
@@ -15,23 +12,25 @@ Boolean func to see if user is registered and implement it
 
 To fix:
 Getting error in communication service when requesting unread messages with count of 0
-Empty data doesn't count as redis cache
 Check online and api client logic
-Memo template
 Issues when redis connects late (-restart?)
 Adjust modal drag
 Highlight types
 Ttt styles
-Adjust location of accept invite emit
 Remove circleMenuSlice
 Your own avatar doesn't show in messageHistory
-No avatars = no list
 Sometimes the ttt turn doesn't change on opponent's client, although the sign is set
 Get sensitive data for .env sorted out, adjust location for client's .env
 Blurred messages and gap between them
 Index file of the profile service
+Sort out game and modal types
 
 To add (In the end):
+Adjust location of accept invite emit
+Save empty messageHistory in redis cache too
+Token expiration logic on client
+User search
+Winner and players logic to client
 Rate limiting to auth
 Add environment (development/production)
 Kubernetes

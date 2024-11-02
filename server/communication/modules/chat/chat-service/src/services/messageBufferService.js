@@ -1,9 +1,10 @@
+import { getLogger } from "../utils/logger.js";
+
 import redisClient from "../utils/redisClient.js";
 
-import { getLogger } from "../utils/logger.js";
-const logger = getLogger("MessageBufferService");
-
 import MessageHistory from "../schemas/MessageHistory.js";
+
+const logger = getLogger("MessageBufferService");
 
 class MessageBufferService {
   static flushTimer = null;

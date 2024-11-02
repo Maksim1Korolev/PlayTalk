@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
-import MessageHistory from "../schemas/MessageHistory.js";
+
 import { getLogger } from "../utils/logger.js";
+
+import MessageHistory from "../schemas/MessageHistory.js";
+
 import MessageBufferService from "./messageBufferService.js";
+
 const logger = getLogger("MessageHistoryService");
 
 class MessageHistoryService {
@@ -114,9 +118,8 @@ class MessageHistoryService {
     let messagesToChange = [];
 
     logger.info("Get messages from buffer to mark as read");
-    const bufferedMessages = await MessageBufferService.getMessagesFromBuffer(
-      sortedUsernames
-    );
+    const bufferedMessages =
+      await MessageBufferService.getMessagesFromBuffer(sortedUsernames);
 
     if (bufferedMessages?.length > 0) {
       messagesToChange = bufferedMessages;
