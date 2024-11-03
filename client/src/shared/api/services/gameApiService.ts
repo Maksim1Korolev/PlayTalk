@@ -1,9 +1,16 @@
+import { Game, GameData } from "@/entities/game/Game";
+
 import { $gameApi } from "./api";
 
+export interface ActiveGames {
+  [username: string]: string[];
+}
+
 export const gameApiService = {
-  getActiveGames: async (token: string, username: string) => {
-    const response = await $gameApi.get(`/game/games/${username}`, {
-      params: { username },
+  getActiveGames: async (token: string): Promise<ActiveGames> => {
+    const response = await $gameApi.get<{
+      activeGames: ActiveGames;
+    }>(`/game/games`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -12,20 +19,17 @@ export const gameApiService = {
 
   getGame: async (
     token: string,
-    {
-      gameName,
-      player1Username,
-      player2Username,
-    }: {
-      gameName: string;
-      player1Username: string;
-      player2Username: string;
-    }
-  ) => {
-    const response = await $gameApi.get(`/game/${gameName}`, {
-      params: { player1Username, player2Username },
+    { gameName, opponentUsername }: GameData
+  ): Promise<Game> => {
+    const response = await $gameApi.get<{
+      game: Game;
+    }>(`/game/${gameName}`, {
+      params: { opponentUsername },
       headers: { Authorization: `Bearer ${token}` },
     });
+    console.log(response.data.game);
+    console.log(response.data.game);
+
     return response.data.game;
   },
 };

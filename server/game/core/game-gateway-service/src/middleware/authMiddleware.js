@@ -2,10 +2,11 @@ import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 
 import { getLogger } from "../utils/logger.js";
-const logger = getLogger("AuthMiddleware");
 
-import UserService from "../services/userService.js";
 import SocketService from "../services/socketService.js";
+import UserService from "../services/userService.js";
+
+const logger = getLogger("AuthMiddleware");
 
 export const socketAuthMiddleware = (req, res, next) => {
   const isHandshake = req._query.sid === undefined;
@@ -90,28 +91,6 @@ export const protect = asyncHandler(async (req, res, next) => {
         return res.status(401).json({ message: "User not found" });
       }
       logger.info(`User fetched from UserService: ${userFound.username}`);
-    }
-
-    if (req.params.username && req.params.username !== userFound.username) {
-      logger.warn(`Unauthorized access attempt by user: ${userFound.username}`);
-      return res
-        .status(403)
-        .json({ message: "Unauthorized access to this user's data" });
-    }
-
-    const { player1Username, player2Username } = req.query;
-    if (player1Username || player2Username) {
-      if (
-        userFound.username !== player1Username &&
-        userFound.username !== player2Username
-      ) {
-        logger.warn(
-          `Unauthorized access attempt to data by user: ${userFound.username}`
-        );
-        return res
-          .status(403)
-          .json({ message: "Unauthorized access to this data" });
-      }
     }
 
     req.user = userFound;

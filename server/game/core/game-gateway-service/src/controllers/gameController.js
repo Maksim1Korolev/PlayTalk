@@ -1,16 +1,17 @@
 import asyncHandler from "express-async-handler";
 
 import { getLogger } from "../utils/logger.js";
-const logger = getLogger("GameController");
 
 import ActiveGamesService from "../services/activeGamesService.js";
 import TicTacToeGameService from "../services/ticTacToe/gameService.js";
 
+const logger = getLogger("GameController");
+
 // @desc   Get data of active games
-// @route  GET /api/game/games/:username
+// @route  GET /api/game/games
 // @access Protected
 export const getActiveGames = asyncHandler(async (req, res) => {
-  const { username } = req.params;
+  const { username } = req.user;
 
   try {
     logger.info(`Fetching active games for user: ${username}`);
@@ -25,36 +26,38 @@ export const getActiveGames = asyncHandler(async (req, res) => {
 });
 
 // @desc   Get a specific game
-// @route  GET /api/:gameName?player1Username=:player1&player2Username=:player2
+// @route  GET /api/game/:gameName?opponentUsername=:opponent
 // @access Protected
-export const getGame = async (req, res) => {
+export const getGame = asyncHandler(async (req, res) => {
+  const { gameName } = req.params;
+  const { username } = req.user;
+  const { opponentUsername } = req.query;
+
+  if (!opponentUsername) {
+    logger.warn(`Opponent username must be specified`);
+    return res
+      .status(400)
+      .json({ message: "Opponent username must be specified." });
+  }
+
   try {
-    const { gameName } = req.params;
-    const { player1Username, player2Username } = req.query;
-
-    if (!player1Username || !player2Username) {
-      logger.warn(
-        `Both usernames must be specified: ${player1Username}, ${player2Username}`
-      );
-      return res
-        .status(400)
-        .json({ message: "Both usernames must be specified." });
-    }
-
     logger.info(
-      `Fetching game: ${gameName} for players ${player1Username} and ${player2Username}`
+      `Fetching game: ${gameName} for players ${username} and ${opponentUsername}`
     );
+    let gameData;
 
     switch (gameName) {
       case "tic-tac-toe":
-        const gameData = await TicTacToeGameService.getGame(
-          player1Username,
-          player2Username
+        gameData = await TicTacToeGameService.getGame(
+          username,
+          opponentUsername
         );
+        console.log(gameData);
+        console.log(gameData);
 
         if (!gameData) {
           logger.warn(
-            `Game not found for users: ${player1Username}, ${player2Username}`
+            `Game not found for users: ${username}, ${opponentUsername}`
           );
           return res
             .status(404)
@@ -62,7 +65,7 @@ export const getGame = async (req, res) => {
         }
 
         logger.info(
-          `Game data retrieved successfully for users: ${player1Username}, ${player2Username}`
+          `Game data retrieved successfully for users: ${username}, ${opponentUsername}`
         );
         return res.status(200).json({ game: gameData });
 
@@ -72,8 +75,8 @@ export const getGame = async (req, res) => {
           .status(400)
           .json({ message: `Game type ${gameName} is not supported.` });
     }
-  } catch (err) {
-    logger.error(`Error retrieving game data: ${err.message}`);
-    res.status(500).json({ message: "Internal server error." });
+  } catch (error) {
+    logger.error(`Error retrieving game data: ${error.message}`);
+    return res.status(500).json({ message: "Internal server error." });
   }
-};
+});

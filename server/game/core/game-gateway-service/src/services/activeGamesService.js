@@ -1,5 +1,7 @@
-import redisClient from "../utils/redisClient.js";
 import { getLogger } from "../utils/logger.js";
+
+import redisClient from "../utils/redisClient.js";
+
 const logger = getLogger("ActiveGamesService");
 
 class ActiveGamesService {
@@ -86,6 +88,7 @@ class ActiveGamesService {
       process.env.REDIS_USER_GAMES_KEY,
       username
     );
+
     return data ? JSON.parse(data) : {};
   }
 }

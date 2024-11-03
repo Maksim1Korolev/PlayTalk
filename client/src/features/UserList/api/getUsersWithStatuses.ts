@@ -1,7 +1,9 @@
 import {
+  ActiveGames,
   chatApiService,
   gameApiService,
   onlineApiService,
+  UnreadMessageCounts,
   usersApiService,
 } from "@/shared/api";
 
@@ -29,19 +31,27 @@ export const getUsersWithStatuses = async ({
     console.log("Fetched users:");
     console.log(users);
 
-    //TODO:No need to pass currentUsername (has to be changed on the servers)
+    // TODO: No need to pass currentUsername (has to be changed on the servers)
     const results = await Promise.allSettled([
       onlineApiService.getOnlineUsernames(token),
       chatApiService.getUnreadMessageCount(currentUsername, token),
-      gameApiService.getActiveGames(token, currentUsername),
+      gameApiService.getActiveGames(token),
     ]);
 
-    const onlineUsernames =
-      results[0].status === "fulfilled" ? results[0].value : [];
-    const unreadMessageCounts =
-      results[1].status === "fulfilled" ? results[1].value : {};
-    const activeGames =
-      results[2].status === "fulfilled" ? results[2].value : {};
+    const onlineUsernames: string[] =
+      results[0].status === "fulfilled" && Array.isArray(results[0].value)
+        ? results[0].value
+        : [];
+
+    const unreadMessageCounts: UnreadMessageCounts =
+      results[1].status === "fulfilled" && typeof results[1].value === "object"
+        ? results[1].value
+        : {};
+
+    const activeGames: ActiveGames =
+      results[2].status === "fulfilled" && typeof results[2].value === "object"
+        ? results[2].value
+        : {};
 
     const onlineSet = new Set(onlineUsernames);
 

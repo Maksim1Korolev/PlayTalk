@@ -36,14 +36,13 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
     const fetchGames = async () => {
       const fetchedGames = await Promise.all(
         gameModals.map(async modal => {
-          const data = await gameApiService.getGame(token, {
+          const fetchedGame: Game = await gameApiService.getGame(token, {
             gameName: modal.data.gameName,
-            player1Username: currentUsername,
-            player2Username: modal.data.opponentUsername,
+            opponentUsername: modal.data.opponentUsername,
           });
           return {
             id: generateModalId(modal.data),
-            game: data.game,
+            game: fetchedGame,
           };
         })
       );

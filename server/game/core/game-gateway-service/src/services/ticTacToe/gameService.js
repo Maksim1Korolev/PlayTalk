@@ -29,7 +29,7 @@ class GameService {
       logger.info(
         `Fetched game data for ${player1Username} and ${player2Username}`
       );
-      return response.data;
+      return response.data.game;
     } catch (error) {
       logger.error(`Error fetching game data: ${error.message}`);
       throw error;

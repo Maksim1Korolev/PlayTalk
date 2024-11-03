@@ -1,5 +1,10 @@
 import { $communicationApi } from "./api";
 
+//TODO:Update import and implement
+export interface UnreadMessageCounts {
+  [username: string]: number;
+}
+
 export const chatApiService = {
   getUnreadMessageCount: async (currentUsername: string, token: string) => {
     const response = await $communicationApi.get(
