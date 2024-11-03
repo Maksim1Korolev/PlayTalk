@@ -32,7 +32,6 @@ Logged errors from circleMenu library
 Serious troubles with unread in real time and messages in general
 Upgrade font
 Not to pass currentUsername on api requests
-Adjust users that come from auth (password field)
 Disable buttons in userList accordingly
 
 To add (In the end):
