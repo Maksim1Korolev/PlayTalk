@@ -36,9 +36,8 @@ Token expiration logic on client
 User search
 Winner and players logic to client
 Rate limiting to auth
-Add environment (development/production)
-Kubernetes
 Storybook
+Kubernetes
 
 Possible expansions:
 s3 signedUrls and images permission on client
