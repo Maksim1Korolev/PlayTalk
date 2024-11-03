@@ -2,7 +2,6 @@ import { User } from "@/entities/User";
 
 import { communicationApiService } from "./communicationApiService";
 import { gameApiService } from "./gameApiService";
-import { profileApiService } from "./profileApiService";
 import { usersApiService } from "./usersApiService";
 
 interface FetchUsersStatusParams {
@@ -24,11 +23,7 @@ export const fetchUsersStatus = async ({
   setIsLoading(true);
 
   try {
-    let users = await profileApiService.getProfiles(token);
-
-    if (!users) {
-      users = await usersApiService.getUsers(token);
-    }
+    const users = await usersApiService.getUsers(token);
 
     const results = await Promise.allSettled([
       communicationApiService.getOnlineUsernames(token),
