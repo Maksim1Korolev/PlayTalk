@@ -1,6 +1,6 @@
 import { $communicationApi } from "@/shared/api/api";
 
-export const communicationApiService = {
+export const chatApiService = {
   getUnreadMessageCount: async (currentUsername: string, token: string) => {
     const response = await $communicationApi.get(
       `/unread/getAll/${currentUsername}`,

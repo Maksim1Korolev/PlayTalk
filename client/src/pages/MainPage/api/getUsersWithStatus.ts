@@ -1,6 +1,6 @@
 import { User } from "@/entities/User";
 
-import { communicationApiService } from "./communicationApiService";
+import { chatApiService } from "./chatApiService";
 import { gameApiService } from "./gameApiService";
 import { onlineApiService } from "./onlineApiService";
 import { usersApiService } from "./usersApiService";
@@ -14,7 +14,7 @@ interface FetchUsersStatusParams {
 }
 
 //TODO:Rename and move
-export const fetchUsersStatus = async ({
+export const getUsersWithStatus = async ({
   currentUsername,
   token,
   setError,
@@ -30,7 +30,7 @@ export const fetchUsersStatus = async ({
 
     const results = await Promise.allSettled([
       onlineApiService.getOnlineUsernames(token),
-      communicationApiService.getUnreadMessageCount(currentUsername, token),
+      chatApiService.getUnreadMessageCount(currentUsername, token),
       gameApiService.getActiveGames(token, currentUsername),
     ]);
 
