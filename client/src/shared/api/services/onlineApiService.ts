@@ -1,4 +1,4 @@
-import { $communicationApi, $gameApi } from "@/shared/api/api";
+import { $communicationApi, $gameApi } from "./api";
 
 export const onlineApiService = {
   getOnlineUsernames: async (token: string): Promise<string[]> => {

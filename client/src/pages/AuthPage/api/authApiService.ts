@@ -1,4 +1,4 @@
-import { $authApi, $profileApi } from "@/shared/api/api";
+import { $authApi, $profileApi } from "@/shared/api/services/api";
 
 export const authApiService = {
   login: async (username: string, password: string) => {

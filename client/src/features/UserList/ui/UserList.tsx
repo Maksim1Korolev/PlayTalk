@@ -10,7 +10,7 @@ import { Card, Loader, UiText, VStack } from "@/shared/ui";
 
 import { GameData } from "@/entities/game/Game";
 import { getUsers, User, userActions, UserListCard } from "@/entities/User";
-import { getUsersWithStatuses } from "@/pages/MainPage/api/getUsersWithStatuses";
+import { getUsersWithStatuses } from "@/features/UserList/api/getUsersWithStatuses";
 
 import { sortUsers } from "../utils/userListUtils";
 

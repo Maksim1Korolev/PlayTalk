@@ -1,6 +1,6 @@
-import { $authApi, $profileApi } from "@/shared/api/api";
-
 import { User } from "@/entities/User";
+
+import { $authApi, $profileApi } from "./api";
 
 export const usersApiService = {
   getUsers: async (token: string): Promise<User[]> => {

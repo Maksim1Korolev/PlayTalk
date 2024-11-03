@@ -1,4 +1,4 @@
-import { $gameApi } from "@/shared/api/api";
+import { $gameApi } from "./api";
 
 export const gameApiService = {
   getActiveGames: async (token: string, username: string) => {

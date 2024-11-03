@@ -1,15 +1,16 @@
-import { configureStore } from "@reduxjs/toolkit"
+import { configureStore } from "@reduxjs/toolkit";
 
-import { inviteReducer } from "@/entities/game/Invite"
-import { modalReducer } from '@/entities/Modal'
-import { userReducer } from "@/entities/User"
-import { circleMenuReducer } from "@/features/UserList"
-import { $api } from '@/shared/api/api'
-import { ThunkExtraArg } from './StateSchema'
+import { $api } from "@/shared/api";
 
+import { inviteReducer } from "@/entities/game/Invite";
+import { modalReducer } from "@/entities/Modal";
+import { userReducer } from "@/entities/User";
+import { circleMenuReducer } from "@/features/UserList";
+
+import { ThunkExtraArg } from "./StateSchema";
 
 const extraArg: ThunkExtraArg = {
-	api: $api,
+  api: $api,
 };
 
 export const store = configureStore({
@@ -17,14 +18,15 @@ export const store = configureStore({
     user: userReducer,
     invite: inviteReducer,
     circleMenu: circleMenuReducer,
-		modal: modalReducer,
+    modal: modalReducer,
   },
-	devTools: import.meta.env.VITE_NODE_ENV,
-	middleware: getDefaultMiddleware => getDefaultMiddleware({
-		thunk: {
-			extraArgument: extraArg
-		},
-	}),
+  devTools: import.meta.env.VITE_NODE_ENV,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      thunk: {
+        extraArgument: extraArg,
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

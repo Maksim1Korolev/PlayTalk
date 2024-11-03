@@ -1,9 +1,11 @@
-import { User } from "@/entities/User";
+import {
+  chatApiService,
+  gameApiService,
+  onlineApiService,
+  usersApiService,
+} from "@/shared/api";
 
-import { chatApiService } from "./chatApiService";
-import { gameApiService } from "./gameApiService";
-import { onlineApiService } from "./onlineApiService";
-import { usersApiService } from "./usersApiService";
+import { User } from "@/entities/User";
 
 interface FetchUsersStatusParams {
   currentUsername: string;
@@ -13,7 +15,6 @@ interface FetchUsersStatusParams {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-//TODO:Maybe move to another place, but move all the imported services for sure
 export const getUsersWithStatuses = async ({
   currentUsername,
   token,
