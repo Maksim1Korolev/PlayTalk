@@ -31,6 +31,7 @@ Initial http request for messageHistory
 Logged errors from circleMenu library
 Serious troubles with unread in real time and messages in general
 Upgrade font
+Not to pass currentUsername on api requests
 
 To add (In the end):
 Adjust location of accept invite emit

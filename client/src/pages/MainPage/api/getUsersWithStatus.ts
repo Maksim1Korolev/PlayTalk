@@ -28,6 +28,7 @@ export const getUsersWithStatus = async ({
     console.log("Fetched users:");
     console.log(users);
 
+    //TODO:No need to pass currentUsername (has to be changed on the servers)
     const results = await Promise.allSettled([
       onlineApiService.getOnlineUsernames(token),
       chatApiService.getUnreadMessageCount(currentUsername, token),
