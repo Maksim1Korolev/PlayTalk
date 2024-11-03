@@ -10,7 +10,7 @@ import { Card, Loader, UiText, VStack } from "@/shared/ui";
 
 import { GameData } from "@/entities/game/Game";
 import { getUsers, User, userActions, UserListCard } from "@/entities/User";
-import { getUsersWithStatus } from "@/pages/MainPage/api/getUsersWithStatus";
+import { getUsersWithStatuses } from "@/pages/MainPage/api/getUsersWithStatuses";
 
 import { sortUsers } from "../utils/userListUtils";
 
@@ -70,7 +70,7 @@ export const UserList = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const upToDateUsers: User[] = await getUsersWithStatus({
+        const upToDateUsers: User[] = await getUsersWithStatuses({
           currentUsername,
           token,
           setError,

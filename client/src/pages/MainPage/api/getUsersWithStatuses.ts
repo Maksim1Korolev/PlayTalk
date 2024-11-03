@@ -13,8 +13,8 @@ interface FetchUsersStatusParams {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-//TODO:Rename and move
-export const getUsersWithStatus = async ({
+//TODO:Maybe move to another place, but move all the imported services for sure
+export const getUsersWithStatuses = async ({
   currentUsername,
   token,
   setError,
