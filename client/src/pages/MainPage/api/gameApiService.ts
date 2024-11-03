@@ -2,7 +2,7 @@ import { $gameApi } from "@/shared/api/api";
 
 export const gameApiService = {
   getActiveGames: async (token: string, username: string) => {
-    const response = await $gameApi.get(`/api/game/games/${username}`, {
+    const response = await $gameApi.get(`/game/games/${username}`, {
       params: { username },
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -22,7 +22,7 @@ export const gameApiService = {
       player2Username: string;
     }
   ) => {
-    const response = await $gameApi.get(`/api/game/${gameName}`, {
+    const response = await $gameApi.get(`/game/${gameName}`, {
       params: { player1Username, player2Username },
       headers: { Authorization: `Bearer ${token}` },
     });

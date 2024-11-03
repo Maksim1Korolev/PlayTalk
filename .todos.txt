@@ -29,6 +29,8 @@ Sort out game and modal types
 User has to be added in real time to the list when registered
 Initial http request for messageHistory
 Logged errors from circleMenu library
+Serious troubles with unread in real time and messages in general
+Upgrade font
 
 To add (In the end):
 Adjust location of accept invite emit

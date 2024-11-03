@@ -20,7 +20,7 @@ export const $profileApi = axios.create({
 });
 
 export const $gameApi = axios.create({
-  baseURL: import.meta.env.VITE_GAME_SOCKET_URL,
+  baseURL: `${import.meta.env.VITE_GAME_SOCKET_URL}/api`,
 });
 
 export const $communicationApi = axios.create({
