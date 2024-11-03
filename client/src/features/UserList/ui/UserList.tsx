@@ -5,8 +5,7 @@ import { useCookies } from "react-cookie";
 
 import { userListResources } from "@/shared/assets";
 
-import { cx } from "@/shared/lib";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { cx, useAppDispatch, useAppSelector } from "@/shared/lib";
 import { Card, Loader, UiText, VStack } from "@/shared/ui";
 
 import { GameData } from "@/entities/game/Game";

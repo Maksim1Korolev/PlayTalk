@@ -1,12 +1,8 @@
-import axios from "axios";
-
-export const $profileApi = axios.create({
-  baseURL: `${import.meta.env.VITE_PROFILE_SERVICE_API_URL}/profiles`,
-});
+import { $profileApi } from "@/shared/api/api";
 
 export const profileApiService = {
   getProfiles: async (token: string) => {
-    const response = await $profileApi.get(`/`, {
+    const response = await $profileApi.get(`/profiles`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data.profiles;

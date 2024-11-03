@@ -1,8 +1,4 @@
-import axios from "axios";
-
-export const $communicationApi = axios.create({
-  baseURL: import.meta.env.VITE_COMMUNICATION_SOCKET_URL,
-});
+import { $communicationApi } from "@/shared/api/api";
 
 //TODO:Divide existent logic, add online from game gateway service
 export const communicationApiService = {

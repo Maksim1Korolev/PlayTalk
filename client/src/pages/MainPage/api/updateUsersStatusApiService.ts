@@ -1,9 +1,9 @@
-import { User } from "@/entities/User"
+import { User } from "@/entities/User";
 
-import { communicationApiService } from "./communicationApiService"
-import { gameApiService } from "./gameApiService"
-import { profileApiService } from "./profileApiService"
-import { usersApiService } from "./usersApiService"
+import { communicationApiService } from "./communicationApiService";
+import { gameApiService } from "./gameApiService";
+import { profileApiService } from "./profileApiService";
+import { usersApiService } from "./usersApiService";
 
 interface FetchUsersStatusParams {
   currentUsername: string;
@@ -13,6 +13,7 @@ interface FetchUsersStatusParams {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+//TODO:Rename and move
 export const fetchUsersStatus = async ({
   currentUsername,
   token,
@@ -25,11 +26,9 @@ export const fetchUsersStatus = async ({
   try {
     let users = await profileApiService.getProfiles(token);
 
-		console.log(users);
     if (!users) {
       users = await usersApiService.getUsers(token);
     }
-		
 
     const results = await Promise.allSettled([
       communicationApiService.getOnlineUsernames(token),

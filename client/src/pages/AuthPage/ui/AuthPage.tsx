@@ -18,7 +18,7 @@ import {
   VStack,
 } from "@/shared/ui";
 
-import { apiService } from "../api/apiAuthService";
+import { authApiService } from "../api/authApiService";
 
 interface AuthPageProps {
   className?: string;
@@ -28,9 +28,13 @@ const AuthPage = ({ className }: AuthPageProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const [isSignUp, setIsSignUp] = useState(false);
+
   const [error, setError] = useState<string>();
+
   const navigate = useNavigate();
+
   const [, setCookie] = useCookies(["jwt-cookie"]);
 
   const handleUsernameChange = (value: string) => {
@@ -41,7 +45,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
   };
 
   const signInMutation = useMutation(
-    () => apiService.login(username, password),
+    () => authApiService.login(username, password),
     {
       onSuccess: data => {
         setCookie(
@@ -59,7 +63,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
 
   //TODO:Send the newly added user straight to all the clients
   const signUpMutation = useMutation(
-    () => apiService.register(username, password),
+    () => authApiService.register(username, password),
     {
       onSuccess: data => {
         setCookie(

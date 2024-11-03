@@ -1,8 +1,4 @@
-import axios from "axios";
-
-export const $gameApi = axios.create({
-  baseURL: import.meta.env.VITE_GAME_SOCKET_URL,
-});
+import { $gameApi } from "@/shared/api/api";
 
 export const gameApiService = {
   getActiveGames: async (token: string, username: string) => {
