@@ -70,7 +70,7 @@ export const UserList = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const upToDateUsers = await fetchUsersStatus({
+        const upToDateUsers: User[] = await fetchUsersStatus({
           currentUsername,
           token,
           setError,

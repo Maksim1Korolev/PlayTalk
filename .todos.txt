@@ -10,6 +10,7 @@ Logic of fetching users in Thunk
 Tests for chat repo services
 Boolean func to see if user is registered and implement it
 Put chat into slice
+Loader instead of no users available for some cases
 
 To fix:
 Getting error in communication service when requesting unread messages with count of 0
@@ -27,7 +28,7 @@ Index file of the profile service
 Sort out game and modal types
 User has to be added in real time to the list when registered
 Initial http request for messageHistory
-
+Logged errors from circleMenu library
 
 To add (In the end):
 Adjust location of accept invite emit

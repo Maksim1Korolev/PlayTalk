@@ -2,6 +2,7 @@ import { User } from "@/entities/User";
 
 import { communicationApiService } from "./communicationApiService";
 import { gameApiService } from "./gameApiService";
+import { onlineApiService } from "./onlineApiService";
 import { usersApiService } from "./usersApiService";
 
 interface FetchUsersStatusParams {
@@ -19,14 +20,16 @@ export const fetchUsersStatus = async ({
   setError,
   setIsError,
   setIsLoading,
-}: FetchUsersStatusParams) => {
+}: FetchUsersStatusParams): Promise<User[]> => {
   setIsLoading(true);
 
   try {
-    const users = await usersApiService.getUsers(token);
+    const users: User[] = await usersApiService.getUsers(token);
+    console.log("Fetched users:");
+    console.log(users);
 
     const results = await Promise.allSettled([
-      communicationApiService.getOnlineUsernames(token),
+      onlineApiService.getOnlineUsernames(token),
       communicationApiService.getUnreadMessageCount(currentUsername, token),
       gameApiService.getActiveGames(token, currentUsername),
     ]);
@@ -60,5 +63,6 @@ export const fetchUsersStatus = async ({
     } else {
       setError(new Error("An unknown error occurred"));
     }
+    return [];
   }
 };
