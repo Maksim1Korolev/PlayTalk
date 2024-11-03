@@ -18,6 +18,7 @@ export const usersApiService = {
       const authResponse = await $authApi.get<{ users: User[] }>(`/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       return authResponse.data.users;
     }
   },
