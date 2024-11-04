@@ -8,6 +8,8 @@ import User from "../schemas/User.js";
 
 const logger = getLogger("UserService");
 
+//2. profile request
+//3. rate limiting
 class UserService {
   static async addUser(user) {
     try {
@@ -32,10 +34,13 @@ class UserService {
 
       if (cachedUsers && Object.keys(cachedUsers).length > 0) {
         logger.info("Fetched users from Redis cache.");
-        return Object.values(cachedUsers).map(user => JSON.parse(user));
+        return Object.values(cachedUsers).map(user => {
+          const { password, ...userWithoutPassword } = JSON.parse(user);
+          return userWithoutPassword;
+        });
       }
 
-      const users = await User.find();
+      const users = await User.find({}, "-password");
       for (const user of users) {
         await redisClient.hSet(
           process.env.REDIS_USERS_USERNAME_KEY,
@@ -44,7 +49,6 @@ class UserService {
         );
       }
       logger.info("Fetched users from database and cached in Redis.");
-      logger.info(users);
       return users;
     } catch (error) {
       logger.error(`Error fetching users: ${error.message}`);
@@ -67,10 +71,11 @@ class UserService {
 
       if (cachedUser) {
         logger.info(`Cache hit for user with ID: ${id}`);
-        return JSON.parse(cachedUser);
+        const { password, ...userWithoutPassword } = JSON.parse(cachedUser);
+        return userWithoutPassword;
       }
 
-      const user = await User.findById(id);
+      const user = await User.findById(id).select("-password");
       if (user) {
         await redisClient.hSet(
           process.env.REDIS_USERS_ID_KEY,
@@ -95,10 +100,11 @@ class UserService {
 
       if (cachedUser) {
         logger.info(`Cache hit for user: ${username}`);
-        return JSON.parse(cachedUser);
+        const { password, ...userWithoutPassword } = JSON.parse(cachedUser);
+        return userWithoutPassword;
       }
 
-      const user = await User.findOne({ username });
+      const user = await User.findOne({ username }).select("-password");
       if (user) {
         await redisClient.hSet(
           process.env.REDIS_USERS_USERNAME_KEY,
@@ -115,6 +121,23 @@ class UserService {
     }
   }
 
+  static async getUserWithPassword(username) {
+    try {
+      const user = await User.findOne({ username });
+      if (!user) {
+        logger.warn(`User not found: ${username}`);
+      } else {
+        logger.info(`Fetched user with password for: ${username}`);
+      }
+      return user;
+    } catch (error) {
+      logger.error(
+        `Error fetching user with password by username: ${error.message}`
+      );
+      throw new Error("Failed to fetch user with password by username");
+    }
+  }
+
   static async updateUser(user) {
     if (!user._id) {
       const error = "Invalid user ID";
@@ -125,7 +148,7 @@ class UserService {
     try {
       const updatedUser = await User.findByIdAndUpdate(user._id, user, {
         new: true,
-      });
+      }).select("-password");
 
       if (updatedUser) {
         await redisClient.hSet(

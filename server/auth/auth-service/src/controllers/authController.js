@@ -16,7 +16,7 @@ export const authUser = asyncHandler(async (req, res) => {
 
   try {
     logger.info(`Authentication attempt for user: ${username}`);
-    const user = await UserService.getUserByUsername(username);
+    const user = await UserService.getUserWithPassword(username);
 
     if (!user) {
       logger.warn(`Failed login attempt for user: ${username}`);
