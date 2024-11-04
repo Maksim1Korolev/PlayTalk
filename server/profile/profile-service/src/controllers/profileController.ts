@@ -1,5 +1,7 @@
 import asyncHandler from "express-async-handler";
+
 import ProfileService from "../services/profileService";
+
 //TODO: protected?
 // @desc   Get users
 // @route  GET /api/users/

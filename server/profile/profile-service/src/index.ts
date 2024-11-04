@@ -12,7 +12,7 @@ import redisClient from "./utils/redisClient";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware";
 
-import profileRouter from "./profile/profiles.routes";
+import profileRouter from "./routes/profileRoutes";
 
 const logger = getLogger("Main");
 

@@ -1,8 +1,8 @@
 import { createClient } from "redis";
 
 import { getLogger } from "./logger";
+
 const logger = getLogger("Redis");
-console.log("process.env.REDIS_URL", process.env.REDIS_URL);
 
 const redisUrl = `${process.env.REDIS_URL}`;
 

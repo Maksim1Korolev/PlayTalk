@@ -1,9 +1,10 @@
 import asyncHandler from "express-async-handler";
 
 import { getLogger } from "../utils/logger.js";
-const logger = getLogger("MessageHistoryController");
 
 import MessageHistoryService from "../services/messageHistoryService.js";
+
+const logger = getLogger("MessageHistoryController");
 
 // @desc   Add message to Message History and update missing message List
 //         return Socket ids
@@ -38,9 +39,8 @@ export const getMessageHistory = asyncHandler(async (req, res) => {
   }
   try {
     logger.info(`Fetching message history for usernames: ${usernames}`);
-    const messageHistory = await MessageHistoryService.getMessageHistory(
-      usernames
-    );
+    const messageHistory =
+      await MessageHistoryService.getMessageHistory(usernames);
 
     return res.json({ messageHistory });
   } catch (err) {
