@@ -1,3 +1,6 @@
+export { getCurrentUser, getUsers } from "./selectors/getUsers";
+export { getUsersLoadingStatus } from "./selectors/getUserStatus";
+
+export { userActions, userReducer } from "./slice/userSlice";
 export type { CurrentUser, User, UserState } from "./types/user";
-export { userReducer, userActions } from "./slice/userSlice";
-export { getUsers, getCurrentUser } from "./selectors/getUsers";
+
