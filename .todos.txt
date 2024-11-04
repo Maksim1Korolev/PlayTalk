@@ -54,3 +54,4 @@ Turns history and more stats on tic tac toe server
 
 Readme:
 Rate limiting
+Messages buffer

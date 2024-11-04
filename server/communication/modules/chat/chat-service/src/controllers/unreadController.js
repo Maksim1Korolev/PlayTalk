@@ -1,9 +1,10 @@
 import asyncHandler from "express-async-handler";
 
 import { getLogger } from "../utils/logger.js";
-const logger = getLogger("UnreadController");
 
 import MessageHistoryService from "../services/messageHistoryService.js";
+
+const logger = getLogger("UnreadController");
 
 // @desc   Get unread Messages count for specific chats
 // @route  GET api/unread/:requestingUsername
@@ -104,9 +105,8 @@ export const getAllUnreadMessageCount = asyncHandler(async (req, res) => {
     }
 
     logger.info(`Fetching all unread message counts for ${requestingUsername}`);
-    const count = await MessageHistoryService.getAllUnreadMessagesCount(
-      requestingUsername
-    );
+    const count =
+      await MessageHistoryService.getAllUnreadMessagesCount(requestingUsername);
 
     return res.json(count);
   } catch (err) {

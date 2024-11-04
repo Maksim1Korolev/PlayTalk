@@ -4,56 +4,103 @@ import redisClient from "../utils/redisClient.js";
 
 import MessageHistory from "../schemas/MessageHistory.js";
 
+import MessageHistoryService from "./messageHistoryService.js";
+
 const logger = getLogger("MessageBufferService");
 
 class MessageBufferService {
   static flushTimer = null;
 
   static async addToBuffer(usernames, message) {
-    const sortedUsernames = usernames.sort();
+    const sortedUsernames = MessageHistoryService.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
     const bufferKey = `${process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY}:${cacheKey}`;
+    const messageCountKey = `${process.env.REDIS_MESSAGE_COUNT_KEY}:${cacheKey}`;
 
-    await redisClient.rPush(bufferKey, JSON.stringify(message));
+    const bufferSize = await redisClient.lLen(bufferKey);
+    console.log("THIS IS CURRENT BUFFER SIZE:::::: ", bufferSize);
 
-    // const bufferSize = await redisClient.lLen(bufferKey);
-    // const threshold = parseInt(process.env.MESSAGE_BUFFER_THRESHOLD) || 10;
+    if (bufferSize !== 0) {
+      await redisClient.rPush(bufferKey, JSON.stringify(message));
+      logger.info(`Added new message to buffer for: ${cacheKey}`);
 
-    // if (bufferSize >= threshold) {
-    //   logger.info(
-    //     `Buffer size threshold reached for ${cacheKey}. Flushing buffer to database.`
-    //   );
-    //   await this.flushBufferToDatabase(sortedUsernames);
-    // }
+      const storedMessageCountStr = await redisClient.get(messageCountKey);
+      const storedMessageCount = storedMessageCountStr
+        ? parseInt(storedMessageCountStr)
+        : 0;
+
+      const newMessagesCount = bufferSize - storedMessageCount;
+      logger.info(
+        `Buffer size: ${bufferSize}, Stored message count: ${storedMessageCount}, New messages: ${newMessagesCount}`
+      );
+      const threshold = parseInt(process.env.MESSAGE_BUFFER_THRESHOLD) || 10;
+
+      if (newMessagesCount >= threshold) {
+        logger.info(
+          `Threshold reached for ${cacheKey}. Flushing buffer to database.`
+        );
+
+        await this.flushBufferToDatabase(sortedUsernames);
+
+        await redisClient.set(messageCountKey, bufferSize);
+        logger.info(
+          `Updated message count for ${cacheKey} after flush: ${bufferSize}`
+        );
+      }
+    } else {
+      await this.loadMongoToBuffer(sortedUsernames);
+      await redisClient.rPush(bufferKey, JSON.stringify(message));
+      logger.info(`Added new message to buffer for: ${cacheKey}`);
+    }
   }
 
-  static async addAllToBuffer(usernames, messages) {
-    const sortedUsernames = usernames.sort();
+  static async loadMongoToBuffer(usernames) {
+    const sortedUsernames = MessageHistoryService.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
-    const bufferKey = `${process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY}:${cacheKey}`;
+    const messageCountKey = `${process.env.REDIS_MESSAGE_COUNT_KEY}:${cacheKey}`;
 
-    const messageStrings = messages.map(msg => JSON.stringify(msg));
+    const messageHistory = await MessageHistory.findOne({
+      usernames: sortedUsernames,
+    });
 
-    await redisClient.rPush(bufferKey, messageStrings);
-    logger.info(`Replaced buffer with updated messages for: ${cacheKey}`);
+    logger.info(
+      `Fetched message history from MongoDB for: ${sortedUsernames.join(", ")}`
+    );
+
+    if (!messageHistory) {
+      return [];
+    }
+
+    const messages = messageHistory.messages;
+    await this.replaceBuffer(sortedUsernames, messages);
+    logger.info(`Message history cached. Cache key: ${cacheKey}`);
+
+    const totalMessages = messages.length;
+    await redisClient.set(messageCountKey, totalMessages);
+    logger.info(`Updated message count for ${cacheKey}: ${totalMessages}`);
+
+    return messages;
   }
 
   static async replaceBuffer(usernames, updatedMessages) {
-    const sortedUsernames = usernames.sort();
+    const sortedUsernames = MessageHistoryService.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
     const bufferKey = `${process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY}:${cacheKey}`;
 
     await redisClient.del(bufferKey);
     logger.info(`Cleared existing buffer for: ${cacheKey}`);
 
-    this.addAllToBuffer(usernames, updatedMessages);
+    const messageStrings = updatedMessages.map(msg => JSON.stringify(msg));
+    await redisClient.rPush(bufferKey, messageStrings);
+    logger.info(`Replaced buffer with updated messages for: ${cacheKey}`);
   }
 
   static async flushBufferToDatabase(usernames) {
-    const sortedUsernames = usernames.sort();
+    const sortedUsernames = MessageHistoryService.getSortedUsernames(usernames);
     const cacheKey = `${
       process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY
     }:${sortedUsernames.join("-")}`;
+    const messageCountKey = `${process.env.REDIS_MESSAGE_COUNT_KEY}:${cacheKey}`;
 
     const messageHistory = await redisClient.lRange(cacheKey, 0, -1);
     if (messageHistory.length < 1) {
@@ -94,6 +141,7 @@ class MessageBufferService {
     await existingMessageHistory.save();
 
     await redisClient.del(cacheKey);
+    await redisClient.del(messageCountKey);
     logger.info(`Cleared Redis cache for: ${cacheKey}`);
   }
 
@@ -141,7 +189,7 @@ class MessageBufferService {
   }
 
   static async getMessagesFromBuffer(usernames) {
-    const sortedUsernames = usernames.sort();
+    const sortedUsernames = MessageHistoryService.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
     const bufferKey = `${process.env.REDIS_MESSAGE_HISTORY_BUFFER_KEY}:${cacheKey}`;
 

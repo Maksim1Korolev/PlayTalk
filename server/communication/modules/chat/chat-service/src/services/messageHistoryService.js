@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 import { getLogger } from "../utils/logger.js";
 
+import redisClient from "../utils/redisClient.js";
+
 import MessageHistory from "../schemas/MessageHistory.js";
 
 import MessageBufferService from "./messageBufferService.js";
@@ -47,22 +49,9 @@ class MessageHistoryService {
     }
 
     logger.info("Cache miss. No cached message history found.");
+    const messages =
+      await MessageBufferService.loadMongoToBuffer(sortedUsernames);
 
-    const messageHistory = await MessageHistory.findOne({
-      usernames: sortedUsernames,
-    });
-
-    logger.info(
-      `Fetched message history from MongoDB for: ${sortedUsernames.join(", ")}`
-    );
-
-    if (!messageHistory) {
-      return [];
-    }
-
-    const messages = messageHistory.messages;
-    await MessageBufferService.replaceBuffer(sortedUsernames, messages);
-    logger.info(`Message history cached. Cache key: ${cacheKey}`);
     return messages;
   }
 
