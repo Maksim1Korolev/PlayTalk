@@ -1,10 +1,11 @@
-import { io } from "../../index.js";
-
 import { getLogger } from "../../utils/logger.js";
-const logger = getLogger("ChatSubscriptions");
 
+import { io } from "../../index.js";
 import SocketService from "../socketService.js";
+
 import MessageHistoryService from "./messageHistoryService.js";
+
+const logger = getLogger("ChatSubscriptions");
 
 export async function handleChatSubscriptions(socket, currentUsername) {
   socket.on("on-chat-open", async ({ receiverUsername }) => {
@@ -28,17 +29,15 @@ export async function handleChatSubscriptions(socket, currentUsername) {
   });
 
   socket.on("typing", async receiverUsername => {
-    const receiversSocketIds = await SocketService.getUserSockets(
-      receiverUsername
-    );
+    const receiversSocketIds =
+      await SocketService.getUserSockets(receiverUsername);
     io.to(receiversSocketIds).emit("typing", currentUsername);
     logger.info(`${currentUsername} is typing to ${receiverUsername}`);
   });
 
   socket.on("stop typing", async receiverUsername => {
-    const receiversSocketIds = await SocketService.getUserSockets(
-      receiverUsername
-    );
+    const receiversSocketIds =
+      await SocketService.getUserSockets(receiverUsername);
     io.to(receiversSocketIds).emit("stop typing", currentUsername);
     logger.info(`${currentUsername} stopped typing to ${receiverUsername}`);
   });
@@ -68,9 +67,8 @@ export async function handleChatSubscriptions(socket, currentUsername) {
 
     try {
       await MessageHistoryService.addMessageToHistory(usernames, message);
-      const receiversSocketIds = await SocketService.getUserSockets(
-        receiverUsername
-      );
+      const receiversSocketIds =
+        await SocketService.getUserSockets(receiverUsername);
 
       io.to(receiversSocketIds).emit("receive-message", message);
 
