@@ -27,8 +27,6 @@ export const gameApiService = {
       params: { opponentUsername },
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(response.data.game);
-    console.log(response.data.game);
 
     return response.data.game;
   },

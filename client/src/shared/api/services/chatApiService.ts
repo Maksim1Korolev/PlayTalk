@@ -1,6 +1,5 @@
 import { $communicationApi } from "./api";
 
-//TODO:Update import and implement
 export interface UnreadMessageCounts {
   [username: string]: number;
 }
