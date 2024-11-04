@@ -1,8 +1,6 @@
 import {
 	memo,
-	useCallback,
-	useEffect,
-	useState
+	useCallback
 } from "react"
 
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
@@ -10,7 +8,7 @@ import { AddonCircleProps, AppImageProps, CircleModal } from "@/shared/ui"
 import { useModalPosition } from "@/shared/ui/CircleModal"
 import getImagePath from "@/shared/utils/getImagePath"
 
-import { ChatData, UnreadMessagesCountIndicator } from "@/entities/Chat"
+import { ChatModalData, UnreadMessagesCountIndicator } from "@/entities/Chat"
 import { Modal, modalActions } from '@/entities/Modal'
 import { getCurrentUser, UserOnlineIndicator } from "@/entities/User"
 import { ChatBox } from "@/features/chat"
@@ -20,45 +18,15 @@ export const ChatModals = memo(
     chatModals,
     onClose,
   }: {
-    chatModals: Modal<ChatData>[];
+    chatModals: Modal<ChatModalData>[];
     onClose: (modalIdß: string) => void;
   }) => {
     const currentUser = useAppSelector(getCurrentUser);
 
-    const [avatarIconMap, setAvatarIconMap] = useState<{
-      [key: string]: string;
-    }>({});
 
 		const dispatch = useAppDispatch()
 
     const { getStartingPosition } = useModalPosition();
-
-    useEffect(() => {
-      const loadIcons = async () => {
-        const avatarMap: {
-          [key: string]: string;
-        } = {};
-
-        for (const modal of chatModals) {
-          const { data } = modal;
-					const {user: opponentUser} = data
-
-          const avatarUrl = getImagePath({
-            collection: "avatars",
-            fileName: opponentUser.avatarFileName,
-          });
-          if (opponentUser.avatarFileName) {
-            avatarMap[opponentUser.avatarFileName] = avatarUrl;
-          }
-        }
-
-        setAvatarIconMap(avatarMap);
-      };
-
-      if (chatModals.length > 0) {
-        loadIcons();
-      }
-    }, [chatModals]);
 
     const getAddonCircleProps = useCallback(
       ({
@@ -70,9 +38,12 @@ export const ChatModals = memo(
         avatarFileName: string | undefined;
         isOnline: boolean | undefined;
       }) => {
-        const getAvatarIconProps = (avatarFileName: string) => {
+        const getAvatarIconProps = (avatarFileName?: string) => {
           const size = 80;
-          const avatarUrl = avatarIconMap[avatarFileName];
+					const avatarUrl = getImagePath({
+            collection: "avatars",
+            fileName: avatarFileName,
+          });
 
           const imageProps: AppImageProps = {
             src: avatarUrl,
@@ -86,7 +57,7 @@ export const ChatModals = memo(
           return imageProps;
         };
 
-        const avatarIconProps = getAvatarIconProps(avatarFileName || "");
+        const avatarIconProps = getAvatarIconProps(avatarFileName);
 
         const addonCircleProps: AddonCircleProps = {
           iconProps: avatarIconProps,
@@ -100,7 +71,7 @@ export const ChatModals = memo(
 
         return addonCircleProps;
       },
-      [avatarIconMap]
+      []
     );
 
 

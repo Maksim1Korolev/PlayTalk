@@ -18,21 +18,21 @@ interface PlayButtonProps {
   className?: string;
   highlight?: HighlightType;
   onSelectGame: (gameName: GameName) => void;
-  menuId: string; // unique identifier for each CircleMenu instance
+  menuId: string;
 }
 
 export const PlayButton = ({
   className,
   highlight = "none",
-  onSelectGame,
   menuId,
+  onSelectGame,
 }: PlayButtonProps) => {
   const gameNames = Object.values(GameNames);
   const highlightClass = useHighlight(highlight);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [showMenu, setShowMenu] = useState(false);
-  const [animateOpen, setAnimateOpen] = useState(false); // Animation control state
-  const [isFlipped, setIsFlipped] = useState(false); // Flip animation state
+  const [animateOpen, setAnimateOpen] = useState(false); 
+  const [isFlipped, setIsFlipped] = useState(false); 
   const playButtonRef = useRef<HTMLDivElement | null>(null);
 
   const dispatch = useAppDispatch();
@@ -41,15 +41,14 @@ export const PlayButton = ({
 
   const handleMenuToggle = () => {
     if (isSelectorOpen) {
-      // Flip back when closing
       setIsFlipped(false);
       setTimeout(() => {
         dispatch(circleMenuActions.closeMenu());
         setAnimateOpen(false);
         setShowMenu(false);
-      }, 100); // Wait for closing animation to finish
+      }, 100); 
     } else {
-      dispatch(circleMenuActions.closeMenu()); // Close any other open menu before opening the current one
+      dispatch(circleMenuActions.closeMenu());
       const rect = playButtonRef.current?.getBoundingClientRect();
       if (rect) {
         setMenuPosition({
@@ -59,10 +58,10 @@ export const PlayButton = ({
       }
       setShowMenu(true);
       setTimeout(() => {
-        setIsFlipped(true); // Flip forward when opening
+        setIsFlipped(true); 
         setAnimateOpen(true);
         dispatch(circleMenuActions.openMenu(menuId));
-      }, 50); // Small delay to trigger animation
+      }, 50); 
     }
   };
 
@@ -81,11 +80,9 @@ export const PlayButton = ({
     fileName: "play",
   });
 
-  // Custom Toggle Element for CircleMenu
   const CustomToggleElement = (
     <div
       className={cx(cls.customToggle, {
-        [cls.active]: isSelectorOpen,
         [cls.flipped]: isFlipped,
       })}
       onClick={handleMenuToggle}
@@ -94,17 +91,15 @@ export const PlayButton = ({
         className={cls.playIcon}
         width={50}
         height={50}
-        src={"../../../../../../../public/play-icon.svg"}
+        src={playButtonSrc}
         draggable={false}
-        clickable
-        onClick={handleMenuToggle}
       />
     </div>
   );
 
   return (
     <>
-      <div ref={playButtonRef}>{CustomToggleElement}</div>
+      <div ref={playButtonRef} className={className}>{CustomToggleElement}</div>
       {showMenu &&
         ReactDOM.createPortal(
           <div
@@ -122,8 +117,7 @@ export const PlayButton = ({
               radius={3.2}
               open={animateOpen}
               onMenuToggle={handleMenuToggle}
-              menuToggleElement={CustomToggleElement} // Pass the custom toggle element to CircleMenu
-
+              menuToggleElement={CustomToggleElement} 
             >
               {gameNames.map(gameName => {
                 const gameSrc = getImagePath({

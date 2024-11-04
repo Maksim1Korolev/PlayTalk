@@ -1,24 +1,24 @@
-import cls from "./GameRequest.module.scss";
+import cls from "./GameRequest.module.scss"
 
-import { ReactNode, useCallback, useContext, useEffect, useState } from "react";
-import { Rnd } from "react-rnd";
+import { ReactNode, useCallback, useContext, useEffect, useState } from "react"
+import { Rnd } from "react-rnd"
 
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
-import SkipNextIcon from "@mui/icons-material/SkipNext";
+import CheckIcon from "@mui/icons-material/Check"
+import CloseIcon from "@mui/icons-material/Close"
+import SkipNextIcon from "@mui/icons-material/SkipNext"
 
-import { useAppDispatch, useAppSelector, useModalDrag } from "@/shared/lib";
-import { SocketContext } from "@/shared/lib/context/SocketContext";
-import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
+import { useAppDispatch, useAppSelector, useModalDrag } from "@/shared/lib"
+import { SocketContext } from "@/shared/lib/context/SocketContext"
+import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui"
+import getImagePath from "@/shared/utils/getImagePath"
 
 import {
-  acceptGameInvite,
-  getInvites,
-  Invite,
-  inviteActions,
-} from "@/entities/game/Invite";
-import { getUsers, User, userActions } from "@/entities/User";
+	acceptGameInvite,
+	getInvites,
+	Invite,
+	inviteActions,
+} from "@/entities/game/Invite"
+import { getUsers, userActions } from "@/entities/User"
 
 interface GameRequestProps {
   className?: string;
@@ -54,9 +54,8 @@ export const GameRequest = ({ className, position }: GameRequestProps) => {
         });
         iconPaths[gameName] = iconPath;
 
-        const inviteUser = users.find(
-          (user: User) => user.username === senderUsername
-        );
+        const inviteUser = users[senderUsername]
+        ;
         if (inviteUser?.avatarFileName) {
           const avatarPath = getImagePath({
             collection: "avatars",

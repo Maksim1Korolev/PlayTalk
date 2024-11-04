@@ -1,18 +1,19 @@
-import cls from "./UserList.module.scss";
+import cls from "./UserList.module.scss"
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useCookies } from "react-cookie";
+import { useEffect, useMemo, useRef } from "react"
+import { useCookies } from "react-cookie"
 
-import { userListResources } from "@/shared/assets";
+import { userListResources } from "@/shared/assets"
 
-import { cx, useAppDispatch, useAppSelector } from "@/shared/lib";
-import { Card, Loader, UiText, VStack } from "@/shared/ui";
+import { cx, useAppDispatch, useAppSelector } from "@/shared/lib"
+import { Card, Loader, UiText, VStack } from "@/shared/ui"
 
-import { GameData } from "@/entities/game/Game";
-import { getUsers, User, userActions, UserListCard } from "@/entities/User";
-import { getUsersWithStatuses } from "@/features/UserList/api/getUsersWithStatuses";
+import { GameData } from "@/entities/game/Game"
+import { getUsers, User, UserListCard } from "@/entities/User"
 
-import { sortUsers } from "../utils/userListUtils";
+import { getUsersLoadingStatus } from '@/entities/User/model'
+import { fetchUsersWithStatuses } from '@/entities/User/model/thunks/fetchUsersWithStatuses'
+import { sortUsers } from "../utils/userListUtils"
 
 export interface UserListProps {
   className?: string;
@@ -50,53 +51,27 @@ export const UserList = ({
   const [cookies] = useCookies();
   const { currentUsername, token } = cookies["jwt-cookie"];
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>();
-
   const dispatch = useAppDispatch();
   const users = useAppSelector(getUsers);
+
+	const { isLoading, isError, errorMessage } = useAppSelector(getUsersLoadingStatus);
 
   const userRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
     userRefs.current.forEach(userRef => {
       if (userRef) {
-        adjustFontSize(userRef, 50); // Adjust maxWidth as needed
+        adjustFontSize(userRef, 50); 
       }
     });
   }, [users]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const upToDateUsers: User[] = await getUsersWithStatuses({
-          currentUsername,
-          token,
-          setError,
-          setIsError,
-          setIsLoading,
-        });
-
-        dispatch(
-          userActions.initializeUsers({
-            users: upToDateUsers,
-            currentUsername,
-          })
-        );
-      } catch (error) {
-        console.error("Error fetching users status:", error);
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [dispatch, currentUsername, token]);
+		dispatch(fetchUsersWithStatuses({ currentUsername, token }));
+	}, [dispatch, currentUsername, token]);
 
   const userList = useMemo(() => {
-    const sortedUsers = users ? [...users].sort(sortUsers) : [];
+    const sortedUsers = users ? Object.values(users).sort(sortUsers) : [];
     return sortedUsers?.map((user, index) => (
       <div style={{ width: "100%" }} key={user._id}>
         <UserListCard
@@ -112,21 +87,19 @@ export const UserList = ({
     ));
   }, [collapsed, handleUserChatButton, handleUserPlayButton, users]);
 
-  if (!users || users.length === 0) {
-    return <p>{userListResources.noUsers}</p>;
-  }
 
   if (isLoading) {
     return <Loader />;
   }
 
-  //TODO:Only show when in development
-  if (isError && error) {
-    {
-      return (
-        <UiText>{`${userListResources.errorMessagePrefix} ${error.message}`}</UiText>
-      );
-    }
+  if (isError && errorMessage) {
+		return (
+			<UiText>{`${userListResources.errorMessagePrefix} ${errorMessage}`}</UiText>
+		);
+	}
+
+	if (!users || Object.keys(users).length === 0) {
+    return <p>{userListResources.noUsers}</p>;
   }
 
   return (

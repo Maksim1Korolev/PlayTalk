@@ -1,21 +1,21 @@
-import { memo, useCallback, useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import { memo, useCallback, useEffect, useState } from "react"
+import { useCookies } from "react-cookie"
 
-import { gameApiService } from "@/shared/api/services/gameApiService";
-import { useAppSelector } from "@/shared/lib";
-import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";
-import { useModalPosition } from "@/shared/ui/CircleModal";
-import getImagePath from "@/shared/utils/getImagePath";
+import { gameApiService } from "@/shared/api/services/gameApiService"
+import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui"
+import { useModalPosition } from "@/shared/ui/CircleModal"
+import getImagePath from "@/shared/utils/getImagePath"
 
-import { Game, GameData, TicTacToeGame } from "@/entities/game/Game";
-import { Modal } from "@/entities/Modal";
-import { getUsers, User } from "@/entities/User";
-import { TicTacToe } from "@/features/game";
+import { Game, GameData, GameModalData, TicTacToeGame } from "@/entities/game/Game"
+import { Modal } from "@/entities/Modal"
+import { TicTacToe } from "@/features/game"
 
-import { generateModalId } from "../hooks/useGameModals";
+import { getUsers } from '@/entities/User'
+import { useAppSelector } from '@/shared/lib'
+import { generateModalId } from "../hooks/useGameModals"
 
 interface GameModalsProps {
-  gameModals: Modal<GameData>[];
+  gameModals: Modal<GameModalData>[];
   onClose: ({ modalId }: { modalId: string }) => void;
 }
 
@@ -23,12 +23,9 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
   const [cookies] = useCookies(["jwt-cookie"]);
   const { currentUsername, token } = cookies["jwt-cookie"];
 
-  const users = useAppSelector(getUsers);
-
   const [games, setGames] = useState<{ [key: string]: Game }>({});
-  const [iconMap, setIconMap] = useState<{ [key: string]: string }>({});
-  const [avatarMap, setAvatarMap] = useState<{ [key: string]: string }>({});
 
+	const users = useAppSelector(getUsers)
   const { getStartingPosition } = useModalPosition();
 
   //TODO: search another way to fetch only one game that opens right now
@@ -36,13 +33,11 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
     const fetchGames = async () => {
       const fetchedGames = await Promise.all(
         gameModals.map(async modal => {
-          const fetchedGame: Game = await gameApiService.getGame(token, {
-            gameName: modal.data.gameName,
-            opponentUsername: modal.data.opponentUsername,
-          });
+					const { data } = modal
+
+          const fetchedGame: Game = await gameApiService.getGame(token, data);
           return {
-            id: generateModalId(modal.data),
-            game: fetchedGame,
+            id: generateModalId(modal.data),    game: fetchedGame,
           };
         })
       );
@@ -57,37 +52,6 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
     fetchGames();
   }, [gameModals, currentUsername, token]);
 
-  useEffect(() => {
-    const loadIcons = async () => {
-      const icons: { [key: string]: string } = {};
-      const avatars: { [key: string]: string } = {};
-
-      for (const modal of gameModals) {
-        const { data } = modal;
-        const { gameName, opponentUsername } = data;
-
-        icons[gameName] = getImagePath({
-          collection: "gameIcons",
-          fileName: gameName,
-        });
-
-        const opponentUser = users.find(
-          (user: User) => user.username === opponentUsername
-        );
-        avatars[opponentUsername] = getImagePath({
-          collection: "avatars",
-          fileName: opponentUser?.avatarFileName,
-        });
-      }
-
-      setIconMap(icons);
-      setAvatarMap(avatars);
-    };
-
-    if (gameModals.length > 0) {
-      loadIcons();
-    }
-  }, [gameModals, users]);
 
   const renderGameModals = useCallback(() => {
     const getGameComponent = (gameData: GameData) => {
@@ -106,11 +70,20 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
     };
 
     const getAddonCircleProps = (
-      opponentUsername: string,
+			opponentUsername: string,
       currentGameName: string
     ): AddonCircleProps => {
-      const gameIconUrl = iconMap[currentGameName];
-      const avatarIconUrl = avatarMap[opponentUsername];
+
+			const opponentAvatarFileName = users[opponentUsername]?.avatarFileName
+			
+      const gameIconUrl = getImagePath({
+				collection: "gameIcons",
+				fileName: currentGameName,
+			});
+      const avatarIconUrl =  getImagePath({
+				collection: "avatars",
+				fileName: opponentAvatarFileName,
+			});
 
       return {
         iconProps: {
@@ -136,8 +109,9 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
     };
 
     return gameModals.map(({ modalId, data }) => {
-      const headerString = `Opponent: ${data.opponentUsername}`;
       const { opponentUsername, gameName } = data;
+
+      const headerString = `Opponent: ${opponentUsername}`;
 
       const position = getStartingPosition();
 
@@ -153,7 +127,7 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
         </CircleModal>
       );
     });
-  }, [gameModals, games, iconMap, avatarMap, onClose, getStartingPosition]);
+  }, [gameModals, games, users, onClose, getStartingPosition]);
 
   return renderGameModals();
 });

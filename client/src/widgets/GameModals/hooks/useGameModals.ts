@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react"
 
-import { GameData } from "@/entities/game/Game"
+import { GameData, GameModalData } from "@/entities/game/Game"
 import { getModalCount, getModalMaxCount, Modal, modalActions } from '@/entities/Modal'
 import { useAppDispatch, useAppSelector } from '@/shared/lib'
 
@@ -10,7 +10,7 @@ export const generateModalId = (gameData: GameData): string => {
 };
 
 export const useGameModals = () => {
-  const [gameModals, setGameModals] = useState<Modal<GameData>[]>([]);
+  const [gameModals, setGameModals] = useState<Modal<GameModalData>[]>([]);
 
 	const dispatch = useAppDispatch()
 	const modalCount = useAppSelector(getModalCount)
@@ -18,13 +18,13 @@ export const useGameModals = () => {
 
   const handleOpenGameModal = useCallback(
     ({
-      gameData,
+      modalData,
       position,
     }: {
-      gameData: GameData;
+      modalData: GameModalData;
       position?: { x: number; y: number };
     }) => {
-			const modalId = generateModalId(gameData)
+			const modalId = generateModalId(modalData)
 
       const isAlreadyOpen = gameModals.some(
         modal =>
@@ -37,9 +37,9 @@ export const useGameModals = () => {
 				return 
 			}
 
-        const newGameModalProps: Modal<GameData> = {
+        const newGameModalProps: Modal<GameModalData> = {
 					modalId ,
-          data: gameData,
+          data: modalData,
           position,
         };
 

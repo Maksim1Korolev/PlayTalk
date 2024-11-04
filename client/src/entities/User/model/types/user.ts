@@ -11,8 +11,11 @@ export type User = {
 };
 
 export interface UserState {
-  users: User[];
+  users: Record<string, User>;
   currentUser: CurrentUser | null;
+  isLoading: boolean;
+  isError: boolean;
+  errorMessage: string | null;
 }
 
 export type CurrentUser = User | undefined | null;

@@ -1,5 +1,5 @@
 import { User } from "@/entities/User"
 
-export type ChatData = {
+export type ChatModalData = {
   user: User;
 };

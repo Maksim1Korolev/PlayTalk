@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import { $api } from "@/shared/api";
+import { chatApiService, gameApiService, onlineApiService, usersApiService } from "@/shared/api";
 
 import { inviteReducer } from "@/entities/game/Invite";
 import { modalReducer } from "@/entities/Modal";
@@ -10,7 +10,12 @@ import { circleMenuReducer } from "@/features/UserList";
 import { ThunkExtraArg } from "./StateSchema";
 
 const extraArg: ThunkExtraArg = {
-  api: $api,
+	api: {
+    usersApiService,
+    onlineApiService,
+    chatApiService,
+    gameApiService,
+  },
 };
 
 export const store = configureStore({

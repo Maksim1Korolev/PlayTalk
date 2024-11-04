@@ -1,2 +1,2 @@
-export type { ChatData } from "./types/chat"
+export type { ChatModalData } from "./types/chat"
 

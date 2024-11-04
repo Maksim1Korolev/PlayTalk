@@ -2,11 +2,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { CurrentUser, User } from "@/entities/User";
 
+import { fetchUsersWithStatuses } from '../thunks/fetchUsersWithStatuses';
 import { UserState } from "../types/user";
 
 const initialState: UserState = {
-  users: [],
+  users: {},
   currentUser: null,
+  isLoading: false,
+  isError: false,
+  errorMessage: null,
 };
 
 const userSlice = createSlice({
@@ -19,27 +23,57 @@ const userSlice = createSlice({
     ) => {
       const { users, currentUsername } = action.payload;
 
-      state.users = users.filter(user => user.username !== currentUsername);
-
-      state.currentUser = users.find(user => user.username === currentUsername);
+      users.forEach((user) => {
+        if (user.username !== currentUsername) {
+          state.users[user.username] = user;
+        } else {
+          state.currentUser = user;
+        }
+      });
     },
     updateUser: (
       state,
       action: PayloadAction<{ username: string; updatedProps: Partial<User> }>
     ) => {
       const { username, updatedProps } = action.payload;
-      const user = state.users.find(user => user.username === username);
+			const user = state.users[username];
 
       if (user) {
-        Object.assign(user, updatedProps);
+        state.users[username] = { ...user, ...updatedProps };
       }
     },
     setCurrentUser: (state, action: PayloadAction<CurrentUser | null>) => {
       state.currentUser = action.payload;
     },
   },
+	extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsersWithStatuses.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.errorMessage = null;
+      })
+      .addCase(fetchUsersWithStatuses.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        const { users, currentUsername } = action.payload;
+
+        users.forEach((user) => {
+          if (user.username !== currentUsername) {
+            state.users[user.username] = user;
+          } else {
+            state.currentUser = user;
+          }
+        });
+      })
+      .addCase(fetchUsersWithStatuses.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.errorMessage = action.payload as string;
+      });
+  },
 });
 
-export const { initializeUsers, updateUser, setCurrentUser } =
-  userSlice.actions;
+
+
 export const { reducer: userReducer, actions: userActions } = userSlice;
