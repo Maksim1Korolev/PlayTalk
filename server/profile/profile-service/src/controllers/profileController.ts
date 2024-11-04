@@ -1,23 +1,69 @@
-import asyncHandler from "express-async-handler";
+import { NextFunction, Request, Response } from "express";
+
+import { getLogger } from "../utils/logger";
 
 import ProfileService from "../services/profileService";
 
-//TODO: protected?
-// @desc   Get users
-// @route  GET /api/users/
-// @access Public
-export const getProfiles = asyncHandler(async (req, res) => {
-  const profiles = await ProfileService.getProfiles();
-  res.status(200).json({ profiles });
-});
+const logger = getLogger("ProfileController");
 
-//TODO:middleware to check if username in token and in req.body the same?
-
-// @desc   Add users
-// @route  POST /api/users/
+// @desc   Get profiles
+// @route  GET /api/users
 // @access Public
-export const addProfile = asyncHandler(async (req, res) => {
-  const profile = await ProfileService.addProfile(req.body.username);
-  if (profile) res.status(200).json({ profile });
-  else res.status(500);
-});
+export const getProfiles = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    logger.info("Fetching all profiles");
+    const profiles = await ProfileService.getProfiles();
+
+    if (!profiles || profiles.length === 0) {
+      logger.warn("No profiles found");
+      res.status(404).json({ message: "No profiles found" });
+      return;
+    }
+
+    logger.info("Profiles fetched successfully");
+    res.status(200).json({ profiles });
+  } catch (error: any) {
+    logger.error(`Error fetching profiles: ${error.message}`);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// @desc   Add profile
+// @route  POST /api/users
+// @access Public
+export const addProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const { username } = req.body;
+
+  if (!username) {
+    logger.warn("Username missing in add profile request");
+    res.status(400).json({ message: "Username is required" });
+    return;
+  }
+
+  try {
+    logger.info(`Attempt to add profile with username: ${username}`);
+    const profile = await ProfileService.addProfile(username);
+
+    if (!profile) {
+      logger.error("Failed to add profile");
+      res.status(500).json({ message: "Failed to add profile" });
+      return;
+    }
+
+    logger.info(`Profile added successfully: ${username}`);
+    res.status(201).json({ profile });
+  } catch (error: any) {
+    logger.error(
+      `Error adding profile for username: ${username} - ${error.message}`
+    );
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
