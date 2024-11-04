@@ -33,6 +33,7 @@ Serious troubles with unread in real time and messages in general
 Upgrade font
 Not to pass currentUsername on api requests
 Disable buttons in userList accordingly
+Update profile service
 
 To add (In the end):
 Adjust location of accept invite emit
@@ -49,3 +50,6 @@ s3 signedUrls and images permission on client
 Group chats
 Friends
 Turns history and more stats on tic tac toe server
+
+Readme:
+Rate limiting

@@ -8,8 +8,6 @@ import User from "../schemas/User.js";
 
 const logger = getLogger("UserService");
 
-//2. profile request
-//3. rate limiting
 class UserService {
   static async addUser(user) {
     try {
