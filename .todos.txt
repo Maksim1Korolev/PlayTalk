@@ -34,6 +34,7 @@ Upgrade font
 Not to pass currentUsername on api requests
 Disable buttons in userList accordingly
 Update profile service
+Messages emits
 
 To add (In the end):
 Adjust location of accept invite emit

@@ -13,35 +13,36 @@ class MessageHistoryService {
     return usernames.sort();
   }
 
-  //the problem with id!!!!!!!!?
   static async addMessage(usernames, message) {
-    const sortedUsernames = this.getSortedUsernames(usernames);
-    const cacheKey = sortedUsernames.join("-");
-    logger.info(`Adding message. Cache key: ${cacheKey}`);
+    try {
+      const sortedUsernames = this.getSortedUsernames(usernames);
+      const cacheKey = sortedUsernames.join("-");
+      logger.info(`Adding message. Cache key: ${cacheKey}`);
 
-    var newId = new mongoose.mongo.ObjectId();
-    console.log(newId);
+      const newId = new mongoose.Types.ObjectId();
 
-    const wrappedMessage = {
-      _id: newId,
-      ...message,
-    };
+      const wrappedMessage = {
+        _id: newId,
+        ...message,
+      };
 
-    await MessageBufferService.addToBuffer(sortedUsernames, wrappedMessage);
+      await MessageBufferService.addToBuffer(sortedUsernames, wrappedMessage);
+    } catch (error) {
+      logger.error(`Error adding message to buffer: ${error.message}`);
+      throw error;
+    }
   }
 
-  // Maybe the problem in async requests
   static async getMessageHistory(usernames) {
     const sortedUsernames = this.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
     logger.info(`Fetching message history. Cache key: ${cacheKey}`);
-    //TODO: Rename?
+
     const bufferedMessageHistory =
       await MessageBufferService.getMessagesFromBuffer(sortedUsernames);
 
     if (bufferedMessageHistory?.length > 0) {
       logger.info("Cache hit. Getting cached message history.");
-
       return bufferedMessageHistory;
     }
 
@@ -51,25 +52,35 @@ class MessageHistoryService {
       usernames: sortedUsernames,
     });
 
-    logger.info(`Get message history of ${usernames} from Mongo`);
+    logger.info(
+      `Fetched message history from MongoDB for: ${sortedUsernames.join(", ")}`
+    );
 
-    if (messageHistory) {
-      const messages = messageHistory.messages;
-
-      await MessageBufferService.replaceBuffer(sortedUsernames, messages);
-      logger.info(`Message history cached. Cache key: ${cacheKey}`);
+    if (!messageHistory) {
+      return [];
     }
 
-    return messageHistory?.messages;
+    const messages = messageHistory.messages;
+    await MessageBufferService.replaceBuffer(sortedUsernames, messages);
+    logger.info(`Message history cached. Cache key: ${cacheKey}`);
+    return messages;
   }
 
   //unread
   static async getUnreadMessagesCount(usernames, requestingUsername) {
     const sortedUsernames = this.getSortedUsernames(usernames);
 
-    const messages = await this.getMessageHistory(sortedUsernames);
+    const bufferedMessages =
+      await MessageBufferService.getMessagesFromBuffer(sortedUsernames);
 
-    const unreadCount = messages.reduce((count, message) => {
+    const messageHistory = await MessageHistory.findOne({
+      usernames: sortedUsernames,
+    });
+    const dbMessages = messageHistory ? messageHistory.messages : [];
+
+    const allMessages = [...bufferedMessages, ...dbMessages];
+
+    const unreadCount = allMessages.reduce((count, message) => {
       if (message.username !== requestingUsername && !message.readAt) {
         return count + 1;
       }
@@ -110,51 +121,40 @@ class MessageHistoryService {
     return unreadMessageMap;
   }
 
-  //maybe the problem in async
   static async markAsRead(usernames, requestingUsername) {
     const sortedUsernames = this.getSortedUsernames(usernames);
     const cacheKey = sortedUsernames.join("-");
     logger.info(`Marking messages as read. Cache key: ${cacheKey}`);
-    let messagesToChange = [];
 
-    logger.info("Get messages from buffer to mark as read");
-    const bufferedMessages =
+    let messagesToChange =
       await MessageBufferService.getMessagesFromBuffer(sortedUsernames);
 
-    if (bufferedMessages?.length > 0) {
-      messagesToChange = bufferedMessages;
-    } else {
-      logger.info("No messages in buffer. Get messages from DB");
-      const messageHistory = this.getMessageHistory(sortedUsernames);
-      messagesToChange = messageHistory.messages;
+    if (!messagesToChange || messagesToChange.length === 0) {
+      logger.info("No messages in buffer. Getting messages from DB.");
+      messagesToChange = await this.getMessageHistory(sortedUsernames);
     }
 
     let updated = false;
 
-    logger.info("Trying to find messages to mark as read");
+    logger.info("Attempting to mark messages as read.");
     for (let i = 0; i < messagesToChange.length; i++) {
-      if (!messagesToChange[i].message) {
-        logger.warn(`Skipping message ${i} because it has no message field.`);
-        continue;
-      }
+      const message = messagesToChange[i];
 
-      if (
-        messagesToChange[i].username !== requestingUsername &&
-        messagesToChange[i].readAt === undefined
-      ) {
-        messagesToChange[i].readAt = new Date();
+      if (message.username !== requestingUsername && !message.readAt) {
+        message.readAt = new Date();
         updated = true;
       }
     }
 
     if (updated) {
-      await MessageBufferService.replaceBuffer(usernames, messagesToChange);
-      logger.info(
-        `Messages marked as read in DB. Cache key invalidated: ${cacheKey}`
+      await MessageBufferService.replaceBuffer(
+        sortedUsernames,
+        messagesToChange
       );
+      logger.info(`Messages marked as read in buffer. Cache key: ${cacheKey}`);
     } else {
       logger.info(
-        `No messages to mark as read in DB. Cache key not invalidated: ${cacheKey}`
+        `No unread messages found to mark as read. Cache key: ${cacheKey}`
       );
     }
 

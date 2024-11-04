@@ -62,3 +62,33 @@ main()
     redisClient.quit();
     process.exit(1);
   });
+
+process.on("SIGINT", async () => {
+  try {
+    logger.info(
+      "SIGINT received. Flushing buffers and shutting down gracefully."
+    );
+    await MessageBufferService.flushAllBuffers();
+    await disconnectFromMongoDB();
+    await redisClient.quit();
+    process.exit(0);
+  } catch (error) {
+    logger.error(`Error during shutdown: ${error.message}`);
+    process.exit(1);
+  }
+});
+
+process.on("SIGTERM", async () => {
+  try {
+    logger.info(
+      "SIGTERM received. Flushing buffers and shutting down gracefully."
+    );
+    await MessageBufferService.flushAllBuffers();
+    await disconnectFromMongoDB();
+    await redisClient.quit();
+    process.exit(0);
+  } catch (error) {
+    logger.error(`Error during shutdown: ${error.message}`);
+    process.exit(1);
+  }
+});
