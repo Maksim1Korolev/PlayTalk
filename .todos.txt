@@ -14,7 +14,6 @@ Issues when redis connects late (-restart?)
 Adjust modal drag
 Highlight types
 Ttt styles
-Remove circleMenuSlice
 Your own avatar doesn't show in messageHistory
 Sometimes the ttt turn doesn't change on opponent's client, although the sign is set
 Get sensitive data for .env sorted out, adjust location for client's .env
@@ -24,7 +23,6 @@ Sort out game and modal types
 User has to be added in real time to the list when registered
 Initial http request for messageHistory
 Logged errors from circleMenu library
-Serious troubles with unread in real time and messages in general
 Upgrade font
 Not to pass currentUsername on api requests
 Disable buttons in userList accordingly
@@ -35,6 +33,7 @@ Save empty messageHistory in redis cache too
 Token expiration logic on client
 User search
 Winner and players logic to client
+polling on profile
 Rate limiting to auth
 Storybook
 Kubernetes
