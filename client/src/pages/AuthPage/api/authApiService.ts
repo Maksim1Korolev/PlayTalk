@@ -14,9 +14,18 @@ export const authApiService = {
       username,
       password,
     });
-    const profileRes = await $profileApi.post("/profiles", { username });
-
-    console.log(profileRes.data + "Register is success");
+    try {
+      const profileRes = await $profileApi.post("/profiles", { username }); //TODO:Move and update logic
+      console.log(
+        profileRes.data +
+          "Registration successful with user added to profile service"
+      );
+    } catch (error) {
+      console.log(
+        response.data +
+          "Registration successful without user added to profile service"
+      );
+    }
 
     return response.data;
   },

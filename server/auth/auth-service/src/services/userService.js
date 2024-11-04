@@ -13,13 +13,10 @@ class UserService {
     try {
       const addedUser = await User.create({ ...user });
 
-      await redisClient.hSet(
-        process.env.REDIS_USERS_USERNAME_KEY,
-        addedUser.username,
-        JSON.stringify(addedUser)
-      );
+      await redisClient.del(process.env.REDIS_USERS_USERNAME_KEY);
+      await redisClient.del(process.env.REDIS_USERS_ID_KEY);
 
-      logger.info(`User added: ${addedUser.username}`);
+      logger.info(`User added: ${addedUser.username} and Redis cache cleared.`);
       return addedUser;
     } catch (error) {
       logger.error(`Error adding user: ${error.message}`);
