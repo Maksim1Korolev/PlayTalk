@@ -1,12 +1,7 @@
 To add:
 Multiple sources for the main list of users and online
 Upgrade UserList scrollbar
-Make users from context into map
 Tests for ttt service
-Modals limitation
-Add modals to portal
-Add api in config of RTK
-Logic of fetching users in Thunk 
 Tests for chat repo services
 Boolean func to see if user is registered and implement it
 Put chat into slice

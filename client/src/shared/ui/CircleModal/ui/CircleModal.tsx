@@ -16,6 +16,7 @@ import {
 	UiText,
 	VStack,
 } from "@/shared/ui"
+import ReactDOM from 'react-dom'
 
 interface CircleModalProps {
   className?: string;
@@ -77,8 +78,14 @@ export const CircleModal = memo(
       enableResizing: !isCollapsed,
       dragHandleClassName: isCollapsed ? "" : cls.header,
     };
+		
+		const modalRoot = document.getElementById("root");
+    if (!modalRoot) {
+      console.error("Modal root element not found!");
+      return null;
+    }
 
-    return (
+    const modalContent = (
       <Rnd {...rndProps} style={{ zIndex: 100 }}>
         {isCollapsed ? (
           <AddonCircle {...addonCircleProps} onClick={handleOpenCircleModal} />
@@ -112,5 +119,7 @@ export const CircleModal = memo(
         )}
       </Rnd>
     );
+
+		return ReactDOM.createPortal(modalContent, modalRoot)
   }
 );
