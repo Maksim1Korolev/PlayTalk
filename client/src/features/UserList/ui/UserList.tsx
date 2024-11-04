@@ -1,18 +1,18 @@
-import cls from "./UserList.module.scss";
+import cls from "./UserList.module.scss"
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useCookies } from "react-cookie";
+import { useEffect, useMemo, useRef, useState } from "react"
+import { useCookies } from "react-cookie"
 
-import { userListResources } from "@/shared/assets";
+import { userListResources } from "@/shared/assets"
 
-import { cx, useAppDispatch, useAppSelector } from "@/shared/lib";
-import { Card, Loader, UiText, VStack } from "@/shared/ui";
+import { cx, useAppDispatch, useAppSelector } from "@/shared/lib"
+import { Card, Loader, UiText, VStack } from "@/shared/ui"
 
-import { GameData } from "@/entities/game/Game";
-import { getUsers, User, userActions, UserListCard } from "@/entities/User";
-import { getUsersWithStatuses } from "@/features/UserList/api/getUsersWithStatuses";
+import { GameData } from "@/entities/game/Game"
+import { getUsers, User, userActions, UserListCard } from "@/entities/User"
+import { getUsersWithStatuses } from "@/features/UserList/api/getUsersWithStatuses"
 
-import { sortUsers } from "../utils/userListUtils";
+import { sortUsers } from "../utils/userListUtils"
 
 export interface UserListProps {
   className?: string;
@@ -96,7 +96,7 @@ export const UserList = ({
   }, [dispatch, currentUsername, token]);
 
   const userList = useMemo(() => {
-    const sortedUsers = users ? [...users].sort(sortUsers) : [];
+    const sortedUsers = users ? Object.values(users).sort(sortUsers) : [];
     return sortedUsers?.map((user, index) => (
       <div style={{ width: "100%" }} key={user._id}>
         <UserListCard
@@ -112,7 +112,7 @@ export const UserList = ({
     ));
   }, [collapsed, handleUserChatButton, handleUserPlayButton, users]);
 
-  if (!users || users.length === 0) {
+  if (!users || Object.keys(users).length === 0) {
     return <p>{userListResources.noUsers}</p>;
   }
 

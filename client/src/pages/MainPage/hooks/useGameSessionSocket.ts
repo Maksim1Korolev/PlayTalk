@@ -1,9 +1,9 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react"
 
-import { SocketContext } from "@/shared/lib/context/SocketContext";
+import { SocketContext } from "@/shared/lib/context/SocketContext"
 
-import { GameData, isGameName } from "@/entities/game/Game";
-import { Invite } from "@/entities/game/Invite";
+import { GameData, GameModalData, isGameName } from "@/entities/game/Game"
+import { Invite } from "@/entities/game/Invite"
 
 export const useGameSessionSocket = ({
   onReceiveInvite,
@@ -11,7 +11,7 @@ export const useGameSessionSocket = ({
   onGameEnd,
 }: {
   onReceiveInvite: ({ invite }: { invite: Invite }) => void;
-  onGameStart: ({ gameData }: { gameData: GameData }) => void;
+  onGameStart: ({ gameData }: { gameData: GameModalData }) => void;
   onGameEnd: ({
     gameData,
     winner,

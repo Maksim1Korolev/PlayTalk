@@ -28,7 +28,7 @@ export const useGameSessionLogic = () => {
     useGameModals();
 
   const getUser = (username: string): User | undefined => {
-    return users.find(user => user.username === username);
+    return users[username];
   };
 
   const onReceiveInvite = ({ invite }: { invite: Invite }) => {
@@ -54,7 +54,8 @@ export const useGameSessionLogic = () => {
       })
     );
 
-    handleOpenGameModal({ gameData });
+
+    handleOpenGameModal({ modalData: gameData });
   };
 
   const onGameEnd = ({ gameData, winner }: GameEndPayload) => {
@@ -117,7 +118,7 @@ export const useGameSessionLogic = () => {
     if (isInviting) {
       handleAcceptGameInvite(invite);
     } else if (isActive) {
-      handleOpenGameModal({ gameData });
+      handleOpenGameModal({ modalData: gameData });
     } else {
       handleSendGameInvite({
         receiverUsername: gameData.opponentUsername,

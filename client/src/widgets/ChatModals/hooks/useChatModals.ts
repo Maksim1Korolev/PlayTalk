@@ -1,12 +1,12 @@
 import { useCallback, useState } from "react"
 
-import { ChatData } from '@/entities/Chat'
+import { ChatModalData } from '@/entities/Chat'
 import { getModalCount, getModalMaxCount, Modal, modalActions } from '@/entities/Modal'
 import { User } from "@/entities/User"
 import { useAppDispatch, useAppSelector } from '@/shared/lib'
 
 export const useChatModals = () => {
-  const [chatModals, setChatModals] = useState<Modal<ChatData>[]>([]);
+  const [chatModals, setChatModals] = useState<Modal<ChatModalData>[]>([]);
 	const dispatch = useAppDispatch()
 	const modalCount = useAppSelector(getModalCount)
 	const modalMaxCount = useAppSelector(getModalMaxCount)
@@ -25,7 +25,7 @@ export const useChatModals = () => {
         return;
       }
 
-      const newChatModalProps: Modal<ChatData> = { 
+      const newChatModalProps: Modal<ChatModalData> = { 
 				modalId: user.username,
 				data: { user }};
 			

@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express";
-import asyncHandler from "express-async-handler";
-import jwt from "jsonwebtoken";
-import ProfileService from "../services/profileService";
-import { getLogger } from "../utils/logger";
+import { NextFunction, Request, Response } from "express"
+import asyncHandler from "express-async-handler"
+import jwt from "jsonwebtoken"
+import ProfileService from "../services/profileService"
+import { getLogger } from "../utils/logger"
 const logger = getLogger("AuthMiddleware");
 
 declare global {

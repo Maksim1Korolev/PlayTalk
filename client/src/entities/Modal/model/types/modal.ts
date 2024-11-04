@@ -1,5 +1,5 @@
-import { ChatData } from '@/entities/Chat'
-import { GameData } from '@/entities/game/Game'
+import { ChatModalData } from '@/entities/Chat'
+import { GameModalData } from '@/entities/game/Game'
 
 export interface ModalState {
 	modals: Modal[],
@@ -17,4 +17,4 @@ export interface Modal<T = ModalData> {
 	data: T
 }
 
-export type ModalData = ChatData | GameData ;
+export type ModalData = ChatModalData | GameModalData ;

@@ -11,7 +11,7 @@ export type User = {
 };
 
 export interface UserState {
-  users: User[];
+  users: Record<string, User>;
   currentUser: CurrentUser | null;
 }
 
