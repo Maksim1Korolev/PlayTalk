@@ -35,13 +35,10 @@ class UserService {
 
       if (cachedUsers && Object.keys(cachedUsers).length > 0) {
         logger.info("Fetched users from Redis cache.");
-        return Object.values(cachedUsers).map(user => {
-          const { password, ...userWithoutPassword } = JSON.parse(user);
-          return userWithoutPassword;
-        });
+        return Object.values(cachedUsers).map(user => JSON.parse(user));
       }
 
-      const users = await User.find({}, "-password");
+      const users = await User.find();
       for (const user of users) {
         await redisClient.hSet(
           process.env.REDIS_USERS_USERNAME_KEY,
@@ -50,6 +47,7 @@ class UserService {
         );
       }
       logger.info("Fetched users from database and cached in Redis.");
+      logger.info(users);
       return users;
     } catch (error) {
       logger.error(`Error fetching users: ${error.message}`);
@@ -72,11 +70,10 @@ class UserService {
 
       if (cachedUser) {
         logger.info(`Cache hit for user with ID: ${id}`);
-        const { password, ...userWithoutPassword } = JSON.parse(cachedUser);
-        return userWithoutPassword;
+        return JSON.parse(cachedUser);
       }
 
-      const user = await User.findById(id).select("-password");
+      const user = await User.findById(id);
       if (user) {
         await redisClient.hSet(
           process.env.REDIS_USERS_ID_KEY,
@@ -101,11 +98,10 @@ class UserService {
 
       if (cachedUser) {
         logger.info(`Cache hit for user: ${username}`);
-        const { password, ...userWithoutPassword } = JSON.parse(cachedUser);
-        return userWithoutPassword;
+        return JSON.parse(cachedUser);
       }
 
-      const user = await User.findOne({ username }).select("-password");
+      const user = await User.findOne({ username });
       if (user) {
         await redisClient.hSet(
           process.env.REDIS_USERS_USERNAME_KEY,
@@ -132,7 +128,7 @@ class UserService {
     try {
       const updatedUser = await User.findByIdAndUpdate(user._id, user, {
         new: true,
-      }).select("-password");
+      });
 
       if (updatedUser) {
         await redisClient.hSet(
