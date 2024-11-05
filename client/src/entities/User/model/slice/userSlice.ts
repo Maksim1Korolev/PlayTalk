@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { CurrentUser, User } from "@/entities/User";
 
-import { fetchUsersWithStatuses } from '../thunks/fetchUsersWithStatuses';
+import { fetchUsersWithStatuses } from "../thunks/fetchUsersWithStatuses";
 import { UserState } from "../types/user";
 
 const initialState: UserState = {
@@ -23,7 +23,7 @@ const userSlice = createSlice({
     ) => {
       const { users, currentUsername } = action.payload;
 
-      users.forEach((user) => {
+      users.forEach(user => {
         if (user.username !== currentUsername) {
           state.users[user.username] = user;
         } else {
@@ -36,7 +36,7 @@ const userSlice = createSlice({
       action: PayloadAction<{ username: string; updatedProps: Partial<User> }>
     ) => {
       const { username, updatedProps } = action.payload;
-			const user = state.users[username];
+      const user = state.users[username];
 
       if (user) {
         state.users[username] = { ...user, ...updatedProps };
@@ -46,9 +46,9 @@ const userSlice = createSlice({
       state.currentUser = action.payload;
     },
   },
-	extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(fetchUsersWithStatuses.pending, (state) => {
+      .addCase(fetchUsersWithStatuses.pending, state => {
         state.isLoading = true;
         state.isError = false;
         state.errorMessage = null;
@@ -58,7 +58,7 @@ const userSlice = createSlice({
         state.isError = false;
         const { users, currentUsername } = action.payload;
 
-        users.forEach((user) => {
+        users.forEach(user => {
           if (user.username !== currentUsername) {
             state.users[user.username] = user;
           } else {
@@ -73,7 +73,5 @@ const userSlice = createSlice({
       });
   },
 });
-
-
 
 export const { reducer: userReducer, actions: userActions } = userSlice;

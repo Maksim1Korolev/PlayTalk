@@ -1,11 +1,13 @@
+import { getLogger } from "../utils/logger.js";
+
 import { io } from "../index.js";
 
 import redisClient from "../utils/redisClient.js";
-import { getLogger } from "../utils/logger.js";
-const logger = getLogger("SocketService");
 
 import { handleInviteSubscriptions } from "./socketGameSessionHandler.js";
 import { handleTicTacToeSubscriptions } from "./ticTacToe/socketSubs.js";
+
+const logger = getLogger("SocketService");
 
 class SocketService {
   static async setupSocketConnection() {
@@ -46,11 +48,7 @@ class SocketService {
         logger.info(
           `Online ping from ${savedUsername}. Current online users: ${await this.getOnlineUsernames()}`
         );
-        socket.broadcast.emit(
-          "player-connection",
-          { username: savedUsername },
-          true
-        );
+        socket.broadcast.emit("player-connection", savedUsername, true);
       });
 
       socket.on("disconnect", async () => {
@@ -63,11 +61,7 @@ class SocketService {
 
           const remainingSockets = await this.getUserSockets(savedUsername);
           if (remainingSockets.length === 0) {
-            socket.broadcast.emit(
-              "player-connection",
-              { username: savedUsername },
-              false
-            );
+            socket.broadcast.emit("player-connection", savedUsername, false);
           }
         }
       });

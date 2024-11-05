@@ -1,9 +1,12 @@
-import { io } from "../index.js";
-import redisClient from "../utils/redisClient.js";
 import { getLogger } from "../utils/logger.js";
-const logger = getLogger("SocketService");
+
+import { io } from "../index.js";
+
+import redisClient from "../utils/redisClient.js";
 
 import { handleChatSubscriptions } from "./chat/socketSubs.js";
+
+const logger = getLogger("SocketService");
 
 class SocketService {
   static async setupSocketConnection() {

@@ -1,10 +1,11 @@
-import SocketService from "../socketService.js";
 import { io } from "../../index.js";
+
 import redisClient from "../../utils/redisClient.js";
-import { handleInviteSubscriptions } from "../socketGameSessionHandler.js";
-import { handleTicTacToeSubscriptions } from "../ticTacToe/socketSubs.js";
 
 import { setupMockSocketAndUser } from "../../__mocks__/io.js";
+import { handleInviteSubscriptions } from "../socketGameSessionHandler.js";
+import SocketService from "../socketService.js";
+import { handleTicTacToeSubscriptions } from "../ticTacToe/socketSubs.js";
 
 jest.mock("../socketGameSessionHandler.js", () => ({
   handleInviteSubscriptions: jest.fn(),
@@ -77,7 +78,7 @@ describe("SocketService", () => {
       );
       expect(mockSocket.broadcast.emit).toHaveBeenCalledWith(
         "player-connection",
-        { username: mockUser.username },
+        mockUser.username,
         true
       );
     });
@@ -106,7 +107,7 @@ describe("SocketService", () => {
 
       expect(mockSocket.broadcast.emit).toHaveBeenCalledWith(
         "player-connection",
-        { username: mockUser.username },
+        mockUser.username,
         false
       );
     });

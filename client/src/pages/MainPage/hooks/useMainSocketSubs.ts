@@ -31,10 +31,12 @@ export const useMainSocketSubs = () => {
         username: string,
         unreadMessageCount: number
       ) => {
-        userActions.updateUser({
-          username,
-          updatedProps: { unreadMessageCount },
-        });
+        dispatch(
+          userActions.updateUser({
+            username,
+            updatedProps: { unreadMessageCount },
+          })
+        );
       };
 
       communicationSocket.on("connect", onCommunicationConnect);
