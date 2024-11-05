@@ -15,6 +15,7 @@ jest.mock("../messageHistoryService.js", () => ({
   getUnreadMessagesCount: jest.fn(),
 }));
 
+//recipientUsername
 describe("ChatSubscriptions", () => {
   let mockSocket, mockUsername, mockReceiverUsername;
 

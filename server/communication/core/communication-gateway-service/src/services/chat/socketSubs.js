@@ -9,48 +9,48 @@ import MessageHistoryService from "./messageHistoryService.js";
 const logger = getLogger("ChatSubscriptions");
 
 export async function handleChatSubscriptions(socket, currentUsername) {
-  socket.on("on-chat-open", async ({ receiverUsername }) => {
+  socket.on("on-chat-open", async ({ recipientUsername }) => {
     try {
       const { data } = await MessageHistoryService.getMessageHistory([
         currentUsername,
-        receiverUsername,
+        recipientUsername,
       ]);
 
       if (data && data.messageHistory) {
-        socket.emit("update-chat", data.messageHistory, receiverUsername);
+        socket.emit("update-chat", data.messageHistory, recipientUsername);
         logger.info(
-          `Chat history sent for ${currentUsername} and ${receiverUsername}.`
+          `Chat history sent for ${currentUsername} and ${recipientUsername}.`
         );
       }
     } catch (err) {
       logger.error(
-        `Error retrieving chat history for ${currentUsername} and ${receiverUsername}: ${err.message}`
+        `Error retrieving chat history for ${currentUsername} and ${recipientUsername}: ${err.message}`
       );
     }
   });
 
-  socket.on("typing", async receiverUsername => {
+  socket.on("typing", async recipientUsername => {
     const receiverSocketIds =
-      await SocketService.getUserSockets(receiverUsername);
+      await SocketService.getUserSockets(recipientUsername);
 
     if (receiverSocketIds.length === 0) {
       return;
     }
 
     io.to(receiverSocketIds).emit("typing", currentUsername);
-    logger.info(`${currentUsername} is typing to ${receiverUsername}`);
+    logger.info(`${currentUsername} is typing to ${recipientUsername}`);
   });
 
-  socket.on("stop typing", async receiverUsername => {
+  socket.on("stop typing", async recipientUsername => {
     const receiverSocketIds =
-      await SocketService.getUserSockets(receiverUsername);
+      await SocketService.getUserSockets(recipientUsername);
 
     if (receiverSocketIds.length === 0) {
       return;
     }
 
     io.to(receiverSocketIds).emit("stop typing", currentUsername);
-    logger.info(`${currentUsername} stopped typing to ${receiverUsername}`);
+    logger.info(`${currentUsername} stopped typing to ${recipientUsername}`);
   });
 
   socket.on("on-read-messages", async ({ usernames }) => {
@@ -73,13 +73,13 @@ export async function handleChatSubscriptions(socket, currentUsername) {
     }
   });
 
-  socket.on("send-message", async ({ receiverUsername, message }) => {
-    const usernames = [currentUsername, receiverUsername].sort();
+  socket.on("send-message", async ({ recipientUsername, message }) => {
+    const usernames = [currentUsername, recipientUsername].sort();
 
     try {
       await MessageHistoryService.addMessageToHistory(usernames, message);
       const receiverSocketIds =
-        await SocketService.getUserSockets(receiverUsername);
+        await SocketService.getUserSockets(recipientUsername);
 
       if (receiverSocketIds.length === 0) {
         return;
@@ -88,7 +88,7 @@ export async function handleChatSubscriptions(socket, currentUsername) {
       io.to(receiverSocketIds).emit("receive-message", message);
 
       const unreadCount = await MessageHistoryService.getUnreadMessagesCount(
-        receiverUsername,
+        recipientUsername,
         usernames
       );
 
@@ -99,13 +99,13 @@ export async function handleChatSubscriptions(socket, currentUsername) {
       );
 
       logger.info(
-        `Message from ${currentUsername} to ${receiverUsername}: "${message}" delivered to sockets: ${receiverSocketIds?.join(
+        `Message from ${currentUsername} to ${recipientUsername}: "${message}" delivered to sockets: ${receiverSocketIds?.join(
           ", "
         )}`
       );
     } catch (err) {
       logger.error(
-        `Error sending message from ${currentUsername} to ${receiverUsername}: ${err.message}`
+        `Error sending message from ${currentUsername} to ${recipientUsername}: ${err.message}`
       );
     }
   });

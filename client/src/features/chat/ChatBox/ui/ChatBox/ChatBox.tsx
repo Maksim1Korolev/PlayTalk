@@ -32,7 +32,7 @@ export const ChatBox = memo(
       readAllUnreadMessages,
     } = useChatMessages({
       currentUsername: currentUser!.username,
-      receiverUsername: receiverUser.username,
+      recipientUsername: receiverUser.username,
     });
 
     useEffect(() => {

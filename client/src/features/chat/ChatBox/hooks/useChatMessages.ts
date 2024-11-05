@@ -6,10 +6,10 @@ import { Message } from "@/features/chat/ChatBox/ui/ChatMessage/ui/ChatMessage";
 
 export const useChatMessages = ({
   currentUsername,
-  receiverUsername,
+  recipientUsername,
 }: {
   currentUsername: string;
-  receiverUsername: string;
+  recipientUsername: string;
 }) => {
   const { sockets } = useContext(SocketContext);
   const { communicationSocket } = sockets;
@@ -27,11 +27,11 @@ export const useChatMessages = ({
       setMessageHistory(prev => [...prev, newMessage]);
       if (!communicationSocket) return;
       communicationSocket.emit("send-message", {
-        receiverUsername,
+        recipientUsername,
         message: newMessage,
       });
     },
-    [communicationSocket, currentUsername, receiverUsername]
+    [communicationSocket, currentUsername, recipientUsername]
   );
 
   const readAllUnreadMessages = useCallback(
@@ -51,21 +51,21 @@ export const useChatMessages = ({
       console.log(messages);
       console.log("Updating chat history");
 
-      if (receiverUsername === senderUsername) {
+      if (recipientUsername === senderUsername) {
         setMessageHistory(messages);
       }
     };
     communicationSocket.emit("on-chat-open", {
-      receiverUsername,
+      recipientUsername,
     });
 
     communicationSocket.on("update-chat", updateChatHistory);
 
     communicationSocket.on("typing", senderUsername => {
-      if (senderUsername === receiverUsername) setIsTyping(true);
+      if (senderUsername === recipientUsername) setIsTyping(true);
     });
     communicationSocket.on("stop typing", senderUsername => {
-      if (senderUsername === receiverUsername) setIsTyping(false);
+      if (senderUsername === recipientUsername) setIsTyping(false);
     });
 
     return () => {
@@ -73,13 +73,13 @@ export const useChatMessages = ({
       communicationSocket.off("typing");
       communicationSocket.off("stop typing");
     };
-  }, [communicationSocket, receiverUsername]);
+  }, [communicationSocket, recipientUsername]);
 
   useEffect(() => {
     const onReceiveMessage = (message: Message) => {
       console.log("ZHOPAAAAAA");
 
-      if (message.username === receiverUsername) {
+      if (message.username === recipientUsername) {
         console.log(message);
 
         setMessageHistory(prev => [...prev, message]);
@@ -94,14 +94,14 @@ export const useChatMessages = ({
         communicationSocket.off("receive-message", onReceiveMessage);
       }
     };
-  }, [communicationSocket, receiverUsername]);
+  }, [communicationSocket, recipientUsername]);
 
   const notifyTyping = useCallback(() => {
     if (!communicationSocket) return;
 
     if (!typing) {
       setTyping(true);
-      communicationSocket.emit("typing", receiverUsername);
+      communicationSocket.emit("typing", recipientUsername);
     }
 
     const lastTypingTime = new Date().getTime();
@@ -111,14 +111,14 @@ export const useChatMessages = ({
       const timeDiff = timeNow - lastTypingTime;
       if (timeDiff >= timerLength && typing) {
         if (communicationSocket) {
-          communicationSocket.emit("stop typing", receiverUsername);
+          communicationSocket.emit("stop typing", recipientUsername);
         }
         setTyping(false);
       }
     }, timerLength);
 
-    communicationSocket.emit("typing", receiverUsername);
-  }, [communicationSocket, receiverUsername, typing]);
+    communicationSocket.emit("typing", recipientUsername);
+  }, [communicationSocket, recipientUsername, typing]);
 
   return {
     messageHistory,
