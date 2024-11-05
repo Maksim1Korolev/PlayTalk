@@ -1,9 +1,10 @@
+import MessageHistoryService from "../../services/messageHistoryService.js";
+
 import {
+  getAllUnreadMessageCount,
   getUnreadMessageCount,
   markAsRead,
-  getAllUnreadMessageCount,
 } from "../unreadController.js";
-import MessageHistoryService from "../../services/messageHistoryService.js";
 
 jest.mock("../../services/messageHistoryService.js");
 
