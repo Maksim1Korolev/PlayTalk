@@ -6,17 +6,19 @@ import MessageHistoryService from "../services/messageHistoryService.js";
 
 const logger = getLogger("MessageHistoryController");
 
-//TODO:Add routes and implement
-// @desc   Get message history for specific users
-// @route  GET api/messageHistories/messageHistory
+// @desc   Get message history between current user and recipient
+// @route  GET /api/messageHistories/:recipientUsername
 // @access Protected
 export const getMessageHistory = asyncHandler(async (req, res) => {
-  const usernames = req.query.usernames;
-  logger.info(usernames);
-  if (!usernames) {
-    logger.warn("Usernames are missing in request");
-    return res.status(400).json({ message: "Usernames are required." });
+  const requestingUsername = req.user.username;
+  const { recipientUsername } = req.params;
+
+  if (!recipientUsername) {
+    logger.warn("Recipient username is missing in request");
+    return res.status(400).json({ message: "Recipient username is required." });
   }
+
+  const usernames = [requestingUsername, recipientUsername];
   try {
     logger.info(`Fetching message history for usernames: ${usernames}`);
     const messageHistory =
