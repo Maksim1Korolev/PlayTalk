@@ -6,6 +6,7 @@ Boolean func to see if user is registered and implement it
 
 To fix:
 Upgrade UserList scrollbar
+Update tests
 Issues when redis connects late (-restart?)
 Highlight types
 Ttt styles
@@ -21,7 +22,6 @@ Emits to empty socket array on game gateway
 getUsersLoadingStatus error in client's console
 Getting error in communication service when requesting unread messages with count of 0/
 Initial http request for messageHistory/
-Not to pass currentUsername on api requests/
 
 To add (In the end):
 Pagination
