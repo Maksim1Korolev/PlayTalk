@@ -29,16 +29,26 @@ export async function handleChatSubscriptions(socket, currentUsername) {
   });
 
   socket.on("typing", async receiverUsername => {
-    const receiversSocketIds =
+    const receiverSocketIds =
       await SocketService.getUserSockets(receiverUsername);
-    io.to(receiversSocketIds).emit("typing", currentUsername);
+
+    if (receiverSocketIds.length === 0) {
+      return;
+    }
+
+    io.to(receiverSocketIds).emit("typing", currentUsername);
     logger.info(`${currentUsername} is typing to ${receiverUsername}`);
   });
 
   socket.on("stop typing", async receiverUsername => {
-    const receiversSocketIds =
+    const receiverSocketIds =
       await SocketService.getUserSockets(receiverUsername);
-    io.to(receiversSocketIds).emit("stop typing", currentUsername);
+
+    if (receiverSocketIds.length === 0) {
+      return;
+    }
+
+    io.to(receiverSocketIds).emit("stop typing", currentUsername);
     logger.info(`${currentUsername} stopped typing to ${receiverUsername}`);
   });
 
@@ -67,24 +77,28 @@ export async function handleChatSubscriptions(socket, currentUsername) {
 
     try {
       await MessageHistoryService.addMessageToHistory(usernames, message);
-      const receiversSocketIds =
+      const receiverSocketIds =
         await SocketService.getUserSockets(receiverUsername);
 
-      io.to(receiversSocketIds).emit("receive-message", message);
+      if (receiverSocketIds.length === 0) {
+        return;
+      }
+
+      io.to(receiverSocketIds).emit("receive-message", message);
 
       const unreadCount = await MessageHistoryService.getUnreadMessagesCount(
         receiverUsername,
         usernames
       );
 
-      io.to(receiversSocketIds).emit(
+      io.to(receiverSocketIds).emit(
         "unread-count-messages",
         currentUsername,
         unreadCount
       );
 
       logger.info(
-        `Message from ${currentUsername} to ${receiverUsername}: "${message}" delivered to sockets: ${receiversSocketIds?.join(
+        `Message from ${currentUsername} to ${receiverUsername}: "${message}" delivered to sockets: ${receiverSocketIds?.join(
           ", "
         )}`
       );

@@ -1,6 +1,8 @@
-import { Message } from "@/features/chat/ChatBox/ui/ChatMessage/ui/ChatMessage"
-import { SocketContext } from "@/shared/lib/context/SocketContext"
-import { useCallback, useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react";
+
+import { SocketContext } from "@/shared/lib/context/SocketContext";
+
+import { Message } from "@/features/chat/ChatBox/ui/ChatMessage/ui/ChatMessage";
 
 export const useChatMessages = ({
   currentUsername,
@@ -66,16 +68,17 @@ export const useChatMessages = ({
       if (senderUsername === receiverUsername) setIsTyping(false);
     });
 
-		return () => {
-			communicationSocket.off("update-chat" )
-			communicationSocket.off("typing" )
-			communicationSocket.off("stop typing" )
-
-		}
+    return () => {
+      communicationSocket.off("update-chat");
+      communicationSocket.off("typing");
+      communicationSocket.off("stop typing");
+    };
   }, [communicationSocket, receiverUsername]);
 
   useEffect(() => {
     const onReceiveMessage = (message: Message) => {
+      console.log("ZHOPAAAAAA");
+
       if (message.username === receiverUsername) {
         console.log(message);
 
