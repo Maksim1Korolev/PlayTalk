@@ -1,35 +1,30 @@
 To add:
-Multiple sources for the main list of users and online
-Upgrade UserList scrollbar
-Tests for ttt service
-Tests for chat repo services
-Boolean func to see if user is registered and implement it
+Tests chat's services, ttt service and profile service
 Put chat into slice
 Loader instead of no users available for some cases
+Boolean func to see if user is registered and implement it
 
 To fix:
-Getting error in communication service when requesting unread messages with count of 0
-Check online and api client logic
+Upgrade UserList scrollbar
+Adjust multiple sources for the main list of users and online
 Issues when redis connects late (-restart?)
-Adjust modal drag
 Highlight types
 Ttt styles
-Your own avatar doesn't show in messageHistory
 Sometimes the ttt turn doesn't change on opponent's client, although the sign is set
 Get sensitive data for .env sorted out, adjust location for client's .env
 Blurred messages and gap between them
-Index file of the profile service
-Sort out game and modal types
 User has to be added in real time to the list when registered
-Initial http request for messageHistory
-Logged errors from circleMenu library
 Upgrade font
-Not to pass currentUsername on api requests
 Disable buttons in userList accordingly
-Update profile service
-Messages emits
+Upgrade profile service
+Initial http request for messageHistory
+Not to pass currentUsername on api requests
+Getting error in communication service when requesting unread messages with count of 0
+Messages and unread emits
 
 To add (In the end):
+Adjust modal drag
+Get rid of logged errors from circleMenu library
 Adjust location of accept invite emit
 Save empty messageHistory in redis cache too
 Token expiration logic on client
