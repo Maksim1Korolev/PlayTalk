@@ -1,8 +1,9 @@
+import MessageHistoryService from "../../services/messageHistoryService.js";
+
 import {
   addMessageToHistory,
   getMessageHistory,
 } from "../messageHistoryController.js";
-import MessageHistoryService from "../../services/messageHistoryService.js";
 
 jest.mock("../../services/messageHistoryService.js");
 
