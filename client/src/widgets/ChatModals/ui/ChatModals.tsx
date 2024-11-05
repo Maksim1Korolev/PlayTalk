@@ -1,17 +1,14 @@
-import {
-	memo,
-	useCallback
-} from "react"
+import { memo, useCallback } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/shared/lib"
-import { AddonCircleProps, AppImageProps, CircleModal } from "@/shared/ui"
-import { useModalPosition } from "@/shared/ui/CircleModal"
-import getImagePath from "@/shared/utils/getImagePath"
+import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { AddonCircleProps, AppImageProps, CircleModal } from "@/shared/ui";
+import { useModalPosition } from "@/shared/ui/CircleModal";
+import getImagePath from "@/shared/utils/getImagePath";
 
-import { ChatModalData, UnreadMessagesCountIndicator } from "@/entities/Chat"
-import { Modal, modalActions } from '@/entities/Modal'
-import { getCurrentUser, UserOnlineIndicator } from "@/entities/User"
-import { ChatBox } from "@/features/chat"
+import { ChatModalData, UnreadMessagesCountIndicator } from "@/entities/Chat";
+import { Modal, modalActions } from "@/entities/Modal";
+import { getCurrentUser, UserOnlineIndicator } from "@/entities/User";
+import { ChatBox } from "@/features/chat";
 
 export const ChatModals = memo(
   ({
@@ -23,8 +20,7 @@ export const ChatModals = memo(
   }) => {
     const currentUser = useAppSelector(getCurrentUser);
 
-
-		const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch();
 
     const { getStartingPosition } = useModalPosition();
 
@@ -40,7 +36,7 @@ export const ChatModals = memo(
       }) => {
         const getAvatarIconProps = (avatarFileName?: string) => {
           const size = 80;
-					const avatarUrl = getImagePath({
+          const avatarUrl = getImagePath({
             collection: "avatars",
             fileName: avatarFileName,
           });
@@ -74,15 +70,14 @@ export const ChatModals = memo(
       []
     );
 
-
     const renderChatModals = useCallback(() => {
       const handleCloseChatModal = (modalId: string) => {
         onClose(modalId);
-				dispatch(modalActions.removeModal(modalId))
+        dispatch(modalActions.removeModal(modalId));
       };
 
       return chatModals?.map(({ modalId, data }) => {
-				const {user} = data
+        const { user } = data;
         const { unreadMessageCount, avatarFileName, isOnline } = user;
 
         const position = getStartingPosition();
@@ -99,11 +94,18 @@ export const ChatModals = memo(
               isOnline,
             })}
           >
-            <ChatBox currentUser={currentUser} receiverUser={user} />
+            <ChatBox currentUser={currentUser} recipient={user} />
           </CircleModal>
         );
       });
-    }, [chatModals, currentUser, dispatch, getAddonCircleProps, getStartingPosition, onClose]);
+    }, [
+      chatModals,
+      currentUser,
+      dispatch,
+      getAddonCircleProps,
+      getStartingPosition,
+      onClose,
+    ]);
 
     return renderChatModals();
   }

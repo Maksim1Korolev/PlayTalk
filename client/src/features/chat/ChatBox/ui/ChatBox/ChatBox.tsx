@@ -15,19 +15,19 @@ export const ChatBox = memo(
   ({
     className,
     currentUser,
-    receiverUser,
+    recipient: receiverUser,
   }: {
     className?: string;
     currentUser: CurrentUser;
-    receiverUser: User;
+    recipient: User;
   }) => {
     const dummy = useRef<HTMLDivElement>(null);
     const [inputMessage, setInputMessage] = useState("");
 
     const {
       messageHistory,
-      sendMessage,
       isTyping,
+      sendMessage,
       notifyTyping,
       readAllUnreadMessages,
     } = useChatMessages({
@@ -68,7 +68,7 @@ export const ChatBox = memo(
         >
           <VStack max>
             <div className={cls.chatBoxOverlay}></div>
-            <VStack className={cls.chatLogs} max >
+            <VStack className={cls.chatLogs} max>
               {messageHistory && renderMessageHistory()}
               <div ref={dummy} />
             </VStack>
