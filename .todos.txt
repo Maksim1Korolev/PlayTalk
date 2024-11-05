@@ -17,10 +17,10 @@ User has to be added in real time to the list when registered
 Upgrade font
 Disable buttons in userList accordingly
 Upgrade profile service
-Initial http request for messageHistory
-Not to pass currentUsername on api requests
-Getting error in communication service when requesting unread messages with count of 0
-Messages and unread emits
+Messages and unread emits/
+Getting error in communication service when requesting unread messages with count of 0/
+Initial http request for messageHistory/
+Not to pass currentUsername on api requests/
 
 To add (In the end):
 Adjust modal drag
@@ -44,3 +44,5 @@ Turns history and more stats on tic tac toe server
 Readme:
 Rate limiting
 Messages buffer
+Ttt repo
+Tech stack: redis, mongo, socket, redux, jest
