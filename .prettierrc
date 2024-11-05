@@ -39,6 +39,7 @@
         "importOrder": [
           "<THIRD_PARTY_MODULES>",
           ".*/utils/logger\\.js$",
+          ".*/index\\.js$",
           ".*/utils/(.*)$",
           ".*/middleware/(.*)$",
           ".*/services/(.*)$",
