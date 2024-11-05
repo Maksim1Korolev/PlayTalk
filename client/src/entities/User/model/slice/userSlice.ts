@@ -17,20 +17,6 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    initializeUsers: (
-      state,
-      action: PayloadAction<{ users: User[]; currentUsername: string }>
-    ) => {
-      const { users, currentUsername } = action.payload;
-
-      users.forEach(user => {
-        if (user.username !== currentUsername) {
-          state.users[user.username] = user;
-        } else {
-          state.currentUser = user;
-        }
-      });
-    },
     updateUser: (
       state,
       action: PayloadAction<{ username: string; updatedProps: Partial<User> }>
