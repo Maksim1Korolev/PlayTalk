@@ -9,7 +9,7 @@ const logger = getLogger("MessageHistoryController");
 // @access Protected
 export const getAllUnreadMessageCounts = async (req, res) => {
   try {
-    const { requestingUsername } = req.params;
+    const requestingUsername = req.user.username;
     logger.info(
       `Fetching unread message counts for user: ${requestingUsername}`
     );
@@ -20,21 +20,25 @@ export const getAllUnreadMessageCounts = async (req, res) => {
   } catch (err) {
     logger.error(`Error retrieving unread message counts: ${err.message}`);
     res.status(500).json({
-      message: `Internal server error retrieving UnreadMessageCounts.`,
+      message: `Internal server error retrieving unread message counts.`,
     });
   }
 };
 
-// @desc   Mark all messages as read
-// @route  POST /api/unread/markAsRead
+// @desc   Mark all messages as read between current user and recipient
+// @route  POST /api/unread/markAsRead/:recipientUsername
 // @access Protected
 export const readAllUnreadMessages = async (req, res) => {
   try {
-    const { requestingUsername } = req.params;
-    const { usernames } = req.body;
+    const requestingUsername = req.user.username;
+    const { recipientUsername } = req.params;
+
+    const usernames = Array.from(
+      new Set([requestingUsername, recipientUsername])
+    );
 
     logger.info(
-      `Marking all unread messages as read for ${requestingUsername} with ${usernames}`
+      `Marking all unread messages as read between ${requestingUsername} and ${recipientUsername}`
     );
 
     const { data } = await MessageHistoryService.readAllUnreadMessages(
@@ -42,12 +46,14 @@ export const readAllUnreadMessages = async (req, res) => {
       usernames
     );
 
-    logger.info(`Unread messages marked as read for ${requestingUsername}`);
+    logger.info(
+      `Unread messages marked as read between ${requestingUsername} and ${recipientUsername}`
+    );
     return res.status(200).json(data);
   } catch (err) {
     logger.error(`Error marking unread messages as read: ${err.message}`);
     res.status(500).json({
-      message: `Internal server error posting previously unread messages.`,
+      message: `Internal server error marking unread messages as read.`,
     });
   }
 };

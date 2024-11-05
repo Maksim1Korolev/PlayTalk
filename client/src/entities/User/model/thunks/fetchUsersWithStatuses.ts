@@ -1,6 +1,7 @@
-import { ThunkConfig } from '@/app/providers';
-import { User, } from "@/entities/User";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+
+import { ThunkConfig } from "@/app/providers";
+import { User } from "@/entities/User";
 
 export const fetchUsersWithStatuses = createAsyncThunk<
   { users: User[]; currentUsername: string },
@@ -16,7 +17,7 @@ export const fetchUsersWithStatuses = createAsyncThunk<
 
       const results = await Promise.allSettled([
         api.onlineApiService.getOnlineUsernames(token),
-        api.chatApiService.getUnreadMessageCount(currentUsername, token),
+        api.chatApiService.getUnreadMessageCount(token),
         api.gameApiService.getActiveGames(token),
       ]);
 
@@ -26,12 +27,14 @@ export const fetchUsersWithStatuses = createAsyncThunk<
           : [];
 
       const unreadMessageCounts =
-        results[1].status === "fulfilled" && typeof results[1].value === "object"
+        results[1].status === "fulfilled" &&
+        typeof results[1].value === "object"
           ? results[1].value
           : {};
 
       const activeGames =
-        results[2].status === "fulfilled" && typeof results[2].value === "object"
+        results[2].status === "fulfilled" &&
+        typeof results[2].value === "object"
           ? results[2].value
           : {};
 

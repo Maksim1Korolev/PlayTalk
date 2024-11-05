@@ -78,27 +78,15 @@ export const protect = asyncHandler(async (req, res, next) => {
     const isUserOnline = onlineUsernames.includes(decoded.username);
 
     let userFound;
-
     if (isUserOnline) {
-      userFound = {
-        id: decoded.userId,
-        username: decoded.username,
-      };
+      userFound = { id: decoded.userId, username: decoded.username };
     } else {
       userFound = await UserService.getUserById(decoded.userId);
-    }
-
-    if (!userFound) {
-      logger.warn(`User not found: userId ${decoded.userId}`);
-      return res.status(401).json({ message: "User not found" });
-    }
-
-    const { requestingUsername } = req.params;
-    if (requestingUsername && requestingUsername !== userFound.username) {
-      logger.warn(`Unauthorized access attempt by user: ${userFound.username}`);
-      return res
-        .status(403)
-        .json({ message: "Unauthorized access to this user's data" });
+      if (!userFound) {
+        logger.warn(`User not found: userId ${decoded.userId}`);
+        return res.status(401).json({ message: "User not found" });
+      }
+      logger.info(`User fetched from UserService: ${userFound.username}`);
     }
 
     req.user = userFound;

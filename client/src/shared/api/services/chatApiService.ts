@@ -5,27 +5,23 @@ export interface UnreadMessageCounts {
 }
 
 export const chatApiService = {
-  getUnreadMessageCount: async (currentUsername: string, token: string) => {
-    const response = await $communicationApi.get(
-      `/unread/getAll/${currentUsername}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+  getUnreadMessageCount: async (
+    token: string
+  ): Promise<UnreadMessageCounts> => {
+    const response = await $communicationApi.get(`/unread/getAll`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return response.data;
   },
-  //TODO: Delete after transferring socket logic from chatModal
+
   postAllReadMessages: async (
-    currentUsername: string,
-    receiverUsername: string,
+    recipientUsername: string,
     token: string
-  ) => {
-    const usernames = [currentUsername, receiverUsername];
+  ): Promise<{ success: boolean; message: string }> => {
     const response = await $communicationApi.post(
-      `/unread/markAsRead/${currentUsername}`,
+      `/unread/markAsRead/${recipientUsername}`,
       {
         headers: { Authorization: `Bearer ${token}` },
-        usernames,
       }
     );
     return response.data;
