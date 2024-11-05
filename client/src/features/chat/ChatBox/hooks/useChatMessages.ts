@@ -77,8 +77,6 @@ export const useChatMessages = ({
 
   useEffect(() => {
     const onReceiveMessage = (message: Message) => {
-      console.log("ZHOPAAAAAA");
-
       if (message.username === recipientUsername) {
         console.log(message);
 
