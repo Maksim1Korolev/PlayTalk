@@ -8,7 +8,7 @@ import { UnreadMessagesCountIndicator } from "@/entities/Chat";
 import { GameData, GameName, PlayButton } from "@/entities/game/Game";
 import { User } from "@/entities/User";
 
-import { UserOnlineIndicator } from "../../UserOnlineIndicator";
+import { UserOnlineIndicator } from "../../../../entities/User/ui/UserOnlineIndicator";
 
 interface UserListCardProps {
   className?: string;

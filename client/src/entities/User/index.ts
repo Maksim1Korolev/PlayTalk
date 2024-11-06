@@ -8,4 +8,4 @@ export {
 } from "./model";
 export type { CurrentUser, User, UserState } from "./model";
 
-export { UserListCard, UserOnlineIndicator } from "./ui";
+export { UserOnlineIndicator } from "./ui";

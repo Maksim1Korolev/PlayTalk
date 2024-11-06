@@ -7,8 +7,7 @@ import { VArrowIcon } from "@/shared/assets";
 import { cx } from "@/shared/lib";
 import { AppSvg } from "@/shared/ui";
 
-import { UserList } from "@/features/UserList";
-import { UserListProps } from "@/features/UserList";
+import { UserList, UserListProps } from "@/features/UserList";
 
 type SidebarProps = UserListProps;
 

@@ -14,10 +14,10 @@ import {
   getUsers,
   getUsersLoadingStatus,
   User,
-  UserListCard,
 } from "@/entities/User";
 
-import { sortUsers } from "../utils/userListUtils";
+import { sortUsers } from "../../utils/userListUtils";
+import { UserListCard } from "../UserListCard/UserListCard";
 
 export interface UserListProps {
   className?: string;
