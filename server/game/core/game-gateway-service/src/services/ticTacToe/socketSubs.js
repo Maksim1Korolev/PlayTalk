@@ -1,11 +1,13 @@
+import { getLogger } from "../../utils/logger.js";
+
 import { io } from "../../index.js";
 
-import { getLogger } from "../../utils/logger.js";
-const logger = getLogger("TicTacToeSubscriptions");
-
-import SocketService from "../socketService.js";
-import GameService from "./gameService.js";
 import { endGame } from "../socketGameSessionHandler.js";
+import SocketService from "../socketService.js";
+
+import GameService from "./gameService.js";
+
+const logger = getLogger("TicTacToeSubscriptions");
 
 const gameName = "tic-tac-toe";
 
@@ -31,9 +33,8 @@ export async function handleTicTacToeSubscriptions(socket, username) {
         return;
       }
 
-      const receiverSocketIds = await SocketService.getUserSockets(
-        opponentUsername
-      );
+      const receiverSocketIds =
+        await SocketService.getUserSockets(opponentUsername);
       const senderSocketIds = await SocketService.getUserSockets(
         username,
         socket.id
@@ -41,14 +42,19 @@ export async function handleTicTacToeSubscriptions(socket, username) {
 
       switch (response.moveResult) {
         case "Success":
-          io.to(receiverSocketIds).emit(MOVE_MADE_EVENT, {
-            interactingUsername: username,
-            interactingIndex,
-          });
-          io.to(senderSocketIds).emit(MOVE_MADE_EVENT, {
-            interactingUsername: username,
-            interactingIndex,
-          });
+          if (receiverSockets.length > 0) {
+            io.to(receiverSocketIds).emit(MOVE_MADE_EVENT, {
+              interactingUsername: username,
+              interactingIndex,
+            });
+          }
+
+          if (senderSocketIds.length > 0) {
+            io.to(senderSocketIds).emit(MOVE_MADE_EVENT, {
+              interactingUsername: username,
+              interactingIndex,
+            });
+          }
           break;
 
         case "Win":

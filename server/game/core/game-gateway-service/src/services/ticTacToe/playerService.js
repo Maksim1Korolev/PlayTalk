@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { getLogger } from "../../utils/logger.js";
+
 const logger = getLogger("TicTacToePlayerService");
 
 const repositoryServiceUrl = process.env.TIC_TAC_TOE_REPOSITORY_SERVICE_API_URL;

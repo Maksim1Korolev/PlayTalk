@@ -1,11 +1,12 @@
-import { io } from "../index.js";
-
 import { getLogger } from "../utils/logger.js";
-const logger = getLogger("GameSessionHandler");
+
+import { io } from "../index.js";
 
 import ActiveGamesService from "./activeGamesService.js";
 import SocketService from "./socketService.js";
 import TicTacToeGameService from "./ticTacToe/gameService.js";
+
+const logger = getLogger("GameSessionHandler");
 
 async function handleInviteSubscriptions(socket, username) {
   socket.on("send-game-invite", async ({ receiverUsername, gameName }) => {
@@ -82,21 +83,25 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
   const senderSockets = await SocketService.getUserSockets(senderUsername);
   const receiverSockets = await SocketService.getUserSockets(receiverUsername);
 
-  io.to(senderSockets).emit("start-game", {
-    opponentUsername: receiverUsername,
-    gameName,
-  });
-  logger.info(
-    `Notified ${senderUsername} of connection with ${receiverUsername} for game ${gameName}`
-  );
+  if (senderSockets.length > 0) {
+    io.to(senderSockets).emit("start-game", {
+      opponentUsername: receiverUsername,
+      gameName,
+    });
+    logger.info(
+      `Notified ${senderUsername} of connection with ${receiverUsername} for game ${gameName}`
+    );
+  }
 
-  io.to(receiverSockets).emit("start-game", {
-    opponentUsername: senderUsername,
-    gameName,
-  });
-  logger.info(
-    `Notified ${receiverUsername} of connection with ${senderUsername} for game ${gameName}`
-  );
+  if (receiverSockets.length > 0) {
+    io.to(receiverSockets).emit("start-game", {
+      opponentUsername: senderUsername,
+      gameName,
+    });
+    logger.info(
+      `Notified ${receiverUsername} of connection with ${senderUsername} for game ${gameName}`
+    );
+  }
 }
 
 async function endGame(username1, username2, gameName, winnerUsername) {
@@ -107,25 +112,28 @@ async function endGame(username1, username2, gameName, winnerUsername) {
   const user1Sockets = await SocketService.getUserSockets(username1);
   const user2Sockets = await SocketService.getUserSockets(username2);
 
-  io.to(user1Sockets).emit("end-game", {
-    opponentUsername: username2,
-    gameName,
-    winner: winnerUsername,
-  });
-  logger.info(
-    `Notified ${username1} of game end with ${username2}. Winner: ${winnerUsername}`
-  );
-
-  io.to(user2Sockets).emit("end-game", {
-    opponentUsername: username1,
-    gameName,
-    winner: winnerUsername,
-  });
-  logger.info(
-    `Notified ${username2} of game end with ${username1}. Winner: ${winnerUsername}`
-  );
-
   await ActiveGamesService.removeActiveGame(username1, username2, gameName);
+
+  if (user1Sockets.length > 0) {
+    io.to(user1Sockets).emit("end-game", {
+      opponentUsername: username2,
+      gameName,
+      winner: winnerUsername,
+    });
+    logger.info(
+      `Notified ${username1} of game end with ${username2}. Winner: ${winnerUsername}`
+    );
+  }
+  if (user2Sockets.length > 0) {
+    io.to(user2Sockets).emit("end-game", {
+      opponentUsername: username1,
+      gameName,
+      winner: winnerUsername,
+    });
+    logger.info(
+      `Notified ${username2} of game end with ${username1}. Winner: ${winnerUsername}`
+    );
+  }
 }
 
 export { handleInviteSubscriptions, endGame };

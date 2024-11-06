@@ -1,5 +1,5 @@
 To add:
-Tests chat's services, ttt service and profile service
+Tests on chat's services, ttt service and profile service
 Put chat into slice
 Loader instead of no users available for some cases
 Boolean func to see if user is registered and implement it
@@ -9,7 +9,6 @@ Upgrade UserList scrollbar
 Update tests
 Issues when redis connects late (-restart?)
 Highlight types
-Ttt styles
 Sometimes the ttt turn doesn't change on opponent's client, although the sign is set
 Get sensitive data for .env sorted out, adjust location for client's .env
 Blurred messages and gap between them
@@ -18,8 +17,7 @@ Upgrade font
 Disable buttons in userList accordingly
 Upgrade profile service
 Typing problems
-Emits to empty socket array on game gateway
-getUsersLoadingStatus error in client's console
+Check userList and it's components's location
 Getting error in communication service when requesting unread messages with count of 0/
 Initial http request for messageHistory/
 
