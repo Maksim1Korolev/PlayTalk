@@ -1,19 +1,19 @@
-import cls from "./UserList.module.scss"
+import cls from "./UserList.module.scss";
 
-import { useEffect, useMemo, useRef } from "react"
-import { useCookies } from "react-cookie"
+import { useEffect, useMemo, useRef } from "react";
+import { useCookies } from "react-cookie";
 
-import { userListResources } from "@/shared/assets"
+import { userListResources } from "@/shared/assets";
 
-import { cx, useAppDispatch, useAppSelector } from "@/shared/lib"
-import { Card, Loader, UiText, VStack } from "@/shared/ui"
+import { cx, useAppDispatch, useAppSelector } from "@/shared/lib";
+import { Card, HStack, UiText, VStack } from "@/shared/ui";
 
-import { GameData } from "@/entities/game/Game"
-import { getUsers, User, UserListCard } from "@/entities/User"
+import { GameData } from "@/entities/game/Game";
+import { getUsers, User, UserListCard } from "@/entities/User";
+import { getUsersLoadingStatus } from "@/entities/User/model";
+import { fetchUsersWithStatuses } from "@/entities/User/model/thunks/fetchUsersWithStatuses";
 
-import { getUsersLoadingStatus } from '@/entities/User/model'
-import { fetchUsersWithStatuses } from '@/entities/User/model/thunks/fetchUsersWithStatuses'
-import { sortUsers } from "../utils/userListUtils"
+import { sortUsers } from "../utils/userListUtils";
 
 export interface UserListProps {
   className?: string;
@@ -54,51 +54,61 @@ export const UserList = ({
   const dispatch = useAppDispatch();
   const users = useAppSelector(getUsers);
 
-	const { isLoading, isError, errorMessage } = useAppSelector(getUsersLoadingStatus);
+  const { isLoading, isError, errorMessage } = useAppSelector(
+    getUsersLoadingStatus
+  );
 
   const userRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
-    userRefs.current.forEach(userRef => {
+    userRefs.current.forEach((userRef) => {
       if (userRef) {
-        adjustFontSize(userRef, 50); 
+        adjustFontSize(userRef, 50);
       }
     });
   }, [users]);
 
   useEffect(() => {
-		dispatch(fetchUsersWithStatuses({ currentUsername, token }));
-	}, [dispatch, currentUsername, token]);
+    dispatch(fetchUsersWithStatuses({ currentUsername, token }));
+  }, [dispatch, currentUsername, token]);
 
   const userList = useMemo(() => {
     const sortedUsers = users ? Object.values(users).sort(sortUsers) : [];
     return sortedUsers?.map((user, index) => (
-      <div style={{ width: "100%" }} key={user._id}>
+      <HStack max key={user._id}>
         <UserListCard
           className={cls.userCard}
           user={user}
           collapsed={collapsed}
           handlePlayButton={handleUserPlayButton}
           handleChatButton={handleUserChatButton}
-          userRef={el => (userRefs.current[index] = el)}
+          userRef={(el) => (userRefs.current[index] = el)}
         />
         {index < sortedUsers.length - 1 && <hr />}
-      </div>
+      </HStack>
     ));
   }, [collapsed, handleUserChatButton, handleUserPlayButton, users]);
 
-
   if (isLoading) {
-    return <Loader />;
+    return (
+      <Card className={cx(cls.UserList, {}, [className])} variant="blurred">
+        <VStack gap="16">
+          <UserListCard isLoading />
+          <UserListCard isLoading />
+          <UserListCard isLoading />
+          <UserListCard isLoading />
+        </VStack>
+      </Card>
+    );
   }
 
   if (isError && errorMessage) {
-		return (
-			<UiText>{`${userListResources.errorMessagePrefix} ${errorMessage}`}</UiText>
-		);
-	}
+    return (
+      <UiText>{`${userListResources.errorMessagePrefix} ${errorMessage}`}</UiText>
+    );
+  }
 
-	if (!users || Object.keys(users).length === 0) {
+  if (!users || Object.keys(users).length === 0) {
     return <p>{userListResources.noUsers}</p>;
   }
 
