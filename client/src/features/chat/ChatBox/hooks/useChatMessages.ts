@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 
-import { Message } from "@/features/chat/ChatBox/ui/ChatMessage/ui/ChatMessage";
+import { Message } from "@/entities/Chat";
 
 export const useChatMessages = ({
   currentUsername,

@@ -1,2 +1,1 @@
-export type { ChatModalData } from "./types/chat"
-
+export type { Message, ChatModalData } from "./types/chat";

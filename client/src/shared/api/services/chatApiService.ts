@@ -1,3 +1,5 @@
+import { Message } from "@/entities/Chat";
+
 import { $communicationApi } from "./api";
 
 export interface UnreadMessageCounts {
@@ -14,16 +16,16 @@ export const chatApiService = {
     return response.data;
   },
 
-  postAllReadMessages: async (
+  getMessageHistory: async (
     recipientUsername: string,
     token: string
-  ): Promise<{ success: boolean; message: string }> => {
-    const response = await $communicationApi.post(
-      `/unread/markAsRead/${recipientUsername}`,
+  ): Promise<Message[]> => {
+    const response = await $communicationApi.get(
+      `/messageHistories/${recipientUsername}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-    return response.data;
+    return response.data.messageHistory;
   },
 };

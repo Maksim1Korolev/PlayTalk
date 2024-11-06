@@ -5,11 +5,12 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cx } from "@/shared/lib";
 import { Card, UiText, VStack } from "@/shared/ui";
 
+import { Message } from "@/entities/Chat";
 import { CurrentUser, User } from "@/entities/User";
 
 import { useChatMessages } from "../../hooks/useChatMessages";
 import { ChatInput } from "../ChatInput";
-import { ChatMessage, Message } from "../ChatMessage";
+import { ChatMessage } from "../ChatMessage";
 
 export const ChatBox = memo(
   ({

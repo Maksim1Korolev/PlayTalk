@@ -1,17 +1,12 @@
-import { cx } from "@/shared/lib"
-import { forwardRef } from "react"
-import cls from "./ChatMessage.module.scss"
+import cls from "./ChatMessage.module.scss";
 
-import { AppImage } from "@/shared/ui"
-import getImagePath from "@/shared/utils/getImagePath"
+import { forwardRef } from "react";
 
-export interface Message {
-  _id?: string;
-  message: string;
-  date: Date;
-  username: string;
-  readAt?: Date;
-}
+import { cx } from "@/shared/lib";
+import { AppImage } from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
+
+import { Message } from "@/entities/Chat";
 
 interface ChatMessageProps {
   className?: string;
@@ -32,15 +27,13 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
         )}
       >
         <span className={cls.msgAvatar}>
-          
-            <AppImage
-              src={getImagePath({
-                collection: "avatars",
-                fileName: avatarFileName,
-              })}
-              draggable={false}
-            />
-          
+          <AppImage
+            src={getImagePath({
+              collection: "avatars",
+              fileName: avatarFileName,
+            })}
+            draggable={false}
+          />
         </span>
         <div className={cls.cmMsgText}>{message.message}</div>
       </div>
