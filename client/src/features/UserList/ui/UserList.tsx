@@ -1,19 +1,23 @@
-import cls from "./UserList.module.scss"
+import cls from "./UserList.module.scss";
 
-import { useEffect, useMemo, useRef } from "react"
-import { useCookies } from "react-cookie"
+import { useEffect, useMemo, useRef } from "react";
+import { useCookies } from "react-cookie";
 
-import { userListResources } from "@/shared/assets"
+import { userListResources } from "@/shared/assets";
 
-import { cx, useAppDispatch, useAppSelector } from "@/shared/lib"
-import { Card, Loader, UiText, VStack } from "@/shared/ui"
+import { cx, useAppDispatch, useAppSelector } from "@/shared/lib";
+import { Card, Loader, UiText, VStack } from "@/shared/ui";
 
-import { GameData } from "@/entities/game/Game"
-import { getUsers, User, UserListCard } from "@/entities/User"
+import { GameData } from "@/entities/game/Game";
+import {
+  fetchUsersWithStatuses,
+  getUsers,
+  getUsersLoadingStatus,
+  User,
+  UserListCard,
+} from "@/entities/User";
 
-import { getUsersLoadingStatus } from '@/entities/User/model'
-import { fetchUsersWithStatuses } from '@/entities/User/model/thunks/fetchUsersWithStatuses'
-import { sortUsers } from "../utils/userListUtils"
+import { sortUsers } from "../utils/userListUtils";
 
 export interface UserListProps {
   className?: string;
@@ -54,21 +58,23 @@ export const UserList = ({
   const dispatch = useAppDispatch();
   const users = useAppSelector(getUsers);
 
-	const { isLoading, isError, errorMessage } = useAppSelector(getUsersLoadingStatus);
+  const { isLoading, isError, errorMessage } = useAppSelector(
+    getUsersLoadingStatus
+  );
 
   const userRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
     userRefs.current.forEach(userRef => {
       if (userRef) {
-        adjustFontSize(userRef, 50); 
+        adjustFontSize(userRef, 50);
       }
     });
   }, [users]);
 
   useEffect(() => {
-		dispatch(fetchUsersWithStatuses({ currentUsername, token }));
-	}, [dispatch, currentUsername, token]);
+    dispatch(fetchUsersWithStatuses({ currentUsername, token }));
+  }, [dispatch, currentUsername, token]);
 
   const userList = useMemo(() => {
     const sortedUsers = users ? Object.values(users).sort(sortUsers) : [];
@@ -87,18 +93,17 @@ export const UserList = ({
     ));
   }, [collapsed, handleUserChatButton, handleUserPlayButton, users]);
 
-
   if (isLoading) {
     return <Loader />;
   }
 
   if (isError && errorMessage) {
-		return (
-			<UiText>{`${userListResources.errorMessagePrefix} ${errorMessage}`}</UiText>
-		);
-	}
+    return (
+      <UiText>{`${userListResources.errorMessagePrefix} ${errorMessage}`}</UiText>
+    );
+  }
 
-	if (!users || Object.keys(users).length === 0) {
+  if (!users || Object.keys(users).length === 0) {
     return <p>{userListResources.noUsers}</p>;
   }
 

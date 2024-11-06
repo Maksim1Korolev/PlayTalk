@@ -1,4 +1,4 @@
-import { RootState } from '@/app/providers/StoreProvider/config/store';
+import { RootState } from "@/app/providers/StoreProvider/config/store";
 
 export const getUsersLoadingStatus = (state: RootState) => ({
   isLoading: state.user.isLoading,
