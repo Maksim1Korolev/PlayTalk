@@ -1,18 +1,21 @@
-import cls from "./PlayButton.module.scss"
+import cls from "./PlayButton.module.scss";
 
-import { useEffect, useRef, useState } from "react"
-import { CircleMenu, CircleMenuItem } from "react-circular-menu"
-import ReactDOM from "react-dom"
+import { useEffect, useRef, useState } from "react";
+import { CircleMenu, CircleMenuItem } from "react-circular-menu";
+import ReactDOM from "react-dom";
 
-import { useAppDispatch, useAppSelector } from "@/shared/lib"
-import { cx } from "@/shared/lib/className/cx"
-import { HighlightType, useHighlight } from "@/shared/lib/hooks/useHighlight"
-import { AppImage } from "@/shared/ui"
-import getImagePath from "@/shared/utils/getImagePath"
+import {
+  cx,
+  HighlightType,
+  useAppDispatch,
+  useAppSelector,
+  useHighlight,
+} from "@/shared/lib";
+import { AppImage } from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
 
-import { GameName, GameNames } from "@/entities/game/Game"
-import { circleMenuActions } from "@/features/UserList"
-import { selectActiveMenuId } from "@/features/UserList/model/selectors/selectActiveMenuId"
+import { GameName, GameNames } from "@/entities/game/Game";
+import { circleMenuActions, selectActiveMenuId } from "@/features/UserList";
 
 interface PlayButtonProps {
   className?: string;
@@ -31,8 +34,8 @@ export const PlayButton = ({
   const highlightClass = useHighlight(highlight);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [showMenu, setShowMenu] = useState(false);
-  const [animateOpen, setAnimateOpen] = useState(false); 
-  const [isFlipped, setIsFlipped] = useState(false); 
+  const [animateOpen, setAnimateOpen] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
   const playButtonRef = useRef<HTMLDivElement | null>(null);
 
   const dispatch = useAppDispatch();
@@ -46,7 +49,7 @@ export const PlayButton = ({
         dispatch(circleMenuActions.closeMenu());
         setAnimateOpen(false);
         setShowMenu(false);
-      }, 100); 
+      }, 100);
     } else {
       dispatch(circleMenuActions.closeMenu());
       const rect = playButtonRef.current?.getBoundingClientRect();
@@ -58,10 +61,10 @@ export const PlayButton = ({
       }
       setShowMenu(true);
       setTimeout(() => {
-        setIsFlipped(true); 
+        setIsFlipped(true);
         setAnimateOpen(true);
         dispatch(circleMenuActions.openMenu(menuId));
-      }, 50); 
+      }, 50);
     }
   };
 
@@ -99,7 +102,9 @@ export const PlayButton = ({
 
   return (
     <>
-      <div ref={playButtonRef} className={className}>{CustomToggleElement}</div>
+      <div ref={playButtonRef} className={className}>
+        {CustomToggleElement}
+      </div>
       {showMenu &&
         ReactDOM.createPortal(
           <div
@@ -112,12 +117,12 @@ export const PlayButton = ({
           >
             <CircleMenu
               startAngle={-90}
-              rotationAngle={50}
+              rotationAngle={60}
               itemSize={1.5}
               radius={3.2}
               open={animateOpen}
               onMenuToggle={handleMenuToggle}
-              menuToggleElement={CustomToggleElement} 
+              menuToggleElement={CustomToggleElement}
             >
               {gameNames.map(gameName => {
                 const gameSrc = getImagePath({
@@ -126,7 +131,7 @@ export const PlayButton = ({
                 });
                 return (
                   <CircleMenuItem
-										className={cls.circleMenuItem}
+                    className={cls.circleMenuItem}
                     key={gameName}
                     tooltip={gameName}
                     onClick={() => onSelectGame(gameName)}
