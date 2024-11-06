@@ -6,4 +6,4 @@ export {
   inviteActions,
   acceptGameInvite,
 } from "../../Invite/model/slice/inviteSlice";
-export { getInvites } from "../../Invite/model/selectors/getInvites";
+export { getCurrentInvite } from "../../Invite/model/selectors/getInvites";

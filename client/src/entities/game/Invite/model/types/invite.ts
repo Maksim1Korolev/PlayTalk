@@ -4,9 +4,11 @@ export type Invite = {
 };
 
 export interface InviteState {
-  invites: { [key: string]: Invite };
+  invites: Invite[];
+  currentInvite?: Invite;
+  currentInviteIndex?: number;
 }
 
 export const getInviteKey = (invite: Invite): string => {
-  return `${invite.senderUsername}-${invite.gameName}`;
+  return `${invite.senderUsername}:${invite.gameName}`;
 };

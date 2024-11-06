@@ -1,7 +1,7 @@
 export {
   inviteReducer,
   inviteActions,
-  getInvites,
+  getCurrentInvite,
   getInviteKey,
   acceptGameInvite,
 } from "./model";

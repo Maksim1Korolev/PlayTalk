@@ -4,16 +4,19 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 
-import redisClient from "./utils/redisClient.js";
 import { getLogger } from "./utils/logger.js";
-const logger = getLogger("Main");
 
-import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+import redisClient from "./utils/redisClient.js";
+
 import { socketAuthMiddleware } from "./middleware/authMiddleware.js";
+import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+
+import SocketService from "./services/socketService.js";
 
 import gameRouter from "./routes/gameRoutes.js";
 import onlineRouter from "./routes/onlineRoutes.js";
-import SocketService from "./services/socketService.js";
+
+const logger = getLogger("Main");
 
 dotenv.config();
 

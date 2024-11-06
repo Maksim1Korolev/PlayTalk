@@ -1,6 +1,6 @@
 import cls from "./GameRequest.module.scss";
 
-import { ReactNode, useCallback, useContext, useEffect, useState } from "react";
+import { memo, useCallback, useContext } from "react";
 import { Rnd } from "react-rnd";
 
 import CheckIcon from "@mui/icons-material/Check";
@@ -14,7 +14,6 @@ import getImagePath from "@/shared/utils/getImagePath";
 
 import {
   acceptGameInvite,
-  getInvites,
   Invite,
   inviteActions,
 } from "@/entities/game/Invite";
@@ -25,54 +24,20 @@ interface GameRequestProps {
   position?: { x: number; y: number };
 }
 
-export const GameRequest = ({ className, position }: GameRequestProps) => {
+export const GameRequest = memo(({ className, position }: GameRequestProps) => {
   const dispatch = useAppDispatch();
-  const invites = Object.values(useAppSelector(getInvites));
-  const users = useAppSelector(getUsers);
-
+  const currentInvite: Invite | undefined = useAppSelector(
+    state => state.invite.currentInvite
+  );
   const { sockets } = useContext(SocketContext);
   const { gameSocket } = sockets;
+  const users = useAppSelector(getUsers);
 
-  const [currentInviteIndex, setCurrentInviteIndex] = useState(0);
-  const currentInvite = invites[currentInviteIndex] || null;
+  const currentInviteAvatarSrc = currentInvite
+    ? users[currentInvite.senderUsername]?.avatarFileName
+    : undefined;
 
   const { isDragged, handleDragStart, handleDragStop } = useModalDrag();
-  const [iconMap, setIconMap] = useState<{ [key: string]: string }>({});
-  const [avatarMap, setAvatarMap] = useState<{ [key: string]: string }>({});
-
-  useEffect(() => {
-    const loadIcons = async () => {
-      const iconPaths: { [key: string]: string } = {};
-      const avatarPaths: { [key: string]: string } = {};
-
-      for (const invite of invites) {
-        const { gameName, senderUsername } = invite;
-
-        const iconPath = getImagePath({
-          collection: "gameIcons",
-          fileName: gameName,
-        });
-        iconPaths[gameName] = iconPath;
-
-        const inviteUser = users[senderUsername];
-
-        if (inviteUser?.avatarFileName) {
-          const avatarPath = getImagePath({
-            collection: "avatars",
-            fileName: inviteUser.avatarFileName,
-          });
-          avatarPaths[senderUsername] = avatarPath;
-        }
-      }
-
-      setIconMap(iconPaths);
-      setAvatarMap(avatarPaths);
-    };
-
-    if (invites.length > 0) {
-      loadIcons();
-    }
-  }, [users]);
 
   const updateInvitingStatus = useCallback(
     (senderUsername: string, isInviting: boolean) => {
@@ -86,81 +51,60 @@ export const GameRequest = ({ className, position }: GameRequestProps) => {
     [dispatch]
   );
 
-  const handleAcceptGameInvite = useCallback(
-    (invite: Invite) => {
-      dispatch(acceptGameInvite(gameSocket, invite));
-      updateInvitingStatus(invite.senderUsername, false);
-    },
-    [dispatch, gameSocket, updateInvitingStatus]
-  );
-
-  const handleRejectGameInvite = useCallback(
-    (invite: Invite) => {
-      const inviteKey = `${invite.senderUsername}:${invite.gameName}`;
-      dispatch(inviteActions.removeInvite(inviteKey));
-      updateInvitingStatus(invite.senderUsername, false);
-    },
-    [dispatch, updateInvitingStatus]
-  );
-
-  const handleYesButtonClick = () => {
-    if (!isDragged && currentInvite) {
-      handleAcceptGameInvite(currentInvite);
+  const handleAcceptGameInvite = () => {
+    if (currentInvite && !isDragged) {
+      dispatch(acceptGameInvite(gameSocket));
+      updateInvitingStatus(currentInvite.senderUsername, false);
+      dispatch(inviteActions.removeInvite());
     }
   };
 
-  const handleNoButtonClick = () => {
-    if (!isDragged && currentInvite) {
-      handleRejectGameInvite(currentInvite);
+  const handleRejectGameInvite = () => {
+    if (currentInvite && !isDragged) {
+      dispatch(inviteActions.removeInvite());
+      updateInvitingStatus(currentInvite.senderUsername, false);
     }
   };
 
   const handleSkipButtonClick = () => {
-    setCurrentInviteIndex(prevIndex =>
-      prevIndex < invites.length - 1 ? prevIndex + 1 : 0
-    );
+    dispatch(inviteActions.skipInvite());
   };
 
-  const getInviteCircle = (): ReactNode => {
-    const gameIconSize = 80;
-    const avatarIconSize = 36;
+  const gameIconSize = 80;
+  const avatarIconSize = 36;
 
-    const gameIconUrl = iconMap[currentInvite?.gameName || ""];
-    const avatarIconUrl = avatarMap[currentInvite?.senderUsername || ""];
+  const gameIconUrl = currentInvite
+    ? getImagePath({
+        collection: "gameIcons",
+        fileName: currentInvite.gameName,
+      })
+    : "";
+  const avatarIconUrl = currentInviteAvatarSrc
+    ? getImagePath({
+        collection: "avatars",
+        fileName: currentInviteAvatarSrc,
+      })
+    : "";
 
-    if (!gameIconUrl || !avatarIconUrl) return null;
+  const gameIconProps: AppImageProps = {
+    src: gameIconUrl,
+    draggable: false,
+    width: gameIconSize,
+    height: gameIconSize,
+    highlight: "secondary",
+  };
 
-    const gameIconProps: AppImageProps = {
-      src: gameIconUrl,
-      draggable: false,
-      width: gameIconSize,
-      height: gameIconSize,
-      highlight: "secondary",
-    };
-
-    const avatarIconProps: AppImageProps = {
-      src: avatarIconUrl,
-      width: avatarIconSize,
-      height: avatarIconSize,
-      draggable: false,
-    };
-
-    return (
-      <AddonCircle
-        className={`${cls.GameRequest} ${className}`}
-        iconProps={{ ...gameIconProps }}
-        addonTopRight={<AppImage {...avatarIconProps} />}
-        addonBottomLeft={yesButton}
-        addonBottomRight={noButton}
-        addonTopLeft={skipButton}
-      />
-    );
+  const avatarIconProps: AppImageProps = {
+    src: avatarIconUrl,
+    width: avatarIconSize,
+    height: avatarIconSize,
+    draggable: false,
   };
 
   const yesButton = (
     <UiButton
       variant="clear"
-      onClick={handleYesButtonClick}
+      onClick={handleAcceptGameInvite}
       className={cls.yesButton}
     >
       <CheckIcon />
@@ -170,7 +114,7 @@ export const GameRequest = ({ className, position }: GameRequestProps) => {
   const noButton = (
     <UiButton
       variant="clear"
-      onClick={handleNoButtonClick}
+      onClick={handleRejectGameInvite}
       className={cls.noButton}
     >
       <CloseIcon />
@@ -187,8 +131,6 @@ export const GameRequest = ({ className, position }: GameRequestProps) => {
     </UiButton>
   );
 
-  if (!currentInvite) return null;
-
   const rndProps = {
     onDragStart: handleDragStart,
     onDragStop: handleDragStop,
@@ -204,7 +146,18 @@ export const GameRequest = ({ className, position }: GameRequestProps) => {
     enableResizing: false,
   };
 
-  if (invites.length === 0) return null;
-
-  return <Rnd {...rndProps}>{getInviteCircle()}</Rnd>;
-};
+  return (
+    currentInvite && (
+      <Rnd {...rndProps}>
+        <AddonCircle
+          className={`${cls.GameRequest} ${className}`}
+          iconProps={gameIconProps}
+          addonTopRight={<AppImage {...avatarIconProps} />}
+          addonBottomLeft={yesButton}
+          addonBottomRight={noButton}
+          addonTopLeft={skipButton}
+        />
+      </Rnd>
+    )
+  );
+});
