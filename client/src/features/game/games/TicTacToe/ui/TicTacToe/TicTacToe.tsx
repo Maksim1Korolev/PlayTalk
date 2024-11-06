@@ -32,7 +32,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
       : game.player1.username;
 
   const changePlayers = () => {
-    setCurrentPlayer(prevPlayer =>
+    setCurrentPlayer((prevPlayer) =>
       prevPlayer === game.player1.username
         ? game.player2.username
         : game.player1.username
@@ -76,7 +76,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
 
     const playerSign = getPlayerSign(interactingUsername);
 
-    setBoard(prevBoard =>
+    setBoard((prevBoard) =>
       prevBoard.map((sign, index) =>
         index === interactingIndex ? playerSign : sign
       )
@@ -110,12 +110,12 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
               currentPlayer
             )}
       </UiText>
-      {statusMessage && (
-        <UiText max className={cls.statusMessage}>
-          {statusMessage}
-        </UiText>
-      )}
       <div className={cls.boardContainer}>
+        {statusMessage && (
+          <UiText max className={cls.warningMessage}>
+            {statusMessage}
+          </UiText>
+        )}
         <Board board={board} onMakeMove={onMakeMove} />
       </div>
       <UiButton
