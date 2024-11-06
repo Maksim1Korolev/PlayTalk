@@ -16,7 +16,7 @@ export const ChatBox = memo(
   ({
     className,
     currentUser,
-    recipient: receiverUser,
+    recipient,
   }: {
     className?: string;
     currentUser: CurrentUser;
@@ -34,14 +34,12 @@ export const ChatBox = memo(
       readAllUnreadMessages,
     } = useChatMessages({
       currentUsername: currentUser!.username,
-      recipientUsername: receiverUser.username,
+      recipientUsername: recipient.username,
     });
 
     useEffect(() => {
       dummy.current?.scrollIntoView({ behavior: "smooth" });
-      readAllUnreadMessages(
-        [currentUser!.username, receiverUser.username].sort()
-      );
+      readAllUnreadMessages([currentUser!.username, recipient.username].sort());
     }, [messageHistory]);
 
     const renderMessageHistory = useCallback(() => {
@@ -53,11 +51,11 @@ export const ChatBox = memo(
           avatarFileName={
             currentUser!.username === message.username
               ? currentUser!.avatarFileName
-              : receiverUser.avatarFileName
+              : recipient.avatarFileName
           }
         />
       ));
-    }, [messageHistory, currentUser, receiverUser.avatarFileName]);
+    }, [messageHistory, currentUser, recipient.avatarFileName]);
 
     return (
       <VStack className={cx(cls.Chat, {}, [className])} justify="start" max>

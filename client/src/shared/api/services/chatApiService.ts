@@ -7,15 +7,6 @@ export interface UnreadMessageCounts {
 }
 
 export const chatApiService = {
-  getUnreadMessageCount: async (
-    token: string
-  ): Promise<UnreadMessageCounts> => {
-    const response = await $communicationApi.get(`/unread/getAll`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
-
   getMessageHistory: async (
     recipientUsername: string,
     token: string
@@ -27,5 +18,14 @@ export const chatApiService = {
       }
     );
     return response.data.messageHistory;
+  },
+
+  getUnreadMessageCount: async (
+    token: string
+  ): Promise<UnreadMessageCounts> => {
+    const response = await $communicationApi.get(`/unread/getAll`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
   },
 };
