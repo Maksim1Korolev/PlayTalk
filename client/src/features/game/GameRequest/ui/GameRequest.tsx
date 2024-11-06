@@ -19,7 +19,6 @@ import {
   inviteActions,
 } from "@/entities/game/Invite";
 import { getUsers, userActions } from "@/entities/User";
-import { getUser } from "@/entities/User/model/selectors/getUsers";
 
 interface GameRequestProps {
   className?: string;
