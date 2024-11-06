@@ -17,7 +17,6 @@ Upgrade font
 Disable buttons in userList accordingly
 Upgrade profile service
 Typing problems
-Check userList and it's components's location
 Getting error in communication service when requesting unread messages with count of 0/
 Initial http request for messageHistory/
 

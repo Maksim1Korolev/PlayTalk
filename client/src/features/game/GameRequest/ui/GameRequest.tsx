@@ -55,7 +55,6 @@ export const GameRequest = memo(({ className, position }: GameRequestProps) => {
     if (currentInvite && !isDragged) {
       dispatch(acceptGameInvite(gameSocket));
       updateInvitingStatus(currentInvite.senderUsername, false);
-      dispatch(inviteActions.removeInvite());
     }
   };
 

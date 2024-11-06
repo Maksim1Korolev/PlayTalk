@@ -68,7 +68,7 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
 
       default:
         logger.warn(`Unsupported game type: ${gameName}`);
-        return;
+        throw new Error({ message: `Unsupported game type: ${gameName}` });
     }
   } catch (err) {
     if (err.response && err.response.data) {
