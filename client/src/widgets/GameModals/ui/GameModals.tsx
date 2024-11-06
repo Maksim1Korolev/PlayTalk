@@ -1,18 +1,27 @@
-import { memo, useCallback, useEffect, useState } from "react"
-import { useCookies } from "react-cookie"
+import { memo, useCallback, useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
-import { gameApiService } from "@/shared/api/services/gameApiService"
-import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui"
-import { useModalPosition } from "@/shared/ui/CircleModal"
-import getImagePath from "@/shared/utils/getImagePath"
+import { gameApiService } from "@/shared/api/services/gameApiService";
+import { useAppSelector } from "@/shared/lib";
+import {
+  AddonCircleProps,
+  AppImage,
+  CircleModal,
+  useModalPosition,
+} from "@/shared/ui";
+import getImagePath from "@/shared/utils/getImagePath";
 
-import { Game, GameData, GameModalData, TicTacToeGame } from "@/entities/game/Game"
-import { Modal } from "@/entities/Modal"
-import { TicTacToe } from "@/features/game"
+import {
+  Game,
+  GameData,
+  GameModalData,
+  TicTacToeGame,
+} from "@/entities/game/Game";
+import { Modal } from "@/entities/Modal";
+import { getUsers } from "@/entities/User";
+import { TicTacToe } from "@/features/game";
 
-import { getUsers } from '@/entities/User'
-import { useAppSelector } from '@/shared/lib'
-import { generateModalId } from "../hooks/useGameModals"
+import { generateModalId } from "../hooks/useGameModals";
 
 interface GameModalsProps {
   gameModals: Modal<GameModalData>[];
@@ -25,7 +34,7 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
 
   const [games, setGames] = useState<{ [key: string]: Game }>({});
 
-	const users = useAppSelector(getUsers)
+  const users = useAppSelector(getUsers);
   const { getStartingPosition } = useModalPosition();
 
   //TODO: search another way to fetch only one game that opens right now
@@ -33,11 +42,12 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
     const fetchGames = async () => {
       const fetchedGames = await Promise.all(
         gameModals.map(async modal => {
-					const { data } = modal
+          const { data } = modal;
 
           const fetchedGame: Game = await gameApiService.getGame(token, data);
           return {
-            id: generateModalId(modal.data),    game: fetchedGame,
+            id: generateModalId(modal.data),
+            game: fetchedGame,
           };
         })
       );
@@ -51,7 +61,6 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
 
     fetchGames();
   }, [gameModals, currentUsername, token]);
-
 
   const renderGameModals = useCallback(() => {
     const getGameComponent = (gameData: GameData) => {
@@ -70,20 +79,19 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
     };
 
     const getAddonCircleProps = (
-			opponentUsername: string,
+      opponentUsername: string,
       currentGameName: string
     ): AddonCircleProps => {
+      const opponentAvatarFileName = users[opponentUsername]?.avatarFileName;
 
-			const opponentAvatarFileName = users[opponentUsername]?.avatarFileName
-			
       const gameIconUrl = getImagePath({
-				collection: "gameIcons",
-				fileName: currentGameName,
-			});
-      const avatarIconUrl =  getImagePath({
-				collection: "avatars",
-				fileName: opponentAvatarFileName,
-			});
+        collection: "gameIcons",
+        fileName: currentGameName,
+      });
+      const avatarIconUrl = getImagePath({
+        collection: "avatars",
+        fileName: opponentAvatarFileName,
+      });
 
       return {
         iconProps: {

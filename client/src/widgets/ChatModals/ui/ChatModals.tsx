@@ -1,8 +1,12 @@
 import { memo, useCallback } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
-import { AddonCircleProps, AppImageProps, CircleModal } from "@/shared/ui";
-import { useModalPosition } from "@/shared/ui/CircleModal";
+import {
+  AddonCircleProps,
+  AppImageProps,
+  CircleModal,
+  useModalPosition,
+} from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
 import { ChatModalData, UnreadMessagesCountIndicator } from "@/entities/Chat";
