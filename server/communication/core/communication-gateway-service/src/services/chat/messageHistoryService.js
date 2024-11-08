@@ -23,7 +23,7 @@ class MessageHistoryService {
       },
     });
 
-    return response.data.messageHistory;
+    return response.data.messageHistory || [];
   }
 
   static async addMessageToHistory(usernames, message) {
@@ -76,7 +76,7 @@ class MessageHistoryService {
     });
 
     logger.info("Unread message count response received.");
-    return response.data;
+    return response.data || [];
   }
 
   static async readAllUnreadMessages(requestingUsername, usernames) {

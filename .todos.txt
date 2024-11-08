@@ -1,7 +1,6 @@
 To add:
 Tests on chat's services, ttt service and profile service
 Put chat into slice
-Loader instead of no users available for some cases
 Boolean func to see if user is registered and implement it
 
 To fix:
@@ -19,10 +18,10 @@ Upgrade profile service
 Typing problems
 Change user to username in chatModalData
 Check for message disappearance
-Getting error in communication service when requesting unread messages with count of 0/
 
 To add (In the end):
 Pagination
+Profile features on client
 Adjust modal drag
 Get rid of logged errors from circleMenu library
 Adjust location of accept invite emit
