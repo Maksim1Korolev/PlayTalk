@@ -1,12 +1,13 @@
 import { useContext, useEffect } from "react";
 
-import { useAppDispatch } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 
-import { userActions } from "@/entities/User";
+import { getUsers, User, userActions } from "@/entities/User";
 
 export const useMainSocketSubs = () => {
   const dispatch = useAppDispatch();
+  const users = useAppSelector(getUsers);
 
   const { sockets } = useContext(SocketContext);
   const { communicationSocket, gameSocket } = sockets;
@@ -22,9 +23,21 @@ export const useMainSocketSubs = () => {
       };
 
       const updateUserOnline = (username: string, isOnline: boolean) => {
-        dispatch(
-          userActions.updateUser({ username, updatedProps: { isOnline } })
-        );
+        const userExists = !!users[username];
+
+        if (userExists) {
+          dispatch(
+            userActions.updateUser({ username, updatedProps: { isOnline } })
+          );
+        } else {
+          //TODO:Add fetching a specific user from api service
+          const newUser: User = {
+            username,
+            isOnline,
+          };
+
+          dispatch(userActions.addUser(newUser));
+        }
       };
 
       const unreadMessageCountChanged = (
@@ -61,5 +74,5 @@ export const useMainSocketSubs = () => {
         );
       };
     }
-  }, [communicationSocket, gameSocket, dispatch]);
+  }, [communicationSocket, gameSocket, dispatch, users]);
 };

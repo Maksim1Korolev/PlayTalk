@@ -17,6 +17,12 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    addUser: (state, action: PayloadAction<User>) => {
+      const newUser = action.payload;
+      if (!state.users[newUser.username]) {
+        state.users[newUser.username] = newUser;
+      }
+    },
     updateUser: (
       state,
       action: PayloadAction<{ username: string; updatedProps: Partial<User> }>
@@ -60,4 +66,5 @@ const userSlice = createSlice({
   },
 });
 
+export const { addUser, updateUser, setCurrentUser } = userSlice.actions;
 export const { reducer: userReducer, actions: userActions } = userSlice;
