@@ -1,40 +1,40 @@
 To add:
-Tests on chat's services, ttt service and profile service
 Put chat into slice
 Boolean func to see if user is registered and implement it
 
 To fix:
 Upgrade UserList scrollbar
-Update tests
-Issues when redis connects late (-restart?)
 Highlight types
-Sometimes the ttt turn doesn't change on opponent's client, although the sign is set
-Get sensitive data for .env sorted out, adjust location for client's .env
 Blurred messages and gap between them
-User has to be added in real time to the list when registered
-Upgrade font
 Disable buttons in userList accordingly
-Upgrade profile service
 Typing problems
+Upgrade profile service
 Change user to username in chatModalData
 Check for message disappearance
+Sometimes the ttt turn doesn't change on opponent's client, although the sign is set
+Get sensitive data for .env sorted out, adjust location for client's .env
+User has to be added in real time to the list when registered
 
-To add (In the end):
+To add (in the end):
+Upgrade font and sizes of the components
+Tests on chat's services and profile service and update tests
+Issues when redis connects late (-restart?)
+
+
+To add (after the end):
+Tests on ttt service
 Pagination
-Profile features on client
+Profile, winner and players features on client
 Adjust modal drag
-Get rid of logged errors from circleMenu library
 Adjust location of accept invite emit
 Save empty messageHistory in redis cache too
 Token expiration logic on client
-User search
-Winner and players logic to client
-polling on profile
-Rate limiting to auth
+Polling on profile service
 Storybook
 Kubernetes
 
 Possible expansions:
+User search
 s3 signedUrls and images permission on client
 Group chats
 Friends
