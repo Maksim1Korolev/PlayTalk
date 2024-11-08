@@ -17,6 +17,7 @@ Upgrade font
 Disable buttons in userList accordingly
 Upgrade profile service
 Typing problems
+Change user to username in chatModalData
 Getting error in communication service when requesting unread messages with count of 0/
 Initial http request for messageHistory/
 

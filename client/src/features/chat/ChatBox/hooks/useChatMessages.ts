@@ -55,6 +55,7 @@ export const useChatMessages = ({
         setMessageHistory(messages);
       }
     };
+
     communicationSocket.emit("on-chat-open", {
       recipientUsername,
     });
