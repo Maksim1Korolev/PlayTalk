@@ -1,1 +1,5 @@
-.fttemplates
+.fttemplates/
+.vscode/
+.prettierrc
+
+mongo_data/

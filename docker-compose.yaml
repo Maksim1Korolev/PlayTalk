@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   # Client
   client:
@@ -18,7 +20,7 @@ services:
           target: /usr/src/app
           action: sync
 
-  # Auth
+  # Auth Service
   auth_service:
     build: ./server/auth/auth-service
     ports:
@@ -27,9 +29,11 @@ services:
       - playtalk-network
     environment:
       - REDIS_URL=${REDIS_URL}
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=${AUTH_DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
+    depends_on:
+      - mongodb
     develop:
       watch:
         - path: ./app/package.json
@@ -38,7 +42,7 @@ services:
           target: /usr/src/app
           action: sync
 
-  #Profile
+  # Profile Service
   profile_service:
     build: ./server/profile/profile-service
     ports:
@@ -47,9 +51,11 @@ services:
       - playtalk-network
     environment:
       - REDIS_URL=${REDIS_URL}
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=${PROFILE_DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
+    depends_on:
+      - mongodb
     develop:
       watch:
         - path: ./server/profile/profile-service/package.json
@@ -58,7 +64,7 @@ services:
           target: /usr/src/app
           action: sync
 
-  # Communication
+  # Communication Gateway Service
   communication_gateway_service:
     build: ./server/communication/core/communication-gateway-service
     ports:
@@ -79,7 +85,7 @@ services:
           target: /usr/src/app
           action: sync
 
-  # Chat
+  # Chat Service
   chat_service:
     build: ./server/communication/modules/chat/chat-service
     ports:
@@ -88,8 +94,10 @@ services:
       - playtalk-network
     environment:
       - REDIS_URL=${REDIS_URL}
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=${CHAT_DATABASE_URL}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
+    depends_on:
+      - mongodb
     develop:
       watch:
         - path: ./server/communication/modules/chat/chat-service/package.json
@@ -98,7 +106,7 @@ services:
           target: /usr/src/app
           action: sync
 
-  # Game
+  # Game Gateway Service
   game_gateway_service:
     build: ./server/game/core/game-gateway-service
     ports:
@@ -120,7 +128,7 @@ services:
           target: /usr/src/app
           action: sync
 
-  # Tic Tac Toe
+  # Tic Tac Toe Service
   tic_tac_toe_service:
     build:
       context: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
@@ -141,6 +149,7 @@ services:
           target: /usr/src/app
           action: sync
 
+  # Tic Tac Toe Repository Service
   tic_tac_toe_repository_service:
     build: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service
     ports:
@@ -149,8 +158,10 @@ services:
       - playtalk-network
     environment:
       - REDIS_URL=${REDIS_URL}
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=${TIC_TAC_TOE_DATABASE_URL}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
+    depends_on:
+      - mongodb
     develop:
       watch:
         - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service/package.json
@@ -166,6 +177,17 @@ services:
       - "6379:6379"
     networks:
       - playtalk-network
+
+  # MongoDB
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - playtalk-network
+    volumes:
+      - ./mongo_data:/data/db
 
 networks:
   playtalk-network:

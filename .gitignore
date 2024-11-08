@@ -1,6 +1,16 @@
-.ngnix/
+# Node.js dependencies
+node_modules/
+
+# MongoDB data directory
+mongo_data/
+
+# Logs
 logs/
+*.log
+
+.ngnix/
 .commands.txt
 .structure.txt
 
+# Environment variables
 /profile/**.env*

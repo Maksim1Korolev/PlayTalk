@@ -10,12 +10,13 @@ Disable buttons in userList accordingly
 Typing problems
 Upgrade profile service
 Change user to username in chatModalData
-Check for message disappearance
 Sometimes the ttt turn doesn't change on opponent's client, although the sign is set
-Get sensitive data for .env sorted out, adjust location for client's .env
 User has to be added in real time to the list when registered
+Check for message disappearance
+Messages are read automatically when reloading the page
 
 To add (in the end):
+Adjust location for client's .env
 Upgrade font and sizes of the components
 Tests on chat's services and profile service and update tests
 Issues when redis connects late (-restart?)
