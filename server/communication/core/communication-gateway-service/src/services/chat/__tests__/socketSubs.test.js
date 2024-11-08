@@ -1,9 +1,9 @@
 import { io } from "../../../index.js";
-import { handleChatSubscriptions } from "../socketSubs.js";
-import SocketService from "../../socketService.js";
-import MessageHistoryService from "../messageHistoryService.js";
 
 import { setupMockSocketAndUser } from "../../../__mocks__/io.js";
+import SocketService from "../../socketService.js";
+import MessageHistoryService from "../messageHistoryService.js";
+import { handleChatSubscriptions } from "../socketSubs.js";
 
 jest.mock("../../socketService.js", () => ({
   getUserSockets: jest.fn(),
@@ -71,13 +71,13 @@ describe("ChatSubscriptions", () => {
       expect(io.emit).toHaveBeenCalledWith("typing", mockUsername);
     });
 
-    it("should handle 'stop typing' event and notify receiver", async () => {
+    it("should handle 'stop-typing' event and notify receiver", async () => {
       SocketService.getUserSockets.mockResolvedValueOnce(["receiverSocketId"]);
 
       await handleChatSubscriptions(mockSocket, mockUsername);
 
       const stopTypingHandler = mockSocket.on.mock.calls.find(
-        ([event]) => event === "stop typing"
+        ([event]) => event === "stop-typing"
       )[1];
 
       await stopTypingHandler(mockReceiverUsername);
@@ -86,7 +86,7 @@ describe("ChatSubscriptions", () => {
         mockReceiverUsername
       );
       expect(io.to).toHaveBeenCalledWith(["receiverSocketId"]);
-      expect(io.emit).toHaveBeenCalledWith("stop typing", mockUsername);
+      expect(io.emit).toHaveBeenCalledWith("stop-typing", mockUsername);
     });
 
     it("should handle 'on-read-messages' event and update unread counts", async () => {

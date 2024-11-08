@@ -65,14 +65,14 @@ export const useChatMessages = ({
     communicationSocket.on("typing", senderUsername => {
       if (senderUsername === recipientUsername) setIsTyping(true);
     });
-    communicationSocket.on("stop typing", senderUsername => {
+    communicationSocket.on("stop-typing", senderUsername => {
       if (senderUsername === recipientUsername) setIsTyping(false);
     });
 
     return () => {
       communicationSocket.off("update-chat");
       communicationSocket.off("typing");
-      communicationSocket.off("stop typing");
+      communicationSocket.off("stop-typing");
     };
   }, [communicationSocket, recipientUsername]);
 
@@ -110,7 +110,7 @@ export const useChatMessages = ({
       const timeDiff = timeNow - lastTypingTime;
       if (timeDiff >= timerLength && typing) {
         if (communicationSocket) {
-          communicationSocket.emit("stop typing", recipientUsername);
+          communicationSocket.emit("stop-typing", recipientUsername);
         }
         setTyping(false);
       }

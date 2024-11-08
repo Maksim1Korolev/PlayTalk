@@ -41,7 +41,7 @@ export async function handleChatSubscriptions(socket, currentUsername) {
     logger.info(`${currentUsername} is typing to ${recipientUsername}`);
   });
 
-  socket.on("stop typing", async recipientUsername => {
+  socket.on("stop-typing", async recipientUsername => {
     const receiverSocketIds =
       await SocketService.getUserSockets(recipientUsername);
 
@@ -49,7 +49,7 @@ export async function handleChatSubscriptions(socket, currentUsername) {
       return;
     }
 
-    io.to(receiverSocketIds).emit("stop typing", currentUsername);
+    io.to(receiverSocketIds).emit("stop-typing", currentUsername);
     logger.info(`${currentUsername} stopped typing to ${recipientUsername}`);
   });
 
