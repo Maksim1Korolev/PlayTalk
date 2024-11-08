@@ -1,5 +1,4 @@
 export type User = {
-  _id: string;
   username: string;
   avatarFileName?: string;
   avatarUrl?: string;

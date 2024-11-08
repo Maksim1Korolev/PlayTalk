@@ -35,6 +35,7 @@ Storybook
 Kubernetes
 
 Possible expansions:
+General id for user on all services
 User search
 s3 signedUrls and images permission on client
 Group chats

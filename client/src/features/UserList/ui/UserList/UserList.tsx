@@ -79,7 +79,7 @@ export const UserList = ({
   const userList = useMemo(() => {
     const sortedUsers = users ? Object.values(users).sort(sortUsers) : [];
     return sortedUsers?.map((user, index) => (
-      <div style={{ width: "100%" }} key={user._id}>
+      <div style={{ width: "100%" }} key={user.username}>
         <UserListCard
           className={cls.userCard}
           user={user}
