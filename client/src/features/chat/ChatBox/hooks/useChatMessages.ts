@@ -1,5 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
+import { chatApiService } from "@/shared/api";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 
 import { Message } from "@/entities/Chat";
@@ -11,11 +13,43 @@ export const useChatMessages = ({
   currentUsername: string;
   recipientUsername: string;
 }) => {
+  const [cookies] = useCookies();
+  //TODO:Possibly get currentUsername from here too
+  const { token } = cookies["jwt-cookie"];
+
   const { sockets } = useContext(SocketContext);
   const { communicationSocket } = sockets;
+
   const [messageHistory, setMessageHistory] = useState<Message[]>([]);
+
   const [isTyping, setIsTyping] = useState(false);
   const [typing, setTyping] = useState(false);
+
+  useEffect(() => {
+    const loadInitialMessages = async () => {
+      try {
+        const initialMessages = await chatApiService.getMessageHistory(
+          recipientUsername,
+          token
+        );
+        setMessageHistory(initialMessages);
+      } catch (error) {
+        console.error("Failed to load message history:", error);
+      }
+    };
+
+    loadInitialMessages();
+  }, [recipientUsername, token]);
+
+  const readAllUnreadMessages = useCallback(
+    (usernames: string[]) => {
+      if (!communicationSocket) return;
+      communicationSocket.emit("on-read-messages", {
+        usernames,
+      });
+    },
+    [communicationSocket]
+  );
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -34,33 +68,8 @@ export const useChatMessages = ({
     [communicationSocket, currentUsername, recipientUsername]
   );
 
-  const readAllUnreadMessages = useCallback(
-    (usernames: string[]) => {
-      if (!communicationSocket) return;
-      communicationSocket.emit("on-read-messages", {
-        usernames,
-      });
-    },
-    [communicationSocket]
-  );
-
   useEffect(() => {
     if (!communicationSocket) return;
-
-    const updateChatHistory = (messages: Message[], senderUsername: string) => {
-      console.log(messages);
-      console.log("Updating chat history");
-
-      if (recipientUsername === senderUsername) {
-        setMessageHistory(messages);
-      }
-    };
-
-    communicationSocket.emit("on-chat-open", {
-      recipientUsername,
-    });
-
-    communicationSocket.on("update-chat", updateChatHistory);
 
     communicationSocket.on("typing", senderUsername => {
       if (senderUsername === recipientUsername) setIsTyping(true);
@@ -70,7 +79,6 @@ export const useChatMessages = ({
     });
 
     return () => {
-      communicationSocket.off("update-chat");
       communicationSocket.off("typing");
       communicationSocket.off("stop-typing");
     };
@@ -85,9 +93,11 @@ export const useChatMessages = ({
         setIsTyping(false);
       }
     };
+
     if (communicationSocket) {
       communicationSocket.on("receive-message", onReceiveMessage);
     }
+
     return () => {
       if (communicationSocket) {
         communicationSocket.off("receive-message", onReceiveMessage);

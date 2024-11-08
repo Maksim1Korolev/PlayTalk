@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 
 import { getLogger } from "../utils/logger.js";
 
-import MessageHistoryService from "../services/messageHistoryService.js";
+import MessageHistoryService from "../services/chat/messageHistoryService.js";
 
 const logger = getLogger("MessageHistoryController");
 
@@ -20,7 +20,10 @@ export const getMessageHistory = asyncHandler(async (req, res) => {
 
   const usernames = [requestingUsername, recipientUsername];
   try {
-    logger.info(`Fetching message history for usernames: ${usernames}`);
+    logger.info(
+      `Fetching message history for usernames: ${usernames.join(", ")}`
+    );
+
     const messageHistory =
       await MessageHistoryService.getMessageHistory(usernames);
 

@@ -4,16 +4,20 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 
-import redisClient from "./utils/redisClient.js";
 import { getLogger } from "./utils/logger.js";
-const logger = getLogger("Main");
 
-import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+import redisClient from "./utils/redisClient.js";
+
 import { socketAuthMiddleware } from "./middleware/authMiddleware.js";
+import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
+import SocketService from "./services/socketService.js";
+
+import messageHistoryRouter from "./routes/messageHistoryRoutes.js";
 import onlineRouter from "./routes/onlineRoutes.js";
 import unreadRouter from "./routes/unreadRoutes.js";
-import SocketService from "./services/socketService.js";
+
+const logger = getLogger("Main");
 
 dotenv.config();
 
@@ -32,6 +36,7 @@ async function main() {
   app.use(express.json());
 
   app.use("/api/online", onlineRouter);
+  app.use("/api/messageHistories", messageHistoryRouter);
   app.use("/api/unread", unreadRouter);
 
   app.use(errorHandler);

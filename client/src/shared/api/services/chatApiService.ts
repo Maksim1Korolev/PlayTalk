@@ -17,6 +17,7 @@ export const chatApiService = {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
+
     return response.data.messageHistory;
   },
 
@@ -26,6 +27,7 @@ export const chatApiService = {
     const response = await $communicationApi.get(`/unread/getAll`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
     return response.data;
   },
 };

@@ -9,26 +9,6 @@ import MessageHistoryService from "./messageHistoryService.js";
 const logger = getLogger("ChatSubscriptions");
 
 export async function handleChatSubscriptions(socket, currentUsername) {
-  socket.on("on-chat-open", async ({ recipientUsername }) => {
-    try {
-      const { data } = await MessageHistoryService.getMessageHistory([
-        currentUsername,
-        recipientUsername,
-      ]);
-
-      if (data && data.messageHistory) {
-        socket.emit("update-chat", data.messageHistory, recipientUsername);
-        logger.info(
-          `Chat history sent for ${currentUsername} and ${recipientUsername}.`
-        );
-      }
-    } catch (err) {
-      logger.error(
-        `Error retrieving chat history for ${currentUsername} and ${recipientUsername}: ${err.message}`
-      );
-    }
-  });
-
   socket.on("typing", async recipientUsername => {
     const receiverSocketIds =
       await SocketService.getUserSockets(recipientUsername);

@@ -16,11 +16,14 @@ class MessageHistoryService {
     const url = `${chatServiceApiUrl}/messageHistories/messageHistory?${query}`;
 
     logger.info(`Fetching message history for: ${usernames.join(", ")}`);
-    return await axios.get(url, {
+
+    const response = await axios.get(url, {
       headers: {
         [internalServiceHeaderKey]: serviceName,
       },
     });
+
+    return response.data.messageHistory;
   }
 
   static async addMessageToHistory(usernames, message) {
