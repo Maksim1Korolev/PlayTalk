@@ -8,7 +8,7 @@ Highlight types
 Blurred messages and gap between them
 Disable buttons in userList accordingly
 Typing problems
-Upgrade profile service
+Update profile service in general and for automatic creation of profile if there isn't one
 Change user to username in chatModalData
 Sometimes the ttt turn doesn't change on opponent's client, although the sign is set
 User has to be added in real time to the list when registered

@@ -1,5 +1,7 @@
 import { useContext, useEffect } from "react";
+import { useCookies } from "react-cookie";
 
+import { usersApiService } from "@/shared/api";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 
@@ -8,6 +10,9 @@ import { getUsers, User, userActions } from "@/entities/User";
 export const useMainSocketSubs = () => {
   const dispatch = useAppDispatch();
   const users = useAppSelector(getUsers);
+
+  const [cookies] = useCookies();
+  const { token } = cookies["jwt-cookie"];
 
   const { sockets } = useContext(SocketContext);
   const { communicationSocket, gameSocket } = sockets;
@@ -22,7 +27,7 @@ export const useMainSocketSubs = () => {
         gameSocket.emit("online-ping");
       };
 
-      const updateUserOnline = (username: string, isOnline: boolean) => {
+      const updateUserOnline = async (username: string, isOnline: boolean) => {
         const userExists = !!users[username];
 
         if (userExists) {
@@ -30,13 +35,16 @@ export const useMainSocketSubs = () => {
             userActions.updateUser({ username, updatedProps: { isOnline } })
           );
         } else {
-          //TODO:Add fetching a specific user from api service
-          const newUser: User = {
-            username,
-            isOnline,
-          };
+          const user = await usersApiService.getUser(username, token);
 
-          dispatch(userActions.addUser(newUser));
+          if (user) {
+            const newUser: User = {
+              ...user,
+              isOnline,
+            };
+
+            dispatch(userActions.addUser(newUser));
+          }
         }
       };
 

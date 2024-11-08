@@ -46,6 +46,7 @@ export const usersApiService = {
         error
       );
 
+      //TODO:Add this route to auth
       try {
         const authResponse = await $authApi.get<{ user: User }>(
           `/users/${username}`,
