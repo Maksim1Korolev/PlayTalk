@@ -15,7 +15,7 @@ export const Sidebar = ({ className, ...otherProps }: SidebarProps) => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
   const onToggle = () => {
-    setCollapsed(prev => !prev);
+    setCollapsed((prev) => !prev);
   };
 
   return (
