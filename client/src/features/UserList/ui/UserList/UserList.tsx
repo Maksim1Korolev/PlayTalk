@@ -54,8 +54,8 @@ export const UserList = ({
   const userList = useMemo(() => {
     const sortedUsers = users ? Object.values(users).sort(sortUsers) : [];
     return sortedUsers?.map((user, index) => (
-      <VStack max>
-        <HStack max key={user.username}>
+      <VStack max key={user.username}>
+        <HStack max>
           <UserListCard
             className={cls.userCard}
             user={user}
