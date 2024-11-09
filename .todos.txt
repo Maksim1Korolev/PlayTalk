@@ -18,7 +18,6 @@ To add (in the end):
 Adjust location for client's .env
 Upgrade font and sizes of the components
 Tests on chat's services and profile service and update tests
-Issues when redis connects late (-restart?)
 
 
 To add (after the end):
