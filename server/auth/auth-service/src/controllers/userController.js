@@ -88,27 +88,27 @@ export const isUserRegistered = asyncHandler(async (req, res) => {
 
 //Unused routes for now
 
-// @desc   Get user by ID
-// @route  GET /api/users/internal/id/:id
-// @access Internal
-export const getUserById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+// // @desc   Get user by ID
+// // @route  GET /api/users/internal/id/:id
+// // @access Internal
+// export const getUserById = asyncHandler(async (req, res) => {
+//   const { id } = req.params;
 
-  try {
-    const user = await UserService.getUserById(id);
+//   try {
+//     const user = await UserService.getUserById(id);
 
-    if (user) {
-      logger.info(`Fetched user by ID: ${id}`);
-      res.json({ user });
-    } else {
-      logger.warn(`User with ID ${id} not found`);
-      res.status(404).json({ message: "User not found" });
-    }
-  } catch (error) {
-    logger.error(`Error fetching user by ID ${id}: ${error.message}`);
-    res.status(500).json({ error: error.message });
-  }
-});
+//     if (user) {
+//       logger.info(`Fetched user by ID: ${id}`);
+//       res.json({ user });
+//     } else {
+//       logger.warn(`User with ID ${id} not found`);
+//       res.status(404).json({ message: "User not found" });
+//     }
+//   } catch (error) {
+//     logger.error(`Error fetching user by ID ${id}: ${error.message}`);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
 // // @desc   Update a user
 // // @route  PUT /api/users/:id

@@ -103,40 +103,40 @@ class UserService {
 
   //Unused functions for now
 
-  static async getUserById(id) {
-    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-      const error = "Invalid user ID";
-      logger.error(error);
-      throw new Error(error);
-    }
+  // static async getUserById(id) {
+  //   if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+  //     const error = "Invalid user ID";
+  //     logger.error(error);
+  //     throw new Error(error);
+  //   }
 
-    try {
-      const cachedUser = await redisClient.hGet(
-        process.env.REDIS_USERS_ID_KEY,
-        id
-      );
+  //   try {
+  //     const cachedUser = await redisClient.hGet(
+  //       process.env.REDIS_USERS_ID_KEY,
+  //       id
+  //     );
 
-      if (cachedUser) {
-        logger.info(`Cache hit for user with ID: ${id}`);
-        const { password, ...userWithoutPassword } = JSON.parse(cachedUser);
-        return userWithoutPassword;
-      }
+  //     if (cachedUser) {
+  //       logger.info(`Cache hit for user with ID: ${id}`);
+  //       const { password, ...userWithoutPassword } = JSON.parse(cachedUser);
+  //       return userWithoutPassword;
+  //     }
 
-      const user = await User.findById(id).select("-password");
-      if (user) {
-        await redisClient.hSet(
-          process.env.REDIS_USERS_ID_KEY,
-          user._id.toString(),
-          JSON.stringify(user)
-        );
-        logger.info(`Fetched and cached user with ID: ${id}`);
-      }
-      return user;
-    } catch (error) {
-      logger.error(`Error fetching user by ID: ${error.message}`);
-      throw new Error("Failed to fetch user by ID");
-    }
-  }
+  //     const user = await User.findById(id).select("-password");
+  //     if (user) {
+  //       await redisClient.hSet(
+  //         process.env.REDIS_USERS_ID_KEY,
+  //         user._id.toString(),
+  //         JSON.stringify(user)
+  //       );
+  //       logger.info(`Fetched and cached user with ID: ${id}`);
+  //     }
+  //     return user;
+  //   } catch (error) {
+  //     logger.error(`Error fetching user by ID: ${error.message}`);
+  //     throw new Error("Failed to fetch user by ID");
+  //   }
+  // }
 
   // static async updateUser(user) {
   //   if (!user._id) {
