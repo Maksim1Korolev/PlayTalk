@@ -1,6 +1,5 @@
 To add:
 Put chat into slice
-Boolean func to see if user is registered and implement it
 
 To fix:
 Upgrade UserList scrollbar
