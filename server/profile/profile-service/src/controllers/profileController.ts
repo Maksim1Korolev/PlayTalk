@@ -6,8 +6,44 @@ import ProfileService from "../services/profileService";
 
 const logger = getLogger("ProfileController");
 
+// @desc   Add profile
+// @route  POST /api/profiles
+// @access Public
+export const addProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const { username } = req.body;
+
+  if (!username) {
+    logger.warn("Username missing in add profile request");
+    res.status(400).json({ message: "Username is required" });
+    return;
+  }
+
+  try {
+    logger.info(`Attempt to add profile with username: ${username}`);
+    const profile = await ProfileService.addProfile(username);
+
+    if (!profile) {
+      logger.error("Failed to add profile");
+      res.status(500).json({ message: "Failed to add profile" });
+      return;
+    }
+
+    logger.info(`Profile added successfully: ${username}`);
+    res.status(201).json({ profile });
+  } catch (error: any) {
+    logger.error(
+      `Error adding profile for username: ${username} - ${error.message}`
+    );
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 // @desc   Get profiles
-// @route  GET /api/users
+// @route  GET /api/profiles
 // @access Public
 export const getProfiles = async (
   req: Request,
@@ -33,7 +69,7 @@ export const getProfiles = async (
 };
 
 // @desc   Get profile by username
-// @route  GET /api/users/:username
+// @route  GET /api/profiles/:username
 // @access Public
 export const getProfileByUsername = async (
   req: Request,
@@ -78,37 +114,35 @@ export const getProfileByUsername = async (
   }
 };
 
-// @desc   Add profile
-// @route  POST /api/users
+// @desc   Check if profile is registered by username
+// @route  GET /api/profiles/isRegistered/:username
 // @access Public
-export const addProfile = async (
+export const isProfileRegistered = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const { username } = req.body;
+  const { username } = req.params;
 
   if (!username) {
-    logger.warn("Username missing in add profile request");
+    logger.warn("Username is missing in request");
     res.status(400).json({ message: "Username is required" });
     return;
   }
 
   try {
-    logger.info(`Attempt to add profile with username: ${username}`);
-    const profile = await ProfileService.addProfile(username);
+    logger.info(`Checking registration status for username: ${username}`);
+    const profile = await ProfileService.getProfileByUsername(username);
 
-    if (!profile) {
-      logger.error("Failed to add profile");
-      res.status(500).json({ message: "Failed to add profile" });
-      return;
-    }
+    const isRegistered = !!profile;
 
-    logger.info(`Profile added successfully: ${username}`);
-    res.status(201).json({ profile });
+    logger.info(
+      `Registration status for username ${username}: ${isRegistered}`
+    );
+    res.status(200).json({ isRegistered });
   } catch (error: any) {
     logger.error(
-      `Error adding profile for username: ${username} - ${error.message}`
+      `Error checking registration status for username ${username}: ${error.message}`
     );
     res.status(500).json({ message: "Internal server error" });
   }
