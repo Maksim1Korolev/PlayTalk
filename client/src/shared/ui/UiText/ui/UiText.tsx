@@ -1,6 +1,8 @@
-import { Mods, cx } from "@/shared/lib";
-import { ReactNode, memo } from "react";
 import cls from "./UiText.module.scss";
+
+import { memo, ReactNode } from "react";
+
+import { cx, Mods } from "@/shared/lib";
 
 type TextSize = "s" | "m" | "l" | "xl" | "xxl";
 type FontFamily = "main" | "monospace" | "text" | "header";
@@ -16,6 +18,7 @@ interface UiTextProps {
   color?: TextColor;
   max?: boolean;
   fontFamily?: FontFamily;
+  ref?: React.LegacyRef<HTMLParagraphElement>;
 }
 
 const mapSizeToClass: Record<TextSize, string> = {
@@ -35,6 +38,7 @@ const mapFontFamilyToClass: Record<FontFamily, string> = {
 
 export const UiText = memo(
   ({
+    ref,
     className,
     children,
     size = "m",
@@ -59,6 +63,7 @@ export const UiText = memo(
           cls[fontFamilyClass],
           cls[color],
         ])}
+        ref={ref}
       >
         {children}
       </p>

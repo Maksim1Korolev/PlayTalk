@@ -1,5 +1,7 @@
 import cls from "./UserListCard.module.scss";
 
+import { useEffect, useRef } from "react";
+
 import { cx } from "@/shared/lib";
 import {
   AddonCircle,
@@ -37,7 +39,6 @@ interface UserListCardProps extends UserListCardBase {
     isActive: boolean;
   }) => void;
   handleChatButton?: (user: User) => void;
-  userRef?: (el: HTMLSpanElement | null) => void;
 }
 
 interface UserListCardLoading extends UserListCardBase {
@@ -54,7 +55,6 @@ interface UserListCardLoading extends UserListCardBase {
     isActive: boolean;
   }) => void;
   handleChatButton?: (user: User) => void;
-  userRef?: (el: HTMLSpanElement | null) => void;
 }
 
 type UserListCard = UserListCardProps | UserListCardLoading;
@@ -66,8 +66,9 @@ export const UserListCard = ({
   isLoading = false,
   handlePlayButton,
   handleChatButton,
-  userRef,
 }: UserListCard) => {
+  const usernameRef = useRef<HTMLParagraphElement>(null);
+
   const adjustFontSize = (
     element: HTMLElement,
     maxWidth: number,
@@ -80,11 +81,11 @@ export const UserListCard = ({
     }
   };
 
-  //useEffect(() => {
-
-  //      adjustFontSize(userRef, 50);
-
-  //}, [userRef]);
+  useEffect(() => {
+    if (usernameRef.current) {
+      adjustFontSize(usernameRef.current, 50);
+    }
+  }, [usernameRef]);
 
   if (isLoading)
     return (
@@ -157,10 +158,7 @@ export const UserListCard = ({
         onClick={onChatOpen}
       />
       <HStack className={cls.userInfo} gap="16" max>
-        {
-          //TODO: ref
-        }
-        <UiText className={cls.username} bold size="l">
+        <UiText className={cls.username} bold size="l" ref={usernameRef}>
           {user?.username}
         </UiText>
         <PlayButton

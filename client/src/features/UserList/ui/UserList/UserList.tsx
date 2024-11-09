@@ -54,16 +54,18 @@ export const UserList = ({
   const userList = useMemo(() => {
     const sortedUsers = users ? Object.values(users).sort(sortUsers) : [];
     return sortedUsers?.map((user, index) => (
-      <HStack max key={user.username}>
-        <UserListCard
-          className={cls.userCard}
-          user={user}
-          collapsed={collapsed}
-          handlePlayButton={handleUserPlayButton}
-          handleChatButton={handleUserChatButton}
-        />
+      <VStack max>
+        <HStack max key={user.username}>
+          <UserListCard
+            className={cls.userCard}
+            user={user}
+            collapsed={collapsed}
+            handlePlayButton={handleUserPlayButton}
+            handleChatButton={handleUserChatButton}
+          />
+        </HStack>
         {index < sortedUsers.length - 1 && <hr />}
-      </HStack>
+      </VStack>
     ));
   }, [collapsed, handleUserChatButton, handleUserPlayButton, users]);
 
