@@ -11,51 +11,48 @@ const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
 const serviceName = "game_gateway_service";
 
 class UserService {
-  static async getUserById(userId) {
-    if (!userId) {
-      const error = "Invalid user ID";
+  static async isUserRegistered(username) {
+    if (!username) {
+      const error = "Invalid username";
       logger.error(error);
       throw new Error(error);
     }
 
     try {
-      const cachedUser = await redisClient.hGet(
-        process.env.REDIS_USERS_ID_KEY,
-        userId
-      );
+      const cacheKey = process.env.REDIS_USERS_USERNAME_KEY;
+      const cachedUser = await redisClient.hGet(cacheKey, username);
       if (cachedUser) {
-        logger.info(`Cache hit for user ID: ${userId}`);
-        return JSON.parse(cachedUser);
+        logger.info(`Cache hit for username: ${username}`);
+        return true;
       }
 
       logger.info(
-        `Cache miss for user ID: ${userId}, fetching from repository service`
+        `Cache miss for username: ${username}, fetching from repository service`
       );
-      const url = `${repositoryServiceUrl}/id/${userId}`;
+      const url = `${repositoryServiceUrl}/isRegistered/${username}`;
       const response = await axios.get(url, {
         headers: {
           [internalServiceHeaderKey]: serviceName,
         },
       });
 
-      const user = response.data.user;
+      const userExists = response.data.isRegistered;
 
-      if (user) {
-        await redisClient.hSet(
-          process.env.REDIS_USERS_ID_KEY,
-          userId,
-          JSON.stringify(user),
-          {
-            EX: 3600,
-          }
+      if (userExists) {
+        await redisClient.hSet(cacheKey, username, JSON.stringify(userExists), {
+          EX: 3600,
+        });
+        logger.info(
+          `User registration status cached for username: ${username}`
         );
-        logger.info(`User data cached for ID: ${userId}`);
       }
 
-      return user;
+      return userExists;
     } catch (error) {
-      logger.error(`Error fetching user by ID: ${userId} - ${error.message}`);
-      throw new Error("Failed to fetch user data");
+      logger.error(
+        `Error checking if user is registered by username: ${username} - ${error.message}`
+      );
+      throw new Error("Failed to check user registration status");
     }
   }
 }

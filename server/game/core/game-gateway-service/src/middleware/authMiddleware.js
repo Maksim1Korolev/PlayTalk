@@ -35,26 +35,9 @@ export const socketAuthMiddleware = (req, res, next) => {
       return next(new Error("Invalid token"));
     }
 
-    try {
-      const userFound = await UserService.getUserById(decoded.userId);
-      if (userFound) {
-        req.user = userFound;
-        logger.info(
-          `Socket handshake successful for user: ${userFound.username}`
-        );
-        next();
-      } else {
-        logger.warn(
-          `User not found during socket handshake: userId ${decoded.userId}`
-        );
-        return next(new Error("User not found"));
-      }
-    } catch (error) {
-      logger.error(
-        `Error fetching user during socket handshake: ${error.message}`
-      );
-      return next(new Error("Error fetching user"));
-    }
+    req.user = { id: decoded.userId, username: decoded.username };
+    logger.info(`Socket handshake successful for user: ${decoded.username}`);
+    next();
   });
 };
 
@@ -63,6 +46,7 @@ export const protect = asyncHandler(async (req, res, next) => {
 
   if (!authorizationHeader || !authorizationHeader.startsWith("Bearer")) {
     logger.warn("Authorization header missing or incorrect format");
+
     return res
       .status(401)
       .json({ message: "Not authorized, no token provided" });
@@ -77,27 +61,26 @@ export const protect = asyncHandler(async (req, res, next) => {
     const onlineUsernames = await SocketService.getOnlineUsernames();
     const isUserOnline = onlineUsernames.includes(decoded.username);
 
-    let userFound;
+    if (!isUserOnline) {
+      const isRegistered = await UserService.isUserRegistered(decoded.username);
 
-    if (isUserOnline) {
-      userFound = {
-        id: decoded.userId,
-        username: decoded.username,
-      };
-    } else {
-      userFound = await UserService.getUserById(decoded.userId);
-      if (!userFound) {
-        logger.warn(`User not found: userId ${decoded.userId}`);
-        return res.status(401).json({ message: "User not found" });
+      if (!isRegistered) {
+        logger.warn(`User not registered: ${decoded.username}`);
+
+        return res.status(401).json({ message: "User not registered" });
       }
-      logger.info(`User fetched from UserService: ${userFound.username}`);
+      logger.info(`User is offline but registered: ${decoded.username}`);
+    } else {
+      logger.info(`User is online: ${decoded.username}`);
     }
 
-    req.user = userFound;
-    logger.info(`Access granted to user: ${userFound.username}`);
+    req.user = { id: decoded.userId, username: decoded.username };
+
+    logger.info(`Access granted to user: ${decoded.username}`);
     next();
   } catch (error) {
     logger.error(`Error verifying token: ${error.message}`);
+
     return res
       .status(500)
       .json({ message: "Error verifying token", error: error.message });
