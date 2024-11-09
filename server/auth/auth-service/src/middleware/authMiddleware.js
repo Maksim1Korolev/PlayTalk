@@ -11,7 +11,8 @@ export const protect = asyncHandler(async (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
 
   if (!authorizationHeader || !authorizationHeader.startsWith("Bearer")) {
-    logger.warn("Authorization header not found or incorrect format");
+    logger.warn("Authorization header missing or incorrect format");
+
     return res
       .status(401)
       .json({ message: "Not authorized, no token provided" });
@@ -19,27 +20,27 @@ export const protect = asyncHandler(async (req, res, next) => {
 
   const token = authorizationHeader.split(" ")[1];
 
-  if (!token) {
-    logger.warn("No token provided in request");
-    return res
-      .status(401)
-      .json({ message: "Not authorized, no token provided" });
-  }
-
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userFound = await UserService.getUserById(decoded.userId);
+    logger.info(`Token verified for user: ${decoded.username}`);
 
-    if (!userFound) {
-      logger.warn(`User not found for token: ${token}`);
-      return res.status(401).json({ message: "User not found" });
+    const isRegistered = await UserService.isUserRegistered(decoded.username);
+
+    if (!isRegistered) {
+      logger.warn(`User not registered: ${decoded.username}`);
+
+      return res.status(401).json({ message: "User not registered" });
     }
+    logger.info(`User is offline but registered: ${decoded.username}`);
 
-    req.user = userFound;
+    req.user = { id: decoded.userId, username: decoded.username };
+
+    logger.info(`Access granted to user: ${decoded.username}`);
     next();
   } catch (error) {
-    logger.error(`Token verification error: ${error.message}`);
-    res
+    logger.error(`Error verifying token: ${error.message}`);
+
+    return res
       .status(500)
       .json({ message: "Error verifying token", error: error.message });
   }
