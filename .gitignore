@@ -8,7 +8,6 @@ mongo_data/
 logs/
 *.log
 
-.ngnix/
 .commands.txt
 .structure.txt
 
