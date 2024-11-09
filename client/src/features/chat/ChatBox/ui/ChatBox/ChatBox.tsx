@@ -68,7 +68,7 @@ export const ChatBox = memo(
         >
           <VStack max>
             <div className={cls.chatBoxOverlay}></div>
-            <VStack className={cls.chatLogs} max>
+            <VStack className={cls.chatLogs} gap="8" max>
               {messageHistory && renderMessageHistory()}
               <div ref={dummy} />
             </VStack>
