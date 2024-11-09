@@ -4,12 +4,13 @@ import {
   addUser,
   getUserById,
   getUserByUsername,
+  isUserRegistered,
 } from "../controllers/userController.js";
 
 const router = express.Router();
 
 router.route("/").post(addUser);
-router.route("/username/:username").get(getUserByUsername);
+router.route("/isRegistered/:username").get(isUserRegistered);
 //TODO:Remove
 router.route("/id/:id").get(getUserById);
 

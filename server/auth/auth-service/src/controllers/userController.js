@@ -11,9 +11,12 @@ const logger = getLogger("UserController");
 // @access Internal
 export const addUser = asyncHandler(async (req, res) => {
   const { user } = req.body;
+
   try {
     const newUser = await UserService.addUser(user);
+
     logger.info(`User added: ${newUser._id}`);
+
     res.status(201).json({ user: newUser });
   } catch (error) {
     logger.error(`Error adding user: ${error.message}`);
@@ -27,7 +30,9 @@ export const addUser = asyncHandler(async (req, res) => {
 export const getUsers = asyncHandler(async (req, res) => {
   try {
     const users = await UserService.getUsers();
+
     logger.info("Fetched all users");
+
     res.json({ users });
   } catch (error) {
     logger.error(`Error fetching users: ${error.message}`);
@@ -37,11 +42,13 @@ export const getUsers = asyncHandler(async (req, res) => {
 
 // @desc   Get user by username
 // @route  GET /api/users/internal/username/:username
-// @access Internal
+// @access Protected
 export const getUserByUsername = asyncHandler(async (req, res) => {
   const { username } = req.params;
+
   try {
     const user = await UserService.getUserByUsername(username);
+
     if (user) {
       logger.info(`Fetched user by username: ${username}`);
       res.json({ user });
@@ -57,6 +64,28 @@ export const getUserByUsername = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc   Check if user is registered by username
+// @route  GET /api/users/internal/isRegistered/:username
+// @access Internal
+export const isUserRegistered = asyncHandler(async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const userExists = await UserService.getUserByUsername(username);
+
+    logger.info(
+      `Checked registration status for username ${username}: ${!!userExists}`
+    );
+
+    res.json({ isRegistered: !!userExists });
+  } catch (error) {
+    logger.error(
+      `Error checking registration for ${username}: ${error.message}`
+    );
+    res.status(500).json({ error: error.message });
+  }
+});
+
 //Unused routes for now
 
 // @desc   Get user by ID
@@ -64,8 +93,10 @@ export const getUserByUsername = asyncHandler(async (req, res) => {
 // @access Internal
 export const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
+
   try {
     const user = await UserService.getUserById(id);
+
     if (user) {
       logger.info(`Fetched user by ID: ${id}`);
       res.json({ user });

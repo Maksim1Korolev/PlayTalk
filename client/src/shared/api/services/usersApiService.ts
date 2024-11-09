@@ -12,6 +12,7 @@ export const usersApiService = {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       return profileResponse.data.profiles;
     } catch (error) {
       console.warn("Profile API failed, falling back to Auth API:", error);
@@ -39,6 +40,7 @@ export const usersApiService = {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       return profileResponse.data.profile;
     } catch (error) {
       console.warn(
@@ -46,20 +48,21 @@ export const usersApiService = {
         error
       );
 
-      //TODO:Add this route to auth
       try {
         const authResponse = await $authApi.get<{ user: User }>(
-          `/users/${username}`,
+          `/users/username/${username}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+
         return authResponse.data.user;
       } catch (authError) {
         console.error(
           `Both Profile and Auth APIs failed to retrieve ${username}:`,
           authError
         );
+
         return null;
       }
     }
