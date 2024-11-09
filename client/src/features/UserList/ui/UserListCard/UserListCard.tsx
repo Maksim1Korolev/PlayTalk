@@ -157,7 +157,9 @@ export const UserListCard = ({
         onClick={onChatOpen}
       />
       <HStack className={cls.userInfo} gap="16" max>
-        //TODO: ref
+        {
+          //TODO: ref
+        }
         <UiText className={cls.username} bold size="l">
           {user?.username}
         </UiText>
