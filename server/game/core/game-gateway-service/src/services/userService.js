@@ -21,6 +21,7 @@ class UserService {
     try {
       const cacheKey = process.env.REDIS_USERS_USERNAME_KEY;
       const cachedUser = await redisClient.hGet(cacheKey, username);
+
       if (cachedUser) {
         logger.info(`Cache hit for username: ${username}`);
         return true;
@@ -29,6 +30,7 @@ class UserService {
       logger.info(
         `Cache miss for username: ${username}, fetching from repository service`
       );
+
       const url = `${repositoryServiceUrl}/isRegistered/${username}`;
       const response = await axios.get(url, {
         headers: {

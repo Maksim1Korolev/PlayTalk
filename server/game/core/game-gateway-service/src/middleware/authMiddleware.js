@@ -35,9 +35,26 @@ export const socketAuthMiddleware = (req, res, next) => {
       return next(new Error("Invalid token"));
     }
 
-    req.user = { id: decoded.userId, username: decoded.username };
-    logger.info(`Socket handshake successful for user: ${decoded.username}`);
-    next();
+    try {
+      const isRegistered = await UserService.isUserRegistered(decoded.username);
+
+      if (!isRegistered) {
+        logger.warn(`User not registered: ${decoded.username}`);
+        return next(new Error("User not registered"));
+      }
+
+      req.user = { id: decoded.userId, username: decoded.username };
+
+      logger.info(
+        `Socket handshake successful for registered user: ${decoded.username}`
+      );
+      next();
+    } catch (error) {
+      logger.error(
+        `Error verifying registration during socket handshake: ${error.message}`
+      );
+      return next(new Error("Error verifying user registration"));
+    }
   });
 };
 
