@@ -157,27 +157,40 @@ export const UserListCard = ({
         }
         onClick={onChatOpen}
       />
-      <HStack className={cls.userInfo} gap="16" max>
-        <UiText className={cls.username} bold size="l" ref={usernameRef}>
+      <HStack
+        className={cls.userInfo}
+        gap="16"
+        max
+        align="center"
+        justify="center"
+      >
+        {
+          //TODO: ref
+        }
+        <UiText className={cls.username} bold size="l">
           {user?.username}
         </UiText>
-        <PlayButton
-          highlight="none"
-          className={cls.playButton}
-          onSelectGame={onPlayButton}
-          menuId={user?.username || ""}
-        />
-        <UiButton
-          className={cls.playButton}
-          onClick={onChatOpen}
-          variant="clear"
-        >
-          <AppImage
-            src={getImagePath({ collection: "appIcons", fileName: "chat" })}
-            width={40}
-            height={40}
+        <HStack className={cls.buttons} gap="8">
+          <PlayButton
+            highlight="none"
+            className={cls.playButton}
+            onSelectGame={onPlayButton}
+            menuId={user?.username || ""}
           />
-        </UiButton>
+          <div className={cls.chatButtonBorder}>
+            <UiButton
+              className={cls.chatButton}
+              onClick={onChatOpen}
+              variant="clear"
+            >
+              <AppImage
+                src={getImagePath({ collection: "appIcons", fileName: "chat" })}
+                width={48}
+                height={48}
+              />
+            </UiButton>
+          </div>
+        </HStack>
       </HStack>
     </HStack>
   );

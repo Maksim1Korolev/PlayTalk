@@ -14,19 +14,18 @@
   }
 }
 
-
 .UserListCard {
   align-items: center;
-	display: flex;
+  display: flex;
   opacity: 1;
   padding: 0 16px;
 
-	.username {
-		@include scale-and-truncate-text(40px); 
-		margin-right: 10px;
-	}
+  .username {
+    @include scale-and-truncate-text(40px);
+    margin-right: 10px;
+  }
 
-	.userInfo {
+  .userInfo {
     display: flex;
     flex-grow: 1;
     align-items: center;
@@ -36,19 +35,31 @@
     }
   }
 
-	.playButton {
-    margin-left: auto; // Pushes the button to the end
+  .buttons {
+    margin-left: auto; // Pushes the buttons to the end
+
+    .playButton {
+    }
+
+    .chatButtonBorder {
+      border: 3px solid var(--primary-color);
+      border-radius: 50%;
+
+      .chatButton {
+        border: 3px solid var(--secondary-color);
+        border-radius: 50%;
+      }
+    }
   }
 }
 
 .collapsed {
   padding: 0 8px;
 
-	.userInfo {
-		opacity: 0;
+  .userInfo {
+    opacity: 0;
     transition: all 0.2s;
     width: 0;
-		display: none;
-	}	
-	
+    display: none;
+  }
 }

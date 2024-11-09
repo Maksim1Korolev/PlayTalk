@@ -1,9 +1,11 @@
 //// Menu.scss
 
 .customToggle {
+  display: flex;
   cursor: pointer;
-  position: relative;
-	transition: transform 0.3s ease-in-out;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease-in-out;
   z-index: 200; // High z-index to ensure it’s above conflicting elements
 }
 
@@ -11,9 +13,7 @@
   transform: rotateY(180deg); // Flip animation for the toggle element
 }
 
-
 .overlayIcon {
-  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -23,12 +23,10 @@
   justify-content: center;
 }
 
-
-
 .circleMenuItem {
   transition: transform 0.3s ease-in-out;
 }
 
 .circleMenuItem:hover {
-  transform: scale(1.1); 
+  transform: scale(1.1);
 }

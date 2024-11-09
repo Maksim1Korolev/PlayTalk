@@ -95,7 +95,9 @@ export const UserList = ({
   return (
     <Card className={cx(cls.UserList, {}, [className])} variant="blurred">
       <UiText size="xl">{userListResources.userListHeader}</UiText>
-      <VStack gap="16">{userList}</VStack>
+      <VStack gap="16" max>
+        {userList}
+      </VStack>
     </Card>
   );
 };

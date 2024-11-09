@@ -92,8 +92,8 @@ export const PlayButton = ({
     >
       <AppImage
         className={cls.playIcon}
-        width={50}
-        height={50}
+        width={60}
+        height={60}
         src={playButtonSrc}
         draggable={false}
       />
@@ -138,8 +138,8 @@ export const PlayButton = ({
                   >
                     <AppImage
                       src={gameSrc}
-                      width={40}
-                      height={40}
+                      width={60}
+                      height={60}
                       draggable={false}
                       alt=""
                       className={cx(cls.PlayButton, {
