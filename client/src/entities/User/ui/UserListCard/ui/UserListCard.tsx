@@ -1,7 +1,14 @@
 import cls from "./UserListCard.module.scss";
 
 import { cx } from "@/shared/lib";
-import { AddonCircle, AppImageProps, HStack } from "@/shared/ui";
+import {
+  AddonCircle,
+  AppImage,
+  AppImageProps,
+  HStack,
+  UiButton,
+  UiText,
+} from "@/shared/ui";
 import { Skeleton } from "@/shared/ui/Skeleton";
 import getImagePath from "@/shared/utils/getImagePath";
 
@@ -61,6 +68,24 @@ export const UserListCard = ({
   handleChatButton,
   userRef,
 }: UserListCard) => {
+  const adjustFontSize = (
+    element: HTMLElement,
+    maxWidth: number,
+    minFontSize: number = 0.6
+  ) => {
+    let fontSize = parseFloat(window.getComputedStyle(element).fontSize);
+    while (element.scrollWidth > maxWidth && fontSize > minFontSize) {
+      fontSize -= 0.1;
+      element.style.fontSize = `${fontSize}rem`;
+    }
+  };
+
+  //useEffect(() => {
+
+  //      adjustFontSize(userRef, 50);
+
+  //}, [userRef]);
+
   if (isLoading)
     return (
       <HStack
@@ -96,7 +121,7 @@ export const UserListCard = ({
   };
 
   const setIconProps = () => {
-    const size = 50;
+    const size = 70;
 
     const avatarSrc = getImagePath({
       collection: "avatars",
@@ -131,17 +156,28 @@ export const UserListCard = ({
         }
         onClick={onChatOpen}
       />
-      <HStack className={cls.userInfo} max>
-        <span className={cls.username} ref={userRef}>
+      <HStack className={cls.userInfo} gap="16" max>
+        //TODO: ref
+        <UiText className={cls.username} bold size="l">
           {user?.username}
-        </span>
-
+        </UiText>
         <PlayButton
           highlight="none"
           className={cls.playButton}
           onSelectGame={onPlayButton}
           menuId={user?.username || ""}
         />
+        <UiButton
+          className={cls.playButton}
+          onClick={onChatOpen}
+          variant="clear"
+        >
+          <AppImage
+            src={getImagePath({ collection: "appIcons", fileName: "chat" })}
+            width={40}
+            height={40}
+          />
+        </UiButton>
       </HStack>
     </HStack>
   );

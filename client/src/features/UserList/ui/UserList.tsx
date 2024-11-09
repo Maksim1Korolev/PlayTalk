@@ -1,6 +1,6 @@
 import cls from "./UserList.module.scss";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { useCookies } from "react-cookie";
 
 import { userListResources } from "@/shared/assets";
@@ -30,18 +30,6 @@ export interface UserListProps {
   }) => void;
 }
 
-const adjustFontSize = (
-  element: HTMLElement,
-  maxWidth: number,
-  minFontSize: number = 0.6
-) => {
-  let fontSize = parseFloat(window.getComputedStyle(element).fontSize);
-  while (element.scrollWidth > maxWidth && fontSize > minFontSize) {
-    fontSize -= 0.1;
-    element.style.fontSize = `${fontSize}rem`;
-  }
-};
-
 export const UserList = ({
   className,
   collapsed,
@@ -58,16 +46,6 @@ export const UserList = ({
     getUsersLoadingStatus
   );
 
-  const userRefs = useRef<(HTMLSpanElement | null)[]>([]);
-
-  useEffect(() => {
-    userRefs.current.forEach((userRef) => {
-      if (userRef) {
-        adjustFontSize(userRef, 50);
-      }
-    });
-  }, [users]);
-
   useEffect(() => {
     dispatch(fetchUsersWithStatuses({ currentUsername, token }));
   }, [dispatch, currentUsername, token]);
@@ -82,7 +60,6 @@ export const UserList = ({
           collapsed={collapsed}
           handlePlayButton={handleUserPlayButton}
           handleChatButton={handleUserChatButton}
-          userRef={(el) => (userRefs.current[index] = el)}
         />
         {index < sortedUsers.length - 1 && <hr />}
       </HStack>
