@@ -6,35 +6,6 @@ import UserService from "../services/userService.js";
 
 const logger = getLogger("UserController");
 
-// @desc   Get users
-// @route  GET /api/users
-// @access Protected
-export const getUsers = asyncHandler(async (req, res) => {
-  try {
-    const users = await UserService.getUsers();
-    logger.info("Fetched all users");
-    res.json({ users });
-  } catch (error) {
-    logger.error(`Error fetching users: ${error.message}`);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// @desc   Update a user
-// @route  PUT /api/users/:id
-// @access Protected
-export const updateUser = asyncHandler(async (req, res) => {
-  const user = req.body;
-  try {
-    const updatedUser = await UserService.updateUser(user);
-    logger.info(`User updated: ${user._id}`);
-    res.json({ user: updatedUser });
-  } catch (error) {
-    logger.error(`Error updating user ${user._id}: ${error.message}`);
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // @desc   Add a user
 // @route  POST /api/users/internal
 // @access Internal
@@ -46,6 +17,20 @@ export const addUser = asyncHandler(async (req, res) => {
     res.status(201).json({ user: newUser });
   } catch (error) {
     logger.error(`Error adding user: ${error.message}`);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// @desc   Get users
+// @route  GET /api/users
+// @access Protected
+export const getUsers = asyncHandler(async (req, res) => {
+  try {
+    const users = await UserService.getUsers();
+    logger.info("Fetched all users");
+    res.json({ users });
+  } catch (error) {
+    logger.error(`Error fetching users: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 });
@@ -72,6 +57,8 @@ export const getUserByUsername = asyncHandler(async (req, res) => {
   }
 });
 
+//Unused routes for now
+
 // @desc   Get user by ID
 // @route  GET /api/users/internal/id/:id
 // @access Internal
@@ -91,3 +78,18 @@ export const getUserById = asyncHandler(async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// // @desc   Update a user
+// // @route  PUT /api/users/:id
+// // @access Protected
+// export const updateUser = asyncHandler(async (req, res) => {
+//   const user = req.body;
+//   try {
+//     const updatedUser = await UserService.updateUser(user);
+//     logger.info(`User updated: ${user._id}`);
+//     res.json({ user: updatedUser });
+//   } catch (error) {
+//     logger.error(`Error updating user ${user._id}: ${error.message}`);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
