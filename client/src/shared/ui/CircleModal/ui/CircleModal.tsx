@@ -1,27 +1,29 @@
-import { cx } from "@/shared/lib"
-import { memo, ReactNode, useState } from "react"
-import { Rnd, Props as RndProps } from "react-rnd"
-import cls from "./CircleModal.module.scss"
+import cls from "./CircleModal.module.scss";
 
-import CancelIcon from "@mui/icons-material/Cancel"
-import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn"
+import { memo, ReactNode, useState } from "react";
+import ReactDOM from "react-dom";
+import { Rnd, Props as RndProps } from "react-rnd";
 
-import { useModalDrag } from "@/shared/lib"
+import CancelIcon from "@mui/icons-material/Cancel";
+import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
+
+import { cx, useModalDrag } from "@/shared/lib";
 import {
-	AddonCircle,
-	AddonCircleProps,
-	Card,
-	HStack,
-	UiButton,
-	UiText,
-	VStack,
-} from "@/shared/ui"
-import ReactDOM from 'react-dom'
+  AddonCircle,
+  AddonCircleProps,
+  Card,
+  HStack,
+  UiButton,
+  UiText,
+  VStack,
+} from "@/shared/ui";
 
 interface CircleModalProps {
   className?: string;
   children?: ReactNode;
   position?: { x: number; y: number };
+  width?: number;
+  height?: number;
   addonCircleProps: AddonCircleProps;
   headerString?: string;
   onClose: () => void;
@@ -32,6 +34,8 @@ export const CircleModal = memo(
     className,
     children,
     position,
+    height = 420,
+    width = 365,
     headerString,
     addonCircleProps,
     onClose,
@@ -39,10 +43,14 @@ export const CircleModal = memo(
     const [isCollapsed, setIsCollapsed] = useState(false);
     const { isDragged, handleDragStart, handleDragStop } = useModalDrag();
 
-		const headerHeight = 50; // This should match the CSS fixed height for header
+    const headerHeight = 50; // This should match the CSS fixed height for header
     const [modalHeight, setModalHeight] = useState(420);
 
-    const handleResize = (e: MouseEvent | TouchEvent, dir, ref: HTMLElement) => {
+    const handleResize = (
+      e: MouseEvent | TouchEvent,
+      dir,
+      ref: HTMLElement
+    ) => {
       setModalHeight(ref.offsetHeight); // Update modal height on resize
     };
 
@@ -63,23 +71,23 @@ export const CircleModal = memo(
     const rndProps: RndProps = {
       onDragStart: handleDragStart,
       onDragStop: handleDragStop,
-			onResize: handleResize,
+      onResize: handleResize,
       default: {
         x: position?.x || 250,
         y: position?.y || 250,
         width: 80,
         height: 80,
       },
-      minWidth: isCollapsed ? 80 : 365,
-      minHeight: isCollapsed ? 80 : 420,
+      minWidth: isCollapsed ? 80 : width,
+      minHeight: isCollapsed ? 80 : height,
       maxWidth: isCollapsed ? 80 : 730,
       maxHeight: isCollapsed ? 80 : 840,
       bounds: ".content",
       enableResizing: !isCollapsed,
       dragHandleClassName: isCollapsed ? "" : cls.header,
     };
-		
-		const modalRoot = document.getElementById("root");
+
+    const modalRoot = document.getElementById("root");
     if (!modalRoot) {
       console.error("Modal root element not found!");
       return null;
@@ -90,7 +98,7 @@ export const CircleModal = memo(
         {isCollapsed ? (
           <AddonCircle {...addonCircleProps} onClick={handleOpenCircleModal} />
         ) : (
-					<VStack className={cx(cls.CircleModal, {}, [className])}>
+          <VStack className={cx(cls.CircleModal, {}, [className])}>
             <HStack className={cx(cls.header, {}, ["drag-handle"])} max>
               <UiText className={cls.headerString} bold max>
                 {headerString}
@@ -112,14 +120,21 @@ export const CircleModal = memo(
                 </UiButton>
               </HStack>
             </HStack>
-						<Card style={{ height: `${contentHeight}px` }} className={cls.contentCard} max padding={"0"} variant='matte' border='default'>
-            {children}
-					</Card>
-          </VStack>							
+            <Card
+              style={{ height: `${contentHeight}px` }}
+              className={cls.contentCard}
+              max
+              padding={"0"}
+              variant="matte"
+              border="default"
+            >
+              {children}
+            </Card>
+          </VStack>
         )}
       </Rnd>
     );
 
-		return ReactDOM.createPortal(modalContent, modalRoot)
+    return ReactDOM.createPortal(modalContent, modalRoot);
   }
 );

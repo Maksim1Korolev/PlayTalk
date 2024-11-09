@@ -3,12 +3,8 @@ import { useCookies } from "react-cookie";
 
 import { gameApiService } from "@/shared/api/services/gameApiService";
 import { useAppSelector } from "@/shared/lib";
-import {
-  AddonCircleProps,
-  AppImage,
-  CircleModal,
-  useModalPosition,
-} from "@/shared/ui";
+import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";
+import { useModalPosition } from "@/shared/ui/CircleModal";
 import getImagePath from "@/shared/utils/getImagePath";
 
 import {
@@ -41,7 +37,7 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
   useEffect(() => {
     const fetchGames = async () => {
       const fetchedGames = await Promise.all(
-        gameModals.map(async modal => {
+        gameModals.map(async (modal) => {
           const { data } = modal;
 
           const fetchedGame: Game = await gameApiService.getGame(token, data);
@@ -63,7 +59,19 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
   }, [gameModals, currentUsername, token]);
 
   const renderGameModals = useCallback(() => {
-    const getGameComponent = (gameData: GameData) => {
+    const getGameComponent = ({
+      modalId,
+      gameData,
+    }: {
+      modalId: string;
+      gameData: GameData;
+    }) => {
+      const { opponentUsername, gameName } = gameData;
+
+      const headerString = `Opponent: ${opponentUsername}`;
+
+      const position = getStartingPosition();
+
       const gameId: string = generateModalId(gameData);
 
       if (!games[gameId]) return null;
@@ -71,7 +79,17 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
       switch (gameData.gameName) {
         case "tic-tac-toe":
           return (
-            <TicTacToe key={gameId} game={games[gameId] as TicTacToeGame} />
+            <CircleModal
+              key={modalId}
+              position={position}
+              width={365}
+              height={520}
+              onClose={() => handleCloseGameModal(modalId)}
+              headerString={headerString}
+              addonCircleProps={getAddonCircleProps(opponentUsername, gameName)}
+            >
+              <TicTacToe key={gameId} game={games[gameId] as TicTacToeGame} />
+            </CircleModal>
           );
         default:
           return <div>No game found</div>;
@@ -117,23 +135,7 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
     };
 
     return gameModals.map(({ modalId, data }) => {
-      const { opponentUsername, gameName } = data;
-
-      const headerString = `Opponent: ${opponentUsername}`;
-
-      const position = getStartingPosition();
-
-      return (
-        <CircleModal
-          key={modalId}
-          position={position}
-          onClose={() => handleCloseGameModal(modalId)}
-          headerString={headerString}
-          addonCircleProps={getAddonCircleProps(opponentUsername, gameName)}
-        >
-          {getGameComponent(data)}
-        </CircleModal>
-      );
+      return getGameComponent({ modalId, gameData: data });
     });
   }, [gameModals, games, users, onClose, getStartingPosition]);
 

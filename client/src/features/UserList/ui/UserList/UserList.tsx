@@ -1,20 +1,17 @@
 import cls from "./UserList.module.scss";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { useCookies } from "react-cookie";
 
 import { userListResources } from "@/shared/assets";
 
 import { cx, useAppDispatch, useAppSelector } from "@/shared/lib";
-import { Card, Loader, UiText, VStack } from "@/shared/ui";
+import { Card, HStack, UiText, VStack } from "@/shared/ui";
 
 import { GameData } from "@/entities/game/Game";
-import {
-  fetchUsersWithStatuses,
-  getUsers,
-  getUsersLoadingStatus,
-  User,
-} from "@/entities/User";
+import { getUsers, User } from "@/entities/User";
+import { getUsersLoadingStatus } from "@/entities/User/model";
+import { fetchUsersWithStatuses } from "@/entities/User/model/thunks/fetchUsersWithStatuses";
 
 import { sortUsers } from "../../utils/userListUtils";
 import { UserListCard } from "../UserListCard/UserListCard";
@@ -34,18 +31,6 @@ export interface UserListProps {
   }) => void;
 }
 
-const adjustFontSize = (
-  element: HTMLElement,
-  maxWidth: number,
-  minFontSize: number = 0.6
-) => {
-  let fontSize = parseFloat(window.getComputedStyle(element).fontSize);
-  while (element.scrollWidth > maxWidth && fontSize > minFontSize) {
-    fontSize -= 0.1;
-    element.style.fontSize = `${fontSize}rem`;
-  }
-};
-
 export const UserList = ({
   className,
   collapsed,
@@ -62,16 +47,6 @@ export const UserList = ({
     getUsersLoadingStatus
   );
 
-  const userRefs = useRef<(HTMLSpanElement | null)[]>([]);
-
-  useEffect(() => {
-    userRefs.current.forEach(userRef => {
-      if (userRef) {
-        adjustFontSize(userRef, 50);
-      }
-    });
-  }, [users]);
-
   useEffect(() => {
     dispatch(fetchUsersWithStatuses({ currentUsername, token }));
   }, [dispatch, currentUsername, token]);
@@ -79,22 +54,30 @@ export const UserList = ({
   const userList = useMemo(() => {
     const sortedUsers = users ? Object.values(users).sort(sortUsers) : [];
     return sortedUsers?.map((user, index) => (
-      <div style={{ width: "100%" }} key={user.username}>
+      <HStack max key={user.username}>
         <UserListCard
           className={cls.userCard}
           user={user}
           collapsed={collapsed}
           handlePlayButton={handleUserPlayButton}
           handleChatButton={handleUserChatButton}
-          userRef={el => (userRefs.current[index] = el)}
         />
         {index < sortedUsers.length - 1 && <hr />}
-      </div>
+      </HStack>
     ));
   }, [collapsed, handleUserChatButton, handleUserPlayButton, users]);
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <Card className={cx(cls.UserList, {}, [className])} variant="blurred">
+        <VStack gap="16">
+          <UserListCard isLoading />
+          <UserListCard isLoading />
+          <UserListCard isLoading />
+          <UserListCard isLoading />
+        </VStack>
+      </Card>
+    );
   }
 
   if (isError && errorMessage) {

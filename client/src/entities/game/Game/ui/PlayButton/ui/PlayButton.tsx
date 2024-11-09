@@ -124,7 +124,7 @@ export const PlayButton = ({
               onMenuToggle={handleMenuToggle}
               menuToggleElement={CustomToggleElement}
             >
-              {gameNames.map(gameName => {
+              {gameNames.map((gameName) => {
                 const gameSrc = getImagePath({
                   collection: "gameIcons",
                   fileName: gameName,
