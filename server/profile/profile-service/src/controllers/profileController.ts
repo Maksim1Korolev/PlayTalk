@@ -68,6 +68,7 @@ export const getProfiles = async (
   }
 };
 
+//TODO:Update after adjusting profile/auth logic
 // @desc   Get profile by username
 // @route  GET /api/profiles/:username
 // @access Public
