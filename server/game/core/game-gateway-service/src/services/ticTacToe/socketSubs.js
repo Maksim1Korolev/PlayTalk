@@ -42,7 +42,7 @@ export async function handleTicTacToeSubscriptions(socket, username) {
 
       switch (response.moveResult) {
         case "Success":
-          if (receiverSockets.length > 0) {
+          if (receiverSocketIds.length > 0) {
             io.to(receiverSocketIds).emit(MOVE_MADE_EVENT, {
               interactingUsername: username,
               interactingIndex,

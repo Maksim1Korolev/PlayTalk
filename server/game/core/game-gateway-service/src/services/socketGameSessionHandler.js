@@ -36,9 +36,10 @@ async function sendGameInvite(senderUsername, receiverUsername, gameName) {
     `Attempting to send game invite from ${senderUsername} to ${receiverUsername} for game ${gameName}`
   );
 
-  const receiverSockets = await SocketService.getUserSockets(receiverUsername);
-  if (receiverSockets.length > 0) {
-    io.to(receiverSockets).emit("receive-game-invite", {
+  const receiverSocketIds = await SocketService.getUserSockets(receiverUsername);
+
+  if (receiverSocketIds.length > 0) {
+    io.to(receiverSocketIds).emit("receive-game-invite", {
       senderUsername,
       gameName,
     });
@@ -80,11 +81,11 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
     return;
   }
 
-  const senderSockets = await SocketService.getUserSockets(senderUsername);
-  const receiverSockets = await SocketService.getUserSockets(receiverUsername);
+  const senderSocketIds = await SocketService.getUserSockets(senderUsername);
+  const receiverSocketIds = await SocketService.getUserSockets(receiverUsername);
 
-  if (senderSockets.length > 0) {
-    io.to(senderSockets).emit("start-game", {
+  if (senderSocketIds.length > 0) {
+    io.to(senderSocketIds).emit("start-game", {
       opponentUsername: receiverUsername,
       gameName,
     });
@@ -93,8 +94,8 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
     );
   }
 
-  if (receiverSockets.length > 0) {
-    io.to(receiverSockets).emit("start-game", {
+  if (receiverSocketIds.length > 0) {
+    io.to(receiverSocketIds).emit("start-game", {
       opponentUsername: senderUsername,
       gameName,
     });
