@@ -113,37 +113,3 @@ export const getProfileByUsername = async (
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-// @desc   Check if profile is registered by username
-// @route  GET /api/profiles/isRegistered/:username
-// @access Public
-export const isProfileRegistered = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  const { username } = req.params;
-
-  if (!username) {
-    logger.warn("Username is missing in request");
-    res.status(400).json({ message: "Username is required" });
-    return;
-  }
-
-  try {
-    logger.info(`Checking registration status for username: ${username}`);
-    const profile = await ProfileService.getProfileByUsername(username);
-
-    const isRegistered = !!profile;
-
-    logger.info(
-      `Registration status for username ${username}: ${isRegistered}`
-    );
-    res.status(200).json({ isRegistered });
-  } catch (error: any) {
-    logger.error(
-      `Error checking registration status for username ${username}: ${error.message}`
-    );
-    res.status(500).json({ message: "Internal server error" });
-  }
-};

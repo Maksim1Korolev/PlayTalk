@@ -16,8 +16,8 @@ import profileRouter from "./routes/profileRoutes";
 
 const logger = getLogger("Main");
 
-const s3 = new AWS.S3();
 dotenv.config();
+const s3 = new AWS.S3();
 
 const app = express();
 
