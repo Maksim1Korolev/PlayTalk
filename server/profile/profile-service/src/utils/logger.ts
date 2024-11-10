@@ -3,24 +3,25 @@ import DailyRotateFile from "winston-daily-rotate-file";
 
 const { combine, timestamp, printf, label } = format;
 
-interface LogFormatParams {
-  level: string;
-  message: string;
-  timestamp?: string;
-  label?: string;
-}
-
 const mainFormat = printf(
-  ({ level, message, timestamp, label }: LogFormatParams) => {
-    return `${timestamp} [${label}] [${level.toUpperCase()}]: ${message}`;
+  ({ level, message, timestamp, label, ...metadata }) => {
+    const metaString = Object.keys(metadata).length
+      ? JSON.stringify(metadata)
+      : "";
+    return `${timestamp} [${label}] [${level.toUpperCase()}]: ${message} ${metaString}`;
   }
 );
 
-const consoleFormat = printf(({ level, message, label }: LogFormatParams) => {
-  return `[${label}] [${level.toUpperCase()}]: ${message}`;
+const consoleFormat = printf(({ level, message, label, ...metadata }) => {
+  const metaString = Object.keys(metadata).length
+    ? JSON.stringify(metadata)
+    : "";
+  return `[${label}] [${level.toUpperCase()}]: ${message} ${metaString}`;
 });
 
-const createTransports = (customLabel: string) => {
+type TransportArray = (transports.ConsoleTransportInstance | DailyRotateFile)[];
+
+const createTransports = (customLabel: string): TransportArray => {
   if (process.env.NODE_ENV === "test") {
     return [
       new transports.Console({
@@ -49,7 +50,7 @@ const createTransports = (customLabel: string) => {
   ];
 };
 
-export const getLogger = (customLabel = "Default"): Logger => {
+export const getLogger = (customLabel: string = "Default"): Logger => {
   return createLogger({
     level: process.env.NODE_ENV === "test" ? "silent" : "info",
     format: label({ label: customLabel }),

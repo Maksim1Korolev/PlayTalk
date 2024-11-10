@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
+import { connectConsumer, runConsumer } from "./utils/kafkaConsumer";
 import { getLogger } from "./utils/logger";
 import {
   connectToMongoDB,
@@ -12,12 +13,13 @@ import redisClient from "./utils/redisClient";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware";
 
+import { handleUserRegistered } from "./services/messageHandlers";
+
 import profileRouter from "./routes/profileRoutes";
 
 const logger = getLogger("Main");
 
 dotenv.config();
-const s3 = new AWS.S3();
 
 const app = express();
 
@@ -34,6 +36,9 @@ async function main() {
 
   await connectToMongoDB();
   await redisClient.connect();
+  await connectConsumer();
+
+  runConsumer(handleUserRegistered);
 
   app.listen(PORT, () => {
     logger.info(
