@@ -82,8 +82,11 @@ export const useGameSessionSocket = ({
         console.log(
           `Game started with opponent ${opponentUsername} for game ${gameName}`
         );
+
         if (!isGameName(gameName)) {
-          //TODO: log on incorrect
+          console.log(
+            `A game named ${gameName} doesn't exist, can't start this game`
+          );
           return;
         }
         onGameStart({ gameData: { opponentUsername, gameName } });
@@ -102,7 +105,9 @@ export const useGameSessionSocket = ({
           `Game ended with opponent ${opponentUsername} for game ${gameName}. Winner: ${winner}`
         );
         if (!isGameName(gameName)) {
-          //TODO: log on incorrect
+          console.log(
+            `A game named ${gameName} doesn't exist, can't end this game`
+          );
           return;
         }
         onGameEnd({ gameData: { opponentUsername, gameName }, winner });

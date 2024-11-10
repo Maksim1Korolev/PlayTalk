@@ -47,7 +47,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
   const signInMutation = useMutation(
     () => authApiService.login(username, password),
     {
-      onSuccess: data => {
+      onSuccess: (data) => {
         setCookie(
           "jwt-cookie",
           { currentUsername: username, token: data.token },
@@ -61,11 +61,10 @@ const AuthPage = ({ className }: AuthPageProps) => {
     }
   );
 
-  //TODO:Send the newly added user straight to all the clients
   const signUpMutation = useMutation(
     () => authApiService.register(username, password),
     {
-      onSuccess: data => {
+      onSuccess: (data) => {
         setCookie(
           "jwt-cookie",
           { currentUsername: username, token: data.token },

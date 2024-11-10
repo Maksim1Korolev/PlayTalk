@@ -12,6 +12,7 @@ const logger = getLogger("MessageHistoryController");
 // @access Internal
 export const addMessageToHistory = asyncHandler(async (req, res) => {
   const { usernames, message } = req.body;
+  
   try {
     logger.info(
       `Adding message to history for usernames: ${usernames.join(", ")}`
@@ -32,6 +33,7 @@ export const addMessageToHistory = asyncHandler(async (req, res) => {
 // @access Internal
 export const getMessageHistory = asyncHandler(async (req, res) => {
   const usernames = req.query.usernames;
+
   logger.info(usernames);
   if (!usernames) {
     logger.warn("Usernames are missing in request");
