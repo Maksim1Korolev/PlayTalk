@@ -64,28 +64,6 @@ export const getUserByUsername = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc   Check if user is registered by username
-// @route  GET /api/users/internal/isRegistered/:username
-// @access Internal
-export const isUserRegistered = asyncHandler(async (req, res) => {
-  const { username } = req.params;
-
-  try {
-    const userExists = await UserService.getUserByUsername(username);
-
-    logger.info(
-      `Checked registration status for username ${username}: ${!!userExists}`
-    );
-
-    res.json({ isRegistered: !!userExists });
-  } catch (error) {
-    logger.error(
-      `Error checking registration for ${username}: ${error.message}`
-    );
-    res.status(500).json({ error: error.message });
-  }
-});
-
 //Unused routes for now
 
 // // @desc   Get user by ID
