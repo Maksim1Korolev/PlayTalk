@@ -13,5 +13,6 @@ logs/
 /profile/**.env*
 
 .vscode/
+
 .commands.txt
 .structure.txt
