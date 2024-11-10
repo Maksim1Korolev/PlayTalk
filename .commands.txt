@@ -1,8 +1,0 @@
-# Tree list commands
-win
-gci -Directory -Recurse -Depth 2 | Where-Object { $_.FullName -notmatch 'node_modules' } | ft FullName > .structure.txt
-taskkill /PID <PID> /F
-
-mac
-find . -maxdepth 2 -type d -not -path '*/node_modules*' | awk '{print substr($0, 3)}' > .structure.txt
-kill -9 <PID>
