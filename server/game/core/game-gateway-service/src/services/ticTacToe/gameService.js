@@ -56,10 +56,19 @@ class GameService {
       logger.info(
         `Game started between ${player1Username} and ${player2Username}`
       );
+
       return response.data;
     } catch (error) {
-      logger.error(`Error starting game: ${error.message}`);
-      throw error;
+      if (error.response && error.response.status === 400) {
+        logger.warn(
+          `Game already exists between ${player1Username} and ${player2Username}, fetching existing game.`
+        );
+        // Call getGame and return its data if the game already exists
+        return await this.getGame(player1Username, player2Username);
+      } else {
+        logger.error(`Error starting game: ${error.message}`);
+        throw error;
+      }
     }
   }
 
