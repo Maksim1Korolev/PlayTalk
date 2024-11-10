@@ -8,8 +8,10 @@ mongo_data/
 logs/
 *.log
 
-.commands.txt
-.structure.txt
 
 # Environment variables
 /profile/**.env*
+
+.vscode/
+.commands.txt
+.structure.txt
