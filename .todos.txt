@@ -8,8 +8,7 @@ Blurred messages and gap between them
 Disable buttons in userList accordingly
 Typing problems
 Change user to username in chatModalData
-Update profile service in general and for automatic creation of profile if there isn't one
-Sometimes the ttt turn doesn't change on opponent's client, although the sign is set
+Update profile service
 Check for message disappearance
 Messages are read automatically when reloading the page
 
