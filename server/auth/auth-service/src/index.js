@@ -4,6 +4,7 @@ import express from "express";
 
 import { getLogger } from "./utils/logger.js";
 
+import { connectProducer } from "./utils/kafkaProducer.js";
 import {
   connectToMongoDB,
   disconnectFromMongoDB,
@@ -43,6 +44,7 @@ async function main() {
 
   await connectToMongoDB();
   await redisClient.connect();
+  await connectProducer();
 
   app.listen(PORT, () => {
     logger.info(
@@ -55,7 +57,7 @@ main()
   .then(async () => {
     logger.info("Main function executed successfully.");
   })
-  .catch(async err => {
+  .catch(async (err) => {
     logger.error(`Application startup error: ${err.message}`);
     await disconnectFromMongoDB();
     redisClient.quit();
