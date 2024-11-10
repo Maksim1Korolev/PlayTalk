@@ -7,13 +7,13 @@ Upgrade UserList scrollbar
 Highlight types
 Blurred messages and gap between them
 Disable buttons in userList accordingly
+Upgrade font
 Typing problems
 Change user to username in chatModalData
 Update profile service
 
 To add (in the end):
-Adjust location for client's .env
-Upgrade font and sizes of the components
+Sort out client's and profile's .envs
 Tests on chat's services and profile service and update tests
 
 
