@@ -3,15 +3,23 @@ import DailyRotateFile from "winston-daily-rotate-file";
 
 const { combine, timestamp, printf, label } = format;
 
-const mainFormat = printf(({ level, message, timestamp, label }) => {
-  return `${timestamp} [${label}] [${level.toUpperCase()}]: ${message}`;
+const mainFormat = printf(
+  ({ level, message, timestamp, label, ...metadata }) => {
+    const metaString = Object.keys(metadata).length
+      ? JSON.stringify(metadata)
+      : "";
+    return `${timestamp} [${label}] [${level.toUpperCase()}]: ${message} ${metaString}`;
+  }
+);
+
+const consoleFormat = printf(({ level, message, label, ...metadata }) => {
+  const metaString = Object.keys(metadata).length
+    ? JSON.stringify(metadata)
+    : "";
+  return `[${label}] [${level.toUpperCase()}]: ${message} ${metaString}`;
 });
 
-const consoleFormat = printf(({ level, message, label }) => {
-  return `[${label}] [${level.toUpperCase()}]: ${message}`;
-});
-
-const createTransports = customLabel => {
+const createTransports = (customLabel) => {
   if (process.env.NODE_ENV === "test") {
     return [
       new transports.Console({

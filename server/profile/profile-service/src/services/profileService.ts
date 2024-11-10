@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
-import Profile, { ProfileType } from "../schemas/Profile";
+
 import { getLogger } from "../utils/logger";
 import redisClient from "../utils/redisClient";
 import S3 from "../utils/s3Client";
+
+import Profile, { ProfileType } from "../schemas/Profile";
 
 const logger = getLogger("ProfileService");
 const REDIS_PROFILES_KEY = process.env.REDIS_USERS_KEY || "defaultProfileKey";
@@ -13,17 +15,16 @@ class ProfileService {
   static async listAvatars() {
     const params = {
       Bucket: S3_BUCKET_NAME,
-      Prefix: AVATAR_FOLDER, // Filter for files in the avatars directory
+      Prefix: AVATAR_FOLDER,
     };
 
     const data = await S3.listObjectsV2(params).promise();
     const avatarFiles =
-      data.Contents?.map(item => item.Key?.replace(AVATAR_FOLDER, "")) || [];
+      data.Contents?.map((item) => item.Key?.replace(AVATAR_FOLDER, "")) || [];
 
     return avatarFiles;
   }
 
-  // Get a random avatar from the avatars folder
   static async getRandomAvatar() {
     const avatarFiles = await ProfileService.listAvatars();
 
@@ -32,7 +33,7 @@ class ProfileService {
     }
 
     const randomIndex = Math.floor(Math.random() * avatarFiles.length);
-    return avatarFiles[randomIndex]; // Return random avatar file name
+    return avatarFiles[randomIndex];
   }
 
   static async getAvatarUrl(avatarFileName: string) {
@@ -40,12 +41,11 @@ class ProfileService {
     const params = {
       Bucket: S3_BUCKET_NAME,
       Key: keyPath,
-      Expires: 3600, // 1 hour expiration for presigned URL
+      Expires: 3600,
     };
     return S3.getSignedUrlPromise("getObject", params);
   }
 
-  // Return profiles with avatar URLs
   static async getProfiles() {
     const cachedProfiles = await redisClient.get(REDIS_PROFILES_KEY);
     if (cachedProfiles) {
@@ -55,7 +55,7 @@ class ProfileService {
 
     const profiles = await Profile.find();
     const profilesWithAvatars = await Promise.all(
-      profiles.map(async profile => {
+      profiles.map(async (profile) => {
         const avatarUrl = await ProfileService.getAvatarUrl(
           profile.avatarFileName
         );

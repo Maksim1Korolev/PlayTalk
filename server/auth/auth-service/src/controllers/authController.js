@@ -3,6 +3,8 @@ import asyncHandler from "express-async-handler";
 
 import { getLogger } from "../utils/logger.js";
 
+import { sendMessage } from "../utils/kafkaProducer.js";
+
 import generateToken from "../services/generateToken.js";
 import UserService from "../services/userService.js";
 
@@ -67,6 +69,11 @@ export const registerUser = asyncHandler(async (req, res) => {
     const user = await UserService.addUser({
       username,
       password: hashedPassword,
+    });
+
+    await sendMessage("user-registered", {
+      userId: user._id,
+      username: user.username,
     });
 
     const token = generateToken(user._id, user.username);
