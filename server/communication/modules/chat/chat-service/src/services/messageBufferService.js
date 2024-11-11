@@ -90,7 +90,7 @@ class MessageBufferService {
     await redisClient.del(bufferKey);
     logger.info(`Cleared existing buffer for: ${cacheKey}`);
 
-    const messageStrings = updatedMessages.map(msg => JSON.stringify(msg));
+    const messageStrings = updatedMessages.map((msg) => JSON.stringify(msg));
     await redisClient.rPush(bufferKey, messageStrings);
     logger.info(`Replaced buffer with updated messages for: ${cacheKey}`);
   }
@@ -112,7 +112,7 @@ class MessageBufferService {
       `Flushing ${messageHistory.length} messages from Redis for: ${cacheKey}`
     );
 
-    const parsedMessages = messageHistory.map(msg => JSON.parse(msg));
+    const parsedMessages = messageHistory.map((msg) => JSON.parse(msg));
 
     let existingMessageHistory = await MessageHistory.findOne({
       usernames: sortedUsernames,
@@ -126,10 +126,10 @@ class MessageBufferService {
     }
 
     const existingMessagesMap = new Map(
-      existingMessageHistory.messages.map(msg => [msg._id.toString(), msg])
+      existingMessageHistory.messages.map((msg) => [msg._id.toString(), msg])
     );
 
-    parsedMessages.forEach(parsedMessage => {
+    parsedMessages.forEach((parsedMessage) => {
       const existingMessage = existingMessagesMap.get(parsedMessage._id);
       if (existingMessage) {
         Object.assign(existingMessage, parsedMessage);
@@ -199,7 +199,7 @@ class MessageBufferService {
       logger.info(
         `Fetched ${messages.length} messages from buffer: ${bufferKey}`
       );
-      return messages.map(msg => JSON.parse(msg));
+      return messages.map((msg) => JSON.parse(msg));
     } else {
       logger.info(`No messages found in buffer: ${bufferKey}`);
       return [];
