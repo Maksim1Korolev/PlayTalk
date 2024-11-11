@@ -1,15 +1,31 @@
-import dotenv from "dotenv";
-import { EachMessagePayload, Kafka, logLevel } from "kafkajs";
+import { EachMessagePayload, Kafka, LogEntry, logLevel } from "kafkajs";
 
 import { getLogger } from "./logger";
 
-dotenv.config();
-
 const logger = getLogger("KafkaConsumer");
+
+const kafkaLogHandler = (logEntry: LogEntry) => {
+  const { level, log } = logEntry;
+  const { message, ...metadata } = log;
+
+  const formattedMessage = `[${metadata.logger || "Kafka"}] ${message}`;
+  const metaString = Object.keys(metadata).length
+    ? JSON.stringify(metadata)
+    : "";
+
+  if (level === logLevel.ERROR) {
+    logger.error(formattedMessage, metaString);
+  } else if (level === logLevel.WARN) {
+    logger.warn(formattedMessage, metaString);
+  } else {
+    logger.info(formattedMessage, metaString);
+  }
+};
 
 const kafka = new Kafka({
   clientId: "profile-service",
   brokers: [process.env.KAFKA_BROKER_URL!],
+  logCreator: () => kafkaLogHandler,
 });
 
 const consumer = kafka.consumer({ groupId: "profile-service-group" });
