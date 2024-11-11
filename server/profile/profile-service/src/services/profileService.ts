@@ -5,7 +5,8 @@ import S3 from "../utils/s3Client";
 import Profile from "../schemas/Profile";
 
 const logger = getLogger("ProfileService");
-const REDIS_PROFILES_KEY = process.env.REDIS_USERS_KEY || "defaultProfileKey";
+const REDIS_PROFILES_KEY =
+  process.env.REDIS_PROFILES_USERNAME_KEY || "defaultProfileKey";
 const S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME || "testforavatars";
 const AVATAR_FOLDER = "avatars/";
 
