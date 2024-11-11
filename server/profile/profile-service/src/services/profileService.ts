@@ -1,10 +1,8 @@
-import mongoose from "mongoose";
-
 import { getLogger } from "../utils/logger";
 import redisClient from "../utils/redisClient";
 import S3 from "../utils/s3Client";
 
-import Profile, { ProfileType } from "../schemas/Profile";
+import Profile from "../schemas/Profile";
 
 const logger = getLogger("ProfileService");
 const REDIS_PROFILES_KEY = process.env.REDIS_USERS_KEY || "defaultProfileKey";
@@ -119,61 +117,61 @@ class ProfileService {
 
   //Unused functions for now
 
-  static async deleteProfile(id: string) {
-    if (!id) {
-      throw new Error("Invalid profile ID");
-    }
+  //   static async deleteProfile(id: string) {
+  //     if (!id) {
+  //       throw new Error("Invalid profile ID");
+  //     }
 
-    const deletedProfile = await Profile.findByIdAndDelete(id);
-    await redisClient.del(REDIS_PROFILES_KEY);
-    logger.info(`Deleted profile: ${id}`);
-    return deletedProfile;
-  }
+  //     const deletedProfile = await Profile.findByIdAndDelete(id);
+  //     await redisClient.del(REDIS_PROFILES_KEY);
+  //     logger.info(`Deleted profile: ${id}`);
+  //     return deletedProfile;
+  //   }
 
-  static async getProfileById(id: string) {
-    const cacheKey = `user:id:${id}`;
-    const cachedProfile = await redisClient.get(cacheKey);
-    if (cachedProfile) {
-      logger.info(`Fetched profile with ID ${id} from Redis cache.`);
-      return JSON.parse(cachedProfile);
-    }
+  //   static async getProfileById(id: string) {
+  //     const cacheKey = `user:id:${id}`;
+  //     const cachedProfile = await redisClient.get(cacheKey);
+  //     if (cachedProfile) {
+  //       logger.info(`Fetched profile with ID ${id} from Redis cache.`);
+  //       return JSON.parse(cachedProfile);
+  //     }
 
-    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-      throw new Error("Invalid profile ID");
-    }
+  //     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+  //       throw new Error("Invalid profile ID");
+  //     }
 
-    const profile = await Profile.findById(id);
-    if (profile) {
-      await redisClient.set(cacheKey, JSON.stringify(profile), {
-        EX: 3600,
-      });
-      logger.info(
-        `Fetched profile with ID ${id} from database and cached in Redis.`
-      );
-    }
-    return profile;
-  }
+  //     const profile = await Profile.findById(id);
+  //     if (profile) {
+  //       await redisClient.set(cacheKey, JSON.stringify(profile), {
+  //         EX: 3600,
+  //       });
+  //       logger.info(
+  //         `Fetched profile with ID ${id} from database and cached in Redis.`
+  //       );
+  //     }
+  //     return profile;
+  //   }
 
-  static async updateProfile(profile: ProfileType) {
-    if (!profile._id) {
-      throw new Error("Invalid profile ID");
-    }
+  //   static async updateProfile(profile: ProfileType) {
+  //     if (!profile._id) {
+  //       throw new Error("Invalid profile ID");
+  //     }
 
-    const updatedProfile = await Profile.findByIdAndUpdate(
-      profile._id,
-      profile,
-      {
-        new: true,
-      }
-    );
-    await redisClient.del(REDIS_PROFILES_KEY);
-    if (updatedProfile) {
-      await redisClient.del(`profile:id:${updatedProfile._id}`);
-      await redisClient.del(`profile:username:${updatedProfile.username}`);
-      logger.info(`Updated profile: ${updatedProfile._id}`);
-    }
-    return updatedProfile;
-  }
+  //     const updatedProfile = await Profile.findByIdAndUpdate(
+  //       profile._id,
+  //       profile,
+  //       {
+  //         new: true,
+  //       }
+  //     );
+  //     await redisClient.del(REDIS_PROFILES_KEY);
+  //     if (updatedProfile) {
+  //       await redisClient.del(`profile:id:${updatedProfile._id}`);
+  //       await redisClient.del(`profile:username:${updatedProfile.username}`);
+  //       logger.info(`Updated profile: ${updatedProfile._id}`);
+  //     }
+  //     return updatedProfile;
+  //   }
 }
 
 export default ProfileService;
