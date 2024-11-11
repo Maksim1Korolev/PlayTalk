@@ -36,7 +36,8 @@ async function sendGameInvite(senderUsername, receiverUsername, gameName) {
     `Attempting to send game invite from ${senderUsername} to ${receiverUsername} for game ${gameName}`
   );
 
-  const receiverSocketIds = await SocketService.getUserSockets(receiverUsername);
+  const receiverSocketIds =
+    await SocketService.getUserSockets(receiverUsername);
 
   if (receiverSocketIds.length > 0) {
     io.to(receiverSocketIds).emit("receive-game-invite", {
@@ -77,12 +78,13 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
     } else {
       logger.error(`Error starting game ${gameName}: ${err.message}`);
     }
-    //TODO:Emit error starting game
+    //TODO:Emit error starting game (not critical)
     return;
   }
 
   const senderSocketIds = await SocketService.getUserSockets(senderUsername);
-  const receiverSocketIds = await SocketService.getUserSockets(receiverUsername);
+  const receiverSocketIds =
+    await SocketService.getUserSockets(receiverUsername);
 
   if (senderSocketIds.length > 0) {
     io.to(senderSocketIds).emit("start-game", {
