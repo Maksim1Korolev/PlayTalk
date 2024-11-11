@@ -1,4 +1,4 @@
-jest.mock("../utils/redisClient.js", () => ({
+jest.mock("../utils/redisClient", () => ({
   hSet: jest.fn(),
   hGet: jest.fn(),
   hGetAll: jest.fn(),

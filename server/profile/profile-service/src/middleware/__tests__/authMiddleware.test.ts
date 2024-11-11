@@ -1,4 +1,5 @@
-import jwt from "jsonwebtoken";
+import { NextFunction, Request, Response } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { protect } from "../authMiddleware";
 
@@ -10,12 +11,12 @@ describe("AuthMiddleware - protect", () => {
   });
 
   it("should return 401 if authorization header is missing", async () => {
-    const req = { headers: {} };
+    const req = { headers: {} } as Request;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
-    };
-    const next = jest.fn();
+    } as unknown as Response;
+    const next = jest.fn() as NextFunction;
 
     await protect(req, res, next);
 
@@ -27,12 +28,12 @@ describe("AuthMiddleware - protect", () => {
   });
 
   it("should return 401 if authorization header format is incorrect", async () => {
-    const req = { headers: { authorization: "Token abc123" } };
+    const req = { headers: { authorization: "Token abc123" } } as Request;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
-    };
-    const next = jest.fn();
+    } as unknown as Response;
+    const next = jest.fn() as NextFunction;
 
     await protect(req, res, next);
 
@@ -48,18 +49,18 @@ describe("AuthMiddleware - protect", () => {
       headers: {
         authorization: "Bearer validToken",
       },
-    };
-    const res = {};
-    const next = jest.fn();
+    } as Request & { user?: { id: string; username: string } };
+    const res = {} as Response;
+    const next = jest.fn() as NextFunction;
 
-    const mockDecoded = { userId: "123", username: "testuser" };
-    jwt.verify.mockReturnValue(mockDecoded);
+    const mockDecoded: JwtPayload = { userId: "123", username: "testuser" };
+    (jwt.verify as jest.Mock).mockReturnValue(mockDecoded);
 
     await protect(req, res, next);
 
     expect(jwt.verify).toHaveBeenCalledWith(
       "validToken",
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET as string
     );
     expect(req.user).toEqual({
       id: mockDecoded.userId,
@@ -69,15 +70,17 @@ describe("AuthMiddleware - protect", () => {
   });
 
   it("should return 500 if token verification fails", async () => {
-    const req = { headers: { authorization: "Bearer invalidToken" } };
+    const req = {
+      headers: { authorization: "Bearer invalidToken" },
+    } as Request;
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
-    };
-    const next = jest.fn();
+    } as unknown as Response;
+    const next = jest.fn() as NextFunction;
 
     const errorMessage = "Invalid token";
-    jwt.verify.mockImplementation(() => {
+    (jwt.verify as jest.Mock).mockImplementation(() => {
       throw new Error(errorMessage);
     });
 
@@ -85,7 +88,7 @@ describe("AuthMiddleware - protect", () => {
 
     expect(jwt.verify).toHaveBeenCalledWith(
       "invalidToken",
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET as string
     );
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({

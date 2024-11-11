@@ -1,8 +1,11 @@
 jest.mock("../utils/redisClient.js", () => ({
-  hSet: jest.fn(),
-  hGet: jest.fn(),
-  hGetAll: jest.fn(),
-  hDel: jest.fn(),
+  lLen: jest.fn(),
+  lRange: jest.fn(),
+  rPush: jest.fn(),
+  set: jest.fn(),
+  get: jest.fn(),
+  del: jest.fn(),
+  keys: jest.fn(),
   connect: jest.fn(),
   quit: jest.fn(),
   createClient: jest.fn(() => ({

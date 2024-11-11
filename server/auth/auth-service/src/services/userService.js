@@ -1,5 +1,3 @@
-import mongoose from "mongoose";
-
 import { getLogger } from "../utils/logger.js";
 
 import redisClient from "../utils/redisClient.js";

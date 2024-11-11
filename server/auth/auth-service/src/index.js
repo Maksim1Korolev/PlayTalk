@@ -12,11 +12,9 @@ import {
 import redisClient from "./utils/redisClient.js";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
-import { serviceWhitelistMiddleware } from "./middleware/serviceWhitelistMiddleware.js";
 
 import authRouter from "./routes/authRoutes.js";
-import userInternalRouter from "./routes/userInternalRoutes.js";
-import userPublicRouter from "./routes/userPublicRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 
 const logger = getLogger("Main");
 
@@ -30,12 +28,7 @@ async function main() {
 
   app.use("/api/auth", authRouter);
 
-  app.use("/api/users", userPublicRouter);
-  app.use(
-    "/api/users/internal",
-    serviceWhitelistMiddleware,
-    userInternalRouter
-  );
+  app.use("/api/users", userRouter);
 
   app.use(errorHandler);
   app.use(notFound);

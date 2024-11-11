@@ -13,18 +13,16 @@ Change user to username in chatModalData
 
 To add (in the end):
 Sort out client's and profile's .envs
-Tests on chat's services and profile service and update tests
 
 
 To add (after the end):
-Tests on ttt service
 Pagination
 Profile, winner and players features on client
 Adjust modal drag
 Adjust location of accept invite emit
 Save empty messageHistory in redis cache too
 Token expiration logic on client
-Polling on profile service
+Tests on chat's services and ttt service
 Storybook
 Kubernetes
 
