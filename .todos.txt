@@ -1,6 +1,5 @@
 To add:
 Put chat into slice
-Auth middleware for kafka
 
 To fix:
 ReactQuery => redux

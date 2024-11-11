@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { Kafka, logLevel } from "kafkajs";
 
 import { getLogger } from "./logger.js";
@@ -41,11 +42,23 @@ export const connectProducer = async () => {
 
 export const sendMessage = async (topic, message) => {
   try {
+    const secretKey = process.env.KAFKA_MESSAGE_SECRET_KEY;
+    const messageString = JSON.stringify(message);
+    const signature = crypto
+      .createHmac("sha256", secretKey)
+      .update(messageString)
+      .digest("hex");
+
+    const signedMessage = {
+      ...message,
+      signature,
+    };
+
     await producer.send({
       topic,
       messages: [
         {
-          value: JSON.stringify(message),
+          value: JSON.stringify(signedMessage),
         },
       ],
     });
