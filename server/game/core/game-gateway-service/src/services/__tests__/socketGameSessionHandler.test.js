@@ -1,124 +1,105 @@
 import { io } from "../../index.js";
-import {
-  handleInviteSubscriptions,
-  endGame,
-} from "../socketGameSessionHandler.js";
-
-import SocketService from "../socketService.js";
-import ActiveGamesService from "../activeGamesService.js";
-import TicTacToeGameService from "../ticTacToe/gameService.js";
 
 import { setupMockSocketAndUser } from "../../__mocks__/io.js";
+import ActiveGamesService from "../activeGamesService.js";
+import {
+  endGame,
+  handleInviteSubscriptions,
+} from "../socketGameSessionHandler.js";
+import SocketService from "../socketService.js";
+import TicTacToeGameService from "../ticTacToe/gameService.js";
 
 jest.mock("../activeGamesService.js");
+jest.mock("../socketService.js");
 jest.mock("../ticTacToe/gameService.js");
-jest.mock("../socketService.js", () => ({
-  getUserSockets: jest.fn(),
-}));
 
 describe("SocketGameSessionHandler", () => {
-  let mockSocket, mockUser;
+  let mockSocket, username, opponentUsername, gameName;
 
   beforeEach(() => {
-    ({ mockSocket, mockUser } = setupMockSocketAndUser());
-    SocketService.getUserSockets.mockResolvedValue([]);
     jest.clearAllMocks();
+    ({ mockSocket, username } = setupMockSocketAndUser());
+    opponentUsername = "player2";
+    gameName = "tic-tac-toe";
   });
 
   describe("handleInviteSubscriptions", () => {
-    describe("handleInviteSubscriptions", () => {
-      it("should set up 'send-game-invite' listener but not call io.to() if no sockets are found", async () => {
-        await handleInviteSubscriptions(mockSocket, mockUser.username);
+    it("should handle 'send-game-invite' event and send invite to receiver", async () => {
+      SocketService.getUserSockets.mockResolvedValue(["socket1"]);
+      await handleInviteSubscriptions(mockSocket, username);
 
-        const eventHandler = mockSocket.on.mock.calls.find(
-          ([event]) => event === "send-game-invite"
-        )[1];
-        expect(eventHandler).toBeDefined();
+      const sendInviteHandler = mockSocket.on.mock.calls.find(
+        ([event]) => event === "send-game-invite"
+      )[1];
+      await sendInviteHandler({ receiverUsername: opponentUsername, gameName });
 
-        const gameInvitePayload = {
-          receiverUsername: "receiver",
-          gameName: "tic-tac-toe",
-        };
-        await eventHandler(gameInvitePayload);
-
-        expect(SocketService.getUserSockets).toHaveBeenCalledWith("receiver");
-        expect(io.to).not.toHaveBeenCalled();
+      expect(SocketService.getUserSockets).toHaveBeenCalledWith(
+        opponentUsername
+      );
+      expect(io.to).toHaveBeenCalledWith(["socket1"]);
+      expect(io.emit).toHaveBeenCalledWith("receive-game-invite", {
+        senderUsername: username,
+        gameName,
       });
     });
 
-    it("should set up 'accept-game' listener", async () => {
-      await handleInviteSubscriptions(mockSocket, mockUser.username);
+    it("should handle 'accept-game' event and start game connection", async () => {
+      ActiveGamesService.addActiveGame.mockResolvedValue();
+      TicTacToeGameService.startGame.mockResolvedValue();
+      SocketService.getUserSockets.mockResolvedValue(["socket1"]);
 
-      const eventHandler = mockSocket.on.mock.calls.find(
+      await handleInviteSubscriptions(mockSocket, username);
+      const acceptGameHandler = mockSocket.on.mock.calls.find(
         ([event]) => event === "accept-game"
       )[1];
-      expect(eventHandler).toBeDefined();
-
-      const gameAcceptPayload = {
-        opponentUsername: "opponent",
-        gameName: "tic-tac-toe",
-      };
-      await eventHandler(gameAcceptPayload);
+      await acceptGameHandler({ opponentUsername, gameName });
 
       expect(ActiveGamesService.addActiveGame).toHaveBeenCalledWith(
-        mockUser.username,
-        "opponent",
-        "tic-tac-toe"
+        username,
+        opponentUsername,
+        gameName
       );
       expect(TicTacToeGameService.startGame).toHaveBeenCalledWith(
-        mockUser.username,
-        "opponent"
+        username,
+        opponentUsername
       );
-      expect(io.to).toHaveBeenCalled();
+      expect(io.to).toHaveBeenCalledWith(["socket1"]);
       expect(io.emit).toHaveBeenCalledWith("start-game", {
-        opponentUsername: "opponent",
-        gameName: "tic-tac-toe",
+        opponentUsername,
+        gameName,
       });
     });
   });
 
   describe("endGame", () => {
-    it("should notify both users and remove the active game", async () => {
+    it("should handle ending a game and notify both players", async () => {
+      const winnerUsername = username;
+      const user1Sockets = ["socket1"];
+      const user2Sockets = ["socket2"];
+
       SocketService.getUserSockets
-        .mockResolvedValueOnce(["socket123"])
-        .mockResolvedValueOnce(["socket456"]);
+        .mockResolvedValueOnce(user1Sockets)
+        .mockResolvedValueOnce(user2Sockets);
 
-      const gamePayload = {
-        username1: "player1",
-        username2: "player2",
-        gameName: "tic-tac-toe",
-        winnerUsername: "player1",
-      };
-
-      await endGame(
-        gamePayload.username1,
-        gamePayload.username2,
-        gamePayload.gameName,
-        gamePayload.winnerUsername
-      );
-
-      expect(SocketService.getUserSockets).toHaveBeenCalledWith("player1");
-      expect(SocketService.getUserSockets).toHaveBeenCalledWith("player2");
-
-      expect(io.to).toHaveBeenCalledWith(["socket123"]);
-      expect(io.emit).toHaveBeenCalledWith("end-game", {
-        opponentUsername: "player2",
-        gameName: "tic-tac-toe",
-        winner: "player1",
-      });
-
-      expect(io.to).toHaveBeenCalledWith(["socket456"]);
-      expect(io.emit).toHaveBeenCalledWith("end-game", {
-        opponentUsername: "player1",
-        gameName: "tic-tac-toe",
-        winner: "player1",
-      });
+      await endGame(username, opponentUsername, gameName, winnerUsername);
 
       expect(ActiveGamesService.removeActiveGame).toHaveBeenCalledWith(
-        "player1",
-        "player2",
-        "tic-tac-toe"
+        username,
+        opponentUsername,
+        gameName
       );
+      expect(io.to).toHaveBeenCalledWith(user1Sockets);
+      expect(io.emit).toHaveBeenCalledWith("end-game", {
+        opponentUsername,
+        gameName,
+        winner: winnerUsername,
+      });
+      expect(io.to).toHaveBeenCalledWith(user2Sockets);
+      expect(io.emit).toHaveBeenCalledWith("end-game", {
+        opponentUsername: username,
+        gameName,
+        winner: winnerUsername,
+      });
     });
   });
 });

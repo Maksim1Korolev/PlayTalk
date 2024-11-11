@@ -52,8 +52,6 @@ export const getGame = asyncHandler(async (req, res) => {
           username,
           opponentUsername
         );
-        console.log(gameData);
-        console.log(gameData);
 
         if (!gameData) {
           logger.warn(
