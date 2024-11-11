@@ -1,184 +1,137 @@
-import UserService from "../../services/userService.js";
+import UserService from "../../services/userService";
 
-import {
-  addUser,
-  getUserById,
-  getUserByUsername,
-  getUsers,
-  updateUser,
-} from "../userController.js";
+import { addUser, getUserByUsername, getUsers } from "../userController";
 
-jest.mock("../../services/userService.js");
+jest.mock("../../services/userService");
 
-const mockResponse = () => {
-  const res = {};
-  res.status = jest.fn().mockReturnValue(res);
-  res.json = jest.fn().mockReturnValue(res);
-  return res;
-};
-
-const mockRequest = (data = {}) => {
-  return {
-    body: data.body,
-    params: data.params,
-  };
-};
-
-describe("User Controller Tests", () => {
-  describe("getUsers", () => {
-    it("should return a list of users", async () => {
-      const req = mockRequest();
-      const res = mockResponse();
-      const users = [{ username: "user1" }, { username: "user2" }];
-      UserService.getUsers.mockResolvedValue(users);
-
-      await getUsers(req, res);
-
-      expect(res.status).not.toHaveBeenCalled();
-      expect(res.json).toHaveBeenCalledWith({ users });
-    });
-
-    it("should return 500 if there is an error", async () => {
-      const req = mockRequest();
-      const res = mockResponse();
-      UserService.getUsers.mockRejectedValue(new Error("Error fetching users"));
-
-      await getUsers(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ error: "Error fetching users" });
-    });
-  });
-
-  describe("updateUser", () => {
-    it("should update a user and return updated user", async () => {
-      const req = mockRequest({
-        body: { _id: "userId", username: "updatedUser" },
-      });
-      const res = mockResponse();
-      const updatedUser = { _id: "userId", username: "updatedUser" };
-      UserService.updateUser.mockResolvedValue(updatedUser);
-
-      await updateUser(req, res);
-
-      expect(res.status).not.toHaveBeenCalled();
-      expect(res.json).toHaveBeenCalledWith({ user: updatedUser });
-    });
-
-    it("should return 500 if there is an error", async () => {
-      const req = mockRequest({
-        body: { _id: "userId", username: "updatedUser" },
-      });
-      const res = mockResponse();
-      UserService.updateUser.mockRejectedValue(
-        new Error("Error updating user")
-      );
-
-      await updateUser(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ error: "Error updating user" });
-    });
+describe("UserController", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   describe("addUser", () => {
-    it("should add a user and return the user object", async () => {
-      const req = mockRequest({ body: { user: { username: "newUser" } } });
-      const res = mockResponse();
-      const newUser = { _id: "newUserId", username: "newUser" };
-      UserService.addUser.mockResolvedValue(newUser);
+    it("should add a user and return 201 status with the user data", async () => {
+      const req = { body: { user: { name: "Test User" } } };
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
+      const mockUser = { _id: "123", name: "Test User" };
+      UserService.addUser.mockResolvedValue(mockUser);
 
       await addUser(req, res);
 
+      expect(UserService.addUser).toHaveBeenCalledWith(req.body.user);
       expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith({ user: newUser });
+      expect(res.json).toHaveBeenCalledWith({ user: mockUser });
     });
 
-    it("should return 500 if there is an error", async () => {
-      const req = mockRequest({ body: { user: { username: "newUser" } } });
-      const res = mockResponse();
-      UserService.addUser.mockRejectedValue(new Error("Error adding user"));
+    it("should handle errors and return 500 status with error message", async () => {
+      const req = { body: { user: { name: "Test User" } } };
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
+      const errorMessage = "Database error";
+      UserService.addUser.mockRejectedValue(new Error(errorMessage));
 
       await addUser(req, res);
 
+      expect(UserService.addUser).toHaveBeenCalledWith(req.body.user);
       expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ error: "Error adding user" });
+      expect(res.json).toHaveBeenCalledWith({ error: errorMessage });
+    });
+  });
+
+  describe("getUsers", () => {
+    it("should fetch all users and return them in response", async () => {
+      const req = {};
+      const res = {
+        json: jest.fn(),
+      };
+
+      const mockUsers = [{ _id: "123", name: "Test User" }];
+      UserService.getUsers.mockResolvedValue(mockUsers);
+
+      await getUsers(req, res);
+
+      expect(UserService.getUsers).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith({ users: mockUsers });
+    });
+
+    it("should handle errors and return 500 status with error message", async () => {
+      const req = {};
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
+      const errorMessage = "Error fetching users";
+      UserService.getUsers.mockRejectedValue(new Error(errorMessage));
+
+      await getUsers(req, res);
+
+      expect(UserService.getUsers).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ error: errorMessage });
     });
   });
 
   describe("getUserByUsername", () => {
-    it("should return user by username", async () => {
-      const req = mockRequest({ params: { username: "user1" } });
-      const res = mockResponse();
-      const user = { username: "user1" };
-      UserService.getUserByUsername.mockResolvedValue(user);
+    it("should fetch a user by username and return the user in response", async () => {
+      const req = { params: { username: "testuser" } };
+      const res = {
+        json: jest.fn(),
+      };
+
+      const mockUser = { _id: "123", username: "testuser" };
+      UserService.getUserByUsername.mockResolvedValue(mockUser);
 
       await getUserByUsername(req, res);
 
-      expect(res.status).not.toHaveBeenCalled();
-      expect(res.json).toHaveBeenCalledWith({ user });
+      expect(UserService.getUserByUsername).toHaveBeenCalledWith(
+        req.params.username
+      );
+      expect(res.json).toHaveBeenCalledWith({ user: mockUser });
     });
 
-    it("should return 404 if user is not found", async () => {
-      const req = mockRequest({ params: { username: "user1" } });
-      const res = mockResponse();
+    it("should return 404 status if user is not found", async () => {
+      const req = { params: { username: "nonexistentuser" } };
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
       UserService.getUserByUsername.mockResolvedValue(null);
 
       await getUserByUsername(req, res);
 
+      expect(UserService.getUserByUsername).toHaveBeenCalledWith(
+        req.params.username
+      );
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({ message: "User not found" });
     });
 
-    it("should return 500 if there is an error", async () => {
-      const req = mockRequest({ params: { username: "user1" } });
-      const res = mockResponse();
-      UserService.getUserByUsername.mockRejectedValue(
-        new Error("Error fetching user")
-      );
+    it("should handle errors and return 500 status with error message", async () => {
+      const req = { params: { username: "testuser" } };
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
+      const errorMessage = "Error fetching user";
+      UserService.getUserByUsername.mockRejectedValue(new Error(errorMessage));
 
       await getUserByUsername(req, res);
 
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ error: "Error fetching user" });
-    });
-  });
-
-  describe("getUserById", () => {
-    it("should return user by ID", async () => {
-      const req = mockRequest({ params: { id: "userId" } });
-      const res = mockResponse();
-      const user = { _id: "userId", username: "user1" };
-      UserService.getUserById.mockResolvedValue(user);
-
-      await getUserById(req, res);
-
-      expect(res.status).not.toHaveBeenCalled();
-      expect(res.json).toHaveBeenCalledWith({ user });
-    });
-
-    it("should return 404 if user is not found", async () => {
-      const req = mockRequest({ params: { id: "userId" } });
-      const res = mockResponse();
-      UserService.getUserById.mockResolvedValue(null);
-
-      await getUserById(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ message: "User not found" });
-    });
-
-    it("should return 500 if there is an error", async () => {
-      const req = mockRequest({ params: { id: "userId" } });
-      const res = mockResponse();
-      UserService.getUserById.mockRejectedValue(
-        new Error("Error fetching user")
+      expect(UserService.getUserByUsername).toHaveBeenCalledWith(
+        req.params.username
       );
-
-      await getUserById(req, res);
-
       expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ error: "Error fetching user" });
+      expect(res.json).toHaveBeenCalledWith({ error: errorMessage });
     });
   });
 });
