@@ -1,10 +1,14 @@
 import { memo, useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-import { gameApiService } from "@/shared/api/services/gameApiService";
+import { gameApiService } from "@/shared/api";
 import { useAppSelector } from "@/shared/lib";
-import { AddonCircleProps, AppImage, CircleModal } from "@/shared/ui";
-import { useModalPosition } from "@/shared/ui/CircleModal";
+import {
+  AddonCircleProps,
+  AppImage,
+  CircleModal,
+  useModalPosition,
+} from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
 import {
@@ -33,11 +37,21 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
   const users = useAppSelector(getUsers);
   const { getStartingPosition } = useModalPosition();
 
-  //TODO: search another way to fetch only one game that opens right now
   useEffect(() => {
     const fetchGames = async () => {
+      const gameIdsInState = Object.keys(games);
+
+      const gamesToFetch = gameModals.filter((modal) => {
+        const gameId = generateModalId(modal.data);
+        return !gameIdsInState.includes(gameId);
+      });
+
+      if (gamesToFetch.length === 0) {
+        return;
+      }
+
       const fetchedGames = await Promise.all(
-        gameModals.map(async (modal) => {
+        gamesToFetch.map(async (modal) => {
           const { data } = modal;
 
           const fetchedGame: Game = await gameApiService.getGame(token, data);
@@ -48,15 +62,16 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
         })
       );
 
-      const gamesMap = fetchedGames.reduce(
+      const newGamesMap = fetchedGames.reduce(
         (acc, { id, game }) => ({ ...acc, [id]: game }),
         {}
       );
-      setGames(gamesMap);
+
+      setGames((prevGames) => ({ ...prevGames, ...newGamesMap }));
     };
 
     fetchGames();
-  }, [gameModals, currentUsername, token]);
+  }, [gameModals, currentUsername, token, games]);
 
   const renderGameModals = useCallback(() => {
     const getGameComponent = ({

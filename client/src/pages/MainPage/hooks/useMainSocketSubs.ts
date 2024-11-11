@@ -35,16 +35,19 @@ export const useMainSocketSubs = () => {
             userActions.updateUser({ username, updatedProps: { isOnline } })
           );
         } else {
-          const user = await usersApiService.getUser(username, token);
+          //Waiting a second for profile service to register the user to see the avatar
+          setTimeout(async () => {
+            const user = await usersApiService.getUser(username, token);
 
-          if (user) {
-            const newUser: User = {
-              ...user,
-              isOnline,
-            };
+            if (user) {
+              const newUser: User = {
+                ...user,
+                isOnline,
+              };
 
-            dispatch(userActions.addUser(newUser));
-          }
+              dispatch(userActions.addUser(newUser));
+            }
+          }, 1000);
         }
       };
 
