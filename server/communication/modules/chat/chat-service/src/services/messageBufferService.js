@@ -9,7 +9,9 @@ import MessageHistoryService from "./messageHistoryService.js";
 const logger = getLogger("MessageBufferService");
 
 class MessageBufferService {
-  static flushTimer = null;
+  constructor() {
+    this.flushTimer = null;
+  }
 
   static async addToBuffer(usernames, message) {
     const sortedUsernames = MessageHistoryService.getSortedUsernames(usernames);
@@ -18,7 +20,6 @@ class MessageBufferService {
     const messageCountKey = `${process.env.REDIS_MESSAGE_COUNT_KEY}:${cacheKey}`;
 
     const bufferSize = await redisClient.lLen(bufferKey);
-    console.log("THIS IS CURRENT BUFFER SIZE:::::: ", bufferSize);
 
     if (bufferSize !== 0) {
       await redisClient.rPush(bufferKey, JSON.stringify(message));
