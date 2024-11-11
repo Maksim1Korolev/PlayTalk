@@ -17,7 +17,7 @@ mongoose.model = model;
 
 mongoose.Types = {
   ObjectId: {
-    isValid: jest.fn().mockImplementation(id => {
+    isValid: jest.fn().mockImplementation((id) => {
       return typeof id === "string" && id.length === 24;
     }),
   },

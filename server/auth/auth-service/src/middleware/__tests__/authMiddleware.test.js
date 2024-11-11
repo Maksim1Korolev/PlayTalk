@@ -1,4 +1,3 @@
-// authMiddleware.test.js
 import jwt from "jsonwebtoken";
 
 import { protect } from "../authMiddleware";
