@@ -2,8 +2,6 @@ import mongoose from "mongoose";
 
 import { getLogger } from "../utils/logger.js";
 
-import redisClient from "../utils/redisClient.js";
-
 import MessageHistory from "../schemas/MessageHistory.js";
 
 import MessageBufferService from "./messageBufferService.js";
@@ -99,7 +97,7 @@ class MessageHistoryService {
       }, 0);
 
       const otherUser = messageHistory.usernames.find(
-        username => username !== requestingUsername
+        (username) => username !== requestingUsername
       );
 
       if (otherUser) {
