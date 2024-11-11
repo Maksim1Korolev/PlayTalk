@@ -9,40 +9,43 @@ describe("MessageHistoryService", () => {
   const internalServiceHeaderKey = process.env.INTERNAL_SERVICE_HEADER;
   const serviceName = "communication_gateway_service";
 
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
   describe("getMessageHistory", () => {
-    it("should fetch message history for provided usernames", async () => {
+    it("should fetch message history for given usernames", async () => {
       const usernames = ["user1", "user2"];
       const mockResponse = {
         data: { messageHistory: ["message1", "message2"] },
       };
-      axios.get.mockResolvedValueOnce(mockResponse);
+      axios.get.mockResolvedValue(mockResponse);
 
       const result = await MessageHistoryService.getMessageHistory(usernames);
 
-      const query = usernames
-        .map(u => `usernames=${encodeURIComponent(u)}`)
-        .join("&");
-      const expectedUrl = `${chatServiceApiUrl}/messageHistories/messageHistory?${query}`;
-
+      const expectedUrl = `${chatServiceApiUrl}/messageHistories/messageHistory?usernames=user1&usernames=user2`;
       expect(axios.get).toHaveBeenCalledWith(expectedUrl, {
-        headers: {
-          [internalServiceHeaderKey]: serviceName,
-        },
+        headers: { [internalServiceHeaderKey]: serviceName },
       });
-      expect(result).toEqual(mockResponse);
+      expect(result).toEqual(mockResponse.data.messageHistory);
+    });
+
+    it("should return an empty array if message history is not available", async () => {
+      const usernames = ["user1", "user2"];
+      axios.get.mockResolvedValue({ data: {} });
+
+      const result = await MessageHistoryService.getMessageHistory(usernames);
+
+      expect(result).toEqual([]);
     });
   });
 
   describe("addMessageToHistory", () => {
-    it("should post message to history for provided usernames", async () => {
+    it("should add a message to history for the specified usernames", async () => {
       const usernames = ["user1", "user2"];
       const message = "Hello!";
-      const mockResponse = { data: "Message added" };
-      axios.post.mockResolvedValueOnce(mockResponse);
+      const mockResponse = { data: { success: true } };
+      axios.post.mockResolvedValue(mockResponse);
 
       const result = await MessageHistoryService.addMessageToHistory(
         usernames,
@@ -50,25 +53,20 @@ describe("MessageHistoryService", () => {
       );
 
       const expectedUrl = `${chatServiceApiUrl}/messageHistories/messages/message`;
-
       expect(axios.post).toHaveBeenCalledWith(
         expectedUrl,
         { usernames, message },
-        {
-          headers: {
-            [internalServiceHeaderKey]: serviceName,
-          },
-        }
+        { headers: { [internalServiceHeaderKey]: serviceName } }
       );
       expect(result).toEqual(mockResponse);
     });
   });
 
   describe("getAllUnreadMessageCounts", () => {
-    it("should fetch unread message counts for the requesting user", async () => {
+    it("should fetch all unread message counts for the requesting username", async () => {
       const requestingUsername = "user1";
-      const mockResponse = { data: { unreadCount: 5 } };
-      axios.get.mockResolvedValueOnce(mockResponse);
+      const mockResponse = { data: { unreadCounts: { user2: 5 } } };
+      axios.get.mockResolvedValue(mockResponse);
 
       const result =
         await MessageHistoryService.getAllUnreadMessageCounts(
@@ -76,47 +74,52 @@ describe("MessageHistoryService", () => {
         );
 
       const expectedUrl = `${chatServiceApiUrl}/unread/getAll/${requestingUsername}`;
-
       expect(axios.get).toHaveBeenCalledWith(expectedUrl, {
-        headers: {
-          [internalServiceHeaderKey]: serviceName,
-        },
+        headers: { [internalServiceHeaderKey]: serviceName },
       });
       expect(result).toEqual(mockResponse);
     });
   });
 
   describe("getUnreadMessagesCount", () => {
-    it("should fetch unread messages count for provided usernames", async () => {
+    it("should fetch unread message count for specific usernames", async () => {
       const requestingUsername = "user1";
-      const usernames = ["user1", "user2"];
-      const mockResponse = { data: { unreadCount: 3 } };
-      axios.get.mockResolvedValueOnce(mockResponse);
+      const usernames = ["user2", "user3"];
+      const mockResponse = { data: { unreadCount: 10 } };
+      axios.get.mockResolvedValue(mockResponse);
 
       const result = await MessageHistoryService.getUnreadMessagesCount(
         requestingUsername,
         usernames
       );
 
-      const expectedUrl = `${chatServiceApiUrl}/unread/${requestingUsername}?usernames=${usernames.join(
-        ","
-      )}`;
-
+      const expectedUrl = `${chatServiceApiUrl}/unread/${requestingUsername}?usernames=user2,user3`;
       expect(axios.get).toHaveBeenCalledWith(expectedUrl, {
-        headers: {
-          [internalServiceHeaderKey]: serviceName,
-        },
+        headers: { [internalServiceHeaderKey]: serviceName },
       });
       expect(result).toEqual(mockResponse.data);
+    });
+
+    it("should return an empty array if unread count is not available", async () => {
+      const requestingUsername = "user1";
+      const usernames = ["user2", "user3"];
+      axios.get.mockResolvedValue({});
+
+      const result = await MessageHistoryService.getUnreadMessagesCount(
+        requestingUsername,
+        usernames
+      );
+
+      expect(result).toEqual([]);
     });
   });
 
   describe("readAllUnreadMessages", () => {
-    it("should mark all unread messages as read for the requesting user", async () => {
+    it("should mark all unread messages as read for the given usernames", async () => {
       const requestingUsername = "user1";
-      const usernames = ["user1", "user2"];
-      const mockResponse = { data: "Messages marked as read" };
-      axios.post.mockResolvedValueOnce(mockResponse);
+      const usernames = ["user2", "user3"];
+      const mockResponse = { data: { success: true } };
+      axios.post.mockResolvedValue(mockResponse);
 
       const result = await MessageHistoryService.readAllUnreadMessages(
         requestingUsername,
@@ -124,15 +127,10 @@ describe("MessageHistoryService", () => {
       );
 
       const expectedUrl = `${chatServiceApiUrl}/unread/markAsRead/${requestingUsername}`;
-
       expect(axios.post).toHaveBeenCalledWith(
         expectedUrl,
         { usernames },
-        {
-          headers: {
-            [internalServiceHeaderKey]: serviceName,
-          },
-        }
+        { headers: { [internalServiceHeaderKey]: serviceName } }
       );
       expect(result).toEqual(mockResponse);
     });
