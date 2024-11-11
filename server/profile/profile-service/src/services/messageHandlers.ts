@@ -42,7 +42,7 @@ export const handleUserRegistered = async ({
 
       const { userId, username } = originalMessage;
 
-      await ProfileService.addProfile(username);
+      await ProfileService.addProfile({ userId, username });
 
       logger.info(
         `Profile created for userId: ${userId}, username: ${username}`

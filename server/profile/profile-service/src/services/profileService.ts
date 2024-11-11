@@ -46,6 +46,29 @@ class ProfileService {
     return S3.getSignedUrlPromise("getObject", params);
   }
 
+  static async addProfile({
+    userId,
+    username,
+  }: {
+    userId: string;
+    username: string;
+  }) {
+    const randomAvatarFileName = await ProfileService.getRandomAvatar();
+
+    const avatarFileName = randomAvatarFileName || "grand.svg";
+
+    const profile = {
+      _id: userId,
+      username,
+      avatarFileName,
+    };
+
+    const newProfile = await Profile.create(profile);
+    await redisClient.del(REDIS_PROFILES_KEY);
+    logger.info(`Added new profile: ${newProfile._id}`);
+    return newProfile;
+  }
+
   static async getProfiles() {
     const cachedProfiles = await redisClient.get(REDIS_PROFILES_KEY);
     if (cachedProfiles) {
@@ -74,33 +97,6 @@ class ProfileService {
     return profilesWithAvatars;
   }
 
-  static async addProfile(username: string) {
-    // Choose a random avatar for the new profile
-    const randomAvatarFileName = await ProfileService.getRandomAvatar();
-
-    const avatarFileName = randomAvatarFileName || "grand.svg";
-
-    const profile = {
-      username,
-      avatarFileName,
-    };
-    const newProfile = await Profile.create(profile);
-    await redisClient.del(REDIS_PROFILES_KEY);
-    logger.info(`Added new profile: ${newProfile._id}`);
-    return newProfile;
-  }
-
-  static async deleteProfile(id: string) {
-    if (!id) {
-      throw new Error("Invalid profile ID");
-    }
-
-    const deletedProfile = await Profile.findByIdAndDelete(id);
-    await redisClient.del(REDIS_PROFILES_KEY);
-    logger.info(`Deleted profile: ${id}`);
-    return deletedProfile;
-  }
-
   static async getProfileByUsername(username: string) {
     const cacheKey = `profile:username:${username}`;
     const cachedProfile = await redisClient.get(cacheKey);
@@ -119,6 +115,19 @@ class ProfileService {
       );
     }
     return profile;
+  }
+
+  //Unused functions for now
+
+  static async deleteProfile(id: string) {
+    if (!id) {
+      throw new Error("Invalid profile ID");
+    }
+
+    const deletedProfile = await Profile.findByIdAndDelete(id);
+    await redisClient.del(REDIS_PROFILES_KEY);
+    logger.info(`Deleted profile: ${id}`);
+    return deletedProfile;
   }
 
   static async getProfileById(id: string) {
