@@ -40,4 +40,4 @@ Readme:
 Rate limiting
 Messages buffer
 Ttt repo
-Tech stack: redis, mongo, socket, redux, jest
+Tech stack: redis, mongo, socket, kafka, redux, jest
