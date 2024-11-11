@@ -1,5 +1,7 @@
 import express from "express";
 
+import { protect } from "../middleware/authMiddleware";
+
 import {
   getProfileByUsername,
   getProfiles,
@@ -7,7 +9,7 @@ import {
 
 const router = express.Router();
 
-router.route("/").get(getProfiles);
-router.get("/:username", getProfileByUsername);
+router.route("/").get(protect, getProfiles);
+router.route("/:username").get(protect, getProfileByUsername);
 
 export default router;

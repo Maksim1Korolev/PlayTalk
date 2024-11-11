@@ -8,7 +8,7 @@ const logger = getLogger("ProfileController");
 
 // @desc   Get profiles
 // @route  GET /api/profiles
-// @access Public
+// @access Protected
 export const getProfiles = async (
   req: Request,
   res: Response,
@@ -34,7 +34,7 @@ export const getProfiles = async (
 
 // @desc   Get profile by username
 // @route  GET /api/profiles/:username
-// @access Public
+// @access Protected
 export const getProfileByUsername = async (
   req: Request,
   res: Response,

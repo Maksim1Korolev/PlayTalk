@@ -1,6 +1,6 @@
 To add:
 Put chat into slice
-Middleware on profile service
+Auth middleware for kafka
 
 To fix:
 ReactQuery => redux
@@ -11,7 +11,6 @@ Disable buttons in userList accordingly
 Upgrade font
 Typing problems
 Change user to username in chatModalData
-Kafka logs
 
 To add (in the end):
 Sort out client's and profile's .envs
