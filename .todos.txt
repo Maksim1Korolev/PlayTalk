@@ -4,11 +4,11 @@ Put chat into slice
 To fix:
 ReactQuery => redux
 Upgrade UserList scrollbar
-Highlight types
 Blurred messages and gap between them
-Disable buttons in userList accordingly
-Upgrade font
 Typing problems
+Upgrade font
+Highlight types
+Disable buttons in userList accordingly, auto closing for game selector
 Change user to username in chatModalData
 
 To add (in the end):
