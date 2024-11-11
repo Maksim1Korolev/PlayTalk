@@ -1,6 +1,5 @@
 To add:
 Put chat into slice
-Tests on profile service
 
 To fix:
 ReactQuery => redux
