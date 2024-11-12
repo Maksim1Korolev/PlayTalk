@@ -15,7 +15,7 @@ import {
 import getImagePath from "@/shared/utils/getImagePath";
 
 import { UnreadMessagesCountIndicator } from "@/entities/Chat";
-import { GameData, GameName } from "@/entities/game/Game";
+import { GameData } from "@/entities/game/Game";
 import { User, UserOnlineIndicator } from "@/entities/User";
 import { GameSelector } from "@/features/game";
 
@@ -28,7 +28,7 @@ interface UserListCardProps extends UserListCardBase {
   user: User;
   collapsed?: boolean;
   isLoading?: false;
-  handlePlayButton?: ({
+  handlePlayButtonClicked: ({
     gameData,
     isInviting,
     isActive,
@@ -37,14 +37,14 @@ interface UserListCardProps extends UserListCardBase {
     isInviting: boolean;
     isActive: boolean;
   }) => void;
-  handleChatButton?: (user: User) => void;
+  handleChatButtonClicked: (user: User) => void;
 }
 
 interface UserListCardLoading extends UserListCardBase {
   isLoading: true;
   user?: User;
   collapsed?: boolean;
-  handlePlayButton?: ({
+  handlePlayButtonClicked?: ({
     gameData,
     isInviting,
     isActive,
@@ -53,7 +53,7 @@ interface UserListCardLoading extends UserListCardBase {
     isInviting: boolean;
     isActive: boolean;
   }) => void;
-  handleChatButton?: (user: User) => void;
+  handleChatButtonClicked?: (user: User) => void;
 }
 
 type UserListCard = UserListCardProps | UserListCardLoading;
@@ -63,8 +63,8 @@ export const UserListCard = ({
   user,
   collapsed = false,
   isLoading = false,
-  handlePlayButton,
-  handleChatButton,
+  handlePlayButtonClicked,
+  handleChatButtonClicked,
 }: UserListCard) => {
   const usernameRef = useRef<HTMLParagraphElement>(null);
 
@@ -102,21 +102,8 @@ export const UserListCard = ({
     );
 
   const onChatOpen = () => {
-    if (handleChatButton && user) {
-      handleChatButton(user);
-    }
-  };
-
-  const onPlayButton = (gameName: GameName) => {
-    if (handlePlayButton && user) {
-      handlePlayButton({
-        gameData: {
-          gameName,
-          opponentUsername: user.username,
-        },
-        isInviting: user.isInviting || false,
-        isActive: user.activeGames?.includes(gameName) || false,
-      });
+    if (handleChatButtonClicked && user) {
+      handleChatButtonClicked(user);
     }
   };
 
@@ -172,7 +159,7 @@ export const UserListCard = ({
         <HStack className={cls.buttons} gap="8">
           <GameSelector
             className={cls.playButton}
-            onSelectGame={onPlayButton}
+            onGameSelected={handlePlayButtonClicked}
             menuId={user?.username || ""}
           />
           <div className={cls.chatButtonBorder}>

@@ -19,8 +19,8 @@ import { UserListCard } from "../UserListCard/UserListCard";
 export interface UserListProps {
   className?: string;
   collapsed?: boolean;
-  handleUserChatButton: (user: User) => void;
-  handleUserPlayButton: ({
+  handleUserChatButtonClicked: (user: User) => void;
+  handleUserPlayButtonClicked: ({
     gameData,
     isInviting,
     isActive,
@@ -34,8 +34,8 @@ export interface UserListProps {
 export const UserList = ({
   className,
   collapsed,
-  handleUserChatButton,
-  handleUserPlayButton,
+  handleUserChatButtonClicked,
+  handleUserPlayButtonClicked,
 }: UserListProps) => {
   const [cookies] = useCookies();
   const { currentUsername, token } = cookies["jwt-cookie"];
@@ -60,14 +60,19 @@ export const UserList = ({
             className={cls.userCard}
             user={user}
             collapsed={collapsed}
-            handlePlayButton={handleUserPlayButton}
-            handleChatButton={handleUserChatButton}
+            handlePlayButtonClicked={handleUserPlayButtonClicked}
+            handleChatButtonClicked={handleUserChatButtonClicked}
           />
         </HStack>
         {index < sortedUsers.length - 1 && <hr />}
       </VStack>
     ));
-  }, [collapsed, handleUserChatButton, handleUserPlayButton, users]);
+  }, [
+    collapsed,
+    handleUserChatButtonClicked,
+    handleUserPlayButtonClicked,
+    users,
+  ]);
 
   if (isLoading) {
     return (
