@@ -1,7 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import { chatApiService, gameApiService, onlineApiService, usersApiService } from "@/shared/api";
+import {
+  chatApiService,
+  gameApiService,
+  onlineApiService,
+  usersApiService,
+} from "@/shared/api";
 
+import { chatReducer } from "@/entities/Chat/model";
 import { inviteReducer } from "@/entities/game/Invite";
 import { modalReducer } from "@/entities/Modal";
 import { userReducer } from "@/entities/User";
@@ -10,7 +16,7 @@ import { circleMenuReducer } from "@/features/UserList";
 import { ThunkExtraArg } from "./StateSchema";
 
 const extraArg: ThunkExtraArg = {
-	api: {
+  api: {
     usersApiService,
     onlineApiService,
     chatApiService,
@@ -21,12 +27,13 @@ const extraArg: ThunkExtraArg = {
 export const store = configureStore({
   reducer: {
     user: userReducer,
+    chat: chatReducer,
     invite: inviteReducer,
     circleMenu: circleMenuReducer,
     modal: modalReducer,
   },
   devTools: import.meta.env.VITE_NODE_ENV,
-  middleware: getDefaultMiddleware =>
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       thunk: {
         extraArgument: extraArg,

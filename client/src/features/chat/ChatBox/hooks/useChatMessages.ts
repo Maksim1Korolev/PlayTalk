@@ -1,26 +1,32 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-import { chatApiService } from "@/shared/api";
+import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 
-import { Message } from "@/entities/Chat";
+import {
+  chatActions,
+  fetchMessages,
+  getChatMessages,
+  markMessagesAsRead,
+  Message,
+  postMessage,
+} from "@/entities/Chat";
 
 export const useChatMessages = ({
-  currentUsername,
   recipientUsername,
 }: {
-  currentUsername: string;
   recipientUsername: string;
 }) => {
   const [cookies] = useCookies();
-  //TODO:Possibly get currentUsername from here too
   const { token } = cookies["jwt-cookie"];
 
   const { sockets } = useContext(SocketContext);
   const { communicationSocket } = sockets;
 
-  const [messageHistory, setMessageHistory] = useState<Message[]>([]);
+  const dispatch = useAppDispatch();
+
+  const messages = useAppSelector(getChatMessages(recipientUsername));
 
   const [isTyping, setIsTyping] = useState(false);
   const [typing, setTyping] = useState(false);
@@ -28,69 +34,66 @@ export const useChatMessages = ({
   useEffect(() => {
     const loadInitialMessages = async () => {
       try {
-        const initialMessages = await chatApiService.getMessageHistory(
-          recipientUsername,
-          token
-        );
-        setMessageHistory(initialMessages);
+        dispatch(fetchMessages({ recipientUsername, token }));
       } catch (error) {
         console.error("Failed to load message history:", error);
       }
     };
 
     loadInitialMessages();
-  }, [recipientUsername, token]);
+  }, [dispatch, recipientUsername, token]);
 
   const readAllUnreadMessages = useCallback(
     (usernames: string[]) => {
-      if (!communicationSocket) return;
-      communicationSocket.emit("on-read-messages", {
-        usernames,
-      });
+      dispatch(markMessagesAsRead({ usernames, communicationSocket }));
     },
-    [communicationSocket]
+    [communicationSocket, dispatch]
   );
 
   const sendMessage = useCallback(
     (message: string) => {
-      const newMessage: Message = {
-        message,
-        date: new Date(),
-        username: currentUsername,
-      };
-      setMessageHistory(prev => [...prev, newMessage]);
-      if (!communicationSocket) return;
-      communicationSocket.emit("send-message", {
-        recipientUsername,
-        message: newMessage,
-      });
+      dispatch(
+        postMessage({
+          recipientUsername,
+          message,
+          communicationSocket,
+        })
+      );
     },
-    [communicationSocket, currentUsername, recipientUsername]
+    [communicationSocket, dispatch, recipientUsername]
   );
 
   useEffect(() => {
     if (!communicationSocket) return;
 
-    communicationSocket.on("typing", senderUsername => {
-      if (senderUsername === recipientUsername) setIsTyping(true);
+    communicationSocket.on("typing", (senderUsername) => {
+      if (senderUsername === recipientUsername)
+        dispatch(
+          chatActions.setIsTyping({ username: senderUsername, isTyping: true })
+        );
     });
-    communicationSocket.on("stop-typing", senderUsername => {
-      if (senderUsername === recipientUsername) setIsTyping(false);
+    communicationSocket.on("stop-typing", (senderUsername) => {
+      if (senderUsername === recipientUsername)
+        dispatch(
+          chatActions.setIsTyping({ username: senderUsername, isTyping: false })
+        );
     });
 
     return () => {
       communicationSocket.off("typing");
       communicationSocket.off("stop-typing");
     };
-  }, [communicationSocket, recipientUsername]);
+  }, [communicationSocket, dispatch, recipientUsername]);
 
   useEffect(() => {
     const onReceiveMessage = (message: Message) => {
       if (message.username === recipientUsername) {
         console.log(message);
 
-        setMessageHistory(prev => [...prev, message]);
-        setIsTyping(false);
+        //setMessageHistory((prev) => [...prev, message]);
+        dispatch(
+          chatActions.addMessage({ username: recipientUsername, message })
+        );
       }
     };
 
@@ -130,7 +133,7 @@ export const useChatMessages = ({
   }, [communicationSocket, recipientUsername, typing]);
 
   return {
-    messageHistory,
+    messageHistory: messages,
     sendMessage,
     readAllUnreadMessages,
     isTyping,
