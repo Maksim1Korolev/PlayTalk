@@ -1,5 +1,9 @@
-export { GameNames, isGameName } from "./model"
+export { GameNames, isGameName } from "./model";
 
-export type { Game, GameData, GameModalData, GameName, TicTacToeGame } from "./model"
-
-export { PlayButton } from "./ui"
+export type {
+  Game,
+  GameData,
+  GameModalData,
+  GameName,
+  TicTacToeGame,
+} from "./model";

@@ -8,17 +8,16 @@ import {
   AppImage,
   AppImageProps,
   HStack,
+  Skeleton,
   UiButton,
   UiText,
 } from "@/shared/ui";
-import { Skeleton } from "@/shared/ui/Skeleton";
 import getImagePath from "@/shared/utils/getImagePath";
 
 import { UnreadMessagesCountIndicator } from "@/entities/Chat";
-import { GameData, GameName, PlayButton } from "@/entities/game/Game";
-import { User } from "@/entities/User";
-
-import { UserOnlineIndicator } from "../../../../entities/User/ui/UserOnlineIndicator";
+import { GameData, GameName } from "@/entities/game/Game";
+import { User, UserOnlineIndicator } from "@/entities/User";
+import { GameSelector } from "@/features/game";
 
 type UserListCardBase = {
   className?: string;
@@ -171,7 +170,7 @@ export const UserListCard = ({
           {user?.username}
         </UiText>
         <HStack className={cls.buttons} gap="8">
-          <PlayButton
+          <GameSelector
             highlight="none"
             className={cls.playButton}
             onSelectGame={onPlayButton}
