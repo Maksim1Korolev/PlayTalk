@@ -1,5 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
+import { ActiveGames, UnreadMessageCounts } from "@/shared/api";
+
 import { ThunkConfig } from "@/app/providers";
 import { User } from "@/entities/User";
 
@@ -26,13 +28,13 @@ export const fetchUsersWithStatuses = createAsyncThunk<
           ? results[0].value
           : [];
 
-      const unreadMessageCounts =
+      const unreadMessageCounts: UnreadMessageCounts =
         results[1].status === "fulfilled" &&
         typeof results[1].value === "object"
           ? results[1].value
           : {};
 
-      const activeGames =
+      const activeGames: ActiveGames =
         results[2].status === "fulfilled" &&
         typeof results[2].value === "object"
           ? results[2].value

@@ -93,6 +93,7 @@ export const UserListCard = ({
 
   const onGameClicked = ({ gameName }: { gameName: GameName }) => {
     if (handlePlayButtonClicked && user) {
+      console.log("YA TUT!!!!!!");
       handlePlayButtonClicked({ opponentUsername: user.username, gameName });
     }
   };

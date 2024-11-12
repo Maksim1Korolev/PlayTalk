@@ -1,9 +1,9 @@
-import { Game, GameData } from "@/entities/game/Game";
+import { Game, GameData, GameName } from "@/entities/game/Game";
 
 import { $gameApi } from "./api";
 
 export interface ActiveGames {
-  [username: string]: string[];
+  [username: string]: GameName[];
 }
 
 export const gameApiService = {

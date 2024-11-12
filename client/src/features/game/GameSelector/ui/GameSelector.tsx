@@ -26,7 +26,7 @@ interface GameSelectorProps {
 export const GameSelector = ({
   className,
   menuId,
-  onGameClicked: onGameSelected,
+  onGameClicked,
 }: GameSelectorProps) => {
   const gameNames = Object.values(GameNames);
 
@@ -82,7 +82,7 @@ export const GameSelector = ({
   const handleGameClicked = (gameName: GameName) => {
     if (!gameName) return;
 
-    onGameSelected({ gameName });
+    onGameClicked({ gameName });
     handleMenuToggle();
   };
 
