@@ -32,34 +32,9 @@ export const GameSelector = memo(
   ({ className = "", user, onGameSelect }: GameSelectorProps) => {
     const gameNames = Object.values(GameNames);
 
-    const [iconMap, setIconMap] = useState<{
-      [key: string]: string;
-    }>({});
     const [highlight, setHighlight] = useState<
       "none" | "primary" | "secondary"
     >("none");
-
-    //TODO: remove
-    useEffect(() => {
-      const loadIcons = async () => {
-        const icons: {
-          [key: string]: string;
-        } = {};
-
-        for (const gameName of gameNames) {
-          const iconPath = getImagePath({
-            collection: "gameIcons",
-            fileName: gameName,
-          });
-
-          icons[gameName] = iconPath;
-        }
-
-        setIconMap(icons);
-      };
-
-      loadIcons();
-    }, []);
 
     useEffect(() => {
       const newHighlight =
@@ -92,7 +67,10 @@ export const GameSelector = memo(
 
     const getGameIcon = (gameName: string): ReactNode => {
       const size = 60;
-      const gameIconUrl = iconMap[gameName];
+      const gameIconUrl = getImagePath({
+        collection: "gameIcons",
+        fileName: gameName,
+      });
 
       if (!gameIconUrl) {
         return <Loader />;
@@ -115,7 +93,7 @@ export const GameSelector = memo(
     return (
       <Card className={cx(cls.GameSelector, {}, [className])}>
         <HStack>
-          {gameNames.map(gameName => (
+          {gameNames.map((gameName) => (
             <div key={gameName}>{getGameIcon(gameName)}</div>
           ))}
         </HStack>
