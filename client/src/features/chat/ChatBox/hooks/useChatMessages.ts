@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
@@ -20,6 +20,7 @@ export const useChatMessages = ({
 }) => {
   const [cookies] = useCookies();
   const { token } = cookies["jwt-cookie"];
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { sockets } = useContext(SocketContext);
   const { communicationSocket } = sockets;
@@ -28,7 +29,6 @@ export const useChatMessages = ({
 
   const messages = useAppSelector(getChatMessages(recipientUsername));
 
-  const [isTyping, setIsTyping] = useState(false);
   const [typing, setTyping] = useState(false);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export const useChatMessages = ({
         communicationSocket.off("receive-message", onReceiveMessage);
       }
     };
-  }, [communicationSocket, recipientUsername]);
+  }, [communicationSocket, dispatch, recipientUsername]);
 
   const notifyTyping = useCallback(() => {
     if (!communicationSocket) return;
@@ -116,27 +116,24 @@ export const useChatMessages = ({
       communicationSocket.emit("typing", recipientUsername);
     }
 
-    const lastTypingTime = new Date().getTime();
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
     const timerLength = 3000;
-    setTimeout(() => {
-      const timeNow = new Date().getTime();
-      const timeDiff = timeNow - lastTypingTime;
-      if (timeDiff >= timerLength && typing) {
-        if (communicationSocket) {
-          communicationSocket.emit("stop-typing", recipientUsername);
-        }
+    typingTimeoutRef.current = setTimeout(() => {
+      if (typing) {
+        communicationSocket.emit("stop-typing", recipientUsername);
         setTyping(false);
       }
+      typingTimeoutRef.current = null;
     }, timerLength);
-
-    communicationSocket.emit("typing", recipientUsername);
   }, [communicationSocket, recipientUsername, typing]);
 
   return {
     messageHistory: messages,
     sendMessage,
     readAllUnreadMessages,
-    isTyping,
     notifyTyping,
   };
 };

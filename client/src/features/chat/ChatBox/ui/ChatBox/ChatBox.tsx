@@ -2,10 +2,10 @@ import cls from "./ChatBox.module.scss";
 
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 
-import { cx } from "@/shared/lib";
+import { cx, useAppSelector } from "@/shared/lib";
 import { Card, UiText, VStack } from "@/shared/ui";
 
-import { Message } from "@/entities/Chat";
+import { getChatIsTyping, Message } from "@/entities/Chat";
 import { CurrentUser, User } from "@/entities/User";
 
 import { useChatMessages } from "../../hooks/useChatMessages";
@@ -26,16 +26,13 @@ export const ChatBox = memo(
     const dummy = useRef<HTMLDivElement>(null);
     const [inputMessage, setInputMessage] = useState("");
 
-    const {
-      messageHistory,
-      isTyping,
-      sendMessage,
-      notifyTyping,
-      readAllUnreadMessages,
-    } = useChatMessages({
-      currentUsername: currentUser!.username,
-      recipientUsername: recipient.username,
-    });
+    const isTyping = useAppSelector(getChatIsTyping(recipient.username));
+    console.log(isTyping);
+
+    const { messageHistory, sendMessage, notifyTyping, readAllUnreadMessages } =
+      useChatMessages({
+        recipientUsername: recipient.username,
+      });
 
     useEffect(() => {
       dummy.current?.scrollIntoView({ behavior: "smooth" });

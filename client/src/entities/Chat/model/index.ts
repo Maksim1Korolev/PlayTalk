@@ -1,3 +1,5 @@
+export { getChatIsTyping } from "./selectors/getIsTyping";
+
 export { markMessagesAsRead } from "./thunks/markMessagesAsRead";
 
 export { postMessage } from "./thunks/postMessage";

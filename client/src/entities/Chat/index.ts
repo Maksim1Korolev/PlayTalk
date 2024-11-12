@@ -2,6 +2,7 @@ export {
   chatActions,
   chatReducer,
   fetchMessages,
+  getChatIsTyping,
   getChatMessages,
   markMessagesAsRead,
   postMessage,
