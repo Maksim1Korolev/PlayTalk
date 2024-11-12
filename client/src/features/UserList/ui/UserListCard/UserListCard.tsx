@@ -171,7 +171,6 @@ export const UserListCard = ({
         </UiText>
         <HStack className={cls.buttons} gap="8">
           <GameSelector
-            highlight="none"
             className={cls.playButton}
             onSelectGame={onPlayButton}
             menuId={user?.username || ""}

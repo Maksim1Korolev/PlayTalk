@@ -19,20 +19,18 @@ import { circleMenuActions, selectActiveMenuId } from "@/features/UserList";
 
 interface GameSelectorProps {
   className?: string;
-  highlight?: HighlightType;
   onSelectGame: (gameName: GameName) => void;
   menuId: string;
 }
 
 export const GameSelector = ({
   className,
-  highlight = "none",
   menuId,
   onSelectGame,
 }: GameSelectorProps) => {
   const gameNames = Object.values(GameNames);
 
-  const highlightClass = useHighlight(highlight);
+  const highlightClass = useHighlight("secondary");
 
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [showMenu, setShowMenu] = useState(false);
