@@ -6,7 +6,6 @@ export type User = {
   isInviting?: boolean;
   activeGames?: string[];
   unreadMessageCount?: number;
-  isChatOpen?: boolean;
 };
 
 export interface UserState {

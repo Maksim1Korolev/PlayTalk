@@ -12,6 +12,7 @@ import { inviteReducer } from "@/entities/game/Invite";
 import { modalReducer } from "@/entities/Modal";
 import { userReducer } from "@/entities/User";
 import { circleMenuReducer } from "@/features/UserList";
+import { authReducer } from "@/pages/AuthPage";
 
 import { ThunkExtraArg } from "./StateSchema";
 
@@ -26,6 +27,7 @@ const extraArg: ThunkExtraArg = {
 
 export const store = configureStore({
   reducer: {
+    auth: authReducer,
     user: userReducer,
     chat: chatReducer,
     invite: inviteReducer,

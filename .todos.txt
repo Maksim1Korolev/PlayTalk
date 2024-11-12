@@ -2,6 +2,7 @@ To add:
 
 To fix:
 Upgrade UserList styles
+Type any in catch of errors
 Change user to username in chatModalData
 ReactQuery => redux
 Unread messages on circleModal
