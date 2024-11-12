@@ -19,22 +19,14 @@ import { circleMenuActions, selectActiveMenuId } from "@/features/UserList";
 
 interface GameSelectorProps {
   className?: string;
-  onGameSelected?: ({
-    gameData,
-    isActive,
-    isInviting,
-  }: {
-    gameData: GameData;
-    isActive: boolean;
-    isInviting: boolean;
-  }) => void;
   menuId: string;
+  onGameClicked: ({ gameName }: { gameName: GameName }) => void;
 }
 
 export const GameSelector = ({
   className,
   menuId,
-  onGameSelected,
+  onGameClicked: onGameSelected,
 }: GameSelectorProps) => {
   const gameNames = Object.values(GameNames);
 
@@ -88,7 +80,9 @@ export const GameSelector = ({
   }, [isSelectorOpen]);
 
   const handleGameClicked = (gameName: GameName) => {
-    //  onGameSelected(gameName);
+    if (!gameName) return;
+
+    onGameSelected({ gameName });
     handleMenuToggle();
   };
 

@@ -2,8 +2,8 @@ import { useCallback } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 
-import { GameData } from "@/entities/game/Game";
-import { getInviteKey, Invite, inviteActions } from "@/entities/game/Invite";
+import { GameData, GameName } from "@/entities/game/Game";
+import { Invite, inviteActions } from "@/entities/game/Invite";
 import { getUsers, User, userActions } from "@/entities/User";
 import { useGameModals } from "@/widgets/GameModals";
 import { generateModalId } from "@/widgets/GameModals/hooks/useGameModals";
@@ -19,6 +19,12 @@ type GameEndPayload = {
   winner: string;
 };
 
+// Define GameStatus type
+type GameStatus = {
+  hasInvitation?: boolean;
+  isActive?: boolean;
+};
+
 export const useGameSessionLogic = () => {
   const users = useAppSelector(getUsers);
   const dispatch = useAppDispatch();
@@ -30,45 +36,62 @@ export const useGameSessionLogic = () => {
     return users[username];
   };
 
+  //TODO:Move
+  const updateGameStatusMap = useCallback(
+    (
+      username: string,
+      gameName: GameName,
+      statusUpdate: Partial<GameStatus>
+    ) => {
+      const user = users[username];
+
+      const currentGameStatusMap = (user?.gameStatusMap ?? {}) as Record<
+        GameName,
+        GameStatus
+      >;
+
+      const currentGameStatus = currentGameStatusMap[gameName] ?? {};
+
+      const updatedGameStatusMap: Record<GameName, GameStatus> = {
+        ...currentGameStatusMap,
+        [gameName]: {
+          ...currentGameStatus,
+          ...statusUpdate,
+        },
+      };
+
+      dispatch(
+        userActions.updateUser({
+          username,
+          updatedProps: {
+            gameStatusMap: updatedGameStatusMap,
+          },
+        })
+      );
+    },
+    [dispatch, users]
+  );
+
   const onReceiveInvite = ({ invite }: { invite: Invite }) => {
     dispatch(inviteActions.receiveInvite(invite));
 
-    dispatch(
-      userActions.updateUser({
-        username: invite.senderUsername,
-        updatedProps: { isInviting: true },
-      })
-    );
+    updateGameStatusMap(invite.senderUsername, invite.gameName, {
+      hasInvitation: true,
+    });
   };
 
   const onGameStart = ({ gameData }: GameStartPayload) => {
-    const user = getUser(gameData.opponentUsername);
-
-    dispatch(
-      userActions.updateUser({
-        username: gameData.opponentUsername,
-        updatedProps: {
-          activeGames: [...(user?.activeGames || []), gameData.gameName],
-        },
-      })
-    );
+    updateGameStatusMap(gameData.opponentUsername, gameData.gameName, {
+      isActive: true,
+    });
 
     handleOpenGameModal({ modalData: gameData });
   };
 
   const onGameEnd = ({ gameData, winner }: GameEndPayload) => {
-    const user = getUser(gameData.opponentUsername);
-
-    dispatch(
-      userActions.updateUser({
-        username: gameData.opponentUsername,
-        updatedProps: {
-          activeGames: (user?.activeGames || []).filter(
-            game => game !== gameData.gameName
-          ),
-        },
-      })
-    );
+    updateGameStatusMap(gameData.opponentUsername, gameData.gameName, {
+      isActive: false,
+    });
 
     handleCloseGameModal({ modalId: generateModalId(gameData) });
   };
@@ -86,33 +109,26 @@ export const useGameSessionLogic = () => {
         gameName: invite.gameName,
       });
 
-      dispatch(inviteActions.removeInvite(getInviteKey(invite)));
-
-      dispatch(
-        userActions.updateUser({
-          username: invite.senderUsername,
-          updatedProps: { isInviting: false },
-        })
-      );
+      updateGameStatusMap(invite.senderUsername, invite.gameName, {
+        hasInvitation: false,
+      });
     },
-    [dispatch, handleAcceptGame]
+    [handleAcceptGame, updateGameStatusMap]
   );
 
-  const handleGameClicked = ({
-    gameData,
-    isActive,
-    isInviting,
-  }: {
-    gameData: GameData;
-    isActive: boolean;
-    isInviting: boolean;
-  }) => {
+  //TODO: Add removeCurrentInvite logic
+  const handleGameClicked = (gameData: GameData) => {
+    const user = getUser(gameData.opponentUsername);
+    const gameStatus = user?.gameStatusMap?.[gameData.gameName] || {};
+    const isActive = gameStatus.isActive || false;
+    const hasInvitation = gameStatus.hasInvitation || false;
+
     const invite: Invite = {
       senderUsername: gameData.opponentUsername,
       gameName: gameData.gameName,
     };
 
-    if (isInviting) {
+    if (hasInvitation) {
       handleAcceptGameInvite(invite);
     } else if (isActive) {
       handleOpenGameModal({ modalData: gameData });

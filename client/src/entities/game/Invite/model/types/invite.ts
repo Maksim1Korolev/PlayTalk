@@ -1,6 +1,8 @@
+import { GameName } from "@/entities/game/Game";
+
 export type Invite = {
   senderUsername: string;
-  gameName: string;
+  gameName: GameName;
 };
 
 export interface InviteState {

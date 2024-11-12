@@ -20,15 +20,7 @@ export interface UserListProps {
   className?: string;
   collapsed?: boolean;
   handleUserChatButtonClicked: (user: User) => void;
-  handleUserPlayButtonClicked: ({
-    gameData,
-    isInviting,
-    isActive,
-  }: {
-    gameData: GameData;
-    isInviting: boolean;
-    isActive: boolean;
-  }) => void;
+  handleUserPlayButtonClicked: (gameData: GameData) => void;
 }
 
 export const UserList = ({

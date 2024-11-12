@@ -19,16 +19,29 @@ const inviteSlice = createSlice({
         state.currentInviteIndex = 0;
       }
     },
-    removeInvite(state) {
-      if (state.currentInviteIndex !== undefined) {
-        state.invites.splice(state.currentInviteIndex, 1);
+    removeInvite(state, action: PayloadAction<Invite>) {
+      const inviteToRemove = action.payload;
+      const index = state.invites.findIndex(
+        (invite) =>
+          invite.senderUsername === inviteToRemove.senderUsername &&
+          invite.gameName === inviteToRemove.gameName
+      );
+
+      if (index !== -1) {
+        state.invites.splice(index, 1);
 
         if (state.invites.length > 0) {
-          state.currentInviteIndex =
-            state.currentInviteIndex < state.invites.length
-              ? state.currentInviteIndex
-              : 0;
-          state.currentInvite = state.invites[state.currentInviteIndex];
+          if (state.currentInviteIndex !== undefined) {
+            if (index < state.currentInviteIndex) {
+              state.currentInviteIndex -= 1;
+            } else if (index === state.currentInviteIndex) {
+              state.currentInviteIndex =
+                state.currentInviteIndex < state.invites.length
+                  ? state.currentInviteIndex
+                  : 0;
+              state.currentInvite = state.invites[state.currentInviteIndex];
+            }
+          }
         } else {
           state.currentInvite = undefined;
           state.currentInviteIndex = undefined;
@@ -54,21 +67,17 @@ const inviteSlice = createSlice({
 });
 
 export const acceptGameInvite =
-  (gameSocket: any) => (dispatch: any, getState: any) => {
-    const {
-      invite: { currentInvite },
-    } = getState();
-
-    if (gameSocket && currentInvite) {
+  (gameSocket: any, invite: Invite) => (dispatch: any) => {
+    if (gameSocket && invite) {
       console.log(
-        `Accepting game invite with opponent ${currentInvite.senderUsername} for game ${currentInvite.gameName}`
+        `Accepting game invite with opponent ${invite.senderUsername} for game ${invite.gameName}`
       );
       gameSocket.emit("accept-game", {
-        opponentUsername: currentInvite.senderUsername,
-        gameName: currentInvite.gameName,
+        opponentUsername: invite.senderUsername,
+        gameName: invite.gameName,
       });
 
-      dispatch(inviteSlice.actions.removeInvite());
+      dispatch(inviteSlice.actions.removeInvite(invite));
     }
   };
 

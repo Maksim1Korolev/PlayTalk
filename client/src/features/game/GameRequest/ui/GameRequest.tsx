@@ -12,12 +12,14 @@ import { SocketContext } from "@/shared/lib/context/SocketContext";
 import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
+import { GameName } from "@/entities/game/Game";
 import {
   acceptGameInvite,
   Invite,
   inviteActions,
 } from "@/entities/game/Invite";
 import { getUsers, userActions } from "@/entities/User";
+import { GameStatus } from "@/entities/User/model/types/user";
 
 interface GameRequestProps {
   className?: string;
@@ -27,7 +29,7 @@ interface GameRequestProps {
 export const GameRequest = memo(({ className, position }: GameRequestProps) => {
   const dispatch = useAppDispatch();
   const currentInvite: Invite | undefined = useAppSelector(
-    state => state.invite.currentInvite
+    (state) => state.invite.currentInvite
   );
   const { sockets } = useContext(SocketContext);
   const { gameSocket } = sockets;
@@ -39,29 +41,65 @@ export const GameRequest = memo(({ className, position }: GameRequestProps) => {
 
   const { isDragged, handleDragStart, handleDragStop } = useModalDrag();
 
-  const updateInvitingStatus = useCallback(
-    (senderUsername: string, isInviting: boolean) => {
+  //TODO:Move
+  const updateGameStatusMap = useCallback(
+    (
+      username: string,
+      gameName: GameName,
+      statusUpdate: Partial<GameStatus>
+    ) => {
+      const user = users[username];
+
+      const currentGameStatusMap = (user?.gameStatusMap ?? {}) as Record<
+        GameName,
+        GameStatus
+      >;
+
+      const currentGameStatus = currentGameStatusMap[gameName] ?? {};
+
+      const updatedGameStatusMap: Record<GameName, GameStatus> = {
+        ...currentGameStatusMap,
+        [gameName]: {
+          ...currentGameStatus,
+          ...statusUpdate,
+        },
+      };
+
       dispatch(
         userActions.updateUser({
-          username: senderUsername,
-          updatedProps: { isInviting },
+          username,
+          updatedProps: {
+            gameStatusMap: updatedGameStatusMap,
+          },
         })
       );
     },
-    [dispatch]
+    [dispatch, users]
   );
 
   const handleAcceptGameInvite = () => {
     if (currentInvite && !isDragged) {
-      dispatch(acceptGameInvite(gameSocket));
-      updateInvitingStatus(currentInvite.senderUsername, false);
+      dispatch(acceptGameInvite(gameSocket, currentInvite));
+      updateGameStatusMap(
+        currentInvite.senderUsername,
+        currentInvite.gameName,
+        {
+          hasInvitation: false,
+        }
+      );
     }
   };
 
   const handleRejectGameInvite = () => {
     if (currentInvite && !isDragged) {
-      dispatch(inviteActions.removeInvite());
-      updateInvitingStatus(currentInvite.senderUsername, false);
+      dispatch(inviteActions.removeInvite(currentInvite));
+      updateGameStatusMap(
+        currentInvite.senderUsername,
+        currentInvite.gameName,
+        {
+          hasInvitation: false,
+        }
+      );
     }
   };
 

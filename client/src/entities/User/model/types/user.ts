@@ -1,12 +1,19 @@
+import { GameName } from "@/entities/game/Game";
+
+//TODO:Move
+export type GameStatus = {
+  hasInvitation?: boolean;
+  isActive?: boolean;
+};
+
 export type User = {
   username: string;
   avatarFileName?: string;
   avatarUrl?: string;
   isOnline?: boolean;
-  isInviting?: boolean;
   activeGames?: string[];
+  gameStatusMap?: Record<GameName, GameStatus>;
   unreadMessageCount?: number;
-  isChatOpen?: boolean;
 };
 
 export interface UserState {

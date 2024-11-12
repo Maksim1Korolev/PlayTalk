@@ -28,15 +28,7 @@ interface UserListCardProps extends UserListCardBase {
   user: User;
   collapsed?: boolean;
   isLoading?: false;
-  handlePlayButtonClicked: ({
-    gameData,
-    isInviting,
-    isActive,
-  }: {
-    gameData: GameData;
-    isInviting: boolean;
-    isActive: boolean;
-  }) => void;
+  handlePlayButtonClicked: (gameData: GameData) => void;
   handleChatButtonClicked: (user: User) => void;
 }
 
@@ -44,15 +36,7 @@ interface UserListCardLoading extends UserListCardBase {
   isLoading: true;
   user?: User;
   collapsed?: boolean;
-  handlePlayButtonClicked?: ({
-    gameData,
-    isInviting,
-    isActive,
-  }: {
-    gameData: GameData;
-    isInviting: boolean;
-    isActive: boolean;
-  }) => void;
+  handlePlayButtonClicked?: (gameData: GameData) => void;
   handleChatButtonClicked?: (user: User) => void;
 }
 
@@ -104,6 +88,12 @@ export const UserListCard = ({
   const onChatOpen = () => {
     if (handleChatButtonClicked && user) {
       handleChatButtonClicked(user);
+    }
+  };
+
+  const onGameClicked = ({ gameName }: { gameName: GameName }) => {
+    if (handlePlayButtonClicked && user) {
+      handlePlayButtonClicked({ opponentUsername: user.username, gameName });
     }
   };
 
@@ -159,7 +149,7 @@ export const UserListCard = ({
         <HStack className={cls.buttons} gap="8">
           <GameSelector
             className={cls.playButton}
-            onGameSelected={handlePlayButtonClicked}
+            onGameClicked={onGameClicked}
             menuId={user?.username || ""}
           />
           <div className={cls.chatButtonBorder}>
