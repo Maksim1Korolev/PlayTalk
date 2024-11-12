@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import { GameData, GameName } from "@/entities/game/Game";
 import { Invite, inviteActions } from "@/entities/game/Invite";
 import { getUsers, User, userActions } from "@/entities/User";
+import { GameStatus } from "@/entities/User/model/types/user";
 import { useGameModals } from "@/widgets/GameModals";
 import { generateModalId } from "@/widgets/GameModals/hooks/useGameModals";
 
@@ -17,12 +18,6 @@ type GameStartPayload = {
 type GameEndPayload = {
   gameData: GameData;
   winner: string;
-};
-
-// Define GameStatus type
-type GameStatus = {
-  hasInvitation?: boolean;
-  isActive?: boolean;
 };
 
 export const useGameSessionLogic = () => {
@@ -116,7 +111,6 @@ export const useGameSessionLogic = () => {
     [handleAcceptGame, updateGameStatusMap]
   );
 
-  //TODO: Add removeCurrentInvite logic
   const handleGameClicked = (gameData: GameData) => {
     const user = getUser(gameData.opponentUsername);
     const gameStatus = user?.gameStatusMap?.[gameData.gameName] || {};

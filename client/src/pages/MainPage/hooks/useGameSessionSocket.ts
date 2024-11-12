@@ -1,9 +1,15 @@
 import { useCallback, useContext, useEffect } from "react";
 
+import { useAppDispatch } from "@/shared/lib";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 
-import { GameData, GameModalData, isGameName } from "@/entities/game/Game";
-import { Invite } from "@/entities/game/Invite";
+import {
+  GameData,
+  GameModalData,
+  GameName,
+  isGameName,
+} from "@/entities/game/Game";
+import { acceptGameInvite, Invite } from "@/entities/game/Invite";
 
 export const useGameSessionSocket = ({
   onReceiveInvite,
@@ -20,6 +26,8 @@ export const useGameSessionSocket = ({
     winner: string;
   }) => void;
 }) => {
+  const dispatch = useAppDispatch();
+
   const { sockets } = useContext(SocketContext);
   const { gameSocket } = sockets;
 
@@ -39,19 +47,20 @@ export const useGameSessionSocket = ({
     [gameSocket]
   );
 
+  //TODO:Move
   const handleAcceptGame = useCallback(
-    ({
-      opponentUsername,
-      gameName,
-    }: {
-      opponentUsername: string;
-      gameName: string;
-    }) => {
+    ({ opponentUsername, gameName }: GameData) => {
       if (gameSocket) {
         console.log(
           `Accepting game invite with opponent ${opponentUsername} for game ${gameName}`
         );
-        gameSocket.emit("accept-game", { opponentUsername, gameName });
+
+        dispatch(
+          acceptGameInvite(gameSocket, {
+            senderUsername: opponentUsername,
+            gameName,
+          })
+        );
       }
     },
     [gameSocket]
@@ -59,26 +68,14 @@ export const useGameSessionSocket = ({
 
   useEffect(() => {
     if (gameSocket) {
-      const handleReceiveInvite = ({
-        senderUsername,
-        gameName,
-      }: {
-        senderUsername: string;
-        gameName: string;
-      }) => {
+      const handleReceiveInvite = ({ senderUsername, gameName }: Invite) => {
         console.log(
           `Game request received from ${senderUsername} for game ${gameName}`
         );
         onReceiveInvite({ invite: { senderUsername, gameName } });
       };
 
-      const handleStartGame = ({
-        opponentUsername,
-        gameName,
-      }: {
-        opponentUsername: string;
-        gameName: string;
-      }) => {
+      const handleStartGame = ({ opponentUsername, gameName }: GameData) => {
         console.log(
           `Game started with opponent ${opponentUsername} for game ${gameName}`
         );
@@ -98,7 +95,7 @@ export const useGameSessionSocket = ({
         winner,
       }: {
         opponentUsername: string;
-        gameName: string;
+        gameName: GameName;
         winner: string;
       }) => {
         console.log(
