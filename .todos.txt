@@ -21,6 +21,7 @@ Adjust modal drag
 Adjust location of accept invite emit
 Save empty messageHistory in redis cache too
 Token expiration logic on client
+Api headers interceptor
 Tests on chat's services and ttt service
 Storybook
 Kubernetes
