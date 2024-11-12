@@ -30,7 +30,7 @@ interface GameModalsProps {
 
 export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
   const [cookies] = useCookies(["jwt-cookie"]);
-  const { currentUsername, token } = cookies["jwt-cookie"];
+  const { token } = cookies["jwt-cookie"];
 
   const [games, setGames] = useState<{ [key: string]: Game }>({});
 
@@ -71,7 +71,7 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
     };
 
     fetchGames();
-  }, [gameModals, currentUsername, token, games]);
+  }, [gameModals, token, games]);
 
   const renderGameModals = useCallback(() => {
     const getGameComponent = ({

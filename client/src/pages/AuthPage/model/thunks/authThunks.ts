@@ -21,10 +21,10 @@ export const signIn = createAsyncThunk<
   try {
     const response = await authApiService.login(username, password);
 
-    // Set cookies on successful login
     document.cookie = `jwt-cookie=${encodeURIComponent(
-      JSON.stringify({ currentUsername: username, token: response.token })
+      JSON.stringify({ token: response.token })
     )};path=/`;
+    localStorage.setItem("currentUsername", username);
 
     return response;
   } catch (error: any) {
@@ -45,6 +45,7 @@ export const signUp = createAsyncThunk<
     document.cookie = `jwt-cookie=${encodeURIComponent(
       JSON.stringify({ currentUsername: username, token: response.token })
     )};path=/`;
+    localStorage.setItem("currentUsername", username);
 
     return response;
   } catch (error: any) {
