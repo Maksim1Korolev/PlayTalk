@@ -9,7 +9,7 @@ import MessageHistoryService from "./messageHistoryService.js";
 const logger = getLogger("ChatSubscriptions");
 
 export async function handleChatSubscriptions(socket, currentUsername) {
-  socket.on("typing", async recipientUsername => {
+  socket.on("typing", async (recipientUsername) => {
     const receiverSocketIds =
       await SocketService.getUserSockets(recipientUsername);
 
@@ -21,7 +21,7 @@ export async function handleChatSubscriptions(socket, currentUsername) {
     logger.info(`${currentUsername} is typing to ${recipientUsername}`);
   });
 
-  socket.on("stop-typing", async recipientUsername => {
+  socket.on("stop-typing", async (recipientUsername) => {
     const receiverSocketIds =
       await SocketService.getUserSockets(recipientUsername);
 
@@ -44,7 +44,7 @@ export async function handleChatSubscriptions(socket, currentUsername) {
 
       if (data) {
         const otherUserInChat = usernames.find(
-          username => username !== currentUsername
+          (username) => username !== currentUsername
         );
         socket.emit("unread-count-messages", otherUserInChat, 0);
       }

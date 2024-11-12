@@ -1,5 +1,4 @@
 To add:
-Put chat into slice
 
 To fix:
 Upgrade UserList styles
@@ -7,7 +6,6 @@ Blurred messages
 Change user to username in chatModalData
 ReactQuery => redux
 Unread messages on circleModal
-Typing problems
 Upgrade font
 Implement highlight
 Disable buttons in userList accordingly

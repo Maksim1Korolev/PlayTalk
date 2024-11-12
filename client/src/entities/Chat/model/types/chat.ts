@@ -1,11 +1,23 @@
 import { User } from "@/entities/User";
 
+export interface ChatState {
+  chats: Record<string, Chat>;
+}
+
 export interface Message {
   _id?: string;
   message: string;
-  date: Date;
+  date: string;
   username: string;
-  readAt?: Date;
+  readAt?: string;
+}
+
+export interface Chat {
+  messages: Message[];
+  isTyping?: boolean;
+  isLoading: boolean;
+  isError: boolean;
+  errorMessage: string | null;
 }
 
 export type ChatModalData = {
