@@ -2,15 +2,16 @@ To add:
 Put chat into slice
 
 To fix:
+Upgrade UserList styles
+Blurred messages
+Change user to username in chatModalData
 ReactQuery => redux
-Upgrade UserList scrollbar
-Blurred messages and gap between them
+Unread messages on circleModal
 Typing problems
 Upgrade font
+LoadIcons in GameSelector
 Highlight types
 Disable buttons in userList accordingly, auto closing for game selector
-Change user to username in chatModalData
-Discuss modals limitation
 
 To add (in the end):
 Sort out client's and profile's .envs
