@@ -81,6 +81,11 @@ export const GameSelector = ({
     }
   }, [isSelectorOpen]);
 
+  const handleGameClicked = (gameName: GameName) => {
+    onSelectGame(gameName);
+    handleMenuToggle();
+  };
+
   const playButtonSrc = getImagePath({
     collection: "appIcons",
     fileName: "play",
@@ -137,7 +142,7 @@ export const GameSelector = ({
                     className={cls.circleMenuItem}
                     key={gameName}
                     tooltip={gameName}
-                    onClick={() => onSelectGame(gameName)}
+                    onClick={() => handleGameClicked(gameName)}
                   >
                     <AppImage
                       src={gameSrc}

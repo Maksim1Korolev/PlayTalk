@@ -10,7 +10,7 @@ Unread messages on circleModal
 Typing problems
 Upgrade font
 Implement highlight
-Disable buttons in userList accordingly, auto closing for game selector
+Disable buttons in userList accordingly
 
 To add (in the end):
 Sort out client's and profile's .envs
