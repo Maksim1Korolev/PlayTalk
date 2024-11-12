@@ -1,14 +1,15 @@
-import { cx } from "@/shared/lib"
-import {
-	ImgHTMLAttributes,
-	ReactElement,
-	memo,
-	useLayoutEffect,
-	useState,
-} from "react"
-import cls from "./AppImage.module.scss"
+import cls from "./AppImage.module.scss";
 
-import { HighlightType, useHighlight } from "@/shared/lib"
+import {
+  ImgHTMLAttributes,
+  memo,
+  ReactElement,
+  useLayoutEffect,
+  useState,
+} from "react";
+
+import { cx } from "@/shared/lib";
+import { HighlightType, useHighlight } from "@/shared/lib";
 
 type ObjectFit = "cover" | "fill" | "contain" | "none";
 

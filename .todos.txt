@@ -9,8 +9,7 @@ ReactQuery => redux
 Unread messages on circleModal
 Typing problems
 Upgrade font
-LoadIcons in GameSelector
-Highlight types
+Implement highlight
 Disable buttons in userList accordingly, auto closing for game selector
 
 To add (in the end):

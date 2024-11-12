@@ -43,9 +43,9 @@ export const GameSelector = memo(
           : user.isInviting
             ? "secondary"
             : "none";
+
       setHighlight(newHighlight);
-    }, []);
-    //}, [user.activeGames, user.isInviting]);
+    }, [user.activeGames, user.isInviting]);
 
     const isGameActive = (gameName: GameName): boolean => {
       if (user.activeGames) return user.activeGames.includes(gameName);
@@ -81,7 +81,6 @@ export const GameSelector = memo(
         draggable: false,
         width: size,
         height: size,
-        //TODO:Fix useState (real-time problems in case game selector doesn't disappear)
         highlight: highlight,
         clickable: true,
         onClick: () => handleIconClick(gameName),
