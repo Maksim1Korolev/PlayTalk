@@ -11,7 +11,7 @@ export type User = {
   avatarFileName?: string;
   avatarUrl?: string;
   isOnline?: boolean;
-  gameStatusMap?: Record<GameName, GameStatus>;
+  gameStatusMap?: Partial<Record<GameName, GameStatus>>;
   unreadMessageCount?: number;
 };
 

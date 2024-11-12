@@ -3,7 +3,10 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ActiveGames, UnreadMessageCounts } from "@/shared/api";
 
 import { ThunkConfig } from "@/app/providers";
+import { GameName } from "@/entities/game/Game";
 import { User } from "@/entities/User";
+
+import { GameStatus } from "../types/user";
 
 export const fetchUsersWithStatuses = createAsyncThunk<
   { users: User[]; currentUsername: string },
@@ -42,12 +45,27 @@ export const fetchUsersWithStatuses = createAsyncThunk<
 
       const onlineSet = new Set(onlineUsernames);
 
-      const updatedUsers = users.map((user: User) => ({
-        ...user,
-        isOnline: onlineSet.has(user.username),
-        unreadMessageCount: unreadMessageCounts[user.username] || 0,
-        activeGames: activeGames[user.username] || [],
-      }));
+      const updatedUsers = users.map((user: User) => {
+        const isOnline = onlineSet.has(user.username);
+        const unreadMessageCount = unreadMessageCounts[user.username] || 0;
+        const userActiveGames = activeGames[user.username] || [];
+
+        const gameStatusMap: Partial<Record<GameName, GameStatus>> = {};
+
+        userActiveGames.forEach((gameName) => {
+          gameStatusMap[gameName] = {
+            hasInvitation: false,
+            isActive: true,
+          };
+        });
+
+        return {
+          ...user,
+          isOnline,
+          unreadMessageCount,
+          gameStatusMap,
+        };
+      });
 
       return { users: updatedUsers, currentUsername };
     } catch (err) {
