@@ -49,7 +49,7 @@ class ActiveGamesService {
 
     if (currentGames[opponentUsername]) {
       currentGames[opponentUsername] = currentGames[opponentUsername].filter(
-        g => g !== game
+        (g) => g !== game
       );
 
       if (currentGames[opponentUsername].length === 0) {
@@ -66,7 +66,9 @@ class ActiveGamesService {
     const opponentGames = await this.getActiveGames(opponentUsername);
 
     if (opponentGames[username]) {
-      opponentGames[username] = opponentGames[username].filter(g => g !== game);
+      opponentGames[username] = opponentGames[username].filter(
+        (g) => g !== game
+      );
 
       if (opponentGames[username].length === 0) {
         delete opponentGames[username];

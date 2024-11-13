@@ -13,6 +13,7 @@ async function handleInviteSubscriptions(socket, username) {
     logger.info(
       `Sending game invite from ${username} to ${receiverUsername} for game ${gameName}`
     );
+
     await sendGameInvite(username, receiverUsername, gameName);
   });
 
@@ -20,6 +21,17 @@ async function handleInviteSubscriptions(socket, username) {
     logger.info(
       `Accepting game invite for ${username} with opponent ${opponentUsername} for game ${gameName}`
     );
+    const activeGames = await ActiveGamesService.getActiveGames(username);
+
+    if (
+      activeGames[opponentUsername] &&
+      activeGames[opponentUsername].includes(gameName)
+    ) {
+      logger.info(
+        `Game between ${username} and ${opponentUsername} for ${gameName} already exists.`
+      );
+      return;
+    }
 
     await ActiveGamesService.addActiveGame(
       username,

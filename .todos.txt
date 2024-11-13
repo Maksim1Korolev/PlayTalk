@@ -7,7 +7,6 @@ Upgrade font
 Check rendering
 Blurred messages (Separate background component)
 Scrolling down problem
-Check starting multiple games and starting chess on server side
 Double play button
 
 To add (in the end):
