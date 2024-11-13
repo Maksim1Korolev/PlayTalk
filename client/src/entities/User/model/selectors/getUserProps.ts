@@ -4,6 +4,7 @@ import { StateSchema } from "@/app/providers";
 
 const getUserState = (state: StateSchema) => state.user;
 
+//TODO:Discuss and update to current user's properties
 const getUsersMap = createSelector(
   [getUserState],
   (userState) => userState.users

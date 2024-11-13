@@ -17,7 +17,6 @@ export const updateGameStatusMap = createAsyncThunk<
 >(
   "gameStatus/updateGameStatusMap",
   async ({ username, gameName, statusUpdate }, { dispatch, getState }) => {
-    //TODO:Update
     const state = getState();
     const users = getUsers(state);
     const user = users[username];

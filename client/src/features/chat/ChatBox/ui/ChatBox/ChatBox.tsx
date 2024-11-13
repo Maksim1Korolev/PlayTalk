@@ -20,7 +20,7 @@ export const ChatBox = memo(
     className?: string;
     recipientUsername: string;
   }) => {
-    //TODO:Check for scrolling problem (not critical)
+    //TODO:Check for scrolling problem
     const dummy = useRef<HTMLDivElement>(null);
     const [inputMessage, setInputMessage] = useState("");
 
@@ -38,7 +38,7 @@ export const ChatBox = memo(
       });
 
     useEffect(() => {
-      dummy.current?.scrollIntoView({ behavior: "smooth" });
+      dummy.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
       readAllUnreadMessages([currentUser!.username, recipientUsername].sort());
     }, [messageHistory]);
 
