@@ -98,7 +98,7 @@ export const UserListCard = ({
   };
 
   const setIconProps = () => {
-    const size = 70;
+    const size = 80;
 
     const avatarSrc = getImagePath({
       collection: "avatars",
@@ -155,8 +155,8 @@ export const UserListCard = ({
             >
               <AppImage
                 src={getImagePath({ collection: "appIcons", fileName: "chat" })}
-                width={48}
-                height={48}
+                width={60}
+                height={60}
               />
             </UiButton>
           </div>
