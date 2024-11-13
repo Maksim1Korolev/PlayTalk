@@ -13,7 +13,7 @@ export const acceptGameInvite = createAsyncThunk<
     invite: Invite;
   },
   ThunkConfig<string>
->("chat/sendMessage", async ({ gameSocket, invite }, { dispatch }) => {
+>("invite/acceptGameInvite", async ({ gameSocket, invite }, { dispatch }) => {
   if (gameSocket) {
     console.log(
       `Accepting game invite with opponent ${invite.senderUsername} for game ${invite.gameName}`
