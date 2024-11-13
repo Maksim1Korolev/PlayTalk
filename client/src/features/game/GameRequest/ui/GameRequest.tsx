@@ -78,7 +78,7 @@ export const GameRequest = memo(({ className, position }: GameRequestProps) => {
 
   const handleAcceptGameInvite = () => {
     if (currentInvite && !isDragged) {
-      dispatch(acceptGameInvite(gameSocket, currentInvite));
+      dispatch(acceptGameInvite({ gameSocket, invite: currentInvite }));
       updateGameStatusMap(
         currentInvite.senderUsername,
         currentInvite.gameName,

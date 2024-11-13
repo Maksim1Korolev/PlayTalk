@@ -56,9 +56,12 @@ export const useGameSessionSocket = ({
         );
 
         dispatch(
-          acceptGameInvite(gameSocket, {
-            senderUsername: opponentUsername,
-            gameName,
+          acceptGameInvite({
+            gameSocket,
+            invite: {
+              senderUsername: opponentUsername,
+              gameName,
+            },
           })
         );
       }

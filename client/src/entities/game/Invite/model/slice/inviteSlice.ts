@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+import { acceptGameInvite } from "../thunks/acceptGameInvite";
 import { Invite, InviteState } from "../types/invite";
 
 const initialState: InviteState = {
@@ -65,21 +66,6 @@ const inviteSlice = createSlice({
     },
   },
 });
-
-export const acceptGameInvite =
-  (gameSocket: any, invite: Invite) => (dispatch: any) => {
-    if (gameSocket && invite) {
-      console.log(
-        `Accepting game invite with opponent ${invite.senderUsername} for game ${invite.gameName}`
-      );
-      gameSocket.emit("accept-game", {
-        opponentUsername: invite.senderUsername,
-        gameName: invite.gameName,
-      });
-
-      dispatch(inviteSlice.actions.removeInvite(invite));
-    }
-  };
 
 export const { receiveInvite, removeInvite, skipInvite, clearInvites } =
   inviteSlice.actions;
