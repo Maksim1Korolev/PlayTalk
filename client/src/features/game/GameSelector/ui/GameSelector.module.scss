@@ -3,12 +3,20 @@
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease-in-out;
   z-index: 200; // High z-index to ensure it’s above conflicting elements
+	background-color: var(--buttons-bg);
+	border: 3px solid var(--secondary-color);
+	border-radius: 50%;
 }
 
 .flipped {
   transform: rotateY(180deg); // Flip animation for the toggle element
+}
+
+.playButtonBorder {
+  transition: transform 0.3s ease-in-out;
+	border: 3px solid var(--primary-color);
+	border-radius: 50%;
 }
 
 .overlayIcon {
@@ -19,6 +27,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.gameIcon {
+	border-radius: 50%;
 }
 
 .circleMenuItem {
