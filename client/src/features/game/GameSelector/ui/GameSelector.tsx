@@ -46,6 +46,8 @@ export const GameSelector = ({
   const activeMenuId = useAppSelector(selectActiveMenuId);
   const isSelectorOpen = activeMenuId === menuId;
 
+  const menuItemSize = 60;
+
   const handleMenuToggle = () => {
     if (isSelectorOpen) {
       setIsFlipped(false);
@@ -124,8 +126,8 @@ export const GameSelector = ({
         className={cx(cls.playIcon, {
           [playButtonHighlightClass]: !!playButtonHighlightClass,
         })}
-        width={60}
-        height={60}
+        width={size}
+        height={size}
         src={playButtonSrc}
         draggable={false}
       />
@@ -150,8 +152,8 @@ export const GameSelector = ({
             <CircleMenu
               startAngle={-90}
               rotationAngle={60}
-              itemSize={1.5}
-              radius={3.2}
+              itemSize={2}
+              radius={4}
               open={animateOpen}
               onMenuToggle={handleMenuToggle}
               menuToggleElement={CustomToggleElement}
@@ -184,8 +186,8 @@ export const GameSelector = ({
                   >
                     <AppImage
                       src={gameSrc}
-                      width={48}
-                      height={48}
+                      width={menuItemSize}
+                      height={menuItemSize}
                       draggable={false}
                       alt=""
                       className={cx(cls.gameIcon, {

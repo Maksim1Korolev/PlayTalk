@@ -1,13 +1,14 @@
 To add:
 
 To fix:
-Upgrade UserList, GameSelector and addonCircle styles
+Upgrade UserList and addonCircle styles
 Type any in catch of errors
 Upgrade font
 Check rendering
 Blurred messages (Separate background component)
 Scrolling down problem
 Check starting multiple games and starting chess on server side
+Double play button
 
 To add (in the end):
 Sort out client's and profile's .envs

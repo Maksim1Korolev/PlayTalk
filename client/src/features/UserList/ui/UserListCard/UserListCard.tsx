@@ -43,6 +43,9 @@ export const UserListCard = (props: UserListCardProps) => {
   const { className = "", collapsed = false, isLoading = false } = props;
   const usernameRef = useRef<HTMLParagraphElement>(null);
 
+  const buttonSize = 60;
+  const avatarSize = 80;
+
   useEffect(() => {
     const adjustFontSize = (
       element: HTMLElement,
@@ -92,8 +95,6 @@ export const UserListCard = (props: UserListCardProps) => {
   };
 
   const setIconProps = () => {
-    const size = 80;
-
     const avatarSrc = getImagePath({
       collection: "avatars",
       fileName: user?.avatarFileName,
@@ -101,8 +102,8 @@ export const UserListCard = (props: UserListCardProps) => {
 
     const iconProps: AppImageProps = {
       src: avatarSrc,
-      width: size,
-      height: size,
+      width: avatarSize,
+      height: avatarSize,
       alt: user?.username,
     };
 
@@ -149,8 +150,8 @@ export const UserListCard = (props: UserListCardProps) => {
             >
               <AppImage
                 src={getImagePath({ collection: "appIcons", fileName: "chat" })}
-                width={60}
-                height={60}
+                width={buttonSize}
+                height={buttonSize}
               />
             </UiButton>
           </div>
@@ -158,6 +159,7 @@ export const UserListCard = (props: UserListCardProps) => {
             <GameSelector
               className={cls.playButton}
               userGameStatusMap={user?.gameStatusMap}
+              size={buttonSize}
               menuId={user?.username || ""}
               onGameClicked={onGameClicked}
             />
