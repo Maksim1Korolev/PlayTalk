@@ -122,8 +122,8 @@ export const GameSelector = ({
         className={cx(cls.playIcon, {
           [playButtonHighlightClass]: !!playButtonHighlightClass,
         })}
-        width={48}
-        height={48}
+        width={60}
+        height={60}
         src={playButtonSrc}
         draggable={false}
       />

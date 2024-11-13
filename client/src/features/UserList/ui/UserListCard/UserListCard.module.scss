@@ -43,6 +43,7 @@
       border-radius: 50%;
 
       .chatButton {
+        background-color: var(--buttons-bg);
         border: 3px solid var(--secondary-color);
         border-radius: 50%;
       }
@@ -53,6 +54,7 @@
       border-radius: 50%;
 
       .playButton {
+        background-color: var(--buttons-bg);
         border: 3px solid var(--secondary-color);
         border-radius: 50%;
       }
