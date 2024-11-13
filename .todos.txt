@@ -1,7 +1,7 @@
 To add:
 
 To fix:
-Upgrade UserList styles
+Upgrade UserList, GameSelector and addonCircle styles
 Type any in catch of errors
 Change user to username in chatModalData
 Unread messages on circleModal
@@ -16,7 +16,7 @@ Check starting multiple games and starting chess on server side
 
 To add (in the end):
 Sort out client's and profile's .envs
-Styles
+General styles
 
 
 To add (after the end):
