@@ -147,12 +147,6 @@ export const UserListCard = ({
           {user?.username}
         </UiText>
         <HStack className={cls.buttons} gap="8">
-          <GameSelector
-            className={cls.playButton}
-            userGameStatusMap={user?.gameStatusMap}
-            menuId={user?.username || ""}
-            onGameClicked={onGameClicked}
-          />
           <div className={cls.chatButtonBorder}>
             <UiButton
               className={cls.chatButton}
@@ -165,6 +159,14 @@ export const UserListCard = ({
                 height={48}
               />
             </UiButton>
+          </div>
+          <div className={cls.playButtonBorder}>
+            <GameSelector
+              className={cls.playButton}
+              userGameStatusMap={user?.gameStatusMap}
+              menuId={user?.username || ""}
+              onGameClicked={onGameClicked}
+            />
           </div>
         </HStack>
       </HStack>
