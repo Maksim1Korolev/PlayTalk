@@ -1,10 +1,15 @@
 export {
-  userReducer,
-  getUsers,
+  fetchUsersWithStatuses,
   getCurrentUser,
+  getUser,
+  getUserAvatarFileName,
+  getUserInvitingStatus,
+  getUserOnlineStatus,
+  getUserUnreadMessageCount,
+  getUsers,
   getUsersLoadingStatus,
   userActions,
-  fetchUsersWithStatuses,
+  userReducer,
 } from "./model";
 export type { CurrentUser, User, UserState } from "./model";
 

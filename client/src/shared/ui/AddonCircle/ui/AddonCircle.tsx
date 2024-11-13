@@ -1,8 +1,9 @@
 import cls from "./AddonCircle.module.scss";
-import { cx } from "@/shared/lib";
+
 import { memo } from "react";
 
-import { AppSvg, SVGProps, AppImage, AppImageProps } from "@/shared/ui";
+import { cx } from "@/shared/lib";
+import { AppImage, AppImageProps, AppSvg, SVGProps } from "@/shared/ui";
 
 export type AddonCircleIconProps = SVGProps | AppImageProps;
 
@@ -24,24 +25,12 @@ export const AddonCircle = memo(
     addonBottomRight,
     addonTopLeft,
     addonBottomLeft,
-    onClick,
   }: AddonCircleProps) => {
-    const handleIconClicked = () => {
-      if (onClick) {
-        onClick();
-      }
-      return;
-    };
     const appIcon =
       "Svg" in iconProps ? (
-        <AppSvg
-          {...(iconProps as SVGProps)} // Render AppSvg if the `Svg` property exists
-          clickable
-          onClick={handleIconClicked}
-          ref={undefined}
-        />
+        <AppSvg {...(iconProps as SVGProps)} ref={undefined} />
       ) : (
-        <AppImage {...iconProps} clickable onClick={handleIconClicked} />
+        <AppImage {...iconProps} />
       );
 
     return (
