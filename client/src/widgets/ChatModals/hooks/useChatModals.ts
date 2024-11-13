@@ -9,7 +9,6 @@ import {
   Modal,
   modalActions,
 } from "@/entities/Modal";
-import { User } from "@/entities/User";
 
 export const useChatModals = () => {
   const [chatModals, setChatModals] = useState<Modal<ChatModalData>[]>([]);
@@ -18,28 +17,28 @@ export const useChatModals = () => {
   const modalMaxCount = useAppSelector(getModalMaxCount);
 
   const handleOpenChatModal = useCallback(
-    (user: User) => {
+    (recipientUsername: string) => {
       if (chatModals && modalCount > modalMaxCount) {
         return;
       }
       if (
         chatModals?.find(
-          ({ data: { user: currentUser } }) =>
-            currentUser.username === user.username
+          ({ data: { recipientUsername: currentUsername } }) =>
+            currentUsername === recipientUsername
         )
       ) {
         return;
       }
 
       const newChatModalProps: Modal<ChatModalData> = {
-        modalId: user.username,
-        data: { user },
+        modalId: recipientUsername,
+        data: { recipientUsername },
       };
 
       setChatModals((prev) => [...(prev || []), newChatModalProps]);
       dispatch(modalActions.addModal(newChatModalProps));
     },
-    [chatModals, dispatch]
+    [chatModals, dispatch, modalCount, modalMaxCount]
   );
 
   const handleCloseChatModal = (modalId: string) => {
