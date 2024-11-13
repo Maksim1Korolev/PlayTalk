@@ -2,14 +2,7 @@ import { memo, useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { gameApiService } from "@/shared/api";
-import { useAppSelector } from "@/shared/lib";
-import {
-  AddonCircleProps,
-  AppImage,
-  CircleModal,
-  useModalPosition,
-} from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
+import { CircleModal, useModalPosition } from "@/shared/ui";
 
 import {
   Game,
@@ -18,8 +11,8 @@ import {
   TicTacToeGame,
 } from "@/entities/game/Game";
 import { Modal } from "@/entities/Modal";
-import { getUsers } from "@/entities/User";
 import { TicTacToe } from "@/features/game";
+import { GameAddonCircleContainer } from "@/features/game/GameAddonCircleContainer";
 
 import { generateModalId } from "../hooks/useGameModals";
 
@@ -34,7 +27,6 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
 
   const [games, setGames] = useState<{ [key: string]: Game }>({});
 
-  const users = useAppSelector(getUsers);
   const { getStartingPosition } = useModalPosition();
 
   useEffect(() => {
@@ -81,7 +73,7 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
       modalId: string;
       gameData: GameData;
     }) => {
-      const { opponentUsername, gameName } = gameData;
+      const { opponentUsername } = gameData;
 
       const headerString = `Opponent: ${opponentUsername}`;
 
@@ -96,12 +88,14 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
           return (
             <CircleModal
               key={modalId}
+              headerString={headerString}
               position={position}
               width={365}
               height={520}
+              collapsedComponent={
+                <GameAddonCircleContainer gameData={gameData} />
+              }
               onClose={() => handleCloseGameModal(modalId)}
-              headerString={headerString}
-              addonCircleProps={getAddonCircleProps(opponentUsername, gameName)}
             >
               <TicTacToe key={gameId} game={games[gameId] as TicTacToeGame} />
             </CircleModal>
@@ -111,48 +105,14 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
       }
     };
 
-    const getAddonCircleProps = (
-      opponentUsername: string,
-      currentGameName: string
-    ): AddonCircleProps => {
-      const opponentAvatarFileName = users[opponentUsername]?.avatarFileName;
-
-      const gameIconUrl = getImagePath({
-        collection: "gameIcons",
-        fileName: currentGameName,
-      });
-      const avatarIconUrl = getImagePath({
-        collection: "avatars",
-        fileName: opponentAvatarFileName,
-      });
-
-      return {
-        iconProps: {
-          src: gameIconUrl,
-          width: 80,
-          height: 80,
-          draggable: false,
-          highlight: "primary",
-        },
-        addonTopRight: avatarIconUrl ? (
-          <AppImage
-            src={avatarIconUrl}
-            width={30}
-            height={30}
-            draggable={false}
-          />
-        ) : null,
-      };
-    };
-
     const handleCloseGameModal = (modalId: string) => {
       onClose({ modalId });
     };
 
-    return gameModals.map(({ modalId, data }) => {
-      return getGameComponent({ modalId, gameData: data });
-    });
-  }, [gameModals, games, users, onClose, getStartingPosition]);
+    return gameModals.map(({ modalId, data }) =>
+      getGameComponent({ modalId, gameData: data })
+    );
+  }, [gameModals, games, onClose, getStartingPosition]);
 
   return renderGameModals();
 });
