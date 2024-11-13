@@ -1,13 +1,12 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { useAppDispatch } from "@/shared/lib";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 
 import {
   chatActions,
   fetchMessages,
-  getChatMessages,
   markMessagesAsRead,
   Message,
   postMessage,
@@ -26,8 +25,6 @@ export const useChatMessages = ({
   const { communicationSocket } = sockets;
 
   const dispatch = useAppDispatch();
-
-  const messages = useAppSelector(getChatMessages(recipientUsername));
 
   const [typing, setTyping] = useState(false);
 
@@ -90,7 +87,6 @@ export const useChatMessages = ({
       if (message.username === recipientUsername) {
         console.log(message);
 
-        //setMessageHistory((prev) => [...prev, message]);
         dispatch(
           chatActions.addMessage({ username: recipientUsername, message })
         );
@@ -131,7 +127,6 @@ export const useChatMessages = ({
   }, [communicationSocket, recipientUsername, typing]);
 
   return {
-    messageHistory: messages,
     sendMessage,
     readAllUnreadMessages,
     notifyTyping,

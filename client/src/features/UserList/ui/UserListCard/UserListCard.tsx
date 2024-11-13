@@ -19,58 +19,48 @@ import { GameData, GameName } from "@/entities/game/Game";
 import { User, UserOnlineIndicator } from "@/entities/User";
 import { GameSelector } from "@/features/game";
 
-type UserListCardBase = {
+type UserListCardBaseProps = {
   className?: string;
 };
 
-interface UserListCardProps extends UserListCardBase {
+interface DefaultProps extends UserListCardBaseProps {
   className?: string;
   user: User;
   collapsed?: boolean;
   isLoading?: false;
   handlePlayButtonClicked: (gameData: GameData) => void;
-  handleChatButtonClicked: (user: User) => void;
+  handleChatButtonClicked: (username: string) => void;
 }
 
-interface UserListCardLoading extends UserListCardBase {
+interface LoadingProps extends UserListCardBaseProps {
   isLoading: true;
-  user?: User;
   collapsed?: boolean;
-  handlePlayButtonClicked?: (gameData: GameData) => void;
-  handleChatButtonClicked?: (user: User) => void;
 }
 
-type UserListCard = UserListCardProps | UserListCardLoading;
+type UserListCardProps = DefaultProps | LoadingProps;
 
-export const UserListCard = ({
-  className = "",
-  user,
-  collapsed = false,
-  isLoading = false,
-  handlePlayButtonClicked,
-  handleChatButtonClicked,
-}: UserListCard) => {
+export const UserListCard = (props: UserListCardProps) => {
+  const { className = "", collapsed = false, isLoading = false } = props;
   const usernameRef = useRef<HTMLParagraphElement>(null);
 
-  const adjustFontSize = (
-    element: HTMLElement,
-    maxWidth: number,
-    minFontSize: number = 0.6
-  ) => {
-    let fontSize = parseFloat(window.getComputedStyle(element).fontSize);
-    while (element.scrollWidth > maxWidth && fontSize > minFontSize) {
-      fontSize -= 0.1;
-      element.style.fontSize = `${fontSize}rem`;
-    }
-  };
-
   useEffect(() => {
+    const adjustFontSize = (
+      element: HTMLElement,
+      maxWidth: number,
+      minFontSize: number = 0.6
+    ) => {
+      let fontSize = parseFloat(window.getComputedStyle(element).fontSize);
+      while (element.scrollWidth > maxWidth && fontSize > minFontSize) {
+        fontSize -= 0.1;
+        element.style.fontSize = `${fontSize}rem`;
+      }
+    };
     if (usernameRef.current) {
       adjustFontSize(usernameRef.current, 50);
     }
   }, [usernameRef]);
 
-  if (isLoading)
+  if (isLoading) {
     return (
       <HStack
         className={cx(cls.UserListCard, { [cls.collapsed]: collapsed }, [
@@ -84,15 +74,19 @@ export const UserListCard = ({
         <Skeleton border="100%" height={50} width={50} />
       </HStack>
     );
+  }
+
+  const { user, handlePlayButtonClicked, handleChatButtonClicked } =
+    props as DefaultProps;
 
   const onChatOpen = () => {
-    if (handleChatButtonClicked && user) {
-      handleChatButtonClicked(user);
+    if (user) {
+      handleChatButtonClicked(user.username);
     }
   };
 
   const onGameClicked = ({ gameName }: { gameName: GameName }) => {
-    if (handlePlayButtonClicked && user) {
+    if (user) {
       handlePlayButtonClicked({ opponentUsername: user.username, gameName });
     }
   };

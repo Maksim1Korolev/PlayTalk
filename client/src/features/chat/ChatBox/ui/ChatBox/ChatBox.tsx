@@ -5,8 +5,8 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cx, useAppSelector } from "@/shared/lib";
 import { Card, UiText, VStack } from "@/shared/ui";
 
-import { getChatIsTyping, Message } from "@/entities/Chat";
-import { CurrentUser, User } from "@/entities/User";
+import { getChatIsTyping, getChatMessages, Message } from "@/entities/Chat";
+import { getCurrentUser, getUserAvatarFileName } from "@/entities/User";
 
 import { useChatMessages } from "../../hooks/useChatMessages";
 import { ChatInput } from "../ChatInput";
@@ -15,28 +15,31 @@ import { ChatMessage } from "../ChatMessage";
 export const ChatBox = memo(
   ({
     className,
-    currentUser,
-    recipient,
+    recipientUsername,
   }: {
     className?: string;
-    currentUser: CurrentUser;
-    recipient: User;
+    recipientUsername: string;
   }) => {
     //TODO:Check for scrolling problem (not critical)
     const dummy = useRef<HTMLDivElement>(null);
     const [inputMessage, setInputMessage] = useState("");
 
-    const isTyping = useAppSelector(getChatIsTyping(recipient.username));
-    console.log(isTyping);
+    const currentUser = useAppSelector(getCurrentUser);
+    const recipientAvatarFileName = useAppSelector(
+      getUserAvatarFileName(recipientUsername)
+    );
 
-    const { messageHistory, sendMessage, notifyTyping, readAllUnreadMessages } =
+    const messageHistory = useAppSelector(getChatMessages(recipientUsername));
+    const isTyping = useAppSelector(getChatIsTyping(recipientUsername));
+
+    const { sendMessage, notifyTyping, readAllUnreadMessages } =
       useChatMessages({
-        recipientUsername: recipient.username,
+        recipientUsername,
       });
 
     useEffect(() => {
       dummy.current?.scrollIntoView({ behavior: "smooth" });
-      readAllUnreadMessages([currentUser!.username, recipient.username].sort());
+      readAllUnreadMessages([currentUser!.username, recipientUsername].sort());
     }, [messageHistory]);
 
     const renderMessageHistory = useCallback(() => {
@@ -48,11 +51,11 @@ export const ChatBox = memo(
           avatarFileName={
             currentUser!.username === message.username
               ? currentUser!.avatarFileName
-              : recipient.avatarFileName
+              : recipientAvatarFileName
           }
         />
       ));
-    }, [messageHistory, currentUser, recipient.avatarFileName]);
+    }, [messageHistory, currentUser, recipientAvatarFileName]);
 
     return (
       <VStack className={cx(cls.Chat, {}, [className])} justify="start" max>

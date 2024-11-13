@@ -9,7 +9,7 @@ import { cx, useAppDispatch, useAppSelector } from "@/shared/lib";
 import { Card, HStack, UiText, VStack } from "@/shared/ui";
 
 import { GameData } from "@/entities/game/Game";
-import { getUsers, User } from "@/entities/User";
+import { getUsers } from "@/entities/User";
 import { getUsersLoadingStatus } from "@/entities/User/model";
 import { fetchUsersWithStatuses } from "@/entities/User/model/thunks/fetchUsersWithStatuses";
 
@@ -19,7 +19,7 @@ import { UserListCard } from "../UserListCard/UserListCard";
 export interface UserListProps {
   className?: string;
   collapsed?: boolean;
-  handleUserChatButtonClicked: (user: User) => void;
+  handleUserChatButtonClicked: (username: string) => void;
   handleUserPlayButtonClicked: (gameData: GameData) => void;
 }
 

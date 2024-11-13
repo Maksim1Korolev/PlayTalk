@@ -1,5 +1,3 @@
-import { User } from "@/entities/User";
-
 export interface ChatState {
   chats: Record<string, Chat>;
 }
@@ -21,5 +19,5 @@ export interface Chat {
 }
 
 export type ChatModalData = {
-  user: User;
+  recipientUsername: string;
 };

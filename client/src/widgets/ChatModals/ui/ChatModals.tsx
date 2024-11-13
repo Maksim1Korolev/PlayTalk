@@ -1,11 +1,10 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { useAppDispatch } from "@/shared/lib";
 import { CircleModal, useModalPosition } from "@/shared/ui";
 
 import { ChatModalData } from "@/entities/Chat";
 import { Modal, modalActions } from "@/entities/Modal";
-import { getCurrentUser } from "@/entities/User";
 import { ChatBox } from "@/features/chat";
 import { ChatAddonCircleContainer } from "@/features/chat/ChatAddonCircleContainer";
 
@@ -17,21 +16,18 @@ export const ChatModals = memo(
     chatModals: Modal<ChatModalData>[];
     onClose: (modalIdß: string) => void;
   }) => {
-    const currentUser = useAppSelector(getCurrentUser);
-
     const dispatch = useAppDispatch();
 
     const { getStartingPosition } = useModalPosition();
 
-    const renderChatModals = () => {
+    const renderChatModals = useCallback(() => {
       const handleCloseChatModal = (modalId: string) => {
         onClose(modalId);
         dispatch(modalActions.removeModal(modalId));
       };
 
       return chatModals?.map(({ modalId, data }) => {
-        const { user } = data;
-        const { username } = user;
+        const { recipientUsername } = data;
 
         const position = getStartingPosition();
 
@@ -40,16 +36,16 @@ export const ChatModals = memo(
             key={modalId}
             position={position}
             onClose={() => handleCloseChatModal(modalId)}
-            headerString={`Chat with ${user.username}`}
+            headerString={`Chat with ${recipientUsername}`}
             collapsedComponent={
-              <ChatAddonCircleContainer username={username} />
+              <ChatAddonCircleContainer username={recipientUsername} />
             }
           >
-            <ChatBox currentUser={currentUser} recipient={user} />
+            <ChatBox recipientUsername={recipientUsername} />
           </CircleModal>
         );
       });
-    };
+    }, [chatModals, dispatch, getStartingPosition, onClose]);
 
     return renderChatModals();
   }
