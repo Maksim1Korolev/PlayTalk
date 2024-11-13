@@ -6,6 +6,7 @@ Change user to username in chatModalData
 ReactQuery => redux
 Unread messages on circleModal
 Upgrade font
+Check rendering
 Scrolling down problem
 Put another svg and 2 borders on play button
 Blurred messages (Separate background component)
