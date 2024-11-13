@@ -4,7 +4,6 @@ import { StateSchema } from "@/app/providers";
 
 const getUserState = (state: StateSchema) => state.user;
 
-//TODO:Discuss and update to current user's properties
 const getUsersMap = createSelector(
   [getUserState],
   (userState) => userState.users
@@ -25,13 +24,10 @@ export const getUserAvatarFileName = (username: string) =>
     (users) => users[username]?.avatarFileName || ""
   );
 
-export const getUserActiveGames = (username: string) =>
-  createSelector([getUsersMap], (users) => users[username]?.activeGames || []);
-
-export const getUserInvitingStatus = (username: string) =>
+export const getUserGameStatusMap = (username: string) =>
   createSelector(
     [getUsersMap],
-    (users) => users[username]?.isInviting || false
+    (users) => users[username]?.gameStatusMap || {}
   );
 
 export const getUser = (username: string) =>
