@@ -38,14 +38,21 @@
   .buttons {
     margin-left: auto; // Pushes the buttons to the end
 
-    .playButton {
-    }
-
     .chatButtonBorder {
       border: 3px solid var(--primary-color);
       border-radius: 50%;
 
       .chatButton {
+        border: 3px solid var(--secondary-color);
+        border-radius: 50%;
+      }
+    }
+
+    .playButtonBorder {
+      border: 3px solid var(--primary-color);
+      border-radius: 50%;
+
+      .playButton {
         border: 3px solid var(--secondary-color);
         border-radius: 50%;
       }
