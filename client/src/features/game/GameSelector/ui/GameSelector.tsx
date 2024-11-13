@@ -55,9 +55,22 @@ export const GameSelector = ({
         dispatch(circleMenuActions.closeMenu());
         setAnimateOpen(false);
         setShowMenu(false);
-      }, 100);
+      }, 200);
     } else {
       dispatch(circleMenuActions.closeMenu());
+
+      setShowMenu(true);
+      setTimeout(() => {
+        setIsFlipped(true);
+        setAnimateOpen(true);
+        dispatch(circleMenuActions.openMenu(menuId));
+      }, 200);
+    }
+  };
+
+  //checking resize
+  useEffect(() => {
+    const updateMenuPosition = () => {
       const rect = playButtonRef.current?.getBoundingClientRect();
       if (rect) {
         setMenuPosition({
@@ -65,24 +78,16 @@ export const GameSelector = ({
           left: rect.left + window.scrollX,
         });
       }
-      setShowMenu(true);
-      setTimeout(() => {
-        setIsFlipped(true);
-        setAnimateOpen(true);
-        dispatch(circleMenuActions.openMenu(menuId));
-      }, 50);
-    }
-  };
+    };
 
-  useEffect(() => {
-    if (!isSelectorOpen) {
-      setIsFlipped(false);
-      setTimeout(() => {
-        setAnimateOpen(false);
-        setShowMenu(false);
-      }, 100);
-    }
-  }, [isSelectorOpen]);
+    updateMenuPosition();
+
+    window.addEventListener("resize", updateMenuPosition);
+
+    return () => {
+      window.removeEventListener("resize", updateMenuPosition);
+    };
+  }, [playButtonRef]);
 
   const playButtonHighlightType: HighlightType = useMemo(() => {
     const hasInvitation = Object.values(userGameStatusMap || {}).some(
@@ -117,20 +122,20 @@ export const GameSelector = ({
 
   const CustomToggleElement = (
     <div
-      className={cx(cls.customToggle, {
+      className={cx(cls.playButtonBorder, {
+        [playButtonHighlightClass]: !!playButtonHighlightClass,
         [cls.flipped]: isFlipped,
       })}
-      onClick={handleMenuToggle}
     >
-      <AppImage
-        className={cx(cls.playIcon, {
-          [playButtonHighlightClass]: !!playButtonHighlightClass,
-        })}
-        width={size}
-        height={size}
-        src={playButtonSrc}
-        draggable={false}
-      />
+      <div className={cx(cls.customToggle)} onClick={handleMenuToggle}>
+        <AppImage
+          className={cx(cls.playIcon)}
+          width={size}
+          height={size}
+          src={playButtonSrc}
+          draggable={false}
+        />
+      </div>
     </div>
   );
 
@@ -142,6 +147,7 @@ export const GameSelector = ({
       {showMenu &&
         ReactDOM.createPortal(
           <div
+            className={className}
             style={{
               position: "absolute",
               top: menuPosition.top,
@@ -153,7 +159,7 @@ export const GameSelector = ({
               startAngle={-90}
               rotationAngle={60}
               itemSize={2}
-              radius={4}
+              radius={5}
               open={animateOpen}
               onMenuToggle={handleMenuToggle}
               menuToggleElement={CustomToggleElement}
@@ -179,10 +185,14 @@ export const GameSelector = ({
 
                 return (
                   <CircleMenuItem
-                    className={cls.circleMenuItem}
+                    className={cx(cls.circleMenuItem)}
                     key={gameName}
                     tooltip={gameName}
-                    onClick={() => handleGameClicked(gameName)}
+                    onClick={() => {
+                      if (isFlipped) {
+                        handleGameClicked(gameName);
+                      }
+                    }}
                   >
                     <AppImage
                       src={gameSrc}
