@@ -3,7 +3,6 @@ To add:
 To fix:
 Upgrade UserList, GameSelector and addonCircle styles
 Type any in catch of errors
-Change user to username in chatModalData
 Upgrade font
 Check rendering
 Scrolling down problem
