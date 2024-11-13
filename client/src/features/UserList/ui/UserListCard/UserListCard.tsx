@@ -153,17 +153,12 @@ export const UserListCard = (props: UserListCardProps) => {
                 height={48}
               />
             </UiButton>
-            <GameSelector
-              className={cls.playButton}
-              userGameStatusMap={user?.gameStatusMap}
-              menuId={user?.username || ""}
-              onGameClicked={onGameClicked}
-            />
           </div>
           <GameSelector
             className={cls.playButton}
-            onGameClicked={onGameClicked}
+            userGameStatusMap={user?.gameStatusMap}
             menuId={user?.username || ""}
+            onGameClicked={onGameClicked}
           />
         </HStack>
       </HStack>
