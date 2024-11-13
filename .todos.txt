@@ -6,7 +6,8 @@ Type any in catch of errors
 Upgrade font
 Check rendering
 Blurred messages (Separate background component)
-Double play button
+Relocate styles of chatButton
+False click on animation in GameSelector
 
 To add (in the end):
 Sort out client's and profile's .envs
