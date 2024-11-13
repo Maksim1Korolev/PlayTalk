@@ -9,7 +9,7 @@ import {
 } from "react";
 
 import { cx } from "@/shared/lib";
-import { HighlightType, useHighlight } from "@/shared/lib";
+import { getHighlightClass, HighlightType } from "@/shared/lib";
 
 type ObjectFit = "cover" | "fill" | "contain" | "none";
 
@@ -70,7 +70,7 @@ export const AppImage = memo(
       };
     }, [src]);
 
-    const highlightClass = useHighlight(highlight);
+    const highlightClass = getHighlightClass(highlight);
 
     if (isLoading && fallback) {
       return fallback;

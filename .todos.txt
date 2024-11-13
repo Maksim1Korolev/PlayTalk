@@ -12,6 +12,7 @@ Put another svg and 2 borders on play button
 Blurred messages (Separate background component)
 Implement highlight
 Disable buttons in userList accordingly
+Check starting multiple games on server side
 
 To add (in the end):
 Sort out client's and profile's .envs

@@ -1,8 +1,9 @@
 import cls from "./AppSvg.module.scss";
-import { cx } from "@/shared/lib";
+
 import { memo } from "react";
 
-import { HighlightType, useHighlight } from "@/shared/lib";
+import { cx } from "@/shared/lib";
+import { getHighlightClass, HighlightType } from "@/shared/lib";
 
 type SvgProps = Omit<React.SVGProps<SVGSVGElement>, "onClick" | "fill">;
 
@@ -45,7 +46,7 @@ export const AppSvg = memo((props: SVGProps) => {
     backgroundColor.charAt(0).toUpperCase() + backgroundColor.slice(1)
   }`;
 
-  const highlightClass = useHighlight(highlight);
+  const highlightClass = getHighlightClass(highlight);
 
   const icon = (
     <Svg

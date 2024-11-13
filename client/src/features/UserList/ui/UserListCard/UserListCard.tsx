@@ -149,8 +149,9 @@ export const UserListCard = ({
         <HStack className={cls.buttons} gap="8">
           <GameSelector
             className={cls.playButton}
-            onGameClicked={onGameClicked}
+            userGameStatusMap={user?.gameStatusMap}
             menuId={user?.username || ""}
+            onGameClicked={onGameClicked}
           />
           <div className={cls.chatButtonBorder}>
             <UiButton

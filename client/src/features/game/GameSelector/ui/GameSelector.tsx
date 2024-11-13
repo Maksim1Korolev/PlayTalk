@@ -1,36 +1,37 @@
 import cls from "./GameSelector.module.scss";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CircleMenu, CircleMenuItem } from "react-circular-menu";
 import ReactDOM from "react-dom";
 
 import {
   cx,
+  getHighlightClass,
   HighlightType,
   useAppDispatch,
   useAppSelector,
-  useHighlight,
 } from "@/shared/lib";
 import { AppImage } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
 import { GameName, GameNames } from "@/entities/game/Game";
+import { GameStatus } from "@/entities/game/GameStatus";
 import { circleMenuActions, selectActiveMenuId } from "@/features/UserList";
 
 interface GameSelectorProps {
   className?: string;
   menuId: string;
+  userGameStatusMap?: Partial<Record<GameName, GameStatus>>;
   onGameClicked: ({ gameName }: { gameName: GameName }) => void;
 }
 
 export const GameSelector = ({
   className,
   menuId,
+  userGameStatusMap,
   onGameClicked,
 }: GameSelectorProps) => {
   const gameNames = Object.values(GameNames);
-
-  const highlightClass = useHighlight("secondary");
 
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [showMenu, setShowMenu] = useState(false);
@@ -79,6 +80,25 @@ export const GameSelector = ({
     }
   }, [isSelectorOpen]);
 
+  const playButtonHighlightType: HighlightType = useMemo(() => {
+    const hasInvitation = Object.values(userGameStatusMap || {}).some(
+      (status) => status.hasInvitation
+    );
+    const isActive = Object.values(userGameStatusMap || {}).some(
+      (status) => status.isActive
+    );
+
+    if (isActive) {
+      return "primary";
+    } else if (hasInvitation) {
+      return "secondary";
+    } else {
+      return "none";
+    }
+  }, [userGameStatusMap]);
+
+  const playButtonHighlightClass = getHighlightClass(playButtonHighlightType);
+
   const handleGameClicked = (gameName: GameName) => {
     if (!gameName) return;
 
@@ -99,7 +119,9 @@ export const GameSelector = ({
       onClick={handleMenuToggle}
     >
       <AppImage
-        className={cls.playIcon}
+        className={cx(cls.playIcon, {
+          [playButtonHighlightClass]: !!playButtonHighlightClass,
+        })}
         width={60}
         height={60}
         src={playButtonSrc}
@@ -133,10 +155,24 @@ export const GameSelector = ({
               menuToggleElement={CustomToggleElement}
             >
               {gameNames.map((gameName) => {
+                const gameStatus = userGameStatusMap?.[gameName];
+                const isActive = gameStatus?.isActive;
+                const hasInvitation = gameStatus?.hasInvitation;
+
+                let iconHighlightType: HighlightType = "none";
+                if (isActive) {
+                  iconHighlightType = "primary";
+                } else if (hasInvitation) {
+                  iconHighlightType = "secondary";
+                }
+
+                const iconHighlightClass = getHighlightClass(iconHighlightType);
+
                 const gameSrc = getImagePath({
                   collection: "gameIcons",
                   fileName: gameName,
                 });
+
                 return (
                   <CircleMenuItem
                     className={cls.circleMenuItem}
@@ -151,7 +187,7 @@ export const GameSelector = ({
                       draggable={false}
                       alt=""
                       className={cx(cls.gameIcon, {
-                        [highlightClass]: !!highlightClass,
+                        [iconHighlightClass]: !!iconHighlightClass,
                       })}
                     />
                   </CircleMenuItem>

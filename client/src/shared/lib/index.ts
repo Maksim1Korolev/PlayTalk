@@ -1,11 +1,10 @@
-export { cx } from "./className/cx"
-export type { Mods } from "./className/cx"
-export { SocketContext } from "./context/SocketContext"
-export { useAppDispatch, useAppSelector } from "./hooks/storeHooks"
-export { useHighlight } from "./hooks/useHighlight"
-export type { HighlightType } from "./hooks/useHighlight"
-export { useModal } from "./hooks/useModal"
-export { useModalDrag } from "./hooks/useModalDrag"
-export { useScroll } from "./hooks/useScroll"
-export { useSockets } from "./hooks/useSockets"
-
+export { cx } from "./className/cx";
+export type { Mods } from "./className/cx";
+export { SocketContext } from "./context/SocketContext";
+export { useAppDispatch, useAppSelector } from "./hooks/storeHooks";
+export { getHighlightClass } from "./hooks/useHighlight";
+export type { HighlightType } from "./hooks/useHighlight";
+export { useModal } from "./hooks/useModal";
+export { useModalDrag } from "./hooks/useModalDrag";
+export { useScroll } from "./hooks/useScroll";
+export { useSockets } from "./hooks/useSockets";
