@@ -17,11 +17,6 @@ export type GameData = {
   gameName: GameName;
 };
 
-export type GameStatus = {
-  hasInvitation?: boolean;
-  isActive?: boolean;
-};
-
 export const isGameName = (gameName: string): gameName is GameName => {
   return gameName === "tic-tac-toe" || gameName === "chess";
 };

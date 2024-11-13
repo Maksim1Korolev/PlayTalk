@@ -12,7 +12,8 @@ import { SocketContext } from "@/shared/lib/context/SocketContext";
 import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
-import { GameName, GameStatus } from "@/entities/game/Game";
+import { GameName } from "@/entities/game/Game";
+import { GameStatus } from "@/entities/game/GameStatus";
 import {
   acceptGameInvite,
   Invite,

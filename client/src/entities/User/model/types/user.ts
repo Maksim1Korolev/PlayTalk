@@ -1,4 +1,5 @@
-import { GameName, GameStatus } from "@/entities/game/Game";
+import { GameName } from "@/entities/game/Game";
+import { GameStatus } from "@/entities/game/GameStatus";
 
 export type User = {
   username: string;
