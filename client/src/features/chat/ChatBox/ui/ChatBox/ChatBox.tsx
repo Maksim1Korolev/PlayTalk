@@ -20,7 +20,6 @@ export const ChatBox = memo(
     className?: string;
     recipientUsername: string;
   }) => {
-    //TODO:Check for scrolling problem
     const dummy = useRef<HTMLDivElement>(null);
     const [inputMessage, setInputMessage] = useState("");
 

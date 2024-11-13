@@ -7,7 +7,7 @@ interface UseScrollProps {
   startPosition?: StartPosition;
 }
 
-//TODO:Get back to it and to the neighbor file
+//May be used for advanced scroll afterwards
 /**
  * Reusable hook for Modal Components (drawer/modal)
  * @param

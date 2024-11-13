@@ -47,7 +47,6 @@ export const useGameSessionSocket = ({
     [gameSocket]
   );
 
-  //TODO:Move
   const handleAcceptGame = useCallback(
     ({ opponentUsername, gameName }: GameData) => {
       if (gameSocket) {

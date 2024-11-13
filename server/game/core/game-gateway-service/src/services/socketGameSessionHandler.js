@@ -90,7 +90,7 @@ async function startGameConnection(senderUsername, receiverUsername, gameName) {
     } else {
       logger.error(`Error starting game ${gameName}: ${err.message}`);
     }
-    //TODO:Emit error starting game (not critical)
+    //Possible add emit on error here
     return;
   }
 

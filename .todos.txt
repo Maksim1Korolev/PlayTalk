@@ -6,7 +6,6 @@ Type any in catch of errors
 Upgrade font
 Check rendering
 Blurred messages (Separate background component)
-Scrolling down problem
 Double play button
 
 To add (in the end):
