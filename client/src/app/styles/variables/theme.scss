@@ -1,14 +1,14 @@
 body {
   --bg-color: #191919;
-	--some-color: #f73200;
+  --some-color: #f73200;
   --inverted-bg-color: #e8e8ea;
   --primary-color: #5916f3;
-  --modals-bg-color: #563A82;
-  --secondary-color: #FF932A;
+  --modals-bg-color: #563a82;
+  --secondary-color: #ff932a;
   --secondary-bleak-color: #f7a154;
   --accent-color: #5a5eb9;
   --card-bg-color: #222;
-	--blurred-background: rgba(255, 255, 255, 0.1);
+  --blurred-background: rgba(255, 255, 255, 0.1);
   --blurred-border: rgba(255, 255, 255, 0.3);
   --highlight: #bfbaff;
   --cancel: #d95757;
@@ -16,14 +16,15 @@ body {
 
   // redesigned
   --light-bg: #151c1f;
-  --dark-bg-redesigned: #191919;
+  --dark-bg: #191919;
   --text-secondary: #fbf8f3;
   --text-dark: #666;
   --text-tertiary: #9f9f9f;
   --input-border: #767676;
   --input-bg: #424243;
-  --hint-redesigned: #555;
-  --save-redesigned: #6cd98b;
+  --hint: #555;
+  --active: #6cd98b;
+  --save: #30f94b;
 
   // skeleton
   --skeleton-color: #1515ad;

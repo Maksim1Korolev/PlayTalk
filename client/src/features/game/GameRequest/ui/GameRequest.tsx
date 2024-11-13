@@ -97,7 +97,7 @@ export const GameRequest = memo(({ className, position }: GameRequestProps) => {
     draggable: false,
     width: gameIconSize,
     height: gameIconSize,
-    highlight: "secondary",
+    highlight: "invited",
   };
 
   const avatarIconProps: AppImageProps = {

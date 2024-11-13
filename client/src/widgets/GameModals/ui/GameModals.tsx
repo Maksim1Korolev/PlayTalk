@@ -132,7 +132,7 @@ export const GameModals = memo(({ gameModals, onClose }: GameModalsProps) => {
           width: 80,
           height: 80,
           draggable: false,
-          highlight: "primary",
+          highlight: "active",
         },
         addonTopRight: avatarIconUrl ? (
           <AppImage

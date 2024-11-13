@@ -89,9 +89,9 @@ export const GameSelector = ({
     );
 
     if (isActive) {
-      return "primary";
+      return "active";
     } else if (hasInvitation) {
-      return "secondary";
+      return "invited";
     } else {
       return "none";
     }
@@ -161,9 +161,9 @@ export const GameSelector = ({
 
                 let iconHighlightType: HighlightType = "none";
                 if (isActive) {
-                  iconHighlightType = "primary";
+                  iconHighlightType = "active";
                 } else if (hasInvitation) {
-                  iconHighlightType = "secondary";
+                  iconHighlightType = "invited";
                 }
 
                 const iconHighlightClass = getHighlightClass(iconHighlightType);

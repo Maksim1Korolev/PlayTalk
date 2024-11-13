@@ -7,17 +7,17 @@
 .chatMsg {
   display: flex;
   align-items: center;
-  gap: 10px; 
+  gap: 10px;
   max-width: 100%;
 }
 
 .chatMsg.user {
-  flex-direction: row; 
+  flex-direction: row;
 }
 
 .chatMsg.self {
-	margin-left: auto;
-  flex-direction: row-reverse; 
+  margin-left: auto;
+  flex-direction: row-reverse;
 }
 
 .msgAvatar img {
@@ -27,10 +27,10 @@
 }
 
 .cmMsgText {
-	border: 1px solid var(--dark-bg-redesigned);
+  border: 1px solid var(--dark-bg);
   background: var(--text);
   padding: 10px 15px;
-  color: var(--dark-bg-redesigned);
+  color: var(--dark-bg);
   max-width: 75%;
   word-wrap: break-word;
   overflow-wrap: break-word;
