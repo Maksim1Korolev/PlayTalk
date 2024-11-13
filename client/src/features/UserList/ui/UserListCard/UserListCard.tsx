@@ -15,7 +15,7 @@ import {
 import getImagePath from "@/shared/utils/getImagePath";
 
 import { UnreadMessagesCountIndicator } from "@/entities/Chat";
-import { GameData } from "@/entities/game/Game";
+import { GameData, GameName } from "@/entities/game/Game";
 import { User, UserOnlineIndicator } from "@/entities/User";
 import { GameSelector } from "@/features/game";
 

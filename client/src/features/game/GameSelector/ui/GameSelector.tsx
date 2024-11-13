@@ -14,7 +14,7 @@ import {
 import { AppImage } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
-import { GameData, GameName, GameNames } from "@/entities/game/Game";
+import { GameName, GameNames } from "@/entities/game/Game";
 import { circleMenuActions, selectActiveMenuId } from "@/features/UserList";
 
 interface GameSelectorProps {
@@ -85,19 +85,6 @@ export const GameSelector = ({
     onGameClicked({ gameName });
     handleMenuToggle();
   };
-
-  // const onGameClicked = (gameName: GameName) => {
-  //   if (handlePlayButton && user) {
-  //     handlePlayButton({
-  //       gameData: {
-  //         gameName,
-  //         opponentUsername: user.username,
-  //       },
-  //       isInviting: user.isInviting || false,
-  //       isActive: user.activeGames?.includes(gameName) || false,
-  //     });
-  //   }
-  // };
 
   const playButtonSrc = getImagePath({
     collection: "appIcons",
