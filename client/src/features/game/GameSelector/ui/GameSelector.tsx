@@ -22,6 +22,7 @@ interface GameSelectorProps {
   className?: string;
   menuId: string;
   userGameStatusMap?: Partial<Record<GameName, GameStatus>>;
+  size?: number;
   onGameClicked: ({ gameName }: { gameName: GameName }) => void;
 }
 
@@ -29,6 +30,7 @@ export const GameSelector = ({
   className,
   menuId,
   userGameStatusMap,
+  size = 60,
   onGameClicked,
 }: GameSelectorProps) => {
   const gameNames = Object.values(GameNames);
@@ -182,8 +184,8 @@ export const GameSelector = ({
                   >
                     <AppImage
                       src={gameSrc}
-                      width={60}
-                      height={60}
+                      width={48}
+                      height={48}
                       draggable={false}
                       alt=""
                       className={cx(cls.gameIcon, {
