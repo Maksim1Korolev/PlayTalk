@@ -2,15 +2,6 @@ import axios from "axios";
 
 export const $api = axios.create();
 
-//TODO:Check
-//$api.interceptors.request.use((config) => {
-//  // if (config.headers)
-//  // //   config.headers.Authorization =
-//  // //     localStorage.getItem(USER_LOCALSTORAGE_KEY) || "";
-
-//  return config;
-//});
-
 export const $authApi = axios.create({
   baseURL: import.meta.env.VITE_AUTH_SERVICE_API_URL,
 });
