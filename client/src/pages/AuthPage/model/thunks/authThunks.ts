@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-// Use js-cookie for managing cookies
 import { authApiService } from "../../api/authApiService";
 
 interface AuthResponse {
@@ -12,7 +11,6 @@ interface AuthArgs {
   password: string;
 }
 
-// Sign-In Thunk
 export const signIn = createAsyncThunk<
   AuthResponse,
   AuthArgs,
@@ -32,7 +30,6 @@ export const signIn = createAsyncThunk<
   }
 });
 
-// Sign-Up Thunk
 export const signUp = createAsyncThunk<
   AuthResponse,
   AuthArgs,
@@ -41,7 +38,6 @@ export const signUp = createAsyncThunk<
   try {
     const response = await authApiService.register(username, password);
 
-    // Set cookies on successful registration
     document.cookie = `jwt-cookie=${encodeURIComponent(
       JSON.stringify({ currentUsername: username, token: response.token })
     )};path=/`;

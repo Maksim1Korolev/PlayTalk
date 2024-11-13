@@ -4,13 +4,11 @@ To fix:
 Upgrade UserList, GameSelector and addonCircle styles
 Type any in catch of errors
 Change user to username in chatModalData
-Unread messages on circleModal
 Upgrade font
 Check rendering
 Scrolling down problem
 Put another svg and 2 borders on play button
 Blurred messages (Separate background component)
-Implement highlight
 Disable buttons in userList accordingly
 Check starting multiple games and starting chess on server side
 
