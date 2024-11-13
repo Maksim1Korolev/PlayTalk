@@ -8,15 +8,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
 
 import { cx, useModalDrag } from "@/shared/lib";
-import {
-  AddonCircle,
-  AddonCircleProps,
-  Card,
-  HStack,
-  UiButton,
-  UiText,
-  VStack,
-} from "@/shared/ui";
+import { Card, HStack, UiButton, UiText, VStack } from "@/shared/ui";
 
 interface CircleModalProps {
   className?: string;
@@ -24,7 +16,7 @@ interface CircleModalProps {
   position?: { x: number; y: number };
   width?: number;
   height?: number;
-  addonCircleProps: AddonCircleProps;
+  collapsedComponent: ReactNode;
   headerString?: string;
   onClose: () => void;
 }
@@ -37,7 +29,7 @@ export const CircleModal = memo(
     height = 420,
     width = 365,
     headerString,
-    addonCircleProps,
+    collapsedComponent,
     onClose,
   }: CircleModalProps) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -96,7 +88,15 @@ export const CircleModal = memo(
     const modalContent = (
       <Rnd {...rndProps} style={{ zIndex: 100 }}>
         {isCollapsed ? (
-          <AddonCircle {...addonCircleProps} onClick={handleOpenCircleModal} />
+          <UiButton variant="clear" onClick={handleOpenCircleModal}>
+            {collapsedComponent}
+            {/*
+						<AddonCircle
+              {...addonCircleProps}
+              onClick={handleOpenCircleModal}
+            />
+						*/}
+          </UiButton>
         ) : (
           <VStack className={cx(cls.CircleModal, {}, [className])}>
             <HStack className={cx(cls.header, {}, ["drag-handle"])} max>

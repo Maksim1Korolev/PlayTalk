@@ -10,6 +10,7 @@ import { InviteState } from "@/entities/game/Invite";
 import { ModalState } from "@/entities/Modal";
 import { UserState } from "@/entities/User";
 import { CircleMenuState } from "@/features/UserList/model/types/circleMenu";
+import { AuthState } from "@/pages/AuthPage";
 
 export interface ThunkExtraArg {
   api: {
@@ -27,6 +28,7 @@ export interface ThunkConfig<T> {
 }
 
 export interface StateSchema {
+  auth: AuthState;
   user: UserState;
   chat: ChatState;
   invite: InviteState;

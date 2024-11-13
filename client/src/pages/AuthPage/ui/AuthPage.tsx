@@ -1,13 +1,11 @@
 import cls from "./AuthPage.module.scss";
 
 import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
-import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 
 import { authPageResources } from "@/shared/assets";
 
-import { cx } from "@/shared/lib";
+import { cx, useAppDispatch, useAppSelector } from "@/shared/lib";
 import {
   Card,
   HStack,
@@ -18,7 +16,8 @@ import {
   VStack,
 } from "@/shared/ui";
 
-import { authApiService } from "../api/authApiService";
+import { getAuthStatuses } from "../model/selectors/getAuthStatus";
+import { signIn, signUp } from "../model/thunks/authThunks";
 
 interface AuthPageProps {
   className?: string;
@@ -27,15 +26,14 @@ interface AuthPageProps {
 const AuthPage = ({ className }: AuthPageProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [isSignUp, setIsSignUp] = useState(false);
 
-  const [error, setError] = useState<string>();
+  const { error, isAuthenticated, loading } = useAppSelector(getAuthStatuses);
 
   const navigate = useNavigate();
 
-  const [, setCookie] = useCookies(["jwt-cookie"]);
+  const dispatch = useAppDispatch();
 
   const handleUsernameChange = (value: string) => {
     setUsername(value);
@@ -44,51 +42,16 @@ const AuthPage = ({ className }: AuthPageProps) => {
     setPassword(value);
   };
 
-  const signInMutation = useMutation(
-    () => authApiService.login(username, password),
-    {
-      onSuccess: (data) => {
-        setCookie(
-          "jwt-cookie",
-          { currentUsername: username, token: data.token },
-          { path: "/" }
-        );
-        setIsAuthenticated(true);
-      },
-      onError: ({ response }) => {
-        setError(response.data.message);
-      },
-    }
-  );
-
-  const signUpMutation = useMutation(
-    () => authApiService.register(username, password),
-    {
-      onSuccess: (data) => {
-        setCookie(
-          "jwt-cookie",
-          { currentUsername: username, token: data.token },
-          { path: "/" }
-        );
-        setIsAuthenticated(true);
-      },
-      onError: ({ response }) => {
-        setError(response.data.message);
-      },
-    }
-  );
-
   const handleAuthAction = () => {
     if (isSignUp) {
-      signUpMutation.mutate();
+      dispatch(signUp({ username, password }));
       return;
     }
-    signInMutation.mutate();
+    dispatch(signIn({ username, password }));
   };
 
   const toggleAuthMode = () => {
     setIsSignUp(!isSignUp);
-    setError("");
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -193,9 +156,7 @@ const AuthPage = ({ className }: AuthPageProps) => {
                 ? authPageResources.button_sign_up
                 : authPageResources.button_sign_in}
             </UiButton>
-            {(signInMutation.isLoading || signUpMutation.isLoading) && (
-              <Loader />
-            )}
+            {loading && <Loader />}
           </VStack>
         </VStack>
       </Card>

@@ -30,7 +30,8 @@ export const UserList = ({
   handleUserPlayButtonClicked,
 }: UserListProps) => {
   const [cookies] = useCookies();
-  const { currentUsername, token } = cookies["jwt-cookie"];
+  const { token } = cookies["jwt-cookie"];
+  const currentUsername = localStorage.getItem("currentUsername");
 
   const dispatch = useAppDispatch();
   const users = useAppSelector(getUsers);
@@ -40,7 +41,9 @@ export const UserList = ({
   );
 
   useEffect(() => {
-    dispatch(fetchUsersWithStatuses({ currentUsername, token }));
+    if (currentUsername) {
+      dispatch(fetchUsersWithStatuses({ currentUsername, token }));
+    }
   }, [dispatch, currentUsername, token]);
 
   const userList = useMemo(() => {

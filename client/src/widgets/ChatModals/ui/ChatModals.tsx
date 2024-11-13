@@ -1,18 +1,13 @@
-import { memo, useCallback } from "react";
+import { memo } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
-import {
-  AddonCircleProps,
-  AppImageProps,
-  CircleModal,
-  useModalPosition,
-} from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
+import { CircleModal, useModalPosition } from "@/shared/ui";
 
-import { ChatModalData, UnreadMessagesCountIndicator } from "@/entities/Chat";
+import { ChatModalData } from "@/entities/Chat";
 import { Modal, modalActions } from "@/entities/Modal";
-import { getCurrentUser, UserOnlineIndicator } from "@/entities/User";
+import { getCurrentUser } from "@/entities/User";
 import { ChatBox } from "@/features/chat";
+import { ChatAddonCircleContainer } from "@/features/chat/ChatAddonCircleContainer";
 
 export const ChatModals = memo(
   ({
@@ -28,53 +23,7 @@ export const ChatModals = memo(
 
     const { getStartingPosition } = useModalPosition();
 
-    const getAddonCircleProps = useCallback(
-      ({
-        unreadMessageCount,
-        avatarFileName,
-        isOnline,
-      }: {
-        unreadMessageCount: number | undefined;
-        avatarFileName: string | undefined;
-        isOnline: boolean | undefined;
-      }) => {
-        const getAvatarIconProps = (avatarFileName?: string) => {
-          const size = 80;
-          const avatarUrl = getImagePath({
-            collection: "avatars",
-            fileName: avatarFileName,
-          });
-
-          const imageProps: AppImageProps = {
-            src: avatarUrl,
-            clickable: false,
-            width: size,
-            height: size,
-            draggable: false,
-            alt: avatarFileName,
-          };
-
-          return imageProps;
-        };
-
-        const avatarIconProps = getAvatarIconProps(avatarFileName);
-
-        const addonCircleProps: AddonCircleProps = {
-          iconProps: avatarIconProps,
-          addonTopRight: (
-            <UnreadMessagesCountIndicator
-              unreadMessagesCount={unreadMessageCount}
-            />
-          ),
-          addonBottomRight: <UserOnlineIndicator isOnline={isOnline} />,
-        };
-
-        return addonCircleProps;
-      },
-      []
-    );
-
-    const renderChatModals = useCallback(() => {
+    const renderChatModals = () => {
       const handleCloseChatModal = (modalId: string) => {
         onClose(modalId);
         dispatch(modalActions.removeModal(modalId));
@@ -82,7 +31,7 @@ export const ChatModals = memo(
 
       return chatModals?.map(({ modalId, data }) => {
         const { user } = data;
-        const { unreadMessageCount, avatarFileName, isOnline } = user;
+        const { username } = user;
 
         const position = getStartingPosition();
 
@@ -92,24 +41,15 @@ export const ChatModals = memo(
             position={position}
             onClose={() => handleCloseChatModal(modalId)}
             headerString={`Chat with ${user.username}`}
-            addonCircleProps={getAddonCircleProps({
-              unreadMessageCount,
-              avatarFileName,
-              isOnline,
-            })}
+            collapsedComponent={
+              <ChatAddonCircleContainer username={username} />
+            }
           >
             <ChatBox currentUser={currentUser} recipient={user} />
           </CircleModal>
         );
       });
-    }, [
-      chatModals,
-      currentUser,
-      dispatch,
-      getAddonCircleProps,
-      getStartingPosition,
-      onClose,
-    ]);
+    };
 
     return renderChatModals();
   }
