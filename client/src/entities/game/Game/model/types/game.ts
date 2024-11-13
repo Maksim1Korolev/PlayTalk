@@ -10,13 +10,18 @@ export interface ChessGame extends GameBase {
 }
 
 export type Game = TicTacToeGame | ChessGame;
-export type GameName = "tic-tac-toe" | "chess"
+export type GameName = "tic-tac-toe" | "chess";
 
 export type GameData = {
-	opponentUsername: string
-	gameName: GameName
-}
+  opponentUsername: string;
+  gameName: GameName;
+};
+
+export type GameStatus = {
+  hasInvitation?: boolean;
+  isActive?: boolean;
+};
 
 export const isGameName = (gameName: string): gameName is GameName => {
-	return gameName === "tic-tac-toe" || gameName === "chess"
-}
+  return gameName === "tic-tac-toe" || gameName === "chess";
+};

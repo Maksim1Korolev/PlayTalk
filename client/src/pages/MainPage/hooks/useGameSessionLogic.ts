@@ -2,10 +2,9 @@ import { useCallback } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 
-import { GameData, GameName } from "@/entities/game/Game";
+import { GameData, GameName, GameStatus } from "@/entities/game/Game";
 import { Invite, inviteActions } from "@/entities/game/Invite";
 import { getUsers, User, userActions } from "@/entities/User";
-import { GameStatus } from "@/entities/User/model/types/user";
 import { useGameModals } from "@/widgets/GameModals";
 import { generateModalId } from "@/widgets/GameModals/hooks/useGameModals";
 

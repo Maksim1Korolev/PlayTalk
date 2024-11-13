@@ -1,10 +1,4 @@
-import { GameName } from "@/entities/game/Game";
-
-//TODO:Move
-export type GameStatus = {
-  hasInvitation?: boolean;
-  isActive?: boolean;
-};
+import { GameName, GameStatus } from "@/entities/game/Game";
 
 export type User = {
   username: string;

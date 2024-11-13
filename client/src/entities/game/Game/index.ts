@@ -6,4 +6,5 @@ export type {
   GameModalData,
   GameName,
   TicTacToeGame,
+  GameStatus,
 } from "./model";

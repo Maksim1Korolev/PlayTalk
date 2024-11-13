@@ -3,10 +3,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ActiveGames, UnreadMessageCounts } from "@/shared/api";
 
 import { ThunkConfig } from "@/app/providers";
-import { GameName } from "@/entities/game/Game";
+import { GameName, GameStatus } from "@/entities/game/Game";
 import { User } from "@/entities/User";
-
-import { GameStatus } from "../types/user";
 
 export const fetchUsersWithStatuses = createAsyncThunk<
   { users: User[]; currentUsername: string },

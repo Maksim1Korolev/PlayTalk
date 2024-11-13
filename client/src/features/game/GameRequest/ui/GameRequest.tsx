@@ -12,14 +12,13 @@ import { SocketContext } from "@/shared/lib/context/SocketContext";
 import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
-import { GameName } from "@/entities/game/Game";
+import { GameName, GameStatus } from "@/entities/game/Game";
 import {
   acceptGameInvite,
   Invite,
   inviteActions,
 } from "@/entities/game/Invite";
 import { getUsers, userActions } from "@/entities/User";
-import { GameStatus } from "@/entities/User/model/types/user";
 
 interface GameRequestProps {
   className?: string;
