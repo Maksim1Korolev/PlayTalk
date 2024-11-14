@@ -6,7 +6,6 @@ Upgrade UserList and addonCircle styles
 Type any in catch of errors
 Check rendering
 Blurred messages (Separate background component)
-Relocate styles of chatButton
 False click on animation in GameSelector
 
 To add (in the end):
