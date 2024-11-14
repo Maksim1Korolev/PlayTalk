@@ -34,7 +34,7 @@ export const GameAddonCircleContainer = memo(
           width: size,
           height: size,
           draggable: false,
-          highlight: "primary",
+          highlight: "active",
         }}
         addonTopRight={
           avatarIconUrl ? (

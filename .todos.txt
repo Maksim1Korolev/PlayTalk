@@ -5,7 +5,7 @@ To fix:
 Check rendering
 Upgrade UserList and addonCircle styles
 Type any in catch of errors
-False click on animation in GameSelector
+False click on animation and HighlightClass in GameSelector
 Blurred messages (Separate background component)
 
 To add (in the end):

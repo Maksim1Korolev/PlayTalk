@@ -141,7 +141,8 @@ export const GameSelector = ({
 
   return (
     <>
-      <div ref={playButtonRef} className={className}>
+      {/* //TODO: HighlightClass is supposed to be here to work properly */}
+      <div ref={playButtonRef} className={cx(cls.playButton, {})}>
         {CustomToggleElement}
       </div>
       {showMenu &&
