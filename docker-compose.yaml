@@ -225,6 +225,8 @@ services:
       - "9092:9092"
     depends_on:
       - zookeeper
+    restart: on-failure
+    restart_delay: 2s
     environment:
       - KAFKA_BROKER_ID=${KAFKA_BROKER_ID}
       - KAFKA_ZOOKEEPER_CONNECT=${KAFKA_ZOOKEEPER_CONNECT}

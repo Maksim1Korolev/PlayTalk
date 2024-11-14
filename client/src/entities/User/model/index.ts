@@ -1,8 +1,7 @@
 export {
   getUser,
-  getUserActiveGames,
   getUserAvatarFileName,
-  getUserInvitingStatus,
+  getUserGameStatusMap,
   getUserOnlineStatus,
   getUserUnreadMessageCount,
 } from "./selectors/getUserProps";

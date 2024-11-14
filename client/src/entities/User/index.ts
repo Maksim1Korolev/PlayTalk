@@ -3,7 +3,7 @@ export {
   getCurrentUser,
   getUser,
   getUserAvatarFileName,
-  getUserInvitingStatus,
+  getUserGameStatusMap,
   getUserOnlineStatus,
   getUserUnreadMessageCount,
   getUsers,

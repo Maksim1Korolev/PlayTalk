@@ -4,15 +4,15 @@ Implement getUserProps (example in chatBox)
 To fix:
 Upgrade UserList and addonCircle styles
 Type any in catch of errors
-Upgrade font
 Check rendering
 Blurred messages (Separate background component)
 Relocate styles of chatButton
 False click on animation in GameSelector
 
 To add (in the end):
-Sort out client's and profile's .envs
 General styles
+Upgrade font
+Sort out client's and profile's .envs
 
 
 To add (after the end):
