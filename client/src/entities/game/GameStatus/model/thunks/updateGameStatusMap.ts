@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { ThunkConfig } from "@/app/providers";
 import { GameName } from "@/entities/game/Game/model";
-import { getUsers, userActions } from "@/entities/User";
+import { getUser, userActions } from "@/entities/User";
 
 import { GameStatus } from "../types/gameStatus";
 
@@ -18,8 +18,7 @@ export const updateGameStatusMap = createAsyncThunk<
   "gameStatus/updateGameStatusMap",
   async ({ username, gameName, statusUpdate }, { dispatch, getState }) => {
     const state = getState();
-    const users = getUsers(state);
-    const user = users[username];
+    const user = getUser(username)(state);
 
     const currentGameStatusMap = (user?.gameStatusMap ?? {}) as Record<
       GameName,
