@@ -6,7 +6,6 @@
   white-space: nowrap;
   font-size: 1rem;
 
-  // Use a loop to scale down the font size if it overflows
   @for $i from 1 through 5 {
     &:nth-of-type(#{$i}) {
       font-size: 1rem - ($i * 0.1rem);
@@ -21,7 +20,7 @@
   padding: 0 16px;
 
   .username {
-    @include scale-and-truncate-text(35px);
+    @include scale-and-truncate-text(55px);
   }
 
   .userInfo {

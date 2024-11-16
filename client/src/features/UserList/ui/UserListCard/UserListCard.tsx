@@ -49,7 +49,7 @@ export const UserListCard = memo((props: UserListCardProps) => {
     const adjustFontSize = (
       element: HTMLElement,
       maxWidth: number,
-      minFontSize: number = 0.6
+      minFontSize: number = 0.8
     ) => {
       let fontSize = parseFloat(window.getComputedStyle(element).fontSize);
       while (element.scrollWidth > maxWidth && fontSize > minFontSize) {
@@ -103,12 +103,6 @@ export const UserListCard = memo((props: UserListCardProps) => {
     >
       <AddonCircle
         addonTopRight={<UserOnlineIndicator isOnline={user?.isOnline} />}
-        addonBottomRight={
-          <UnreadMessagesCountIndicator
-            unreadMessagesCount={user?.unreadMessageCount}
-          />
-        }
-        onClick={onChatOpen}
       >
         <AppImage
           src={getImagePath({
@@ -132,19 +126,32 @@ export const UserListCard = memo((props: UserListCardProps) => {
           {user?.username}
         </UiText>
         <HStack className={cls.buttons} gap="8">
-          <div className={cls.chatButtonBorder}>
-            <UiButton
-              className={cls.chatButton}
-              onClick={onChatOpen}
-              variant="clear"
-            >
-              <AppImage
-                src={getImagePath({ collection: "appIcons", fileName: "chat" })}
-                width={buttonSize}
-                height={buttonSize}
+          <AddonCircle
+            addonTopRight={
+              <UnreadMessagesCountIndicator
+                className={cls.unread}
+                unreadMessagesCount={user.unreadMessageCount}
               />
-            </UiButton>
-          </div>
+            }
+          >
+            <div className={cls.chatButtonBorder}>
+              <UiButton
+                className={cls.chatButton}
+                onClick={onChatOpen}
+                variant="clear"
+              >
+                <AppImage
+                  src={getImagePath({
+                    collection: "appIcons",
+                    fileName: "chat",
+                  })}
+                  width={buttonSize}
+                  height={buttonSize}
+                />
+              </UiButton>
+            </div>
+          </AddonCircle>
+
           <GameSelector
             className={cls.playButton}
             userGameStatusMap={user?.gameStatusMap}
