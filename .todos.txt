@@ -4,14 +4,14 @@ To fix:
 Upgrade UserList and addonCircle styles
 Type any in catch of errors
 Move unread messages indicator to chat button from the avatar in userList
+Check for strings that are not in assets (typing)
+Unread real time
 
 To add (in the end):
 General styles
 Upgrade font
 Username symbols in userListCard
-Check for strings that are not in assets (typing)
 Sort out client's and profile's .envs
-Unread real time
 
 
 To add (after the end):
