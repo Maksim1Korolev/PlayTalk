@@ -55,6 +55,8 @@ export const useMainSocketSubs = () => {
         username: string,
         unreadMessageCount: number
       ) => {
+        console.log("update game status");
+
         dispatch(
           userActions.updateUser({
             username,
@@ -85,5 +87,5 @@ export const useMainSocketSubs = () => {
         );
       };
     }
-  }, [communicationSocket, gameSocket, dispatch, users]);
+  }, [communicationSocket, dispatch, gameSocket]);
 };

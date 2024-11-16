@@ -3,7 +3,7 @@ import cls from "./ChatAddonCircleContainer.module.scss";
 import { memo } from "react";
 
 import { cx, useAppSelector } from "@/shared/lib";
-import { AddonCircle } from "@/shared/ui";
+import { AddonCircle, AppImage } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
 import { UnreadMessagesCountIndicator } from "@/entities/Chat";
@@ -32,22 +32,22 @@ export const ChatAddonCircleContainer = memo(
 
     return (
       <AddonCircle
-        iconProps={{
-          src: avatarPath,
-          clickable: false,
-          width: size,
-          height: size,
-          draggable: false,
-          alt: avatarFileName,
-        }}
-        addonBottomRight={<UserOnlineIndicator isOnline={isOnline} />}
         addonTopRight={
           <UnreadMessagesCountIndicator
             unreadMessagesCount={unreadMessageCount}
           />
         }
+        addonBottomRight={<UserOnlineIndicator isOnline={isOnline} />}
         className={cx(cls.ChatAddonCircle, {}, [className])}
-      />
+      >
+        <AppImage
+          src={avatarPath}
+          width={size}
+          height={size}
+          draggable={false}
+          alt={avatarFileName}
+        />
+      </AddonCircle>
     );
   }
 );

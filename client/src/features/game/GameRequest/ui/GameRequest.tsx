@@ -157,12 +157,13 @@ export const GameRequest = memo(({ className, position }: GameRequestProps) => {
       <Rnd {...rndProps}>
         <AddonCircle
           className={`${cls.GameRequest} ${className}`}
-          iconProps={gameIconProps}
           addonTopRight={<AppImage {...avatarIconProps} />}
           addonBottomLeft={yesButton}
           addonBottomRight={noButton}
           addonTopLeft={skipButton}
-        />
+        >
+          <AppImage {...gameIconProps} />
+        </AddonCircle>
       </Rnd>
     )
   );
