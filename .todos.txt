@@ -1,5 +1,4 @@
 To add:
-Implement getUserProps (example in chatBox)
 
 To fix:
 Check rendering
