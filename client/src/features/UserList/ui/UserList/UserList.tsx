@@ -101,6 +101,7 @@ export const UserList = memo(
       >
         <UiText size="xl">{userListResources.userListHeader}</UiText>
         <VStack gap="16" max>
+          <UiText size="xl">{userListResources.userListHeader}</UiText>
           {userList}
         </VStack>
       </Card>

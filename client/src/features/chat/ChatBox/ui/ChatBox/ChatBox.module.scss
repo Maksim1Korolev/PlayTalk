@@ -1,4 +1,5 @@
 .Chat {
+  display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
@@ -8,7 +9,6 @@
 
 .body {
   position: relative;
-  display: flex;
   height: 91%;
   border: 1px solid #ccc;
   overflow: hidden;

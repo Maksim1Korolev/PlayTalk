@@ -5,7 +5,9 @@ Check rendering
 Upgrade UserList and addonCircle styles
 Type any in catch of errors
 HighlightClass in GameSelector
+Username symbols in userList
 AppSvg => AppImage
+Move unread messages indicator to chat button from the avatar in userList
 
 To add (in the end):
 General styles
