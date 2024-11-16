@@ -21,8 +21,7 @@
   padding: 0 16px;
 
   .username {
-    @include scale-and-truncate-text(40px);
-    margin-right: 10px;
+    @include scale-and-truncate-text(35px);
   }
 
   .userInfo {
