@@ -3,6 +3,7 @@ import cls from "./Card.module.scss";
 import { HTMLAttributes, memo, ReactNode } from "react";
 
 import { cx } from "@/shared/lib";
+import { BlurredBackground } from "@/shared/ui";
 
 type CardVariant = "default" | "outlined" | "light" | "blurred" | "matte";
 type CardBorder = "default" | "round" | "none";
@@ -57,6 +58,7 @@ export const Card = memo(
         )}
         {...otherProps}
       >
+        {variant === "blurred" && <BlurredBackground />}
         {children}
       </div>
     );

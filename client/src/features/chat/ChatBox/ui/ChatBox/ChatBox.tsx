@@ -4,7 +4,6 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 
 import { cx, useAppSelector } from "@/shared/lib";
 import { Card, UiText, VStack } from "@/shared/ui";
-import { BlurredBackground } from "@/shared/ui/Background/ui/BlurredBackground/BlurredBackground";
 
 import { getChatIsTyping, getChatMessages, Message } from "@/entities/Chat";
 import { getCurrentUser, getUserAvatarFileName } from "@/entities/User";
@@ -62,11 +61,10 @@ export const ChatBox = memo(
         <Card
           className={cx(cls.body)}
           padding={"0"}
-          variant="outlined"
+          variant="blurred"
           border="none"
           max
         >
-          <BlurredBackground />
           <VStack max>
             <div className={cls.chatBoxOverlay}></div>
             <VStack className={cls.chatLogs} gap="8" max>

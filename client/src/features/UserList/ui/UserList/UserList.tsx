@@ -7,7 +7,6 @@ import { userListResources } from "@/shared/assets";
 
 import { cx, useAppDispatch, useAppSelector } from "@/shared/lib";
 import { Card, HStack, UiText, VStack } from "@/shared/ui";
-import { BlurredBackground } from "@/shared/ui/Background/ui/BlurredBackground/BlurredBackground";
 
 import { GameData } from "@/entities/game/Game";
 import { getUsers } from "@/entities/User";
@@ -94,15 +93,17 @@ export const UserList = ({
   }
 
   return (
-    <Card
-      className={cx(cls.UserList, {}, [className])}
-      variant="blurred"
-      padding="16"
-    >
-      <UiText size="xl">{userListResources.userListHeader}</UiText>
-      <VStack gap="16" max>
-        {userList}
-      </VStack>
-    </Card>
+    <>
+      <Card
+        className={cx(cls.UserList, {}, [className])}
+        variant="blurred"
+        padding="16"
+      >
+        <UiText size="xl">{userListResources.userListHeader}</UiText>
+        <VStack gap="16" max>
+          {userList}
+        </VStack>
+      </Card>
+    </>
   );
 };
