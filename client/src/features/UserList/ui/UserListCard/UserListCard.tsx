@@ -1,12 +1,11 @@
 import cls from "./UserListCard.module.scss";
 
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 
 import { cx } from "@/shared/lib";
 import {
   AddonCircle,
   AppImage,
-  AppImageProps,
   HStack,
   Skeleton,
   UiButton,
@@ -39,7 +38,7 @@ interface LoadingProps extends UserListCardBaseProps {
 
 type UserListCardProps = DefaultProps | LoadingProps;
 
-export const UserListCard = (props: UserListCardProps) => {
+export const UserListCard = memo((props: UserListCardProps) => {
   const { className = "", collapsed = false, isLoading = false } = props;
   const usernameRef = useRef<HTMLParagraphElement>(null);
 
@@ -94,22 +93,6 @@ export const UserListCard = (props: UserListCardProps) => {
     }
   };
 
-  const setIconProps = () => {
-    const avatarSrc = getImagePath({
-      collection: "avatars",
-      fileName: user?.avatarFileName,
-    });
-
-    const iconProps: AppImageProps = {
-      src: avatarSrc,
-      width: avatarSize,
-      height: avatarSize,
-      alt: user?.username,
-    };
-
-    return iconProps;
-  };
-
   return (
     <HStack
       className={cx(cls.UserListCard, { [cls.collapsed]: collapsed }, [
@@ -119,7 +102,6 @@ export const UserListCard = (props: UserListCardProps) => {
       max
     >
       <AddonCircle
-        iconProps={setIconProps()}
         addonTopRight={<UserOnlineIndicator isOnline={user?.isOnline} />}
         addonBottomRight={
           <UnreadMessagesCountIndicator
@@ -127,7 +109,18 @@ export const UserListCard = (props: UserListCardProps) => {
           />
         }
         onClick={onChatOpen}
-      />
+      >
+        <AppImage
+          src={getImagePath({
+            collection: "avatars",
+            fileName: user?.avatarFileName,
+          })}
+          draggable={false}
+          width={avatarSize}
+          height={avatarSize}
+          alt={user?.username}
+        />
+      </AddonCircle>
       <HStack
         className={cls.userInfo}
         gap="16"
@@ -135,10 +128,7 @@ export const UserListCard = (props: UserListCardProps) => {
         align="center"
         justify="center"
       >
-        {
-          //TODO: ref
-        }
-        <UiText className={cls.username} bold size="l">
+        <UiText className={cls.username} bold size="l" ref={usernameRef}>
           {user?.username}
         </UiText>
         <HStack className={cls.buttons} gap="8">
@@ -166,4 +156,4 @@ export const UserListCard = (props: UserListCardProps) => {
       </HStack>
     </HStack>
   );
-};
+});

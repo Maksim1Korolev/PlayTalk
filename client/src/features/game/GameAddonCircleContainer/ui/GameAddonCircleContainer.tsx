@@ -29,25 +29,25 @@ export const GameAddonCircleContainer = memo(
 
     return (
       <AddonCircle
-        iconProps={{
-          src: gameIconUrl,
-          width: size,
-          height: size,
-          draggable: false,
-          highlight: "active",
-        }}
         addonTopRight={
-          avatarIconUrl ? (
-            <AppImage
-              src={avatarIconUrl}
-              width={30}
-              height={30}
-              draggable={false}
-            />
-          ) : null
+          <AppImage
+            src={avatarIconUrl}
+            width={30}
+            height={30}
+            draggable={false}
+          />
         }
         className={cx(cls.ChatAddonCircle, {}, [className])}
-      />
+      >
+        <AppImage
+          src={gameIconUrl}
+          width={size}
+          height={size}
+          draggable={false}
+          alt={gameName}
+          highlight="active"
+        />
+      </AddonCircle>
     );
   }
 );
