@@ -23,7 +23,6 @@ export const Sidebar = ({ className, ...otherProps }: SidebarProps) => {
       className={cx(cls.Sidebar, { [cls.collapsed]: collapsed }, [className])}
     >
       <UserList className={cls.items} collapsed={collapsed} {...otherProps} />
-
       <AppSvg
         className={cls.collapseBtn}
         onClick={onToggle}

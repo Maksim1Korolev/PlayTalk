@@ -4,8 +4,8 @@ To fix:
 Check rendering
 Upgrade UserList and addonCircle styles
 Type any in catch of errors
-False click on animation and HighlightClass in GameSelector
-Blurred messages (Separate background component), update imports, remove unused code
+HighlightClass in GameSelector
+AppSvg => AppImage
 
 To add (in the end):
 General styles
