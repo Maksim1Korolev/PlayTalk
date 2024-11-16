@@ -3,5 +3,11 @@ import cls from "../../styles/highlightStyles.module.scss";
 export type HighlightType = "none" | "active" | "invited";
 
 export function getHighlightClass(highlight: HighlightType) {
-  return highlight !== "none" ? cls[`highlight-${highlight}`] : "";
+  const classes = [cls.highlight];
+
+  if (highlight === "active" || highlight === "invited") {
+    classes.push(cls[`highlight-${highlight}`]);
+  }
+
+  return classes.join(" ");
 }

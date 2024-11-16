@@ -4,19 +4,20 @@
   align-items: center;
   justify-content: center;
   z-index: 200; // High z-index to ensure it’s above conflicting elements
-	background-color: var(--buttons-bg);
-	border: 3px solid var(--secondary-color);
-	border-radius: 50%;
-}
-
-.flipped {
-  transform: rotateY(180deg); // Flip animation for the toggle element
+  background-color: var(--buttons-bg);
+  border: 3px solid var(--secondary-color);
+  border-radius: 50%;
 }
 
 .playButtonBorder {
   transition: transform 0.3s ease-in-out;
-	border: 3px solid var(--primary-color);
-	border-radius: 50%;
+  border: 3px solid var(--primary-color);
+  border-radius: 50%;
+}
+
+.flipped {
+  transition: transform 0.3s ease-in-out;
+  transform: rotateY(180deg); // Flip animation for the toggle element
 }
 
 .overlayIcon {
@@ -30,7 +31,14 @@
 }
 
 .gameIcon {
-	border-radius: 50%;
+  background-color: var(--buttons-bg);
+  border: 3px solid var(--primary-color);
+  border-radius: 50%;
+}
+
+.gameIconBorder {
+  display: flex;
+  align-items: center;
 }
 
 .circleMenuItem {

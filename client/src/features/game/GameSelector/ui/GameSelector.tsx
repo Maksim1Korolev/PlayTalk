@@ -123,7 +123,6 @@ export const GameSelector = ({
   const CustomToggleElement = (
     <div
       className={cx(cls.playButtonBorder, {
-        [playButtonHighlightClass]: !!playButtonHighlightClass,
         [cls.flipped]: isFlipped,
       })}
     >
@@ -141,9 +140,12 @@ export const GameSelector = ({
 
   return (
     <>
-      {/* //TODO: HighlightClass is supposed to be here to work properly */}
-      <div ref={playButtonRef} className={cx(cls.playButton, {}, )}>
-        {CustomToggleElement}
+      <div
+        className={cx(cls.playButton, {
+          [playButtonHighlightClass]: !!playButtonHighlightClass,
+        })}
+      >
+        <div ref={playButtonRef}>{CustomToggleElement}</div>
       </div>
       {showMenu &&
         ReactDOM.createPortal(
@@ -195,16 +197,20 @@ export const GameSelector = ({
                       }
                     }}
                   >
-                    <AppImage
-                      src={gameSrc}
-                      width={menuItemSize}
-                      height={menuItemSize}
-                      draggable={false}
-                      alt=""
-                      className={cx(cls.gameIcon, {
+                    <div
+                      className={cx(cls.gameIconBorder, {
                         [iconHighlightClass]: !!iconHighlightClass,
                       })}
-                    />
+                    >
+                      <AppImage
+                        src={gameSrc}
+                        width={menuItemSize}
+                        height={menuItemSize}
+                        draggable={false}
+                        alt=""
+                        className={cx(cls.gameIcon, {})}
+                      />
+                    </div>
                   </CircleMenuItem>
                 );
               })}
