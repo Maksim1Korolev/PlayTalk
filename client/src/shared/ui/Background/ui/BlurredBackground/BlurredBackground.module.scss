@@ -2,7 +2,10 @@
   width: 100%;
   height: 100%;
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: -500;
+  border-radius: inherit;
   background: var(--blurred-background);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px); //For Safari browser

@@ -1,16 +1,15 @@
 .Sidebar {
   position: relative;
   display: flex;
-  width: 360px;
+  width: 342px;
+  overflow: hidden;
   max-height: 80svh;
-  overflow-y: auto;
-  overflow-x: hidden;
   transition: width 0.3s;
   top: 50px;
 
   .collapseBtn {
     position: absolute;
-    right: 7px;
+    right: 0px;
     top: 50%;
     z-index: 10;
     transform: rotate(90deg);
@@ -19,9 +18,10 @@
 }
 
 .collapsed {
-  width: 147px;
+  width: 115px;
 
   .collapseBtn {
     transform: rotate(-90deg);
+    right: -10px;
   }
 }
