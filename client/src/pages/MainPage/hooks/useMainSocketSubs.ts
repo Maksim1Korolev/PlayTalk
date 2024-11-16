@@ -87,5 +87,5 @@ export const useMainSocketSubs = () => {
         );
       };
     }
-  }, [communicationSocket, dispatch, gameSocket]);
+  }, [users, communicationSocket, dispatch, gameSocket]);
 };
