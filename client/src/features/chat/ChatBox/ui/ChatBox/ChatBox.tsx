@@ -72,7 +72,7 @@ export const ChatBox = memo(
             </VStack>
             <div className="spacer" />
             {isTyping && (
-              <UiText dimmed className="typingLabel">
+              <UiText dimmed className={cls.typingLabel}>
                 Typing...
               </UiText>
             )}

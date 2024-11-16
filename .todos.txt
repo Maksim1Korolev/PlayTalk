@@ -11,6 +11,7 @@ Upgrade font
 Username symbols in userListCard
 Check for strings that are not in assets (typing)
 Sort out client's and profile's .envs
+Unread real time
 
 
 To add (after the end):
