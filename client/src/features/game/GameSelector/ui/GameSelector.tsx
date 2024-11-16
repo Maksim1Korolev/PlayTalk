@@ -68,7 +68,7 @@ export const GameSelector = ({
     }
   };
 
-  //checking resize
+  //Resize check
   useEffect(() => {
     const updateMenuPosition = () => {
       const rect = playButtonRef.current?.getBoundingClientRect();
@@ -142,7 +142,7 @@ export const GameSelector = ({
   return (
     <>
       {/* //TODO: HighlightClass is supposed to be here to work properly */}
-      <div ref={playButtonRef} className={cx(cls.playButton, {})}>
+      <div ref={playButtonRef} className={cx(cls.playButton, {}, )}>
         {CustomToggleElement}
       </div>
       {showMenu &&

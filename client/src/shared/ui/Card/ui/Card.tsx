@@ -54,14 +54,12 @@ export const Card = memo(
           {
             [cls.max]: max,
           },
-          [className, cls[variant], cls[borderClass]]
+          [className, cls[variant], cls[borderClass], cls[paddingClass]]
         )}
         {...otherProps}
       >
         {variant === "blurred" && <BlurredBackground />}
-        <div className={cx(cls.content, {}, [cls[paddingClass]])}>
-          {children}
-        </div>
+        {children}
       </div>
     );
   }
