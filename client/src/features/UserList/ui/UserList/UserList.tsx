@@ -7,6 +7,7 @@ import { userListResources } from "@/shared/assets";
 
 import { cx, useAppDispatch, useAppSelector } from "@/shared/lib";
 import { Card, HStack, UiText, VStack } from "@/shared/ui";
+import { BlurredBackground } from "@/shared/ui/Background/ui/BlurredBackground/BlurredBackground";
 
 import { GameData } from "@/entities/game/Game";
 import { getUsers } from "@/entities/User";

@@ -5,11 +5,12 @@ Check rendering
 Upgrade UserList and addonCircle styles
 Type any in catch of errors
 False click on animation and HighlightClass in GameSelector
-Blurred messages (Separate background component)
+Blurred messages (Separate background component), update imports, remove unused code
 
 To add (in the end):
 General styles
 Upgrade font
+Check for strings that are not in assets (typing)
 Sort out client's and profile's .envs
 
 
