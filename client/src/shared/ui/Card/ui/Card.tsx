@@ -50,7 +50,7 @@ export const Card = memo(
     return (
       <div
         className={cx(
-          cls.card,
+          cls.Card,
           {
             [cls.max]: max,
           },
