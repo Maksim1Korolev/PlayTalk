@@ -160,7 +160,7 @@ export const GameSelector = ({
           >
             <CircleMenu
               startAngle={-90}
-              rotationAngle={90}
+              rotationAngle={60}
               itemSize={2}
               radius={5}
               open={animateOpen}
