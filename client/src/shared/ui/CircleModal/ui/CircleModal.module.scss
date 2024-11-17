@@ -30,35 +30,34 @@
   justify-content: center;
 }
 .controlButtons {
-  display: flex;
   align-items: center;
   gap: 8px;
-}
 
-.collapseButton,
-.closeButton {
-  width: 30px;
-  height: 30px;
-  color: var(--text-tertiary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: transform 0.2s ease;
+  .collapseButton,
+  .closeButton {
+    width: 30px;
+    height: 30px;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
 
-  &:hover {
-    transform: scale(1.1);
+    &:hover {
+      transform: scale(1.1);
+    }
   }
-}
 
-.collapseButton {
-  background-color: var(--accent-color);
-  color: var(--inverted-bg-color);
-}
+  .collapseButton {
+    background-color: var(--inverted-bg-color);
+    color: var(--accent-color);
+  }
 
-.closeButton {
-  background-color: var(--inverted-bg-color);
-  color: var(--accent-color);
+  .closeButton {
+    background-color: var(--inverted-bg-color);
+    color: var(--cancel);
+  }
 }
 
 .drag-handle {
