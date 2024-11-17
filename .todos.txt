@@ -1,5 +1,4 @@
 To add:
-Typing timeouts on the server
 
 To fix:
 Upgrade UserList and addonCircle styles
@@ -21,6 +20,7 @@ Adjust location of accept invite emit
 Save empty messageHistory in redis cache too
 Token expiration logic on client
 Api headers interceptor
+Store invites on the server
 Disable buttons in userList accordingly
 Tests on chat's services and ttt service
 Storybook

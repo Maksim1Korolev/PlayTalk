@@ -69,6 +69,7 @@ export const useChatMessages = ({
           chatActions.setIsTyping({ username: senderUsername, isTyping: true })
         );
     });
+
     communicationSocket.on("stop-typing", (senderUsername) => {
       if (senderUsername === recipientUsername)
         dispatch(

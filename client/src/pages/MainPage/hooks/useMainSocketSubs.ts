@@ -5,6 +5,7 @@ import { usersApiService } from "@/shared/api";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 
+import { chatActions } from "@/entities/Chat";
 import { getUsers, User, userActions } from "@/entities/User";
 
 export const useMainSocketSubs = () => {
@@ -34,6 +35,10 @@ export const useMainSocketSubs = () => {
           dispatch(
             userActions.updateUser({ username, updatedProps: { isOnline } })
           );
+
+          if (!isOnline) {
+            dispatch(chatActions.setIsTyping({ username, isTyping: false }));
+          }
         } else {
           //Waiting a second for profile service to register the user to see the avatar
           setTimeout(async () => {
