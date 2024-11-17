@@ -1,8 +1,7 @@
 To add:
 
 To fix:
-Upgrade UserList and addonCircle styles
-Check "unread-messages-count" on client (is called thrice)
+Upgrade UserList styles
 
 To add (in the end):
 General styles
