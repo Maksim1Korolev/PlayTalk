@@ -55,19 +55,9 @@ class MessageHistoryService {
 
   //unread
   static async getUnreadMessagesCount(usernames, requestingUsername) {
-    const sortedUsernames = this.getSortedUsernames(usernames);
+    const messages = await this.getMessageHistory(usernames);
 
-    const bufferedMessages =
-      await MessageBufferService.getMessagesFromBuffer(sortedUsernames);
-
-    const messageHistory = await MessageHistory.findOne({
-      usernames: sortedUsernames,
-    });
-    const dbMessages = messageHistory ? messageHistory.messages : [];
-
-    const allMessages = [...bufferedMessages, ...dbMessages];
-
-    const unreadCount = allMessages.reduce((count, message) => {
+    const unreadCount = messages.reduce((count, message) => {
       if (message.username !== requestingUsername && !message.readAt) {
         return count + 1;
       }

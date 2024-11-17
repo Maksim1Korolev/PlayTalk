@@ -11,7 +11,7 @@ const serviceName = "communication_gateway_service";
 class MessageHistoryService {
   static async getMessageHistory(usernames) {
     const query = usernames
-      .map(u => `usernames=${encodeURIComponent(u)}`)
+      .map((u) => `usernames=${encodeURIComponent(u)}`)
       .join("&");
     const url = `${chatServiceApiUrl}/messageHistories/messageHistory?${query}`;
 
@@ -34,6 +34,7 @@ class MessageHistoryService {
         ", "
       )}. Message: ${message}`
     );
+
     return await axios.post(
       url,
       {
@@ -51,6 +52,7 @@ class MessageHistoryService {
   static async getAllUnreadMessageCounts(requestingUsername) {
     const url = `${chatServiceApiUrl}/unread/getAll/${requestingUsername}`;
     logger.info(`Fetching all unread message counts for ${requestingUsername}`);
+
     return await axios.get(url, {
       headers: {
         [internalServiceHeaderKey]: serviceName,
