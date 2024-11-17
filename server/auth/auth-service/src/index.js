@@ -4,7 +4,7 @@ import express from "express";
 
 import { getLogger } from "./utils/logger.js";
 
-import { connectProducer } from "./utils/kafkaProducer.js";
+import { connectProducer, disconnectProducer } from "./utils/kafkaProducer.js";
 import {
   connectToMongoDB,
   disconnectFromMongoDB,
@@ -54,5 +54,6 @@ main()
     logger.error(`Application startup error: ${err.message}`);
     await disconnectFromMongoDB();
     redisClient.quit();
+    await disconnectProducer();
     process.exit(1);
   });

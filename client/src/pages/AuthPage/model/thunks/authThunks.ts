@@ -11,6 +11,14 @@ interface AuthArgs {
   password: string;
 }
 
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 export const signIn = createAsyncThunk<
   AuthResponse,
   AuthArgs,
@@ -25,8 +33,9 @@ export const signIn = createAsyncThunk<
     localStorage.setItem("currentUsername", username);
 
     return response;
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || "Login failed");
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    return rejectWithValue(apiError.response?.data?.message || "Login failed");
   }
 });
 
@@ -44,9 +53,10 @@ export const signUp = createAsyncThunk<
     localStorage.setItem("currentUsername", username);
 
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
     return rejectWithValue(
-      error.response?.data?.message || "Registration failed"
+      apiError.response?.data?.message || "Registration failed"
     );
   }
 });

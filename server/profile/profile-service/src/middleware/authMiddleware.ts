@@ -18,6 +18,10 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
+interface ApiError extends Error {
+  status?: number;
+}
+
 export const protect = asyncHandler(
   async (
     req: AuthenticatedRequest,
@@ -26,7 +30,7 @@ export const protect = asyncHandler(
   ): Promise<void> => {
     const authorizationHeader = req.headers.authorization;
 
-    if (!authorizationHeader || !authorizationHeader.startsWith("Bearer")) {
+    if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
       logger.warn("Authorization header missing or incorrect format");
       res.status(401).json({ message: "Not authorized, no token provided" });
       return;
@@ -34,23 +38,27 @@ export const protect = asyncHandler(
 
     const token = authorizationHeader.split(" ")[1];
 
-    try {
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET as string
-      ) as DecodedToken;
-      logger.info(`Token verified for user: ${decoded.username}`);
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      logger.error("JWT secret is not defined in environment variables");
+      res
+        .status(500)
+        .json({ message: "Internal server error, misconfigured JWT secret" });
+      return;
+    }
 
+    try {
+      const decoded = jwt.verify(token, jwtSecret) as DecodedToken;
+
+      logger.info(`Token verified for user: ${decoded.username}`);
       req.user = { id: decoded.userId, username: decoded.username };
 
       logger.info(`Access granted to user: ${decoded.username}`);
       next();
-    } catch (error: any) {
-      logger.error(`Error verifying token: ${error.message}`);
-      res
-        .status(500)
-        .json({ message: "Error verifying token", error: error.message });
-      return;
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      logger.error(`Error verifying token: ${apiError.message}`);
+      next(apiError);
     }
   }
 );

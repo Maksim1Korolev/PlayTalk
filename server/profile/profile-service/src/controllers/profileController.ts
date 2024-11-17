@@ -6,6 +6,10 @@ import ProfileService from "../services/profileService";
 
 const logger = getLogger("ProfileController");
 
+interface ApiError extends Error {
+  status?: number;
+}
+
 // @desc   Get profiles
 // @route  GET /api/profiles
 // @access Protected
@@ -16,6 +20,7 @@ export const getProfiles = async (
 ): Promise<void> => {
   try {
     logger.info("Fetching all profiles");
+
     const profiles = await ProfileService.getProfiles();
 
     if (!profiles || profiles.length === 0) {
@@ -26,9 +31,10 @@ export const getProfiles = async (
 
     logger.info("Profiles fetched successfully");
     res.status(200).json({ profiles });
-  } catch (error: any) {
-    logger.error(`Error fetching profiles: ${error.message}`);
-    res.status(500).json({ message: "Internal server error" });
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    logger.error(`Error fetching profiles: ${apiError.message}`);
+    next(apiError);
   }
 };
 
@@ -43,19 +49,23 @@ export const getProfileByUsername = async (
   const { username } = req.params;
 
   try {
+    logger.info(`Fetching profile for username: ${username}`);
+
     const profile = await ProfileService.getProfileByUsername(username);
 
-    if (profile) {
-      logger.info(`Fetched profile by username: ${username}`);
-      res.json({ profile });
-    } else {
-      logger.warn(`Profile with username ${username} not found`);
+    if (!profile) {
+      logger.warn(`Profile not found for username: ${username}`);
       res.status(404).json({ message: "User not found" });
+      return;
     }
-  } catch (error: any) {
+
+    logger.info(`Profile fetched for username: ${username}`);
+    res.status(200).json({ profile });
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
     logger.error(
-      `Error fetching profile by username ${username}: ${error.message}`
+      `Error fetching profile for username ${username}: ${apiError.message}`
     );
-    res.status(500).json({ error: error.message });
+    next(apiError);
   }
 };

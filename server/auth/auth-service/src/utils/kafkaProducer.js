@@ -43,6 +43,12 @@ export const connectProducer = async () => {
 export const sendMessage = async (topic, message) => {
   try {
     const secretKey = process.env.KAFKA_MESSAGE_SECRET_KEY;
+    if (!secretKey) {
+      throw new Error(
+        "KAFKA_MESSAGE_SECRET_KEY is not set in environment variables"
+      );
+    }
+
     const messageString = JSON.stringify(message);
     const signature = crypto
       .createHmac("sha256", secretKey)
@@ -65,5 +71,14 @@ export const sendMessage = async (topic, message) => {
     logger.info(`Message sent to topic ${topic}`);
   } catch (error) {
     logger.error(`Failed to send message: ${error.message}`);
+  }
+};
+
+export const disconnectProducer = async () => {
+  try {
+    await producer.disconnect();
+    logger.info("Kafka producer disconnected");
+  } catch (error) {
+    logger.error(`Failed to disconnect Kafka producer: ${error.message}`);
   }
 };

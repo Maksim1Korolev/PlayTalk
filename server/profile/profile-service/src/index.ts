@@ -3,7 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
-import { connectConsumer, runConsumer } from "./utils/kafkaConsumer";
+import {
+  connectConsumer,
+  disconnectConsumer,
+  runConsumer,
+} from "./utils/kafkaConsumer";
 import { getLogger } from "./utils/logger";
 import {
   connectToMongoDB,
@@ -55,5 +59,6 @@ main()
     logger.error(`Application startup error: ${err.message}`);
     await disconnectFromMongoDB();
     redisClient.quit();
+    await disconnectConsumer();
     process.exit(1);
   });
