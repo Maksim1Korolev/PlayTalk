@@ -1,4 +1,5 @@
 import cls from "./UnreadMessagesCountIndicator.module.scss";
+
 import { cx } from "@/shared/lib";
 
 export const UnreadMessagesCountIndicator = ({
@@ -8,10 +9,8 @@ export const UnreadMessagesCountIndicator = ({
   className?: string;
   unreadMessagesCount?: number;
 }) => {
-  if (!unreadMessagesCount || unreadMessagesCount === 0) return null;
+  //if (!unreadMessagesCount || unreadMessagesCount === 0) return null;
   return (
-    <div className={cx(cls.UnreadMessageCountIndicator, {}, [className])}>
-      {unreadMessagesCount}
-    </div>
+    <p className={cx(cls.UnreadMessageCountIndicator, {}, [className])}>6</p>
   );
 };
