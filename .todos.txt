@@ -1,8 +1,8 @@
 To add:
+Typing timeouts on the server
 
 To fix:
 Upgrade UserList and addonCircle styles
-Typing doesn't disappear
 Unread real time
 
 To add (in the end):

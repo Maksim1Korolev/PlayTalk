@@ -40,7 +40,7 @@ export const CircleModal = memo(
 
     const handleResize = (
       e: MouseEvent | TouchEvent,
-      dir,
+      dir: any,
       ref: HTMLElement
     ) => {
       setModalHeight(ref.offsetHeight); // Update modal height on resize
@@ -126,7 +126,7 @@ export const CircleModal = memo(
               max
               padding={"0"}
               variant="matte"
-              border="default"
+              border="none"
             >
               {children}
             </Card>

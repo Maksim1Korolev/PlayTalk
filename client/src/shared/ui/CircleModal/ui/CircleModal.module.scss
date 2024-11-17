@@ -1,26 +1,28 @@
 .CircleModal {
-  display: flex;
-  align-items: center;
   width: 100%;
   height: 100%;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
+  border-radius: 12px;
 }
 
 .header {
   height: 50px;
+  padding: 10px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   justify-content: space-between;
   background-color: var(--modals-bg-color);
-  padding: 10px;
 }
 
 .contentCard {
   flex-grow: 1;
   display: flex;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  border-top: none;
+  box-shadow: inset 0 1px 0 0 var(--modals-bg-color);
+  // background-color: var(--modals-bg-color);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .headerString {
