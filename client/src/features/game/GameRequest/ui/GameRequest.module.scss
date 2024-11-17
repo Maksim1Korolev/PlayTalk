@@ -1,6 +1,3 @@
-.GameRequest {
-}
-
 .yesButton {
   background-color: var(--accent-color);
   color: var(--inverted-bg-color);
@@ -14,4 +11,10 @@
 .skipButton {
   background-color: var(--bg-color);
   color: var(--inverted-bg-color);
+}
+
+.gameIcon {
+  background-color: var(--buttons-bg);
+  border: 3px solid var(--primary-color);
+  border-radius: 50%;
 }

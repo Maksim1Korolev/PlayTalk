@@ -40,6 +40,7 @@ export const GameAddonCircleContainer = memo(
         className={cx(cls.ChatAddonCircle, {}, [className])}
       >
         <AppImage
+          className={cls.gameIcon}
           src={gameIconUrl}
           width={size}
           height={size}
