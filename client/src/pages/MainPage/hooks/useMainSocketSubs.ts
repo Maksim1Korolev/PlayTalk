@@ -51,12 +51,13 @@ export const useMainSocketSubs = () => {
         }
       };
 
-      const unreadMessageCountChanged = (
-        username: string,
-        unreadMessageCount: number
-      ) => {
-        console.log("update game status");
-
+      const unreadMessageCountChanged = ({
+        username,
+        unreadMessageCount,
+      }: {
+        username: string;
+        unreadMessageCount: number;
+      }) => {
         dispatch(
           userActions.updateUser({
             username,

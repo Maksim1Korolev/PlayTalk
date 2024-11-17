@@ -56,7 +56,7 @@ describe("ChatSubscriptions", () => {
       expect(io.emit).toHaveBeenCalledWith("stop-typing", mockUsername);
     });
 
-    it("should handle 'on-read-messages' event and update unread counts", async () => {
+    it("should handle 'messages-read' event and update unread counts", async () => {
       const usernames = [mockUsername, mockReceiverUsername];
       MessageHistoryService.readAllUnreadMessages.mockResolvedValue({
         data: true,
@@ -64,7 +64,7 @@ describe("ChatSubscriptions", () => {
 
       await handleChatSubscriptions(mockSocket, mockUsername);
       const onReadMessagesHandler = mockSocket.on.mock.calls.find(
-        ([event]) => event === "on-read-messages"
+        ([event]) => event === "messages-read"
       )[1];
       await onReadMessagesHandler({ usernames });
 
@@ -72,11 +72,10 @@ describe("ChatSubscriptions", () => {
         mockUsername,
         usernames
       );
-      expect(mockSocket.emit).toHaveBeenCalledWith(
-        "unread-count-messages",
-        mockReceiverUsername,
-        0
-      );
+      expect(mockSocket.emit).toHaveBeenCalledWith("unread-count-messages", {
+        username: otherUserInChat,
+        unreadMessageCount: 0,
+      });
     });
 
     it("should handle 'send-message' event and notify receiver", async () => {
@@ -101,11 +100,10 @@ describe("ChatSubscriptions", () => {
       );
       expect(io.to).toHaveBeenCalledWith(["receiverSocketId"]);
       expect(io.emit).toHaveBeenCalledWith("receive-message", message);
-      expect(io.emit).toHaveBeenCalledWith(
-        "unread-count-messages",
-        mockUsername,
-        3
-      );
+      expect(io.emit).toHaveBeenCalledWith("unread-count-messages", {
+        username: mockUsername,
+        unreadMessageCount: 3,
+      });
     });
   });
 });

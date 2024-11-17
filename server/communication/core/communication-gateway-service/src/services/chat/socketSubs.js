@@ -33,23 +33,26 @@ export async function handleChatSubscriptions(socket, currentUsername) {
     logger.info(`${currentUsername} stopped typing to ${recipientUsername}`);
   });
 
-  socket.on("on-read-messages", async ({ usernames }) => {
+  socket.on("messages-read", async ({ usernames }) => {
     try {
-      logger.info("on-read-messages started", usernames);
+      logger.info("messages-read started", usernames);
       const { data } = await MessageHistoryService.readAllUnreadMessages(
         currentUsername,
         usernames
       );
-      logger.info("on-read-messages sent request to chat-server", data);
+      logger.info("messages-read sent request to chat-server", data);
 
       if (data) {
         const otherUserInChat = usernames.find(
           (username) => username !== currentUsername
         );
-        socket.emit("unread-count-messages", otherUserInChat, 0);
+        socket.emit("unread-count-messages", {
+          username: otherUserInChat,
+          unreadMessageCount: 0,
+        });
       }
     } catch (err) {
-      logger.error(`Error in on-read-messages: ${err.message}`);
+      logger.error(`Error in messages-read: ${err.message}`);
     }
   });
 
@@ -72,11 +75,10 @@ export async function handleChatSubscriptions(socket, currentUsername) {
         usernames
       );
 
-      io.to(receiverSocketIds).emit(
-        "unread-count-messages",
-        currentUsername,
-        unreadCount
-      );
+      io.to(receiverSocketIds).emit("unread-count-messages", {
+        username: currentUsername,
+        unreadMessageCount: unreadCount,
+      });
 
       logger.info(
         `Message from ${currentUsername} to ${recipientUsername}: "${message}" delivered to sockets: ${receiverSocketIds?.join(

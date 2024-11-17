@@ -13,7 +13,7 @@ export const markMessagesAsRead = createAsyncThunk<
     return;
   }
 
-  communicationSocket.emit("on-read-messages", {
+  communicationSocket.emit("messages-read", {
     usernames,
   });
 });
