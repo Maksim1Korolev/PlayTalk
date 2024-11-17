@@ -3,7 +3,7 @@ Typing timeouts on the server
 
 To fix:
 Upgrade UserList and addonCircle styles
-Unread real time
+Unread in real-time problem (on the server side), check "unread-messages-count" on client (is called thrice). 
 
 To add (in the end):
 General styles

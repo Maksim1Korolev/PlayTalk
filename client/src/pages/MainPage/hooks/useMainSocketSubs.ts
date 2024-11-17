@@ -51,6 +51,7 @@ export const useMainSocketSubs = () => {
         }
       };
 
+      //TODO: This is called thrice on chat open (Meaning 3 emits?)
       const unreadMessageCountChanged = ({
         username,
         unreadMessageCount,
