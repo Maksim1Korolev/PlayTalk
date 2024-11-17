@@ -17,8 +17,6 @@ export const LogoutButton = ({ className, onClick }: LogoutButtonProps) => {
       <div className={cls.sign}>
         <AppSvg Svg={LogoutIcon} />
       </div>
-
-      <div className={cls.text}>Logout</div>
     </button>
   );
 };
