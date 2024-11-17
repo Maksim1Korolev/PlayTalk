@@ -9,8 +9,10 @@ export const UnreadMessagesCountIndicator = ({
   className?: string;
   unreadMessagesCount?: number;
 }) => {
-  //if (!unreadMessagesCount || unreadMessagesCount === 0) return null;
+  if (!unreadMessagesCount || unreadMessagesCount === 0) return null;
   return (
-    <p className={cx(cls.UnreadMessageCountIndicator, {}, [className])}>6</p>
+    <div className={cx(cls.UnreadMessageCountIndicator, {}, [className])}>
+      {unreadMessagesCount}
+    </div>
   );
 };
