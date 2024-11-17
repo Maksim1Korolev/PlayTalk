@@ -13,7 +13,7 @@
     top: 50%;
     z-index: 10;
     transform: rotate(90deg);
-    color: var(--inverted-bg-color);
+    color: var(--white-color-1);
   }
 }
 
@@ -31,20 +31,15 @@
   margin-top: 30px;
   margin-bottom: 30px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: var(--bg-color);
+  background-color: var(--main-bg-color);
 }
 
 .Sidebar::-webkit-scrollbar {
   width: 5px;
-  background-color: var(--dark-bg);
+  background-color: var(--dark-bg-color);
 }
 
 .Sidebar::-webkit-scrollbar-thumb {
   border-radius: 30px;
-  // background-color: var(--accent-color);
-  background-image: linear-gradient(
-    180deg,
-    var(--modals-bg-color) 0%,
-    var(--blurred-border) 99%
-  );
+  background-image: var(--sidebar-scrollbar-color);
 }

@@ -1,12 +1,12 @@
 .UnreadMessageCountIndicator {
-	display: inline-flex; 
-	justify-content: center; 
-	align-items: center; 
-	width: 23px;
-	height: 23px;
-	font-weight: 700;
-	border-radius: 50%; 
-	border-color: var(--text); 
-	color: var(--text); 
-	background-color: var(--cancel); 
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 23px;
+  height: 23px;
+  font-weight: 700;
+  border-radius: 50%;
+  border-color: var(--text-color); //TODO: update
+  color: var(--text-color);
+  background-color: var(--cancel-color);
 }

@@ -27,10 +27,10 @@
 }
 
 .cmMsgText {
-  border: 1px solid var(--dark-bg);
-  background: var(--text);
+  border: 1px solid var(--dark-bg-color); //TODO: update
+  background: var(--text-color); //TODO: update
   padding: 10px 15px;
-  color: var(--dark-bg);
+  color: var(--dark-bg-color); //TODO: update
   max-width: 75%;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -40,5 +40,5 @@
 
 .chatMsg.self .cmMsgText {
   background: var(--accent-color);
-  color: var(--text);
+  color: var(--text-color);
 }

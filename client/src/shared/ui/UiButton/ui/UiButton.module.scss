@@ -1,6 +1,6 @@
 .Button {
   cursor: pointer;
-  color: var(--text);
+  color: var(--text-color); //TODO: update
   border-radius: 25%;
   display: flex;
   align-items: center;
@@ -18,7 +18,7 @@
   outline: none;
 
   &.blue {
-    color: var(--highlight);
+    color: var(--highlight-color);
   }
 
   &:hover {
@@ -34,7 +34,7 @@
 
   &:hover {
     border: 2px solid var(--accent-redesign);
-    color: var(--highlight);
+    color: var(--highlight-color);
   }
 }
 
@@ -43,7 +43,7 @@
   border-radius: 10px 20px;
   transition: transform 200ms ease;
   font-family: Satoshi, sans-serif;
-  color: var(--text-secondary);
+  color: var(--text-secondary-color); //TODO: update
   font-size: 16px;
   font-weight: 700;
   text-align: center;

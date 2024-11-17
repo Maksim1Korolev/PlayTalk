@@ -37,7 +37,7 @@
   .closeButton {
     width: 30px;
     height: 30px;
-    color: var(--text-tertiary);
+    color: var(--text-tertiary-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -50,13 +50,13 @@
   }
 
   .collapseButton {
-    background-color: var(--inverted-bg-color);
+    background-color: var(--white-color-1);
     color: var(--accent-color);
   }
 
   .closeButton {
-    background-color: var(--inverted-bg-color);
-    color: var(--cancel);
+    background-color: var(--white-color-1);
+    color: var(--cancel-color);
   }
 }
 

@@ -1,7 +1,7 @@
 .TicTacToe {
   align-items: center;
   justify-content: space-around;
-  background-color: var(--bg-color);
+  background-color: var(--main-bg-color);
   //border-radius: 8px;
   border: 2px solid var(--accent-color);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -12,7 +12,7 @@
 .statusMessage {
   margin-top: 20px;
   font-size: 20px;
-  color: var(--text-secondary);
+  color: var(--text-secondary-color);
   text-align: center;
 }
 
@@ -21,7 +21,7 @@
   display: grid;
   background-color: var(--accent-color);
   border-radius: 12px;
-  border: 1px solid var(--inverted-bg-color);
+  border: 1px solid var(--white-color-1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 300px;
@@ -32,14 +32,14 @@
   position: absolute;
   top: -24px;
   font-size: 16px;
-  color: var(--cancel);
+  color: var(--cancel-color);
   text-align: center;
 }
 
 .surrenderButton {
   margin-bottom: 20px;
-  background-color: var(--cancel);
-  color: var(--text);
+  background-color: var(--cancel-color);
+  color: var(--text-color);
   border: none;
   padding: 10px 20px;
   border-radius: 4px;
@@ -48,7 +48,7 @@
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: var(--highlight);
+    background-color: var(--highlight-color);
   }
 
   &:disabled {

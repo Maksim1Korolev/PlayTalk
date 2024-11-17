@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   z-index: 200; // High z-index to ensure it’s above conflicting elements
-  background-color: var(--buttons-bg);
+  background-color: var(--buttons-bg-color);
   border: 3px solid var(--secondary-color);
   border-radius: 50%;
 }
@@ -31,7 +31,7 @@
 }
 
 .gameIcon {
-  background-color: var(--buttons-bg);
+  background-color: var(--buttons-bg-color);
   border: 3px solid var(--primary-color);
   border-radius: 50%;
 }

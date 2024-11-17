@@ -1,39 +1,47 @@
 body {
-  --bg-color: #191919;
-  --some-color: #f73200;
-  --inverted-bg-color: #e8e8ea;
+  // main colors
   --primary-color: #5916f3;
   --modals-bg-color: #563a82;
   --secondary-color: #ff932a;
   --secondary-bleak-color: #f7a154;
   --accent-color: #5a5eb9;
+  --highlight-color: #bfbaff;
+  --cancel-color: #d95757;
+  --active-color: #6cd98b; //active game?
+  --save-color: #30f94b; //online indicator
+
+  // input
+  --input-border-color: #767676;
+  --input-bg-color: #424243;
+
+  // bg
+  --stars-bg-color: linear-gradient(#16161d, #1f1f3a, #3b2f4a);
+  --main-bg-color: #191919;
+  --dark-bg-color: #191919;
+  --light-bg-color: #151c1f; //not really used
   --card-bg-color: #222;
-  --blurred-background: rgba(255, 255, 255, 0.1);
-  --blurred-border: rgba(255, 255, 255, 0.3);
-  --highlight: #bfbaff;
-  --cancel: #d95757;
-  --text: #fff;
-  --buttons-bg: #fefbf3;
+  --blurred-background-color: rgba(255, 255, 255, 0.1);
+  --blurred-border-color: rgba(255, 255, 255, 0.3);
+  --buttons-bg-color: #fefbf3;
 
-  // redesigned
-  --light-bg: #151c1f;
-  --dark-bg: #191919;
-  --text-secondary: #fbf8f3;
-  --text-dark: #666;
-  --text-tertiary: #9f9f9f;
-  --input-border: #767676;
-  --input-bg: #424243;
+  // text
+  --text-color: #fff;
+  --text-secondary-color: #fbf8f3;
+  --text-tertiary-color: #9f9f9f;
+
+  // scrollbar
+  --sidebar-scrollbar-color: linear-gradient(
+    180deg,
+    var(--modals-bg-color) 0%,
+    var(--blurred-border-color) 99%
+  );
+
+  // white shades
+  --white-color-1: #e8e8ea;
+
+  // unused
   --hint: #555;
-  --active: #6cd98b;
-  --save: #30f94b;
-
-  // skeleton
-  --skeleton-color: #1515ad;
-  --skeleton-shadow: #2b2be8;
-
-  // code
   --code-bg: #353642;
-
-  // listbox
   --listbox-bg: #353642;
+  --text-dark: #666;
 }

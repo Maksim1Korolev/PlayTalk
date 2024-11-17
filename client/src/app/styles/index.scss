@@ -3,8 +3,8 @@
 @import "./reset.scss";
 
 .app {
-  background: linear-gradient(#16161d, #1f1f3a, #3b2f4a); // var(--bg-color);
-  color: var(--text);
+  background: var(--stars-bg-color);
+  color: var(--text-color);
   overflow: hidden;
   height: 100vh;
 }

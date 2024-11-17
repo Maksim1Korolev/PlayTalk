@@ -16,7 +16,7 @@
 }
 
 .ChatInput {
-  background: var(--dark-bg);
+  background: var(--dark-bg-color);
   position: relative;
   width: 100%;
   border: 1px solid #ccc;
@@ -37,7 +37,7 @@
   min-height: 40px;
   max-height: 150px;
   caret-color: var(--primary-color);
-  background: var(--dark-bg);
+  background: var(--dark-bg-color);
   color: var(--text-color);
   font-size: 16px;
   caret-color: var(--accent-color);
