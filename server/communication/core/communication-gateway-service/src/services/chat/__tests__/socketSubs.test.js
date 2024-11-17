@@ -72,7 +72,7 @@ describe("ChatSubscriptions", () => {
         mockUsername,
         usernames
       );
-      expect(mockSocket.emit).toHaveBeenCalledWith("unread-count-messages", {
+      expect(mockSocket.emit).toHaveBeenCalledWith("unread-messages-count", {
         username: otherUserInChat,
         unreadMessageCount: 0,
       });
@@ -100,7 +100,7 @@ describe("ChatSubscriptions", () => {
       );
       expect(io.to).toHaveBeenCalledWith(["receiverSocketId"]);
       expect(io.emit).toHaveBeenCalledWith("receive-message", message);
-      expect(io.emit).toHaveBeenCalledWith("unread-count-messages", {
+      expect(io.emit).toHaveBeenCalledWith("unread-messages-count", {
         username: mockUsername,
         unreadMessageCount: 3,
       });

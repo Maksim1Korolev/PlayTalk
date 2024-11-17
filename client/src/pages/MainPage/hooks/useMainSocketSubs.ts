@@ -73,7 +73,7 @@ export const useMainSocketSubs = () => {
       gameSocket.on("player-connection", updateUserOnline);
 
       communicationSocket.on(
-        "unread-count-messages",
+        "unread-messages-count",
         unreadMessageCountChanged
       );
 
@@ -83,7 +83,7 @@ export const useMainSocketSubs = () => {
         communicationSocket.off("user-connection", updateUserOnline);
         gameSocket.off("player-connection", updateUserOnline);
         communicationSocket.off(
-          "unread-count-messages",
+          "unread-messages-count",
           unreadMessageCountChanged
         );
       };

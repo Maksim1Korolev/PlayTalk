@@ -46,7 +46,7 @@ export async function handleChatSubscriptions(socket, currentUsername) {
         const otherUserInChat = usernames.find(
           (username) => username !== currentUsername
         );
-        socket.emit("unread-count-messages", {
+        socket.emit("unread-messages-count", {
           username: otherUserInChat,
           unreadMessageCount: 0,
         });
@@ -75,7 +75,7 @@ export async function handleChatSubscriptions(socket, currentUsername) {
         usernames
       );
 
-      io.to(receiverSocketIds).emit("unread-count-messages", {
+      io.to(receiverSocketIds).emit("unread-messages-count", {
         username: currentUsername,
         unreadMessageCount: unreadCount,
       });
