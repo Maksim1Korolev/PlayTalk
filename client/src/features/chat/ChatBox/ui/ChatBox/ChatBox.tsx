@@ -2,6 +2,8 @@ import cls from "./ChatBox.module.scss";
 
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 
+import { chatResources } from "@/shared/assets";
+
 import { cx, useAppSelector } from "@/shared/lib";
 import { Card, UiText, VStack } from "@/shared/ui";
 
@@ -73,7 +75,7 @@ export const ChatBox = memo(
             <div className="spacer" />
             {isTyping && (
               <UiText dimmed className={cls.typingLabel}>
-                Typing...
+                {chatResources.label_typing}
               </UiText>
             )}
           </VStack>

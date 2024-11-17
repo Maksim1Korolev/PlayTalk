@@ -2,7 +2,7 @@ To add:
 
 To fix:
 Upgrade UserList and addonCircle styles
-Check for strings that are not in assets (typing)
+Typing doesn't disappear
 Unread real time
 
 To add (in the end):
