@@ -72,7 +72,6 @@ export const ChatBox = memo(
               {messageHistory && renderMessageHistory()}
               <div ref={dummy} />
             </VStack>
-            <div className="spacer" />
             {isTyping && (
               <UiText dimmed className={cls.typingLabel}>
                 {chatResources.label_typing}

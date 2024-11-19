@@ -1,4 +1,5 @@
 {
-    "label_typing": "Typing..."
-  }
-  
+  "label_typing": "Typing...",
+  "placeholder_type_message": "Type your message...",
+  "button_send": "Send"
+}

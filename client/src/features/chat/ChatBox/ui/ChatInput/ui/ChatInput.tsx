@@ -1,4 +1,7 @@
 import cls from "./ChatInput.module.scss";
+
+import { chatResources } from "@/shared/assets";
+
 import { cx } from "@/shared/lib";
 
 interface ChatInputProps {
@@ -12,7 +15,7 @@ interface ChatInputProps {
 
 export const ChatInput = ({
   className,
-  placeholder = "Type your message...",
+  placeholder = chatResources.placeholder_type_message,
   onSend,
   onTyping,
   inputMessage,
@@ -38,6 +41,7 @@ export const ChatInput = ({
   };
 
   return (
+    //TODO:Update components
     <div className={cx(cls.ChatInput, {}, [className])}>
       <textarea
         className={cx(cls.chatInputField)}
@@ -47,7 +51,7 @@ export const ChatInput = ({
         placeholder={placeholder}
       />
       <button className={cls.sendButton} onClick={handleSendMessage}>
-        Send
+        {chatResources.button_send}
       </button>
     </div>
   );
