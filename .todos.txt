@@ -1,8 +1,6 @@
 To add:
 
 To fix:
-Move most of chat and ttt styles to cards and update them
-hr in userList
 
 To add (in the end):
 General styles
