@@ -49,12 +49,9 @@ export const UserList = memo(
 
     const userList = useMemo(() => {
       const sortedUsers = users ? Object.values(users).sort(sortUsers) : [];
-      console.log(users);
-
-      console.log(sortedUsers);
 
       return sortedUsers?.map((user, index) => (
-        <VStack max key={user.username}>
+        <VStack max key={user.username} gap="8">
           <HStack max>
             <UserListCard
               className={cls.userCard}
@@ -94,7 +91,7 @@ export const UserList = memo(
     }
 
     if (!users || Object.keys(users).length === 0) {
-      return <p>{userListResources.noUsers}</p>;
+      return <UiText>{userListResources.noUsers}</UiText>;
     }
 
     return (
@@ -103,7 +100,7 @@ export const UserList = memo(
         variant="blurred"
         padding="16"
       >
-        <VStack className={cls.userList} gap="16" max>
+        <VStack className={cls.userList} gap="8" max>
           <UiText size="xl">{userListResources.userListHeader}</UiText>
           {userList}
         </VStack>

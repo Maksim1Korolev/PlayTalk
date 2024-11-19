@@ -18,8 +18,6 @@ export const fetchUsersWithStatuses = createAsyncThunk<
 
     try {
       const users: User[] = await api.usersApiService.getUsers(token);
-      console.log("users");
-      console.log(users);
 
       const results = await Promise.allSettled([
         api.onlineApiService.getOnlineUsernames(token),
