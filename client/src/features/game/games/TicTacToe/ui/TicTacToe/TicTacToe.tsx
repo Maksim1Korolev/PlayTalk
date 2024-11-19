@@ -119,7 +119,8 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
         <Board board={board} onMakeMove={onMakeMove} />
       </div>
       <UiButton
-        max
+        variant="filled"
+        color="cancel"
         className={cls.surrenderButton}
         onClick={() => handleSurrender({ opponentUsername })}
       >
