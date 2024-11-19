@@ -49,6 +49,10 @@ export const UserList = memo(
 
     const userList = useMemo(() => {
       const sortedUsers = users ? Object.values(users).sort(sortUsers) : [];
+      console.log(users);
+
+      console.log(sortedUsers);
+
       return sortedUsers?.map((user, index) => (
         <VStack max key={user.username}>
           <HStack max>
@@ -99,8 +103,7 @@ export const UserList = memo(
         variant="blurred"
         padding="16"
       >
-        <UiText size="xl">{userListResources.userListHeader}</UiText>
-        <VStack gap="16" max>
+        <VStack className={cls.userList} gap="16" max>
           <UiText size="xl">{userListResources.userListHeader}</UiText>
           {userList}
         </VStack>
