@@ -1,7 +1,6 @@
 To add:
 
 To fix:
-Upgrade UserList styles
 Move most of chat and ttt styles to cards and update them
 
 To add (in the end):
@@ -13,6 +12,7 @@ Sort out client's and profile's .envs
 
 To add (after the end):
 Pagination
+Modal's z-index
 Profile, winner and players features on client
 AppSvg => AppImage
 Adjust modal drag
