@@ -1,6 +1,6 @@
 .Button {
   cursor: pointer;
-  color: var(--text-color); //TODO: update
+  color: var(--text-color);
   border-radius: 25%;
   display: flex;
   align-items: center;
@@ -42,31 +42,31 @@
   border: 1px solid var(--primary-color);
   border-radius: 10px 20px;
   transition: transform 0.5s ease;
-  font-family: Satoshi, sans-serif;
-  color: var(--text-secondary-color); //TODO: update
+  font-family: var(--font-family-text);
+  color: var(--text-secondary-color);
   font-size: 16px;
   font-weight: 700;
   text-align: center;
 
   &.default {
     background: var(--accent-color);
-		color: var(--text-color);
+    color: var(--text-color);
 
-		&:hover {
-			box-shadow: 0 0 30px 0 rgba(113, 77, 197, 0.32);
-		}
+    &:hover {
+      box-shadow: 0 0 30px 0 rgba(113, 77, 197, 0.32);
+    }
   }
 
-	&.cancel {
-		border: none;
-		background: var(--cancel-color);
+  &.cancel {
+    border: none;
+    background: var(--cancel-color);
 
-		&:hover {
-			box-shadow: none;
-			transform: scale(1.02);
-			opacity: (0.9);
-		}
-	}
+    &:hover {
+      box-shadow: none;
+      transform: scale(1.02);
+      opacity: (0.9);
+    }
+  }
 }
 
 .textIsUnderlined {
