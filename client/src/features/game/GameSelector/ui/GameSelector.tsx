@@ -48,6 +48,16 @@ export const GameSelector = ({
 
   const menuItemSize = 60;
 
+  const updateMenuPosition = () => {
+    const rect = playButtonRef.current?.getBoundingClientRect();
+    if (rect) {
+      setMenuPosition({
+        top: rect.top + window.scrollY,
+        left: rect.left + window.scrollX,
+      });
+    }
+  };
+
   const handleMenuToggle = () => {
     if (isSelectorOpen) {
       setIsFlipped(false);
@@ -60,6 +70,9 @@ export const GameSelector = ({
       dispatch(circleMenuActions.closeMenu());
 
       setShowMenu(true);
+
+      updateMenuPosition();
+
       setTimeout(() => {
         setIsFlipped(true);
         setAnimateOpen(true);
@@ -68,18 +81,8 @@ export const GameSelector = ({
     }
   };
 
-  //Resize check
+  // Resize check
   useEffect(() => {
-    const updateMenuPosition = () => {
-      const rect = playButtonRef.current?.getBoundingClientRect();
-      if (rect) {
-        setMenuPosition({
-          top: rect.top + window.scrollY,
-          left: rect.left + window.scrollX,
-        });
-      }
-    };
-
     updateMenuPosition();
 
     window.addEventListener("resize", updateMenuPosition);
