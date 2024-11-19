@@ -1,7 +1,7 @@
 .TicTacToe {
   align-items: center;
   justify-content: space-around;
-  background-color: var(--main-bg-color);
+  background-color: var(--dark-bg-color);
   //border-radius: 8px;
   border: 2px solid var(--accent-color);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -21,7 +21,7 @@
   display: grid;
   background-color: var(--accent-color);
   border-radius: 12px;
-  border: 1px solid var(--white-color-1);
+  border: 1px solid var(--helpers-color);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 300px;

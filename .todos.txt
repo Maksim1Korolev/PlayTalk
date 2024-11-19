@@ -2,6 +2,7 @@ To add:
 
 To fix:
 Upgrade UserList styles
+Move most of chat and ttt styles to cards and update them
 
 To add (in the end):
 General styles

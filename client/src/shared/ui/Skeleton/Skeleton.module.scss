@@ -3,8 +3,7 @@
   height: 50px;
   position: relative;
   overflow: hidden;
-  background-color: var(--main-bg-color);
-  background: linear-gradient(110deg, #1e1e38 8%, #29294d 18%, #1e1e38 33%);
+  background: var(--skeleton-bg-color);
   background-size: 200% 100%;
   animation: 2s shine linear infinite;
 }

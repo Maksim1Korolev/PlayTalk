@@ -55,7 +55,7 @@
 //Scrollbar
 .chatLogs::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: var(--main-bg-color);
+  background-color: var(--dark-bg-color);
 }
 
 .chatLogs::-webkit-scrollbar {
@@ -64,5 +64,5 @@
 }
 
 .chatLogs::-webkit-scrollbar-thumb {
-  background-color: var(--accent-color);
+  background-color: var(--chat-scrollbar-color);
 }
