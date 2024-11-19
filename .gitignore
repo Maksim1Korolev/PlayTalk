@@ -9,9 +9,6 @@ logs/
 *.log
 
 
-# Environment variables
-/profile/**.env*
-
 .vscode/
 
 .commands.txt

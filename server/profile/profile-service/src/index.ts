@@ -1,4 +1,3 @@
-import AWS from "aws-sdk";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
