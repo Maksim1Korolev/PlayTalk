@@ -16,11 +16,15 @@
   background: var(--light-bg-color);
 }
 
-.outlined {
+.accent {
+	background: var(--accent-color);
+}
+
+.border_style_default {
   border: 1px solid var(--accent-color);
 }
 
-.matte {
+.border_style_matte {
   border: 7px solid var(--modals-bg-color);
 }
 

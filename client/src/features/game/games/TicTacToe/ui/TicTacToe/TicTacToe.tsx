@@ -22,7 +22,7 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
   const currentUser: CurrentUser = useAppSelector(getCurrentUser);
 
   const [currentPlayer, setCurrentPlayer] = useState(game.currentPlayer);
-  const [statusMessage, setStatusMessage] = useState("");
+  const [warningMessage, setStatusMessage] = useState("");
 
   const [board, setBoard] = useState<("-" | "O" | "X")[]>(game.board);
 
@@ -87,14 +87,14 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
   };
 
   useEffect(() => {
-    if (statusMessage !== "") {
+    if (warningMessage !== "") {
       const timer = setTimeout(() => {
         setStatusMessage("");
       }, 3000);
 
       return () => clearTimeout(timer);
     }
-  }, [statusMessage]);
+  }, [warningMessage]);
 
   const { handleMakeMove, handleSurrender } = useTicTacToeSocket({
     onMoveMade,
@@ -111,9 +111,9 @@ export const TicTacToe = memo(({ className, game }: TicTacToeProps) => {
             )}
       </UiText>
       <div className={cls.boardContainer}>
-        {statusMessage && (
-          <UiText max className={cls.warningMessage}>
-            {statusMessage}
+        {warningMessage && (
+          <UiText color="error" max className={cls.warningMessage}>
+            {warningMessage}
           </UiText>
         )}
         <Board board={board} onMakeMove={onMakeMove} />

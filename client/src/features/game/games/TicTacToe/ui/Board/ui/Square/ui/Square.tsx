@@ -1,8 +1,9 @@
 import cls from "./Square.module.scss";
-import { cx } from "@/shared/lib";
+
 import { memo } from "react";
 
-import { UiButton } from "@/shared/ui";
+import { cx } from "@/shared/lib";
+import { UiButton, UiText } from "@/shared/ui";
 
 interface SquareProps {
   className?: string;
@@ -22,7 +23,9 @@ export const Square = memo(
         className={cx(cls.Square, {}, [className])}
         onClick={handleSquareClicked}
       >
-        {sign}
+        <UiText size="l" bold>
+          {sign}
+        </UiText>
       </UiButton>
     );
   }

@@ -7,7 +7,7 @@ import { cx, Mods } from "@/shared/lib";
 type TextSize = "s" | "m" | "l" | "xl" | "xxl";
 type FontFamily = "main" | "monospace" | "text" | "header";
 
-type TextColor = "error" | "default";
+type TextColor = "error" | "default" | "black";
 
 interface UiTextProps {
   className?: string;
