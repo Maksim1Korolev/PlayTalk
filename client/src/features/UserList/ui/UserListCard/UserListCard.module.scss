@@ -1,40 +1,17 @@
-@mixin scale-and-truncate-text($max-width) {
-  display: inline-block;
-  max-width: $max-width;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 1rem;
-
-  @for $i from 1 through 5 {
-    &:nth-of-type(#{$i}) {
-      font-size: 1rem - ($i * 0.1rem);
-    }
-  }
-}
-
 .UserListCard {
   align-items: center;
-  display: flex;
   opacity: 1;
   padding: 0 16px;
 
   .username {
-    @include scale-and-truncate-text(55px);
-  }
-
-  .userInfo {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-
-    span {
-      flex-grow: 1;
-    }
+    flex: 0 0 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .buttons {
-    margin-left: auto; // Pushes the buttons to the end
+    margin-left: auto;
+    width: 50%;
 
     .chatButtonBorder {
       border: 3px solid var(--primary-color);

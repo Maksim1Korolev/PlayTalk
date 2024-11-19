@@ -1,6 +1,6 @@
 import cls from "./UserListCard.module.scss";
 
-import { memo, useEffect, useRef } from "react";
+import { memo } from "react";
 
 import { cx } from "@/shared/lib";
 import {
@@ -40,27 +40,9 @@ type UserListCardProps = DefaultProps | LoadingProps;
 
 export const UserListCard = memo((props: UserListCardProps) => {
   const { className = "", collapsed = false, isLoading = false } = props;
-  const usernameRef = useRef<HTMLParagraphElement>(null);
 
   const buttonSize = 60;
   const avatarSize = 80;
-
-  useEffect(() => {
-    const adjustFontSize = (
-      element: HTMLElement,
-      maxWidth: number,
-      minFontSize: number = 0.8
-    ) => {
-      let fontSize = parseFloat(window.getComputedStyle(element).fontSize);
-      while (element.scrollWidth > maxWidth && fontSize > minFontSize) {
-        fontSize -= 0.1;
-        element.style.fontSize = `${fontSize}rem`;
-      }
-    };
-    if (usernameRef.current) {
-      adjustFontSize(usernameRef.current, 50);
-    }
-  }, [usernameRef]);
 
   if (isLoading) {
     return (
@@ -115,52 +97,43 @@ export const UserListCard = memo((props: UserListCardProps) => {
           alt={user?.username}
         />
       </AddonCircle>
-      <HStack
-        className={cls.userInfo}
-        gap="16"
-        max
-        align="center"
-        justify="center"
-      >
-        <UiText className={cls.username} bold size="l" ref={usernameRef}>
-          {user?.username}
-        </UiText>
-        <HStack className={cls.buttons} gap="8">
-          <AddonCircle
-            addonTopRight={
-              <UnreadMessagesCountIndicator
-                className={cls.unread}
-                unreadMessagesCount={user.unreadMessageCount}
+      <UiText className={cls.username} size="l" max title={user?.username}>
+        {user?.username}
+      </UiText>
+      <HStack className={cls.buttons} gap="8">
+        <AddonCircle
+          addonTopRight={
+            <UnreadMessagesCountIndicator
+              className={cls.unread}
+              unreadMessagesCount={user.unreadMessageCount}
+            />
+          }
+        >
+          <div className={cls.chatButtonBorder}>
+            <UiButton
+              className={cls.chatButton}
+              onClick={onChatOpen}
+              variant="clear"
+            >
+              <AppImage
+                src={getImagePath({
+                  collection: "appIcons",
+                  fileName: "chat",
+                })}
+                width={buttonSize}
+                height={buttonSize}
+                draggable={false}
               />
-            }
-          >
-            <div className={cls.chatButtonBorder}>
-              <UiButton
-                className={cls.chatButton}
-                onClick={onChatOpen}
-                variant="clear"
-              >
-                <AppImage
-                  src={getImagePath({
-                    collection: "appIcons",
-                    fileName: "chat",
-                  })}
-                  width={buttonSize}
-                  height={buttonSize}
-                  draggable={false}
-                />
-              </UiButton>
-            </div>
-          </AddonCircle>
-
-          <GameSelector
-            className={cls.playButton}
-            userGameStatusMap={user?.gameStatusMap}
-            size={buttonSize}
-            menuId={user?.username || ""}
-            onGameClicked={onGameClicked}
-          />
-        </HStack>
+            </UiButton>
+          </div>
+        </AddonCircle>
+        <GameSelector
+          className={cls.playButton}
+          userGameStatusMap={user?.gameStatusMap}
+          size={buttonSize}
+          menuId={user?.username || ""}
+          onGameClicked={onGameClicked}
+        />
       </HStack>
     </HStack>
   );

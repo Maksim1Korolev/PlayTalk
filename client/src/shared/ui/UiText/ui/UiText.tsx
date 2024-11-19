@@ -4,7 +4,6 @@ import { forwardRef, ReactNode } from "react";
 
 import { cx, Mods } from "@/shared/lib";
 
-type TextSize = "s" | "m" | "l" | "xl" | "xxl";
 type FontFamily = "main" | "monospace" | "text" | "header";
 
 type TextColor = "error" | "default" | "black";
@@ -18,6 +17,7 @@ interface UiTextProps {
   color?: TextColor;
   max?: boolean;
   fontFamily?: FontFamily;
+  title?: string;
 }
 
 const mapSizeToClass: Record<TextSize, string> = {
@@ -46,6 +46,7 @@ export const UiText = forwardRef<HTMLParagraphElement, UiTextProps>(
       dimmed = false,
       max = false,
       fontFamily = "text",
+      title,
     }: UiTextProps,
     ref
   ) => {
@@ -64,6 +65,7 @@ export const UiText = forwardRef<HTMLParagraphElement, UiTextProps>(
           cls[fontFamilyClass],
           cls[color],
         ])}
+        title={title}
         ref={ref}
       >
         {children}
