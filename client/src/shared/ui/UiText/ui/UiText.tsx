@@ -5,7 +5,7 @@ import { forwardRef, ReactNode } from "react";
 import { cx, Mods } from "@/shared/lib";
 
 type FontFamily = "main" | "monospace" | "text" | "header";
-
+type TextSize = "s" | "m" | "l" | "xl" | "xxl";
 type TextColor = "error" | "default" | "black";
 
 interface UiTextProps {

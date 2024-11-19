@@ -1,4 +1,5 @@
 To add:
+Chat and logout to assets
 
 To fix:
 
