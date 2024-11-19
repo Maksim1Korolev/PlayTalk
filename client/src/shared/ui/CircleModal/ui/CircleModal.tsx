@@ -125,6 +125,7 @@ export const CircleModal = memo(
               className={cls.contentCard}
               max
               padding={"0"}
+              variant="none"
               borderStyle="matte"
               border="none"
             >
