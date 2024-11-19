@@ -1,12 +1,12 @@
 .userList {
-	display: flex;
-	overflow-y: auto;
-	height: 80vh;
-	padding-bottom: 20px;
+  display: flex;
+  overflow-y: auto;
+  height: 80vh;
+  padding-bottom: 20px;
 }
 .UserList {
-	display: flex;
-	height: 80vh;
+  display: flex;
+  height: 80vh;
 }
 
 //Scrollbar styles
@@ -14,17 +14,13 @@
   width: 5px;
 }
 
-
 .userList::-webkit-scrollbar-track {
-  background-color: var(--main-bg-color);
-	margin-top: 20px;
-	margin-bottom: 50px;
-	border-radius: 30px;
-	
+  margin-top: 20px;
+  margin-bottom: 50px;
+  margin-right: 500px;
 }
 
 .userList::-webkit-scrollbar-thumb {
   border-radius: 30px;
   background-image: var(--sidebar-scrollbar-color);
 }
-
