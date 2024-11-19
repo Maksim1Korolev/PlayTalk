@@ -147,6 +147,7 @@ export const UserListCard = memo((props: UserListCardProps) => {
                   })}
                   width={buttonSize}
                   height={buttonSize}
+                  draggable={false}
                 />
               </UiButton>
             </div>

@@ -13,6 +13,7 @@ Sort out client's and profile's .envs
 To add (after the end):
 Pagination
 Modal's z-index
+Separate circle and modal components
 Profile, winner and players features on client
 AppSvg => AppImage
 Adjust modal drag
