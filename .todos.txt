@@ -3,9 +3,6 @@ To add:
 To fix:
 
 To add (in the end):
-General styles
-Upgrade font
-Username symbols in userListCard
 Sort out client's and profile's .envs
 
 
