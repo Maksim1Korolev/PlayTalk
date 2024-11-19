@@ -1,6 +1,9 @@
 To add:
 
 To fix:
+Registration bug
+Ttt when opened and closed
+Highlight cut of the first user
 
 To add (in the end):
 
