@@ -3,7 +3,7 @@ Secrets handling
 
 To fix:
 Ttt when opened and closed
-Highlight cut of the first user
+Highlight on game request and game modal
 
 To add (in the end):
 

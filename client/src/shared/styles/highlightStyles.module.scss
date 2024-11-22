@@ -1,15 +1,15 @@
 .highlight {
   border: 3px solid transparent;
   border-radius: 50%;
-  box-shadow: 0 0 30px transparent;
+  box-shadow: 0 0 10px transparent;
 }
 
 .highlight-active {
   border-color: var(--active-game-color);
-  box-shadow: 0 0 30px var(--active-game-color);
+  box-shadow: 0 0 10px var(--active-game-color);
 }
 
 .highlight-invited {
   border-color: var(--secondary-color);
-  box-shadow: 0 0 30px var(--secondary-color);
+  box-shadow: 0 0 10px var(--secondary-color);
 }
