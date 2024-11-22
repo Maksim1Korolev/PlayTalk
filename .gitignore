@@ -8,8 +8,5 @@ mongo_data/
 logs/
 *.log
 
-
 .vscode/
 
-.commands.txt
-.structure.txt
