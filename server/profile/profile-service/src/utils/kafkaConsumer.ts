@@ -40,15 +40,32 @@ const kafka = new Kafka({
 const consumer = kafka.consumer({ groupId: "profile-service-group" });
 
 export const connectConsumer = async (): Promise<void> => {
-  try {
-    await consumer.connect();
-    logger.info("Kafka consumer connected");
+  const maxRetries = 10;
+  const retryInterval = 3000;
 
-    await consumer.subscribe({ topic: "user-registered", fromBeginning: true });
-    logger.info("Subscribed to topic user-registered");
-  } catch (error: unknown) {
-    const err = error as Error;
-    logger.error(`Failed to connect Kafka consumer: ${err.message}`);
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      await consumer.connect();
+      logger.info("Kafka consumer connected");
+
+      await consumer.subscribe({
+        topic: "user-registered",
+        fromBeginning: true,
+      });
+      logger.info("Subscribed to topic user-registered");
+
+      return;
+    } catch (error: unknown) {
+      const err = error as Error;
+      logger.error(
+        `Attempt ${attempt} - Failed to connect Kafka consumer: ${err.message}`
+      );
+
+      logger.info(
+        `Retrying to connect to Kafka in ${retryInterval / 1000} seconds...`
+      );
+      await new Promise((resolve) => setTimeout(resolve, retryInterval));
+    }
   }
 };
 

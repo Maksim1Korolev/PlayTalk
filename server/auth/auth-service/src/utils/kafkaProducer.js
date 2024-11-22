@@ -32,11 +32,26 @@ const kafka = new Kafka({
 const producer = kafka.producer();
 
 export const connectProducer = async () => {
-  try {
-    await producer.connect();
-    logger.info("Kafka producer connected");
-  } catch (error) {
-    logger.error(`Failed to connect Kafka producer: ${error.message}`);
+  const maxRetries = 5;
+  const retryInterval = 3000;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      await producer.connect();
+      logger.info("Kafka producer connected");
+      return;
+    } catch (error) {
+      logger.error(
+        `Attempt ${attempt} - Failed to connect Kafka producer: ${error.message}`
+      );
+      if (attempt < maxRetries) {
+        logger.info(`Retrying in ${retryInterval / 1000} seconds...`);
+        await new Promise((resolve) => setTimeout(resolve, retryInterval));
+      } else {
+        logger.error("Exceeded maximum retry attempts to connect to Kafka");
+        throw new Error("Kafka producer wasn't successful to connect");
+      }
+    }
   }
 };
 
