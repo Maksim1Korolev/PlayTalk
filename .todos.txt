@@ -5,7 +5,6 @@ To fix:
 Ttt when opened and closed
 Ttt styles
 Highlight on game request and game modal
-Opponent can get the same invite
 
 To add (in the end):
 
@@ -13,6 +12,7 @@ To add (in the end):
 To add (after the end):
 Pagination
 Modal's z-index
+Redux middleware for invites/gameStatusMap logic
 Separate circle and modal components
 Profile, winner and players features on client
 AppSvg => AppImage

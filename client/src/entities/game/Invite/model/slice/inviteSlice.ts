@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { acceptGameInvite } from "../thunks/acceptGameInvite";
 import { Invite, InviteState } from "../types/invite";
 
 const initialState: InviteState = {
@@ -14,10 +13,20 @@ const inviteSlice = createSlice({
   initialState,
   reducers: {
     receiveInvite(state, action: PayloadAction<Invite>) {
-      state.invites.push(action.payload);
-      if (state.invites.length === 1) {
-        state.currentInvite = action.payload;
-        state.currentInviteIndex = 0;
+      const newInvite = action.payload;
+
+      const exists = state.invites.some(
+        (invite) =>
+          invite.senderUsername === newInvite.senderUsername &&
+          invite.gameName === newInvite.gameName
+      );
+
+      if (!exists) {
+        state.invites.push(newInvite);
+        if (state.invites.length === 1) {
+          state.currentInvite = newInvite;
+          state.currentInviteIndex = 0;
+        }
       }
     },
     removeInvite(state, action: PayloadAction<Invite>) {
