@@ -2,7 +2,6 @@ To add:
 Secrets handling
 
 To fix:
-Ttt when opened and closed
 
 To add (in the end):
 
