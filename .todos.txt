@@ -3,6 +3,7 @@ Ngnix
 Secrets handling
 
 To fix:
+profile .env
 
 To add (in the end):
 
