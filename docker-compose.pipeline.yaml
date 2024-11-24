@@ -3,6 +3,7 @@ version: "3.8"
 services:
   # Client
   client:
+    build: ./client
     image: naitu2/client:latest
     ports:
       - "5173:5173"
@@ -15,6 +16,7 @@ services:
 
   # Auth Service
   auth_service:
+    build: ./server/auth/auth-service
     image: naitu2/auth_service:latest
     ports:
       - "3010:3010"
@@ -28,18 +30,17 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
       - KAFKA_MESSAGE_SECRET_KEY=${KAFKA_MESSAGE_SECRET_KEY}
-    depends_on:
-      - mongodb
-      - redis
-      - kafka
 
   # Profile Service
   profile_service:
+    build:
+      context: ./server/profile/profile-service
     image: naitu2/profile_service:latest
     ports:
       - "3040:3040"
     networks:
       - playtalk-network
+
     environment:
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${PROFILE_DATABASE_URL}
@@ -48,13 +49,10 @@ services:
       - KAFKA_BROKER_URL=${KAFKA_BROKER_URL}
       - KAFKAJS_NO_PARTITIONER_WARNING=${KAFKAJS_NO_PARTITIONER_WARNING}
       - KAFKA_MESSAGE_SECRET_KEY=${KAFKA_MESSAGE_SECRET_KEY}
-    depends_on:
-      - mongodb
-      - redis
-      - kafka
 
   # Communication Gateway Service
   communication_gateway_service:
+    build: ./server/communication/core/communication-gateway-service
     image: naitu2/communication_gateway_service:latest
     ports:
       - "3000:3000"
@@ -66,11 +64,10 @@ services:
       - CHAT_SERVICE_API_URL=${CHAT_SERVICE_API_URL}
       - JWT_SECRET=${JWT_SECRET}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
-    depends_on:
-      - redis
 
   # Chat Service
   chat_service:
+    build: ./server/communication/modules/chat/chat-service
     image: naitu2/chat_service:latest
     ports:
       - "3020:3020"
@@ -80,12 +77,10 @@ services:
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${CHAT_DATABASE_URL}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
-    depends_on:
-      - mongodb
-      - redis
 
   # Game Gateway Service
   game_gateway_service:
+    build: ./server/game/core/game-gateway-service
     image: naitu2/game_gateway_service:latest
     ports:
       - "3030:3030"
@@ -98,11 +93,12 @@ services:
       - AUTH_SERVICE_API_URL=${AUTH_SERVICE_API_URL}
       - JWT_SECRET=${JWT_SECRET}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
-    depends_on:
-      - redis
 
   # Tic Tac Toe Service
   tic_tac_toe_service:
+    build:
+      context: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
+      dockerfile: Dockerfile
     image: naitu2/tic_tac_toe_service:latest
     ports:
       - "8080:8080"
@@ -112,11 +108,10 @@ services:
       - REDIS_URL=${REDIS_URL}
       - TIC_TAC_TOE_REPOSITORY_SERVICE_API_URL=${TIC_TAC_TOE_REPOSITORY_SERVICE_API_URL}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
-    depends_on:
-      - redis
 
   # Tic Tac Toe Repository Service
   tic_tac_toe_repository_service:
+    build: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service
     image: naitu2/tic_tac_toe_repository_service:latest
     ports:
       - "8082:8082"
@@ -126,59 +121,6 @@ services:
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${TIC_TAC_TOE_DATABASE_URL}
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
-    depends_on:
-      - mongodb
-      - redis
-
-  # Redis
-  redis:
-    image: redis:alpine
-    ports:
-      - "6379:6379"
-    networks:
-      - playtalk-network
-
-  # MongoDB
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
-    ports:
-      - "27017:27017"
-    networks:
-      - playtalk-network
-    volumes:
-      - ./mongo_data:/data/db
-
-  # Zookeeper
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      - ZOOKEEPER_CLIENT_PORT=${ZOOKEEPER_CLIENT_PORT}
-      - ZOOKEEPER_TICK_TIME=2000
-    networks:
-      - playtalk-network
-
-  # Kafka
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    container_name: kafka
-    ports:
-      - "9092:9092"
-    depends_on:
-      - zookeeper
-    restart: on-failure
-    environment:
-      - KAFKA_BROKER_ID=${KAFKA_BROKER_ID}
-      - KAFKA_ZOOKEEPER_CONNECT=${KAFKA_ZOOKEEPER_CONNECT}
-      - KAFKA_ADVERTISED_LISTENERS=${KAFKA_ADVERTISED_LISTENERS}
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
-      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=${KAFKA_AUTO_CREATE_TOPICS_ENABLE}
-    networks:
-      - playtalk-network
 
 networks:
   playtalk-network:
