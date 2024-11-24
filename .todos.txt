@@ -1,6 +1,6 @@
 To add:
 Ngnix
-Secrets handling
+CD
 
 To fix:
 profile .env
@@ -24,7 +24,6 @@ Store invites on the server
 Disable buttons in userList accordingly
 Tests on chat's services and ttt service
 Storybook
-CI/CD
 
 Possible expansions:
 General id for user on all services
