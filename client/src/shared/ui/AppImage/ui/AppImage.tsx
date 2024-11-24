@@ -81,17 +81,20 @@ export const AppImage = memo(
     }
 
     const image = (
-      <img
-        className={cx("", { [highlightClass]: !!highlightClass }, [
-          className,
-          cls[objectFit],
-        ])}
-        alt={alt}
-        src={src}
-        width={width}
-        height={height}
-        {...otherProps}
-      />
+      <div
+        className={cx(cls.playButtonBorder, {
+          [highlightClass]: !!highlightClass,
+        })}
+      >
+        <img
+          className={cx("", {}, [className, cls[objectFit]])}
+          alt={alt}
+          src={src}
+          width={width}
+          height={height}
+          {...otherProps}
+        />
+      </div>
     );
 
     if (clickable) {

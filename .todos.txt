@@ -4,7 +4,6 @@ Secrets handling
 To fix:
 Ttt when opened and closed
 Ttt styles
-Highlight on game request and game modal
 
 To add (in the end):
 
@@ -15,7 +14,7 @@ Modal's z-index
 Redux middleware for invites/gameStatusMap logic
 Separate circle and modal components
 Profile, winner and players features on client
-AppSvg => AppImage
+AppSvg & AppImage
 Adjust modal drag
 Adjust location of accept invite emit
 Save empty messageHistory in redis cache too
@@ -25,7 +24,7 @@ Store invites on the server
 Disable buttons in userList accordingly
 Tests on chat's services and ttt service
 Storybook
-Kubernetes
+CI/CD
 
 Possible expansions:
 General id for user on all services
