@@ -13,6 +13,13 @@ services:
       - AUTH_SERVICE_API_URL=${AUTH_SERVICE_API_URL}
       - COMMUNICATION_SOCKET_URL=${COMMUNICATION_SOCKET_URL}
       - GAME_SOCKET_URL=${GAME_SOCKET_URL}
+    develop:
+      watch:
+        - path: ./client/package.json
+          action: rebuild
+        - path: ./client
+          target: /usr/src/app
+          action: sync
 
   # Auth Service
   auth_service:
@@ -34,6 +41,13 @@ services:
       - mongodb
       - redis
       - kafka
+    develop:
+      watch:
+        - path: ./app/package.json
+          action: rebuild
+        - path: ./server/auth/auth-service
+          target: /usr/src/app
+          action: sync
 
   # Profile Service
   profile_service:
@@ -44,6 +58,7 @@ services:
       - "3040:3040"
     networks:
       - playtalk-network
+
     environment:
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${PROFILE_DATABASE_URL}
@@ -56,6 +71,13 @@ services:
       - mongodb
       - redis
       - kafka
+    develop:
+      watch:
+        - path: ./server/profile/profile-service/package.json
+          action: rebuild
+        - path: ./server/profile/profile-service
+          target: /usr/src/app
+          action: sync
 
   # Communication Gateway Service
   communication_gateway_service:
@@ -73,6 +95,13 @@ services:
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     depends_on:
       - redis
+    develop:
+      watch:
+        - path: ./server/communication/core/communication-gateway-service/package.json
+          action: rebuild
+        - path: ./server/communication/core/communication-gateway-service
+          target: /usr/src/app
+          action: sync
 
   # Chat Service
   chat_service:
@@ -89,6 +118,13 @@ services:
     depends_on:
       - mongodb
       - redis
+    develop:
+      watch:
+        - path: ./server/communication/modules/chat/chat-service/package.json
+          action: rebuild
+        - path: ./server/communication/modules/chat/chat-service
+          target: /usr/src/app
+          action: sync
 
   # Game Gateway Service
   game_gateway_service:
@@ -107,6 +143,13 @@ services:
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     depends_on:
       - redis
+    develop:
+      watch:
+        - path: ./server/game/core/game-gateway-service/package.json
+          action: rebuild
+        - path: ./server/game/core/game-gateway-service
+          target: /usr/src/app
+          action: sync
 
   # Tic Tac Toe Service
   tic_tac_toe_service:
@@ -124,6 +167,13 @@ services:
       - INTERNAL_SERVICE_HEADER=${INTERNAL_SERVICE_HEADER}
     depends_on:
       - redis
+    develop:
+      watch:
+        - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-service/tic-tac-toe-service.csproj
+          action: rebuild
+        - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
+          target: /usr/src/app
+          action: sync
 
   # Tic Tac Toe Repository Service
   tic_tac_toe_repository_service:
@@ -140,6 +190,13 @@ services:
     depends_on:
       - mongodb
       - redis
+    develop:
+      watch:
+        - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service/package.json
+          action: rebuild
+        - path: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service
+          target: /usr/src/app
+          action: sync
 
   # Redis
   redis:
