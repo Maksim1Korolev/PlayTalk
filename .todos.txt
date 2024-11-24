@@ -1,4 +1,5 @@
 To add:
+Ngnix
 Secrets handling
 
 To fix:
