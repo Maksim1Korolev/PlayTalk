@@ -23,7 +23,7 @@ export const Square = memo(
         className={cx(cls.Square, {}, [className])}
         onClick={handleSquareClicked}
       >
-        <UiText size="l" bold>
+        <UiText size="xl" bold fontFamily="header">
           {sign}
         </UiText>
       </UiButton>

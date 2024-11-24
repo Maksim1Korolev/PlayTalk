@@ -3,7 +3,6 @@ Secrets handling
 
 To fix:
 Ttt when opened and closed
-Ttt styles
 
 To add (in the end):
 
