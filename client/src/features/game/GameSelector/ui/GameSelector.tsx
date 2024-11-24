@@ -182,8 +182,6 @@ export const GameSelector = ({
                   iconHighlightType = "invited";
                 }
 
-                const iconHighlightClass = getHighlightClass(iconHighlightType);
-
                 const gameSrc = getImagePath({
                   collection: "gameIcons",
                   fileName: gameName,
@@ -200,20 +198,15 @@ export const GameSelector = ({
                       }
                     }}
                   >
-                    <div
-                      className={cx(cls.gameIconBorder, {
-                        [iconHighlightClass]: !!iconHighlightClass,
-                      })}
-                    >
-                      <AppImage
-                        src={gameSrc}
-                        width={menuItemSize}
-                        height={menuItemSize}
-                        draggable={false}
-                        alt=""
-                        className={cx(cls.gameIcon, {})}
-                      />
-                    </div>
+                    <AppImage
+                      src={gameSrc}
+                      width={menuItemSize}
+                      height={menuItemSize}
+                      draggable={false}
+                      alt=""
+                      className={cx(cls.gameIcon, {})}
+                      highlight={iconHighlightType}
+                    />
                   </CircleMenuItem>
                 );
               })}
