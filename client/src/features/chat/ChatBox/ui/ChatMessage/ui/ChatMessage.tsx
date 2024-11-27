@@ -4,7 +4,6 @@ import { forwardRef } from "react";
 
 import { cx } from "@/shared/lib";
 import { AppImage, Card, UiText } from "@/shared/ui";
-import getImagePath from "@/shared/utils/getImagePath";
 
 import { Message } from "@/entities/Chat";
 
@@ -12,11 +11,11 @@ interface ChatMessageProps {
   className?: string;
   isRight?: boolean;
   message: Message;
-  avatarFileName?: string;
+  avatarUrl?: string;
 }
 
 export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
-  ({ className, isRight, message, avatarFileName }, ref) => {
+  ({ className, isRight, message, avatarUrl }, ref) => {
     return (
       <div
         ref={ref}
@@ -27,13 +26,7 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
         )}
       >
         <span className={cls.msgAvatar}>
-          <AppImage
-            src={getImagePath({
-              collection: "avatars",
-              fileName: avatarFileName,
-            })}
-            draggable={false}
-          />
+          <AppImage src={avatarUrl} draggable={false} />
         </span>
         <Card
           padding="16"

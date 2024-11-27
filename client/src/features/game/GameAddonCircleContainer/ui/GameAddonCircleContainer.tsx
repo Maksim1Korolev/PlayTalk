@@ -7,22 +7,18 @@ import { AddonCircle, AppImage } from "@/shared/ui";
 import getImagePath from "@/shared/utils/getImagePath";
 
 import { GameData } from "@/entities/game/Game";
-import { getUserAvatarFileName } from "@/entities/User";
+import { getUserAvatarUrl } from "@/entities/User";
 
 export const GameAddonCircleContainer = memo(
   ({ className, gameData }: { className?: string; gameData: GameData }) => {
     const { opponentUsername, gameName } = gameData;
-    const opponentAvatarFileName = useAppSelector(
-      getUserAvatarFileName(opponentUsername)
+    const opponentAvatarUrl = useAppSelector(
+      getUserAvatarUrl(opponentUsername)
     );
 
     const gameIconUrl = getImagePath({
       collection: "gameIcons",
       fileName: gameName,
-    });
-    const avatarIconUrl = getImagePath({
-      collection: "avatars",
-      fileName: opponentAvatarFileName,
     });
 
     const size = 80;
@@ -31,7 +27,7 @@ export const GameAddonCircleContainer = memo(
       <AddonCircle
         addonTopRight={
           <AppImage
-            src={avatarIconUrl}
+            src={opponentAvatarUrl}
             width={30}
             height={30}
             draggable={false}

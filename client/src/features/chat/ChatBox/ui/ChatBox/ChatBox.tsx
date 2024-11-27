@@ -8,7 +8,7 @@ import { cx, useAppSelector } from "@/shared/lib";
 import { Card, UiText, VStack } from "@/shared/ui";
 
 import { getChatIsTyping, getChatMessages, Message } from "@/entities/Chat";
-import { getCurrentUser, getUserAvatarFileName } from "@/entities/User";
+import { getCurrentUser, getUserAvatarUrl } from "@/entities/User";
 
 import { useChatMessages } from "../../hooks/useChatMessages";
 import { ChatInput } from "../ChatInput";
@@ -26,8 +26,8 @@ export const ChatBox = memo(
     const [inputMessage, setInputMessage] = useState("");
 
     const currentUser = useAppSelector(getCurrentUser);
-    const recipientAvatarFileName = useAppSelector(
-      getUserAvatarFileName(recipientUsername)
+    const recipientAvatarUrl = useAppSelector(
+      getUserAvatarUrl(recipientUsername)
     );
 
     const messageHistory = useAppSelector(getChatMessages(recipientUsername));
@@ -49,14 +49,14 @@ export const ChatBox = memo(
           key={`${index} ${message.date}`}
           message={message}
           isRight={currentUser!.username === message.username}
-          avatarFileName={
+          avatarUrl={
             currentUser!.username === message.username
-              ? currentUser!.avatarFileName
-              : recipientAvatarFileName
+              ? currentUser!.avatarUrl
+              : recipientAvatarUrl
           }
         />
       ));
-    }, [messageHistory, currentUser, recipientAvatarFileName]);
+    }, [messageHistory, currentUser, recipientAvatarUrl]);
 
     return (
       <VStack className={cx(cls.Chat, {}, [className])} justify="start" max>

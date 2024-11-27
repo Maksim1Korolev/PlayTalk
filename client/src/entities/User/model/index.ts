@@ -1,6 +1,7 @@
 export {
   getUser,
   getUserAvatarFileName,
+  getUserAvatarUrl,
   getUserGameStatusMap,
   getUserOnlineStatus,
   getUserUnreadMessageCount,

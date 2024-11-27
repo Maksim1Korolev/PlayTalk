@@ -24,6 +24,9 @@ export const getUserAvatarFileName = (username: string) =>
     (users) => users[username]?.avatarFileName || ""
   );
 
+export const getUserAvatarUrl = (username: string) =>
+  createSelector([getUsersMap], (users) => users[username]?.avatarUrl || "");
+
 export const getUserGameStatusMap = (username: string) =>
   createSelector(
     [getUsersMap],

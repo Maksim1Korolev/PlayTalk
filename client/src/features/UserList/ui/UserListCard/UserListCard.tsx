@@ -2,7 +2,7 @@ import cls from "./UserListCard.module.scss";
 
 import { memo } from "react";
 
-import { cx } from "@/shared/lib";
+import { cx, useAppSelector } from "@/shared/lib";
 import {
   AddonCircle,
   AppImage,
@@ -15,7 +15,7 @@ import getImagePath from "@/shared/utils/getImagePath";
 
 import { UnreadMessagesCountIndicator } from "@/entities/Chat";
 import { GameData, GameName } from "@/entities/game/Game";
-import { User, UserOnlineIndicator } from "@/entities/User";
+import { getUserAvatarUrl, User, UserOnlineIndicator } from "@/entities/User";
 import { GameSelector } from "@/features/game";
 
 type UserListCardBaseProps = {
@@ -41,9 +41,6 @@ type UserListCardProps = DefaultProps | LoadingProps;
 export const UserListCard = memo((props: UserListCardProps) => {
   const { className = "", collapsed = false, isLoading = false } = props;
 
-  const buttonSize = 60;
-  const avatarSize = 80;
-
   if (isLoading) {
     return (
       <HStack
@@ -62,6 +59,10 @@ export const UserListCard = memo((props: UserListCardProps) => {
 
   const { user, handlePlayButtonClicked, handleChatButtonClicked } =
     props as DefaultProps;
+
+  const buttonSize = 60;
+  const avatarSize = 80;
+  const avatarUrl = useAppSelector(getUserAvatarUrl(user.username));
 
   const onChatOpen = () => {
     if (user) {
@@ -87,10 +88,7 @@ export const UserListCard = memo((props: UserListCardProps) => {
         addonTopRight={<UserOnlineIndicator isOnline={user?.isOnline} />}
       >
         <AppImage
-          src={getImagePath({
-            collection: "avatars",
-            fileName: user?.avatarFileName,
-          })}
+          src={avatarUrl}
           draggable={false}
           width={avatarSize}
           height={avatarSize}

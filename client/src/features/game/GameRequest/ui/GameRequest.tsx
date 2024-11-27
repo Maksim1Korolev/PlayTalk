@@ -34,8 +34,8 @@ export const GameRequest = memo(({ className, position }: GameRequestProps) => {
   const { gameSocket } = sockets;
   const users = useAppSelector(getUsers);
 
-  const currentInviteAvatarSrc = currentInvite
-    ? users[currentInvite.senderUsername]?.avatarFileName
+  const currentInviteAvatarUrl = currentInvite
+    ? users[currentInvite.senderUsername]?.avatarUrl
     : undefined;
 
   const { isDragged, handleDragStart, handleDragStop } = useModalDrag();
@@ -85,12 +85,6 @@ export const GameRequest = memo(({ className, position }: GameRequestProps) => {
         fileName: currentInvite.gameName,
       })
     : "";
-  const avatarIconUrl = currentInviteAvatarSrc
-    ? getImagePath({
-        collection: "avatars",
-        fileName: currentInviteAvatarSrc,
-      })
-    : "";
 
   const gameIconProps: AppImageProps = {
     src: gameIconUrl,
@@ -101,7 +95,7 @@ export const GameRequest = memo(({ className, position }: GameRequestProps) => {
   };
 
   const avatarIconProps: AppImageProps = {
-    src: avatarIconUrl,
+    src: currentInviteAvatarUrl,
     width: avatarIconSize,
     height: avatarIconSize,
     draggable: false,

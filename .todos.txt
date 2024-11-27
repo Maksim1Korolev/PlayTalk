@@ -3,6 +3,7 @@ Ngnix
 CD
 
 To fix:
+currentUser problem
 
 To add (in the end):
 
