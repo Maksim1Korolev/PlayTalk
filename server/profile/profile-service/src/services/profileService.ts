@@ -68,6 +68,7 @@ class ProfileService {
       newProfile.username,
       JSON.stringify(newProfile)
     );
+
     logger.info(
       `User added: ${newProfile.username} and Redis cache updated accordingly.`
     );
@@ -79,8 +80,14 @@ class ProfileService {
 
     if (cachedProfiles && Object.keys(cachedProfiles).length > 0) {
       logger.info("Fetched profiles from Redis cache.");
-      return Object.values(cachedProfiles).map((profile) =>
-        JSON.parse(profile)
+      return await Promise.all(
+        Object.values(cachedProfiles).map(async (profile) => {
+          const parsedProfile = JSON.parse(profile);
+          const avatarUrl = await ProfileService.getAvatarUrl(
+            parsedProfile.avatarFileName
+          );
+          return { ...parsedProfile, avatarUrl };
+        })
       );
     }
 
@@ -111,20 +118,30 @@ class ProfileService {
 
     if (cachedProfile) {
       logger.info(`Cache hit for profile: ${username}`);
-      return JSON.parse(cachedProfile);
+      const parsedProfile = JSON.parse(cachedProfile);
+      const avatarUrl = await ProfileService.getAvatarUrl(
+        parsedProfile.avatarFileName
+      );
+      return { ...parsedProfile, avatarUrl };
     }
 
     const profile = await Profile.findOne({ username });
     if (profile) {
+      const avatarUrl = await ProfileService.getAvatarUrl(
+        profile.avatarFileName
+      );
+      const profileWithAvatar = { ...profile.toObject(), avatarUrl };
+
       await redisClient.hSet(
         REDIS_PROFILES_KEY,
         username,
-        JSON.stringify(profile)
+        JSON.stringify(profileWithAvatar)
       );
       logger.info(`Fetched and cached profile: ${username}`);
+      return profileWithAvatar;
     }
 
-    return profile;
+    return null;
   }
 
   // Unused functions for now
