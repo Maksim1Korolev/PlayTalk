@@ -13,11 +13,11 @@ const getImagePath = ({ collection, fileName }: GetImagePathParams): string => {
     imagePath = `https://testforavatars.s3.eu-north-1.amazonaws.com/${folderName}/${fileName}`;
 
     if (collection === "gameIcons" || collection === "appIcons") {
-      imagePath = `https://testforavatars.s3.eu-north-1.amazonaws.com/${folderName}/${fileName}-icon.svg`;
+      imagePath = `/images/${folderName}/${fileName}-icon.svg`;
     }
   } else {
     // Fallback to the default image path
-    imagePath = "/public/images/avatars/no-avatar.svg";
+    imagePath = "/images/avatars/no-avatar.svg";
   }
 
   return imagePath;

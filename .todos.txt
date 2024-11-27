@@ -3,7 +3,6 @@ Ngnix
 CD
 
 To fix:
-profile .env
 
 To add (in the end):
 
