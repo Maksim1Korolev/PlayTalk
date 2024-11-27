@@ -3,7 +3,7 @@ Ngnix
 CD
 
 To fix:
-currentUser problem
+kafka retry
 
 To add (in the end):
 

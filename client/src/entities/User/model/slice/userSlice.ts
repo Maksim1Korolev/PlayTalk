@@ -38,9 +38,9 @@ const userSlice = createSlice({
       state.currentUser = action.payload;
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(fetchUsersWithStatuses.pending, state => {
+      .addCase(fetchUsersWithStatuses.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
         state.errorMessage = null;
@@ -50,7 +50,7 @@ const userSlice = createSlice({
         state.isError = false;
         const { users, currentUsername } = action.payload;
 
-        users.forEach(user => {
+        users.forEach((user) => {
           if (user.username !== currentUsername) {
             state.users[user.username] = user;
           } else {
