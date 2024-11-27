@@ -4,7 +4,6 @@ services:
   # Client
   client:
     build: ./client
-    image: naitu2/client:latest
     ports:
       - "5173:5173"
     networks:
@@ -53,7 +52,6 @@ services:
   profile_service:
     build:
       context: ./server/profile/profile-service
-    image: naitu2/profile_service:latest
     ports:
       - "3040:3040"
     networks:
@@ -82,7 +80,6 @@ services:
   # Communication Gateway Service
   communication_gateway_service:
     build: ./server/communication/core/communication-gateway-service
-    image: naitu2/communication_gateway_service:latest
     ports:
       - "3000:3000"
     networks:
@@ -106,7 +103,6 @@ services:
   # Chat Service
   chat_service:
     build: ./server/communication/modules/chat/chat-service
-    image: naitu2/chat_service:latest
     ports:
       - "3020:3020"
     networks:
@@ -129,7 +125,6 @@ services:
   # Game Gateway Service
   game_gateway_service:
     build: ./server/game/core/game-gateway-service
-    image: naitu2/game_gateway_service:latest
     ports:
       - "3030:3030"
     networks:
@@ -156,7 +151,6 @@ services:
     build:
       context: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
       dockerfile: Dockerfile
-    image: naitu2/tic_tac_toe_service:latest
     ports:
       - "8080:8080"
     networks:
@@ -178,7 +172,6 @@ services:
   # Tic Tac Toe Repository Service
   tic_tac_toe_repository_service:
     build: ./server/game/modules/tic-tac-toe/tic-tac-toe-repository-service
-    image: naitu2/tic_tac_toe_repository_service:latest
     ports:
       - "8082:8082"
     networks:
@@ -219,7 +212,7 @@ services:
 
   # Zookeeper
   zookeeper:
-    image: naitu2/cp-zookeeper:latest
+    image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
     ports:
       - "2181:2181"
@@ -231,7 +224,7 @@ services:
 
   # Kafka
   kafka:
-    image: naitu2/cp-kafka:latest
+    image: confluentinc/cp-kafka:latest
     container_name: kafka
     ports:
       - "9092:9092"
