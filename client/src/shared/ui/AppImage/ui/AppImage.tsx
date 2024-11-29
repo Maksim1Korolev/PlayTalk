@@ -34,7 +34,7 @@ interface ImageProps extends AppImageBaseProps {
 }
 interface ClickableImageProps extends AppImageBaseProps {
   clickable: true;
-  onClick?: () => void;
+  onClick: () => void;
 }
 
 export type AppImageProps = ImageProps | ClickableImageProps;

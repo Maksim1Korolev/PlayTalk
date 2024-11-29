@@ -1,18 +1,21 @@
-import { cx } from "@/shared/lib"
-import { AppImage } from "../../AppImage"
-import cls from "./Avatar.module.scss"
+import cls from "./Avatar.module.scss";
+
+import { cx } from "@/shared/lib";
+
+import { AppImage } from "../../AppImage";
 
 const defaultImage = "images/default-avatar.svg";
+
 export const Avatar = ({
   className,
   size = 80,
   src,
-	onClick,
+  onClick,
 }: {
   className?: string;
   size?: number;
   src: string;
-	onClick?: () => void;
+  onClick?: () => void;
 }) => {
   const getDefaultAvatar = () => {
     return (
@@ -26,13 +29,23 @@ export const Avatar = ({
     );
   };
 
-  return (
+  return onClick ? (
     <AppImage
       className={cx(cls.Avatar, {}, [className])}
       width={size}
       height={size}
       src={src}
-			onClick={onClick}
+      onClick={onClick}
+      clickable={true}
+      draggable="false"
+      errorFallback={getDefaultAvatar()}
+    />
+  ) : (
+    <AppImage
+      className={cx(cls.Avatar, {}, [className])}
+      width={size}
+      height={size}
+      src={src}
       draggable="false"
       errorFallback={getDefaultAvatar()}
     />
