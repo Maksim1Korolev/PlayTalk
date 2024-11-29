@@ -7,6 +7,7 @@ To fix:
 No avatars for dev
 Check client env
 Docker compose of ttt server for production
+Check for different url access when ran through ngnix
 
 To add (in the end):
 
