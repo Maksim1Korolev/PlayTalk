@@ -3,12 +3,15 @@ version: "3.8"
 services:
   # Client
   client:
-    build: ./client
+    build:
+      context: ./client
+      target: development
     ports:
       - "5173:5173"
     networks:
       - playtalk-network
     environment:
+      - NODE_ENV=development
       - AUTH_SERVICE_API_URL=${AUTH_SERVICE_API_URL}
       - COMMUNICATION_SOCKET_URL=${COMMUNICATION_SOCKET_URL}
       - GAME_SOCKET_URL=${GAME_SOCKET_URL}

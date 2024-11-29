@@ -3,13 +3,16 @@ version: "3.8"
 services:
   # Client
   client:
-    build: ./client
+    build:
+      context: ./client
+      target: production
     image: naitu2/client:latest
     ports:
-      - "5173:5173"
+      - "80:80"
     networks:
       - playtalk-network
     environment:
+      - NODE_ENV=production
       - AUTH_SERVICE_API_URL=${AUTH_SERVICE_API_URL}
       - COMMUNICATION_SOCKET_URL=${COMMUNICATION_SOCKET_URL}
       - GAME_SOCKET_URL=${GAME_SOCKET_URL}

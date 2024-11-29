@@ -1,21 +1,35 @@
-# Base image
-FROM node:16-alpine
+# Base image for building the application
+FROM node:16-alpine as builder
 
-# Create and set app directory
 WORKDIR /usr/src/app
 
-# Install app dependencies by copying package.json and package-lock.json
+# Copy dependencies and install
 COPY package*.json ./
-
-
-# Install dependencies
 RUN npm install
 
-# Bundle app source
+# Copy application code
 COPY . .
 
-# Expose the application's port
-EXPOSE 5173
+# Build the application
+RUN npm run build
 
-# Command to run the application
-CMD ["npm", "run", "dev"]
+# Development Stage
+FROM node:16-alpine as development
+
+WORKDIR /usr/src/app
+
+# Copy dependencies and source code for live development
+COPY package*.json ./
+RUN npm install
+COPY . .
+
+CMD ["npm", "run", "dev"] 
+
+# Production Stage
+FROM nginx:alpine as production
+
+# Copy static build files to Nginx
+COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,9 +1,12 @@
 To add:
+Browser notifications for some actions as temp measure
 Ngnix
 CD
 
 To fix:
-kafka retry
+No avatars for dev
+Check client env
+Docker compose of ttt server for production
 
 To add (in the end):
 
