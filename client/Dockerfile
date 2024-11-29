@@ -27,6 +27,7 @@ CMD ["npm", "run", "dev"]
 
 # Production Stage
 FROM nginx:alpine as production
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy static build files to Nginx
 COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
