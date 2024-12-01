@@ -1,18 +1,17 @@
 To add:
-Browser notifications for some actions as temp measure
 Ngnix
-CD
 
 To fix:
-No avatars for dev
+No avatars for dev (getImagePath)
 Check client env
 Docker compose of ttt server for production
-Check for different url access when ran through ngnix
 
 To add (in the end):
 
 
 To add (after the end):
+CD
+Browser notifications for some actions as temp measure
 Pagination
 Modal's z-index
 Redux middleware for invites/gameStatusMap logic
