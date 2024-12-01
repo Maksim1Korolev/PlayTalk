@@ -6,6 +6,7 @@ To add (in the end):
 
 
 To add (after the end):
+Multi-stage dockerfiles for all services
 Check client env
 CD
 Browser notifications for some actions as temp measure
