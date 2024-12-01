@@ -1,36 +1,29 @@
-# Base image for building the application
-FROM node:16-alpine as builder
+# Base Stage
+FROM node:16-alpine AS base
 
 WORKDIR /usr/src/app
 
-# Copy dependencies and install
+# Install dependencies
 COPY package*.json ./
 RUN npm install
 
 # Copy application code
-COPY . .
-
-# Build the application
-RUN npm run build
+COPY . ./
 
 # Development Stage
-FROM node:16-alpine as development
+FROM base AS development
+CMD ["npm", "run", "dev"]
 
-WORKDIR /usr/src/app
-
-# Copy dependencies and source code for live development
-COPY package*.json ./
-RUN npm install
-COPY . .
-
-CMD ["npm", "run", "dev"] 
+# Build Stage
+FROM base AS build
+RUN npm run build
 
 # Production Stage
-FROM nginx:alpine as production
+FROM nginx:alpine AS production
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy static build files to Nginx
-COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

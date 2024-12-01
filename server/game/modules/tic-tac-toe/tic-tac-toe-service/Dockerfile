@@ -1,11 +1,26 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Debug
+# Base Stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
 WORKDIR /usr/src/app
-COPY . .
-RUN dotnet restore "./tic-tac-toe-service.csproj"
-RUN dotnet build "./tic-tac-toe-service.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS final
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
+
+# Development Stage
+FROM base AS development
+ARG BUILD_CONFIGURATION=Debug
+COPY . ./
+CMD ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:8080"]
+
+# Build Stage
+FROM base AS build
+ARG BUILD_CONFIGURATION=Release
+COPY . ./
+RUN dotnet publish -c $BUILD_CONFIGURATION -o out
+
+# Production Stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS production
 WORKDIR /usr/src/app
+COPY --from=build /usr/src/app/out ./
 EXPOSE 8080
-CMD ["dotnet", "watch", "run", "--project", "tic-tac-toe-service.csproj", "--urls", "http://tic_tac_toe_service:8080"]
+ENTRYPOINT ["dotnet", "tic-tac-toe-service.dll", "--urls", "http://0.0.0.0:8080"]

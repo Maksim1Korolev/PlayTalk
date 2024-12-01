@@ -7,7 +7,7 @@ services:
       context: ./client
       target: development
     ports:
-      - "5173:5173"
+      - "80:5173"
     networks:
       - playtalk-network
     environment:
@@ -154,6 +154,7 @@ services:
     build:
       context: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
       dockerfile: Dockerfile
+      target: development
     ports:
       - "8080:8080"
     networks:

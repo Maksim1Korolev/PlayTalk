@@ -102,6 +102,7 @@ services:
     build:
       context: ./server/game/modules/tic-tac-toe/tic-tac-toe-service
       dockerfile: Dockerfile
+      target: production
     image: naitu2/tic_tac_toe_service:latest
     ports:
       - "8080:8080"
