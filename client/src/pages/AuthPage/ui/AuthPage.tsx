@@ -62,9 +62,16 @@ const AuthPage = ({ className }: AuthPageProps) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/");
-      //TODO:Find replacement
-      window.location.reload();
+      //TODO:Find replacement for timeOut and reload
+      if (isSignUp) {
+        setTimeout(() => {
+          navigate("/");
+          window.location.reload();
+        }, 500);
+      } else {
+        navigate("/");
+        window.location.reload();
+      }
     }
   }, [isAuthenticated]);
 

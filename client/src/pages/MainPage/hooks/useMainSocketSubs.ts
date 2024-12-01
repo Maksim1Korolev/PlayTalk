@@ -52,7 +52,7 @@ export const useMainSocketSubs = () => {
 
               dispatch(userActions.addUser(newUser));
             }
-          }, 1000);
+          }, 500);
         }
       };
 
