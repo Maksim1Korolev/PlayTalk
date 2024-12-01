@@ -1,15 +1,12 @@
 To add:
-Ngnix
 
 To fix:
-No avatars for dev (getImagePath)
-Check client env
-Docker compose of ttt server for production
 
 To add (in the end):
 
 
 To add (after the end):
+Check client env
 CD
 Browser notifications for some actions as temp measure
 Pagination
