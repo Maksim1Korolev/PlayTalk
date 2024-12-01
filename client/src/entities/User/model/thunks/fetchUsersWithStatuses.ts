@@ -8,12 +8,12 @@ import { GameStatus } from "@/entities/game/GameStatus";
 import { User } from "@/entities/User";
 
 export const fetchUsersWithStatuses = createAsyncThunk<
-  { users: User[]; currentUsername: string },
-  { currentUsername: string; token: string },
+  User[],
+  { token: string },
   ThunkConfig<string>
 >(
   "user/fetchUsersWithStatuses",
-  async ({ currentUsername, token }, { extra, rejectWithValue }) => {
+  async ({ token }, { extra, rejectWithValue }) => {
     const { api } = extra;
 
     try {
@@ -66,7 +66,7 @@ export const fetchUsersWithStatuses = createAsyncThunk<
         };
       });
 
-      return { users: updatedUsers, currentUsername };
+      return updatedUsers;
     } catch (err) {
       console.error("Error fetching users status:", err);
       return rejectWithValue(

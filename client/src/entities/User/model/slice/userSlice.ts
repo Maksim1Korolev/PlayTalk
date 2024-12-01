@@ -5,9 +5,19 @@ import { CurrentUser, User } from "@/entities/User";
 import { fetchUsersWithStatuses } from "../thunks/fetchUsersWithStatuses";
 import { UserState } from "../types/user";
 
+const getCurrentUserFromLocalStorage = (): CurrentUser | null => {
+  if (typeof window !== "undefined") {
+    const username = localStorage.getItem("currentUsername");
+    if (username) {
+      return { username };
+    }
+  }
+  return null;
+};
+
 const initialState: UserState = {
   users: {},
-  currentUser: null,
+  currentUser: getCurrentUserFromLocalStorage(),
   isLoading: false,
   isError: false,
   errorMessage: null,
@@ -48,12 +58,13 @@ const userSlice = createSlice({
       .addCase(fetchUsersWithStatuses.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
-        const { users, currentUsername } = action.payload;
+        const users = action.payload;
+
+        const currentUsername = state.currentUser?.username;
 
         users.forEach((user) => {
-          if (user.username !== currentUsername) {
-            state.users[user.username] = user;
-          } else {
+          state.users[user.username] = user;
+          if (user.username === currentUsername) {
             state.currentUser = user;
           }
         });

@@ -43,7 +43,7 @@ export const UserList = memo(
 
     useEffect(() => {
       if (currentUsername) {
-        dispatch(fetchUsersWithStatuses({ currentUsername, token }));
+        dispatch(fetchUsersWithStatuses({ token }));
       }
     }, [dispatch, currentUsername, token]);
 
