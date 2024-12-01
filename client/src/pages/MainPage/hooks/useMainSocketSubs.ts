@@ -40,7 +40,7 @@ export const useMainSocketSubs = () => {
             dispatch(chatActions.setIsTyping({ username, isTyping: false }));
           }
         } else {
-          //Waiting a second for profile service to register the user to see the avatar
+          //Waiting half a second for profile service to register the user to see the avatar
           setTimeout(async () => {
             const user = await usersApiService.getUser(username, token);
 
