@@ -63,9 +63,10 @@ const userSlice = createSlice({
         const currentUsername = state.currentUser?.username;
 
         users.forEach((user) => {
-          state.users[user.username] = user;
           if (user.username === currentUsername) {
             state.currentUser = user;
+          } else {
+            state.users[user.username] = user;
           }
         });
       })
