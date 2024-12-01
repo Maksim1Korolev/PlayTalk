@@ -10,6 +10,7 @@ import SkipNextIcon from "@mui/icons-material/SkipNext";
 import { useAppDispatch, useAppSelector, useModalDrag } from "@/shared/lib";
 import { SocketContext } from "@/shared/lib/context/SocketContext";
 import { AddonCircle, AppImage, AppImageProps, UiButton } from "@/shared/ui";
+import { Avatar } from "@/shared/ui/Avatar";
 import getImagePath from "@/shared/utils/getImagePath";
 
 import { updateGameStatusMap } from "@/entities/game/GameStatus";
@@ -94,13 +95,6 @@ export const GameRequest = memo(({ className, position }: GameRequestProps) => {
     highlight: "invited",
   };
 
-  const avatarIconProps: AppImageProps = {
-    src: currentInviteAvatarUrl,
-    width: avatarIconSize,
-    height: avatarIconSize,
-    draggable: false,
-  };
-
   const yesButton = (
     <UiButton
       variant="clear"
@@ -151,7 +145,9 @@ export const GameRequest = memo(({ className, position }: GameRequestProps) => {
       <Rnd {...rndProps}>
         <AddonCircle
           className={`${cls.GameRequest} ${className}`}
-          addonTopRight={<AppImage {...avatarIconProps} />}
+          addonTopRight={
+            <Avatar src={currentInviteAvatarUrl} size={avatarIconSize} />
+          }
           addonBottomLeft={yesButton}
           addonBottomRight={noButton}
           addonTopLeft={skipButton}

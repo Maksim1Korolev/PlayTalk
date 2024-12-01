@@ -1,9 +1,10 @@
 import cls from "./ChatMessage.module.scss";
 
+import { Avatar } from "@mui/material";
 import { forwardRef } from "react";
 
 import { cx } from "@/shared/lib";
-import { AppImage, Card, UiText } from "@/shared/ui";
+import { Card, UiText } from "@/shared/ui";
 
 import { Message } from "@/entities/Chat";
 
@@ -26,7 +27,7 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
         )}
       >
         <span className={cls.msgAvatar}>
-          <AppImage src={avatarUrl} draggable={false} />
+          <Avatar src={avatarUrl} draggable={false} />
         </span>
         <Card
           padding="16"

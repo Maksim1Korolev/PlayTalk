@@ -4,7 +4,7 @@ import { cx } from "@/shared/lib";
 
 import { AppImage } from "../../AppImage";
 
-const defaultImage = "images/default-avatar.svg";
+const defaultImage = "images/no-avatar.svg";
 
 export const Avatar = ({
   className,
@@ -14,13 +14,13 @@ export const Avatar = ({
 }: {
   className?: string;
   size?: number;
-  src: string;
+  src?: string;
   onClick?: () => void;
 }) => {
   const getDefaultAvatar = () => {
     return (
       <AppImage
-        className={cls.Avatar}
+        className={cx(cls.Avatar, {}, [className])}
         width={size}
         height={size}
         src={defaultImage}

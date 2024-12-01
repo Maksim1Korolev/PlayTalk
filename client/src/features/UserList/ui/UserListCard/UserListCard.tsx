@@ -11,6 +11,7 @@ import {
   UiButton,
   UiText,
 } from "@/shared/ui";
+import { Avatar } from "@/shared/ui/Avatar";
 import getImagePath from "@/shared/utils/getImagePath";
 
 import { UnreadMessagesCountIndicator } from "@/entities/Chat";
@@ -50,9 +51,10 @@ export const UserListCard = memo((props: UserListCardProps) => {
         gap="8"
         max
       >
-        <Skeleton border="100%" height={50} width={50} />
-        <Skeleton width={50} height={20} />
-        <Skeleton border="100%" height={50} width={50} />
+        <Skeleton border="100%" height={80} width={80} />
+        <Skeleton width={70} height={20} />
+        <Skeleton border="100%" height={80} width={80} />
+        <Skeleton border="100%" height={80} width={80} />
       </HStack>
     );
   }
@@ -87,13 +89,7 @@ export const UserListCard = memo((props: UserListCardProps) => {
       <AddonCircle
         addonTopRight={<UserOnlineIndicator isOnline={user?.isOnline} />}
       >
-        <AppImage
-          src={avatarUrl}
-          draggable={false}
-          width={avatarSize}
-          height={avatarSize}
-          alt={user?.username}
-        />
+        <Avatar src={avatarUrl} size={avatarSize} />
       </AddonCircle>
       <UiText className={cls.username} size="l" max title={user?.username}>
         {user?.username}

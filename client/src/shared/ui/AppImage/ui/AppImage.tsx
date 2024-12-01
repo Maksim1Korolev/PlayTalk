@@ -8,8 +8,7 @@ import {
   useState,
 } from "react";
 
-import { cx } from "@/shared/lib";
-import { getHighlightClass, HighlightType } from "@/shared/lib";
+import { cx, getHighlightClass, HighlightType } from "@/shared/lib";
 
 type ObjectFit = "cover" | "fill" | "contain" | "none";
 
@@ -46,7 +45,7 @@ export const AppImage = memo(
     alt = "image",
     fallback,
     highlight = "none",
-    errorFallback,
+    errorFallback = <AppImage src="" />,
     clickable = false,
     onClick,
     objectFit = "cover",
