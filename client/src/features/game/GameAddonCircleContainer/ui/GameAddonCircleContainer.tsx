@@ -4,6 +4,7 @@ import { memo } from "react";
 
 import { cx, useAppSelector } from "@/shared/lib";
 import { AddonCircle, AppImage } from "@/shared/ui";
+import { Avatar } from "@/shared/ui/Avatar";
 import getImagePath from "@/shared/utils/getImagePath";
 
 import { GameData } from "@/entities/game/Game";
@@ -25,14 +26,7 @@ export const GameAddonCircleContainer = memo(
 
     return (
       <AddonCircle
-        addonTopRight={
-          <AppImage
-            src={opponentAvatarUrl}
-            width={30}
-            height={30}
-            draggable={false}
-          />
-        }
+        addonTopRight={<Avatar src={opponentAvatarUrl} size={30} />}
         className={cx(cls.ChatAddonCircle, {}, [className])}
       >
         <AppImage

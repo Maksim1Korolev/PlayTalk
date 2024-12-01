@@ -55,7 +55,6 @@ export const UserListCard = memo((props: UserListCardProps) => {
         <Skeleton width={70} height={20} />
         <Skeleton border="100%" height={80} width={80} />
         <Skeleton border="100%" height={80} width={80} />
-        <Skeleton border="100%" height={80} width={80} />
       </HStack>
     );
   }

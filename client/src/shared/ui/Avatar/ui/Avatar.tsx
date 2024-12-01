@@ -14,7 +14,7 @@ export const Avatar = ({
 }: {
   className?: string;
   size?: number;
-  src: string;
+  src?: string;
   onClick?: () => void;
 }) => {
   const getDefaultAvatar = () => {
