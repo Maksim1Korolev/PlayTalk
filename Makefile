@@ -8,7 +8,3 @@ down:
 
 clean:
 	docker compose down --rmi all
-
-push-pipeline:
-	docker-compose -f docker-compose.pipeline.yaml build
-	docker-compose -f docker-compose.pipeline.yaml push
