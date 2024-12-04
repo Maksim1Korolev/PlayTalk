@@ -3,12 +3,13 @@ To add:
 To fix:
 
 To add (in the future):
-Multi-stage dockerfiles for all services
+Multi-stage dockerfiles for the rest of the services
 Check client env
 CD
 Browser notifications for some actions as temp measure
 Pagination
 Modal's z-index
+General id for user on all services
 Redux middleware for invites/gameStatusMap logic
 Separate circle and modal components
 Profile, winner and players features on client
@@ -24,9 +25,7 @@ Tests on chat's services and ttt service
 Storybook
 
 Possible expansions:
-General id for user on all services
 User search
-s3 signedUrls and images permission on client
 Group chats
 Friends
 Turns history and more stats on tic tac toe server
