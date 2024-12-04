@@ -76,7 +76,7 @@ Once the services are up, the application will be accessible at:
 
 ## Project Architecture
 
-[Placeholder for Project Architecture Diagram - Please insert your image here]
+![Architecture Diagram](./Diagram.jpg "Architecture Overview")
 
 The PlayTalk architecture is designed with modularity and resilience in mind. It consists of multiple microservices connected through two primary gateway services: the Game Gateway and the Communication Gateway. Each of these gateways is responsible for managing specific interactions in the system.
 
@@ -193,7 +193,7 @@ The Tic Tac Toe Module consists of two distinct parts: the Tic Tac Toe Service (
 - **Node.js** and **Express**: Backend service and framework for handling requests and business logic.
 - **.NET**: Used for building the Tic Tac Toe Service to handle core game logic.
 - **Redis**: Used for caching and real-time data operations.
-- **MongoDB**: Database for storing user data, games data, and chat history.
+- **MongoDB**: Database for storing user data, games data, and chat history through mongoose.
 - **Socket.io**: Real-time, bi-directional communication between the client and server for chat and game events.
 - **Kafka**: Message broker used for inter-service communication, specifically between auth and profile services.
 - **Jest**: Testing framework for ensuring code reliability through unit and integration tests.
@@ -204,17 +204,13 @@ All environment variables are pre-configured in the system, except for AWS keys.
 
 ## Usage
 
-### Authentication Flow
+This part will be filled out soon, for now you can run the project and explore things firsthand:)
 
-How to register, log in, and manage user sessions.
+### Authentication Flow
 
 ### Chat Operations
 
-Overview of how to use the chat functionality, including sending messages, etc.
-
 ### Game Management
-
-Description of game-related features, such as starting a game, inviting a friend, and viewing active games.
 
 ## Testing
 
