@@ -204,8 +204,6 @@ All environment variables are pre-configured in the system, except for AWS keys.
 
 ## Usage
 
-This part will be filled out soon, for now you can run the project and explore things firsthand:)
-
 ### Authentication Flow
 
 ![Authentication Flow](./assets/gifs/Auth.gif)
