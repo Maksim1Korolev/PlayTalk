@@ -76,7 +76,7 @@ Once the services are up, the application will be accessible at:
 
 ## Project Architecture
 
-![Architecture Diagram](./Diagram.jpg "Architecture Overview")
+![Architecture Diagram](./assets/Diagram.jpg "Architecture Overview")
 
 The PlayTalk architecture is designed with modularity and resilience in mind. It consists of multiple microservices connected through two primary gateway services: the Game Gateway and the Communication Gateway. Each of these gateways is responsible for managing specific interactions in the system.
 
@@ -208,9 +208,15 @@ This part will be filled out soon, for now you can run the project and explore t
 
 ### Authentication Flow
 
+![Authentication Flow](./assets/gifs/Auth.gif)
+
 ### Chat Operations
 
+![Chat Operations](./assets/gifs/Chat.gif)
+
 ### Game Management
+
+![Game Management](./assets/gifs/Game.gif)
 
 ## Testing
 
