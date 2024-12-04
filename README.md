@@ -21,7 +21,6 @@
    - [Chat Operations](#chat-operations)
    - [Game Management](#game-management)
 9. [Testing](#testing)
-   - [Unit Tests](#unit-tests)
 10. [Folder Structure](#folder-structure)
 11. [Known Issues](#known-issues)
 12. [Future Enhancements](#future-enhancements)
