@@ -2,10 +2,7 @@ To add:
 
 To fix:
 
-To add (in the end):
-
-
-To add (after the end):
+To add (in the future):
 Multi-stage dockerfiles for all services
 Check client env
 CD
@@ -33,9 +30,3 @@ s3 signedUrls and images permission on client
 Group chats
 Friends
 Turns history and more stats on tic tac toe server
-
-Readme:
-Rate limiting
-Messages buffer
-Ttt repo
-Tech stack: redis, mongo, socket, kafka, redux, jest
