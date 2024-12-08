@@ -1,10 +1,10 @@
 dev:
-	docker-compose -f docker-compose.dev.yaml watch
+	docker compose -f docker-compose.dev.yaml watch
 
 up:
-	docker-compose up
+	docker compose up
 down:
-	docker-compose down
+	docker compose down
 
 clean:
 	docker compose down --rmi all

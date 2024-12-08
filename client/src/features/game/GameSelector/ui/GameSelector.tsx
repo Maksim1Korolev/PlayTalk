@@ -1,6 +1,6 @@
 import cls from "./GameSelector.module.scss";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { CircleMenu, CircleMenuItem } from "react-circular-menu";
 import ReactDOM from "react-dom";
 
@@ -82,7 +82,7 @@ export const GameSelector = ({
   };
 
   // Resize check
-  useEffect(() => {
+  useLayoutEffect(() => {
     updateMenuPosition();
 
     window.addEventListener("resize", updateMenuPosition);
